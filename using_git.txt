@@ -31,7 +31,7 @@ Quick set up a Spaceout project with Git and Eclipse!
  
  - Once you're done with your work, you can do 'git status' to see what you've changed.
  
- - Do a 'git add [filename]' for each file then do 'git commit'
+ - You can either do a 'git add [filename]' for each file then do 'git commit', or just do a 'git commit -a' to commit all your changes.
  
  - Enter a comment about the commit in the file that pops up.
  

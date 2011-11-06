@@ -17,6 +17,8 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
 public class DisplayHelper {
+	private static final String ICON_PATH = "res/images/";
+	
 	/**
 	 * these change whenever the screen size is changed. The values that they
 	 * are now will be the initial size of the window.
@@ -62,7 +64,7 @@ public class DisplayHelper {
 		frame.setLayout(new BorderLayout());
 		frame.setBackground(java.awt.Color.black);
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(
-				"res/spoutlogo.png"));
+				ICON_PATH + "spoutlogo.png"));
 		final Canvas canvas = new Canvas();
 
 		// add listeners to the canvas
