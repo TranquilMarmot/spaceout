@@ -19,6 +19,8 @@ public abstract class Entity {
 	public float maxXSpeed, maxYSpeed, maxZSpeed;
 	
 	public float xAccel, yAccel, zAccel;
+	
+	public float xDecel, yDecel, zDecel;
 
 	// rotation variables
 	public Quaternion rotation;
@@ -127,13 +129,13 @@ public abstract class Entity {
 	 */
 	protected void decelerateZ(int delta){
 		if (zSpeed > 0){
-			float newSpeed = zSpeed - (delta * zAccel);
+			float newSpeed = zSpeed - (delta * zDecel);
 			if(newSpeed < 0)
 				zSpeed = 0;
 			else
 				zSpeed = newSpeed;
 		} else if(zSpeed < 0){
-			float newSpeed = zSpeed + (delta * zAccel);
+			float newSpeed = zSpeed + (delta * zDecel);
 			if(newSpeed > 0)
 				zSpeed = 0;
 			else
@@ -176,13 +178,13 @@ public abstract class Entity {
 	 */
 	protected void decelerateX(int delta){
 		if (xSpeed > 0){
-			float newSpeed = xSpeed - (delta * xAccel);
+			float newSpeed = xSpeed - (delta * xDecel);
 			if(newSpeed < 0)
 				xSpeed = 0;
 			else
 				xSpeed = newSpeed;
 		} else if(xSpeed < 0){
-			float newSpeed = xSpeed + (delta * xAccel);
+			float newSpeed = xSpeed + (delta * xDecel);
 			if(newSpeed > 0)
 				xSpeed = 0;
 			else
@@ -225,13 +227,13 @@ public abstract class Entity {
 	 */
 	protected void decelerateY(int delta){
 		if (ySpeed > 0){
-			float newSpeed = ySpeed - (delta * yAccel);
+			float newSpeed = ySpeed - (delta * yDecel);
 			if(newSpeed < 0)
 				ySpeed = 0;
 			else
 				ySpeed = newSpeed;
 		} else if(ySpeed < 0){
-			float newSpeed = ySpeed + (delta * yAccel);
+			float newSpeed = ySpeed + (delta * yDecel);
 			if(newSpeed > 0)
 				ySpeed = 0;
 			else
