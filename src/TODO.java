@@ -1,15 +1,8 @@
-
-
 /*
- * NOTES GO HERE
- * 
- * SUPER IMPORTANT:
- * 
- * Note: Put all to-do's/notes in this file so that they can be changed independently of runner class. This will help with GIT pushing. 
- *
  * In sort of order of importance:
- * TODO implement acceleration! Instead of going full speed right away, start out going slow and then speed up while the key is held down (until a max speed is reached) 
- *  When the key is released go back down to zero (if stabilization variable is on!)
+ * TODO Enhance acceleration. Make it so that everything slows down at the same speed.
+ * TODO Also, the acceleration is not rotation independent. I.E. if you look down and speed up forward, then stop accelerating and look somewhere else, 
+ * you continue going in the direction you're looking (instead of going the direction you were looking at before)
  * TODO create the rest of the solar system
  * TODO Organize the res folder! It's pretty bad at the moment
  * 
