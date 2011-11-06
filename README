@@ -80,13 +80,13 @@ MICRO CLASS
 Space flight Default Control Scheme:
 
 W        :     Forward
-A        :     Left
+A        :     Roll Left
 S        :     Backward
-D        :     Right
+D        :     Roll Right
 Space    :     Up
 Shift    :     Down
-Mouse1   :     Control Yaw/Pitch
-Mouse2   :
+Mouse1   :     Action 1
+Mouse2   :     Action 2
 
 *All controls are relative to current direction of the ship.
 
