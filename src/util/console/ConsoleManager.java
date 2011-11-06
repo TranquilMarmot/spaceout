@@ -10,6 +10,7 @@ import util.helper.DisplayHelper;
 import util.helper.KeyboardHandler;
 
 public class ConsoleManager {
+	private static final String FONT_PATH = "res/fonts/";
 
 	// whether or not the console is up
 	public static boolean consoleOn = false;
@@ -63,7 +64,7 @@ public class ConsoleManager {
 		// initialize the font if this is the first draw
 		if (font == null) {
 			try {
-				font = new UnicodeFont("res/VeraMono.ttf", 15, false, false);
+				font = new UnicodeFont(FONT_PATH + "VeraMono.ttf", 15, false, false);
 				font.addAsciiGlyphs();
 				font.getEffects().add(new ColorEffect(java.awt.Color.WHITE));
 				font.loadGlyphs();

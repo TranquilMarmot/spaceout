@@ -3,6 +3,7 @@ package util.helper;
 import util.model.ModelLoader;
 
 public class ModelHandler {
+	private static final String MODEL_PATH = "res/models/";
 	private static Integer ship1List;
 	
 	public static final int SHIP1 = 98;
@@ -20,7 +21,7 @@ public class ModelHandler {
 	private static void initModel(int model){
 		switch(model){
 		case SHIP1:
-			ship1List = ModelLoader.loadPlyFile("res/test2.ply").get(0);
+			ship1List = ModelLoader.loadPlyFile(MODEL_PATH + "ships/ship1.ply").get(0);
 			break;
 		}
 	}

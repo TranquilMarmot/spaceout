@@ -8,6 +8,8 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 public class TextureHandler {
+	private static final String TEXTURE_PATH = "res/images/textures/";
+	
 	private static Texture earth;
 	private static Texture stars;
 	private static Texture white;
@@ -64,31 +66,31 @@ public class TextureHandler {
 			switch (texture) {
 			case EARTH:
 				earth = TextureLoader.getTexture("JPG", new FileInputStream(
-						"res/earthbig.jpg"), true, GL11.GL_LINEAR);
+						TEXTURE_PATH + "earthbig.jpg"), true, GL11.GL_LINEAR);
 				break;
 			case STARS:
 				stars = TextureLoader.getTexture("JPG", new FileInputStream(
-						"res/stars.jpg"), true, GL11.GL_LINEAR);
+						TEXTURE_PATH + "stars.jpg"), true, GL11.GL_LINEAR);
 				break;
 			case WHITE:
 				white = TextureLoader.getTexture("BMP", new FileInputStream(
-						"res/white.bmp"), true, GL11.GL_LINEAR);
+						TEXTURE_PATH + "white.bmp"), true, GL11.GL_LINEAR);
 				break;
 			case CHECKERS:
 				checkers = TextureLoader.getTexture("BMP", new FileInputStream(
-						"res/checkers.bmp"), true, GL11.GL_LINEAR);
+						TEXTURE_PATH + "checkers.bmp"), true, GL11.GL_LINEAR);
 				break;
 			case MERCURY:
 				mercury = TextureLoader.getTexture("JPG", new FileInputStream(
-						"res/mercury.jpg"), true, GL11.GL_LINEAR);
+						TEXTURE_PATH + "mercury.jpg"), true, GL11.GL_LINEAR);
 				break;
 			case VENUS:
 				venus = TextureLoader.getTexture("JPG", new FileInputStream(
-						"res/venus.jpg"), true, GL11.GL_LINEAR);
+						TEXTURE_PATH + "venus.jpg"), true, GL11.GL_LINEAR);
 				break;
 			case MARS:
 				mars = TextureLoader.getTexture("JPG", new FileInputStream(
-						"res/mars.jpg"), true, GL11.GL_LINEAR);
+						TEXTURE_PATH + "mars.jpg"), true, GL11.GL_LINEAR);
 				break;
 			default:
 				System.out.println("Error creating texture! Parameter "

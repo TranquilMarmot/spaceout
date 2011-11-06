@@ -25,9 +25,6 @@ public class Debug {
 
 	// whether or not debug info is being displayed
 	public static boolean displayDebug = true;
-
-	// font for printing stuff to the screen
-	public static UnicodeFont text = null;
 	
 	private static int rectangleCallList = 0;
 
@@ -48,8 +45,8 @@ public class Debug {
 		 * Entities.player.pitch, Entities.player.roll);
 		 */
 		// draw the text
-		text.drawString(3, 3, coords.toString(), Color.cyan);
-		text.drawString(3, 59, "quatX: " + Entities.player.rotation.x
+		ConsoleManager.font.drawString(3, 3, coords.toString(), Color.cyan);
+		ConsoleManager.font.drawString(3, 59, "quatX: " + Entities.player.rotation.x
 				+ "\nquatY: " + Entities.player.rotation.y + "\nquatZ: "
 				+ Entities.player.rotation.z + "\nquatW: "
 				+ Entities.player.rotation.w, new Color(0, 123, 255));
@@ -58,9 +55,9 @@ public class Debug {
 		String cameraInfo = "zoom: " + Entities.camera.zoom;
 		if(Entities.camera.vanityMode)
 			cameraInfo += " (vanity)";
-		text.drawString(3, 135, cameraInfo, Color.blue);
+		ConsoleManager.font.drawString(3, 135, cameraInfo, Color.blue);
 
-		text.drawString(DisplayHelper.windowWidth - 70, text.getDescent() + 5,
+		ConsoleManager.font.drawString(DisplayHelper.windowWidth - 70, ConsoleManager.font.getDescent() + 5,
 				currentFPS + " fps");
 
 
@@ -79,16 +76,8 @@ public class Debug {
 		updateFPS();
 
 		// initialize the font if this is the first draw
-		if (text == null) {
-			try {
-				text = new UnicodeFont("res/VeraMono.ttf", 15, false, false);
-				text.addAsciiGlyphs();
-				text.getEffects().add(new ColorEffect(java.awt.Color.WHITE));
-				text.loadGlyphs();
-			} catch (SlickException e) {
-				System.out.println("Error initializing font!!!");
-				e.printStackTrace();
-			}
+		if (ConsoleManager.font == null) {
+			ConsoleManager.checkForInit();
 		}
 		
 		if(rectangleCallList == 0){

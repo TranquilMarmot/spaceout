@@ -26,12 +26,12 @@ public class Player extends Entity {
 		ySpeed = 0.0f;
 		zSpeed = 0.0f;
 
-		maxZSpeed = 20.0f;
-		zAccel = 0.01f;
-		maxXSpeed = 20.0f;
-		xAccel = 0.01f;
-		maxYSpeed = 20.0f;
-		yAccel = 0.01f;
+		maxZSpeed = 50.0f;
+		zAccel = 0.05f;
+		maxXSpeed = 50.0f;
+		xAccel = 0.05f;
+		maxYSpeed = 50.0f;
+		yAccel = 0.05f;
 	}
 
 	@Override
@@ -122,8 +122,14 @@ public class Player extends Entity {
 			GL11.glMultMatrix(rotationBuffer);
 
 			// rotate so that the model is facing the right way
+			/*
+			 * For the monkey ship
 			GL11.glRotatef(-165.0f, 1.0f, 0.0f, 0.0f);
 			GL11.glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
+			*/
+			
+			GL11.glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
+			GL11.glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 			// draw the model
 			GL11.glCallList(ModelHandler.getCallList(model));
 		}
