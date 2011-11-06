@@ -1,0 +1,91 @@
+<Entities>
+	<Player>
+		<x>-125.0f</x>
+		<y>0.0f</y>
+		<z>-1496500.0f</z>
+		<yaw>0.0f</yaw>
+		<pitch>0.0f</pitch>
+		<roll>0.0f</roll>
+		<model>ARROW</model>
+	</Player>
+	
+	<Debris>
+		<numStars>500</numStars>
+		<range>50000.0f</range>
+		<seed>420133742L</seed>
+	</Debris>
+	
+	<Skybox>
+		<size>4999000.0f</size>
+		<yaw>90.0f</yaw>
+		<pitch>0.0f</pitch>
+		<roll>0.0f</roll>
+		<texture>STARS</texture>
+	</Skybox>
+	
+	<Sun>
+		<x>0.0f</x>
+		<y>0.0f</y>
+		<z>0.0f</z>
+		<size>69550.0f</size>
+		<color>1.0f,1.0f,0.3f</color>
+		<lightAmbient>1.0f,1.0f,1.0f</lightAmbient>
+		<lightDiffuse>1.0f,1.0f,1.0f</lightDiffuse>
+	</Sun>
+	
+	<Planet>
+		<name>Earth</name>
+		<size>63.781f</size>
+		<x>-125.0f</x>
+		<y>0.0f</y>
+		<z>-1496000.0f</z>
+		<yaw>90.0f</yaw>
+		<pitch>0.0f</pitch>
+		<roll>0.0f</roll>
+		<dxrot>0.0f</dxrot>
+		<dyrot>0.0f</dyrot>
+		<dzrot>0.15f</dzrot>
+	</Planet>
+	
+	<Planet>
+		<name>Mercury</name>
+		<size>24.3971f</size>
+		<x>125.0f</x>
+		<y>0.0f</y>
+		<z>598000.0f</z>
+		<yaw>90.0f</yaw>
+		<pitch>0.0f</pitch>
+		<roll>0.0f</roll>
+		<dxrot>0.0f</dxrot>
+		<dyrot>0.0f</dyrot>
+		<dzrot>0.15f</dzrot>
+	</Planet>
+	
+	<Planet>
+		<name>Venus</name>
+		<size>60.518f</size>
+		<x>225.0f</x>
+		<y>0.0f</y>
+		<z>1050000.0f</z>
+		<yaw>90.0f</yaw>
+		<pitch>0.0f</pitch>
+		<roll>0.0f</roll>
+		<dxrot>0.0f</dxrot>
+		<dyrot>0.0f</dyrot>
+		<dzrot>0.15f</dzrot>
+	</Planet>
+	
+	<Planet>
+		<name>Mars</name>
+		<size>33.962f</size>
+		<x>125.0f</x>
+		<y>0.0f</y>
+		<z>-2240000.0f</z>
+		<yaw>90.0f</yaw>
+		<pitch>0.0f</pitch>
+		<roll>0.0f</roll>
+		<dxrot>0.0f</dxrot>
+		<dyrot>0.0f</dyrot>
+		<dzrot>0.15f</dzrot>
+	</Planet>	
+</Entities>

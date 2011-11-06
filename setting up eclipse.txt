@@ -1,0 +1,13 @@
+- First, go to File -> New -> Java Project. Name it 'Spaceout'. Or don't, whatever. It doesn't really matter.
+- Select the 'src' folder in the Package Explorer and delete it.
+- Now, right-click the project and select 'Properties'. Go to the 'Java Build Path' menu and flip over to the 'Source' tab
+- Click 'Link Source...', then browse for the 'src' folder in the Dropbox 'Spaceout' folder. Just click finish and ignore the other settings. Now the 'src' folder from the Dropbox should show up in your project with all the glorious, glorious source code (you might have to refresh you Package Explorer)
+-Now, to set up LWJGL and Slick utils (LWJGL handles all the OpenGL and OpenAL calls, as well as keyboard and mouse input. Slick utils are for image loading.)
+- While still in the 'Java Build Path' menu, flip to the 'Libraries' tab
+- Click on 'Add External JARs...' and then browse to the 'lib' folder in the Dropbox 'Spaceout' folder
+- From the 'lwjgl-2.7.1/jar' folder, you need to add: lwjgl.jar, lwjgl_util.jar
+- From the 'slick/lib' folder, you need to add: slick.jar
+-After those are added, click on the little arrow next to 'lwjgl.jar'. Select 'Native library location' in the drop-down menu
+-Click 'Edit...' and then browse to'lwjgl-2.7.1/native'. Select the folder the corresponds to your OS
+
+- Sadly, we can't link resources this way (textures, models, sounds, etc.) So just copy the 'res' (resources) folder from the Dropbox and plop it into your Eclipse workspace project folder (the folder where the 'bin' folder is)

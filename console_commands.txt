@@ -1,0 +1,32 @@
+These are the valid console commands. Any input to the console starting with a / is interpreted as a command.
+
+xyz/position (number) (number) (number)
+	Moves the player to the given vector
+	
+speed (number)
+	Changes how fast the player moves
+	
+camera (command)
+	zoom (number)
+		zooms the camera to the given number
+	xOffset(number)
+		offsets the camera on the x axis by the given number
+	yOffset(number)
+		offsets the camera on the y axis by the given number
+	
+listentities
+	Lists all the current entities
+	
+warp (entity)
+	Warps the player to the given entity (get available entities with 'listentities')
+	
+clear
+	Clears the console screen
+	
+exit/quit
+	Instantly ends the game and closes the window
+	
+beer
+	99 bottles of beer on the wall (You know... for science!)
+	
+

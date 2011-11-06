@@ -1,0 +1,103 @@
+package util.helper;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
+
+public class TextureHandler {
+	private static Texture earth;
+	private static Texture stars;
+	private static Texture white;
+	private static Texture checkers;
+	private static Texture mercury;
+	private static Texture venus;
+	private static Texture mars;
+
+	public static final int EARTH = 0;
+	public static final int STARS = 1;
+	public static final int WHITE = 2;
+	public static final int CHECKERS = 3;
+	public static final int MERCURY = 4;
+	public static final int VENUS = 5;
+	public static final int MARS = 6;
+
+	public static Texture getTexture(int texture) {
+		switch (texture) {
+		case EARTH:
+			if (earth == null)
+				initTexture(EARTH);
+			return earth;
+		case STARS:
+			if (stars == null)
+				initTexture(STARS);
+			return stars;
+		case WHITE:
+			if (white == null)
+				initTexture(WHITE);
+			return white;
+		case CHECKERS:
+			if (checkers == null)
+				initTexture(CHECKERS);
+			return checkers;
+		case MERCURY:
+			if(mercury == null)
+				initTexture(MERCURY);
+			return mercury;
+		case VENUS:
+			if(venus == null)
+				initTexture(VENUS);
+			return venus;
+		case MARS:
+			if(mars == null)
+				initTexture(MARS);
+			return mars;
+		default:
+			return null;
+		}
+	}
+
+	public static void initTexture(int texture) {
+		try {
+			switch (texture) {
+			case EARTH:
+				earth = TextureLoader.getTexture("JPG", new FileInputStream(
+						"res/earthbig.jpg"), true, GL11.GL_LINEAR);
+				break;
+			case STARS:
+				stars = TextureLoader.getTexture("JPG", new FileInputStream(
+						"res/stars.jpg"), true, GL11.GL_LINEAR);
+				break;
+			case WHITE:
+				white = TextureLoader.getTexture("BMP", new FileInputStream(
+						"res/white.bmp"), true, GL11.GL_LINEAR);
+				break;
+			case CHECKERS:
+				checkers = TextureLoader.getTexture("BMP", new FileInputStream(
+						"res/checkers.bmp"), true, GL11.GL_LINEAR);
+				break;
+			case MERCURY:
+				mercury = TextureLoader.getTexture("JPG", new FileInputStream(
+						"res/mercury.jpg"), true, GL11.GL_LINEAR);
+				break;
+			case VENUS:
+				venus = TextureLoader.getTexture("JPG", new FileInputStream(
+						"res/venus.jpg"), true, GL11.GL_LINEAR);
+				break;
+			case MARS:
+				mars = TextureLoader.getTexture("JPG", new FileInputStream(
+						"res/mars.jpg"), true, GL11.GL_LINEAR);
+				break;
+			default:
+				System.out.println("Error creating texture! Parameter "
+						+ texture
+						+ " doesn't match any known texture (TextureHandler)");
+				break;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+}
