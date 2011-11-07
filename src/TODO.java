@@ -1,4 +1,15 @@
 /*
+ * Collision branch TODO
+ * TODO Check out JBullet!!!!!
+ * Maybe do these:
+ * TODO Tweak the model loader so that you can give it a scale to load in a file at
+ * TODO When the model loader building the object from the file, it needs to keep track of all the min/max x/y/z coordinates
+ * TODO Those min/max coordinates will then be used to make the bounding box for the object
+ * TODO Find a way to rotate those boxes with the quaternions (there's equations for it)
+ * TODO Find out how to see if two boxes have hit each other
+ * TODO Although this method will be pretty accurate, it will also probably be slow (also geared toward static objects). Look into more scholarly collision detection methods
+ * TODO Might even be good to get help from a library specifically made for collision detection
+ *
  * In sort of order of importance:
  * TODO Enhance acceleration. Make it so that everything slows down at the same speed.
  * TODO Also, the acceleration is not rotation independent. I.E. if you look down and speed up forward, then stop accelerating and look somewhere else, 

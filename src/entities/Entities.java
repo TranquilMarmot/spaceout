@@ -9,6 +9,7 @@ public class Entities {
 	public static Camera camera;
 	public static ArrayList<Entity> entities = new ArrayList<Entity>();
 	public static ArrayList<Light> lights = new ArrayList<Light>();
+	public static ArrayList<Entity> addBuffer = new ArrayList<Entity>();
 	
 	/**
 	 * Gets the distance between two entities

@@ -1,6 +1,7 @@
 package util;
 
 import java.nio.FloatBuffer;
+import java.util.Iterator;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Mouse;
@@ -237,9 +238,22 @@ public class Runner {
 			for (Light l : Entities.lights) {
 				l.draw();
 			}
+			
+			Iterator<Entity> entityIterator = Entities.entities.iterator();
 
 			/* BEGIN ENTITY DRAWING */
-			for (Entity ent : Entities.entities) {
+			//for (Entity ent : Entities.entities) {
+			if(!Entities.addBuffer.isEmpty()){
+				Iterator<Entity> addIterator = Entities.addBuffer.iterator();
+				while(addIterator.hasNext()){
+					Entity ent = addIterator.next();
+					Entities.entities.add(ent);
+					addIterator.remove();
+				}
+			}
+			while(entityIterator.hasNext()) {
+				//FIXME concurrent modification exception
+				Entity ent = entityIterator.next();
 				// update the entity if we're not paused
 				ent.update();
 				float transx = Entities.camera.location.x - ent.location.x;

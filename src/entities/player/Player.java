@@ -12,9 +12,11 @@ import util.helper.QuaternionHelper;
 import util.helper.TextureHandler;
 import entities.Entities;
 import entities.Entity;
+import entities.weapons.bullets.LaserBullet;
 
 public class Player extends Entity {
 	private int model = ModelHandler.SHIP1;
+	private boolean button1Down = false;
 
 	public Player() {
 		super();
@@ -109,6 +111,17 @@ public class Player extends Entity {
 				rotateZ(-delta / 10.0f);
 			if (rollLeft)
 				rotateZ(delta / 10.0f);
+			
+			//TODO
+			if(MouseHandler.button0 && !button1Down){
+				LaserBullet bullet = new LaserBullet(this.location.x, this.location.y, this.location.z, this.rotation);
+				Entities.addBuffer.add(bullet);
+				button1Down = true;
+			}
+			
+			if(!MouseHandler.button0){
+				button1Down = false;
+			}
 		}
 	}
 
