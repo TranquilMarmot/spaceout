@@ -13,7 +13,7 @@ import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
-import util.console.ConsoleManager;
+import util.debug.console.ConsoleManager;
 
 public class Screenshot {
 	static int screenshotWidth, screenshotHeight;

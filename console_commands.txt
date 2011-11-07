@@ -3,8 +3,13 @@ These are the valid console commands. Any input to the console starting with a /
 xyz/position (number) (number) (number)
 	Moves the player to the given vector
 	
-speed (number)
-	Changes how fast the player moves
+speed (variable) (newvalue)
+	maxX/xMax or maxY/yMax or maxZ/zMax
+		Changes max speed on a given axis
+	xAcel/acelX or yAcel/acelY or zAcel/acelZ
+		Changes acceleration rate along a given axis
+	xDecel/decelX or yDecel/decelY or zDecel/decelZ
+		Changes deceleration rate along a given axis
 	
 camera (command)
 	zoom (number)
@@ -16,6 +21,9 @@ camera (command)
 	
 listentities
 	Lists all the current entities
+
+numentities
+	Prints out the number of entities
 	
 warp (entity)
 	Warps the player to the given entity (get available entities with 'listentities')

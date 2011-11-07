@@ -1,4 +1,4 @@
-package util.console;
+package util.debug.console;
 
 import java.util.ArrayList;
 
@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.UnicodeFont;
 
+import util.debug.Debug;
 import util.helper.DisplayHelper;
 import util.helper.MouseHandler;
 import util.helper.TextureHandler;

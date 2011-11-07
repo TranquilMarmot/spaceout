@@ -1,4 +1,4 @@
-package util.console;
+package util.debug.console;
 
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
@@ -34,8 +34,13 @@ public class ConsoleCommands {
 			}
 
 			else if (command.equals("listentities")) {
+				console.print("Listing entities...");
 				for (entities.Entity ent : Entities.entities)
 					console.print(ent.type);
+			}
+
+			else if (command.equals("numentities")) {
+				console.print("Number of entities: " + Entities.entities.size());
 			}
 
 			else if (command.equals("beer")) {
@@ -58,9 +63,7 @@ public class ConsoleCommands {
 
 			else if (command.equals("warp")) {
 				warpCommand(toker);
-			}
-
-			else {
+			} else {
 				console.print("Invalid command! (" + command + ")");
 			}
 		} catch (NoSuchElementException e) {
@@ -99,12 +102,39 @@ public class ConsoleCommands {
 	}
 
 	private static void speedCommand(StringTokenizer toker) {
-		float speed = Float.parseFloat(toker.nextToken());
-		float oldSpeed = Entities.player.zSpeed;
-
-		ConsoleManager.console.print("Changing player speed from " + oldSpeed + " to "
-				+ speed);
-		Entities.player.zSpeed = speed;
+		String speedCommand = toker.nextToken().toLowerCase();
+		Float speedChange = Float.parseFloat(toker.nextToken());
+		
+		if(speedCommand.equals("maxx") || speedCommand.equals("xmax")){
+			console.print("Changing player max X speed from " + Entities.player.maxXSpeed + " to " + speedChange);
+			Entities.player.maxXSpeed = speedChange;
+		} else if(speedCommand.equals("maxy") || speedCommand.equals("ymax")){
+			console.print("Changing player max Y speed from " + Entities.player.maxYSpeed + " to " + speedChange);
+			Entities.player.maxYSpeed = speedChange;
+		} else if(speedCommand.equals("maxz") || speedCommand.equals("zmax")){
+			console.print("Changing player max Z speed from " + Entities.player.maxZSpeed + " to " + speedChange);
+			Entities.player.maxZSpeed = speedChange;
+		} else if(speedCommand.equals("accelx") || speedCommand.equals("xaccel")){
+			console.print("Changing player X acceleration from " + Entities.player.xAccel + " to " + speedChange);
+			Entities.player.xAccel = speedChange;
+		} else if(speedCommand.equals("accely") || speedCommand.equals("yaccel")){
+			console.print("Changing player Y acceleration from " + Entities.player.yAccel + " to " + speedChange);
+			Entities.player.yAccel = speedChange;
+		} else if(speedCommand.equals("accelz") || speedCommand.equals("zaccel")){
+			console.print("Changing player Z acceleration from " + Entities.player.zAccel + " to " + speedChange);
+			Entities.player.zAccel = speedChange;
+		} else if(speedCommand.equals("decelx") || speedCommand.equals("xdecel")){
+			console.print("Changing player X deceleration from " + Entities.player.xDecel + " to " + speedChange);
+			Entities.player.xDecel = speedChange;
+		} else if(speedCommand.equals("decely") || speedCommand.equals("ydecel")){
+			console.print("Changing player Y deceleration from " + Entities.player.yDecel + " to " + speedChange);
+			Entities.player.yDecel = speedChange;
+		} else if(speedCommand.equals("decelz") || speedCommand.equals("zdecel")){
+			console.print("Changing player Z deceleration from " + Entities.player.zDecel + " to " + speedChange);
+			Entities.player.zDecel = speedChange;
+		} else{
+			console.print("Not a valid speed command!");
+		}
 	}
 
 	private static void cameraCommand(StringTokenizer toker) {

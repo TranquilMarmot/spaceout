@@ -9,7 +9,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import util.console.ConsoleManager;
+import util.debug.console.ConsoleManager;
 import util.helper.QuaternionHelper;
 import util.helper.TextureHandler;
 import entities.Entity;

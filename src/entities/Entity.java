@@ -5,7 +5,7 @@ import java.nio.FloatBuffer;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-import util.console.Debug;
+import util.debug.Debug;
 import util.helper.QuaternionHelper;
 import util.helper.TextureHandler;
 

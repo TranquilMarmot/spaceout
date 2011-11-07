@@ -1,4 +1,4 @@
-package util.console;
+package util.debug;
 
 import java.util.Formatter;
 
@@ -9,6 +9,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
+import util.debug.console.ConsoleManager;
 import util.helper.DisplayHelper;
 import util.helper.TextureHandler;
 import entities.Entities;
@@ -28,7 +29,7 @@ public class Debug {
 	
 	private static int rectangleCallList = 0;
 
-	protected static void drawDebugInfo() {
+	public static void drawDebugInfo() {
 		
 		GL11.glCallList(rectangleCallList);
 		
@@ -67,7 +68,7 @@ public class Debug {
 	 * Initialize's Debug's objects as needed
 	 */
 	@SuppressWarnings("unchecked")
-	protected static void checkForInit() {
+	public static void checkForInit() {
 		// initialize variables if this is the first draw
 		if (lastFrame == null)
 			lastFrame = getTime();
@@ -113,7 +114,7 @@ public class Debug {
 		long time = getTime();
 		int delta = (int) (time - lastFrame);
 		lastFrame = time;
-
+		
 		return delta;
 	}
 

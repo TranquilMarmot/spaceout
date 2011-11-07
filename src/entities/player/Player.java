@@ -16,7 +16,7 @@ import entities.weapons.bullets.LaserBullet;
 
 public class Player extends Entity {
 	private int model = ModelHandler.SHIP1;
-	private boolean button1Down = false;
+	private boolean button0Down = false;
 
 	public Player() {
 		super();
@@ -112,15 +112,15 @@ public class Player extends Entity {
 			if (rollLeft)
 				rotateZ(delta / 10.0f);
 			
-			//TODO
-			if(MouseHandler.button0 && !button1Down){
+			// shoot bullets if the player clicked
+			if(MouseHandler.button0 && !button0Down){
 				LaserBullet bullet = new LaserBullet(this.location.x, this.location.y, this.location.z, this.rotation);
 				Entities.addBuffer.add(bullet);
-				button1Down = true;
+				button0Down = true;
 			}
 			
 			if(!MouseHandler.button0){
-				button1Down = false;
+				button0Down = false;
 			}
 		}
 	}
@@ -148,6 +148,7 @@ public class Player extends Entity {
 			
 			GL11.glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
 			GL11.glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+			
 			// draw the model
 			GL11.glCallList(ModelHandler.getCallList(model));
 		}

@@ -2,7 +2,7 @@ package util.helper;
 
 import org.lwjgl.input.Keyboard;
 
-import util.console.ConsoleManager;
+import util.debug.console.ConsoleManager;
 
 public class KeyboardHandler {
 	// These allow for controls to easily be changed (just change the key for

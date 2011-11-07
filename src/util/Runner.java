@@ -9,7 +9,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
-import util.console.ConsoleManager;
+import util.debug.console.ConsoleManager;
 import util.helper.DisplayHelper;
 import util.helper.KeyboardHandler;
 import util.helper.MouseHandler;

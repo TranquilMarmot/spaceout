@@ -2,7 +2,7 @@ package util.helper;
 
 import org.lwjgl.input.Mouse;
 
-import util.console.ConsoleManager;
+import util.debug.console.ConsoleManager;
 
 public class MouseHandler {
 	/** whether or not button 0 is being pressed */

@@ -4,7 +4,7 @@ import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 import util.Runner;
-import util.console.ConsoleManager;
+import util.debug.console.ConsoleManager;
 import util.helper.KeyboardHandler;
 import util.helper.MouseHandler;
 
