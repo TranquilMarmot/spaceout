@@ -2,8 +2,7 @@
  * Collision branch TODO
  * TODO Check out JBullet!!!!!
  * Maybe do these:
- * TODO Tweak the model loader so that you can give it a scale to load in a file at
- * TODO When the model loader building the object from the file, it needs to keep track of all the min/max x/y/z coordinates
+ * TODO When the model loader is building the object from the file, it needs to keep track of all the min/max x/y/z coordinates
  * TODO Those min/max coordinates can then be used to make the bounding box for the object
  * TODO Find a way to rotate those boxes with the quaternions (there's equations for it)
  * TODO Find out how to see if two boxes have hit each other
@@ -35,6 +34,7 @@
  * -TODO Save chat/console history to text file
  * -TODO Chat color parsing
  * -TODO Make ctrl+v work with the console
+ * -TODO If you're looking at an earlier line in the console, then submit something, it should jump back to the bottom
  * TODO XML
  * -TODO Figure out how to write to XML files
  * -TODO Store all options in XML files

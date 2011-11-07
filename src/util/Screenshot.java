@@ -13,7 +13,7 @@ import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
-import util.debug.console.ConsoleManager;
+import util.debug.DebugManager;
 
 public class Screenshot {
 	static int screenshotWidth, screenshotHeight;
@@ -64,7 +64,7 @@ public class Screenshot {
 		 try {
 			file.createNewFile();
 		 	ImageIO.write(image, fileFormat, file);
-		 	ConsoleManager.console.print("Saved screenshot to " + file.getAbsolutePath());
+		 	DebugManager.console.print("Saved screenshot to " + file.getAbsolutePath());
 		 } catch (IOException e) { 
 			 System.out.println("Error writing screenshot to " + file.getAbsolutePath() + "\nMaybe the folder doesn't exist?");
 		}

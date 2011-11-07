@@ -6,10 +6,11 @@ import java.util.StringTokenizer;
 import org.lwjgl.util.vector.Vector3f;
 
 import util.Runner;
+import util.debug.DebugManager;
 import entities.Entities;
 
 public class ConsoleCommands {
-	private static Console console = ConsoleManager.console;
+	private static Console console = DebugManager.console;
 
 	public static void issueCommand(String comm) {
 		// split the command at the spaces

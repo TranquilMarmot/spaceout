@@ -27,10 +27,10 @@ public class ModelHandler {
 	private static void initModel(int model){
 		switch(model){
 		case SHIP1:
-			ship1List = ModelLoader.loadPlyFile(MODEL_PATH + "ships/ship1.ply").get(0);
+			ship1List = ModelLoader.loadPlyFile(MODEL_PATH + "ships/ship1.ply", 0.5f).get(0);
 			break;
 		case LASERBULLET:
-			laserbulletList = ModelLoader.loadPlyFile(MODEL_PATH + "laserbullet.ply").get(0);
+			laserbulletList = ModelLoader.loadPlyFile(MODEL_PATH + "laserbullet.ply", 1.0f).get(0);
 			break;
 		}
 	}

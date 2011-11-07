@@ -2,7 +2,7 @@ package util.helper;
 
 import org.lwjgl.input.Keyboard;
 
-import util.debug.console.ConsoleManager;
+import util.debug.DebugManager;
 
 public class KeyboardHandler {
 	// These allow for controls to easily be changed (just change the key for
@@ -79,7 +79,7 @@ public class KeyboardHandler {
 							chat = true;
 					}/* END ALWAYS CHECKED KEYS */
 
-					if (!ConsoleManager.consoleOn) {
+					if (!DebugManager.consoleOn) {
 						/* BEGIN CONTROL KEYS */
 						if (eventKey == forwardKey)
 							forward = true;
@@ -106,7 +106,7 @@ public class KeyboardHandler {
 						if (!Character.isIdentifierIgnorable(c)
 								&& !c.equals('`') && !c.equals('\n')
 								&& !c.equals('\r')) {
-							ConsoleManager.console.putCharacter(c);
+							DebugManager.console.putCharacter(c);
 						}
 						/* END CONSOLE INPUT */
 					}

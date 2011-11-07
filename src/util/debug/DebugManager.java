@@ -1,4 +1,4 @@
-package util.debug.console;
+package util.debug;
 
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.SlickException;
@@ -6,11 +6,11 @@ import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
 import util.Screenshot;
-import util.debug.Debug;
+import util.debug.console.Console;
 import util.helper.DisplayHelper;
 import util.helper.KeyboardHandler;
 
-public class ConsoleManager {
+public class DebugManager {
 	private static final String FONT_PATH = "res/fonts/";
 
 	// whether or not the console is up
@@ -79,7 +79,7 @@ public class ConsoleManager {
 	private static void updateKeys() {
 		// handle the debug button
 		if (KeyboardHandler.debug && !debugDown) {
-			ConsoleManager.displayDebug = !ConsoleManager.displayDebug;
+			DebugManager.displayDebug = !DebugManager.displayDebug;
 			debugDown = true;
 		}
 
@@ -88,7 +88,7 @@ public class ConsoleManager {
 		}
 
 		if (KeyboardHandler.console && !consoleDown) {
-			ConsoleManager.consoleOn = !ConsoleManager.consoleOn;
+			DebugManager.consoleOn = !DebugManager.consoleOn;
 			autoClose = false;
 			consoleDown = true;
 		}	

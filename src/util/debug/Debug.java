@@ -5,11 +5,7 @@ import java.util.Formatter;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.UnicodeFont;
-import org.newdawn.slick.font.effects.ColorEffect;
 
-import util.debug.console.ConsoleManager;
 import util.helper.DisplayHelper;
 import util.helper.TextureHandler;
 import entities.Entities;
@@ -46,19 +42,18 @@ public class Debug {
 		 * Entities.player.pitch, Entities.player.roll);
 		 */
 		// draw the text
-		ConsoleManager.font.drawString(3, 3, coords.toString(), Color.cyan);
-		ConsoleManager.font.drawString(3, 59, "quatX: " + Entities.player.rotation.x
+		DebugManager.font.drawString(3, 3, coords.toString(), Color.cyan);
+		DebugManager.font.drawString(3, 59, "quatX: " + Entities.player.rotation.x
 				+ "\nquatY: " + Entities.player.rotation.y + "\nquatZ: "
 				+ Entities.player.rotation.z + "\nquatW: "
 				+ Entities.player.rotation.w, new Color(0, 123, 255));
-		// text.drawString(10, 74, rots.toString());
 
 		String cameraInfo = "zoom: " + Entities.camera.zoom;
 		if(Entities.camera.vanityMode)
 			cameraInfo += " (vanity)";
-		ConsoleManager.font.drawString(3, 135, cameraInfo, Color.blue);
+		DebugManager.font.drawString(3, 135, cameraInfo, Color.blue);
 
-		ConsoleManager.font.drawString(DisplayHelper.windowWidth - 70, ConsoleManager.font.getDescent() + 5,
+		DebugManager.font.drawString(DisplayHelper.windowWidth - 70, DebugManager.font.getDescent() + 5,
 				currentFPS + " fps");
 
 
@@ -67,7 +62,6 @@ public class Debug {
 	/**
 	 * Initialize's Debug's objects as needed
 	 */
-	@SuppressWarnings("unchecked")
 	public static void checkForInit() {
 		// initialize variables if this is the first draw
 		if (lastFrame == null)
@@ -77,8 +71,8 @@ public class Debug {
 		updateFPS();
 
 		// initialize the font if this is the first draw
-		if (ConsoleManager.font == null) {
-			ConsoleManager.checkForInit();
+		if (DebugManager.font == null) {
+			DebugManager.checkForInit();
 		}
 		
 		if(rectangleCallList == 0){

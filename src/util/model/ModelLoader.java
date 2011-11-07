@@ -14,11 +14,28 @@ import util.model.geom.Triangle;
 
 public class ModelLoader {
 	/**
-	 * Loads in vertices from an external file to an Model, which has a display list for the vertices
-	 * @param file The file to load the Model from
+	 * Loads in vertices from an external file to an Model, which has a display
+	 * list for the vertices
+	 * 
+	 * @param file
+	 *            The file to load the Model from
 	 * @return An ArrayList containing all the Models found in the file
 	 */
 	public static ArrayList<Integer> loadPlyFile(String file) {
+		return loadPlyFile(file, 1.0f);
+	}
+
+	/**
+	 * Loads in vertices from an external file to an Model, which has a display
+	 * list for the vertices
+	 * 
+	 * @param file
+	 *            The file to load the Model from
+	 * @param scale
+	 *            The scale to load the model in at
+	 * @return An ArrayList containing all the Models found in the file
+	 */
+	public static ArrayList<Integer> loadPlyFile(String file, float scale) {
 		ArrayList<Integer> models = new ArrayList<Integer>();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -34,8 +51,9 @@ public class ModelLoader {
 					StringTokenizer toker = new StringTokenizer(line, " ");
 					// skip 'element'
 					toker.nextElement();
-					
-					//figure out whether we're getting number of vertices or number of faces
+
+					// figure out whether we're getting number of vertices or
+					// number of faces
 					String type = toker.nextToken();
 					if (type.equals("vertex")) {
 						numVertices = Integer.parseInt(toker.nextToken());
@@ -44,11 +62,12 @@ public class ModelLoader {
 					}
 				}
 
-				//these ArrayLists hold all the vertices and normals (there is a normal for every vertex)	
+				// these ArrayLists hold all the vertices and normals (there is
+				// a normal for every vertex)
 				float[][] vertices = new float[numVertices][3];
 				float[][] normals = new float[numVertices][3];
 
-				//this array holds all the faces
+				// this array holds all the faces
 				Face[] faces = new Face[numFaces];
 
 				// skip the rest of the header
@@ -64,7 +83,11 @@ public class ModelLoader {
 					float x = Float.parseFloat(toker.nextToken());
 					float y = Float.parseFloat(toker.nextToken());
 					float z = Float.parseFloat(toker.nextToken());
-					
+
+					x *= scale;
+					y *= scale;
+					z *= scale;
+
 					float[] vertex = { x, y, z };
 					vertices[i] = vertex;
 
@@ -72,7 +95,11 @@ public class ModelLoader {
 					float nx = Float.parseFloat(toker.nextToken());
 					float ny = Float.parseFloat(toker.nextToken());
 					float nz = Float.parseFloat(toker.nextToken());
-					
+
+					nx *= scale;
+					ny *= scale;
+					nz *= scale;
+
 					float[] normal = { nx, ny, nz };
 					normals[i] = normal;
 				}
@@ -82,42 +109,48 @@ public class ModelLoader {
 					line = reader.readLine();
 
 					StringTokenizer toker = new StringTokenizer(line, " ");
-					
+
 					// grab the number of vertices
 					int numFaceVertices = Integer.parseInt(toker.nextToken());
-					
+
 					Face f = null;
-					
-					// create a triangle or a quad based on the number of vertices
-					if(numFaceVertices == 3)
+
+					// create a triangle or a quad based on the number of
+					// vertices
+					if (numFaceVertices == 3)
 						f = new Triangle();
-					else if(numFaceVertices == 4)
+					else if (numFaceVertices == 4)
 						f = new Quad();
 					else
-						System.out.println("Error reading in number of face vertices!");
-					
+						System.out
+								.println("Error reading in number of face vertices!");
+
 					// loop through all the face's vertices
-					for(int j = 0; j < numFaceVertices; j++){
+					for (int j = 0; j < numFaceVertices; j++) {
 						// grab which vertex we need
 						int v = Integer.parseInt(toker.nextToken());
-						
-						//set the vertex and normal for the face
+
+						// set the vertex and normal for the face
 						f.vertices[j] = vertices[v];
 						f.normals[j] = normals[v];
 					}
 
 					faces[i] = f;
 				}
-				
-				// create the Model for all those faces; the display list is created with the Model
+
+				// create the Model for all those faces; the display list is
+				// created with the Model
 				int list = GL11.glGenLists(1);
-				
-				// fill up the display list with all the instructions for drawing the faces
-				GL11.glNewList(list, GL11.GL_COMPILE);{
-					for(Face f : faces){
+
+				// fill up the display list with all the instructions for
+				// drawing the faces
+				GL11.glNewList(list, GL11.GL_COMPILE);
+				{
+					for (Face f : faces) {
 						f.draw();
 					}
-				} GL11.glEndList();
+				}
+				GL11.glEndList();
 
 				models.add(list);
 			}
@@ -128,13 +161,11 @@ public class ModelLoader {
 
 		return models;
 	}
-	
-	
-	
+
 	public static ArrayList<Integer> loadObjFile(String file) {
-		//TODO this is TOTALLY incomplete, should be finished
+		// TODO this is TOTALLY incomplete, should be finished
 		ArrayList<Integer> Models = new ArrayList<Integer>();
-		
+
 		ArrayList<float[]> vertices = new ArrayList<float[]>();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -147,22 +178,22 @@ public class ModelLoader {
 					int list = GL11.glGenLists(1);
 
 					Models.add(list);
-					
-					//grab all the vertices for the current Model
-					while((line = reader.readLine()).startsWith("v")){
+
+					// grab all the vertices for the current Model
+					while ((line = reader.readLine()).startsWith("v")) {
 						StringTokenizer toker = new StringTokenizer(line, " ");
 						// skip the v
 						toker.nextToken();
-						
+
 						float x = Float.parseFloat(toker.nextToken());
 						float y = Float.parseFloat(toker.nextToken());
 						float z = Float.parseFloat(toker.nextToken());
-						
+
 						float[] vertex = { x, y, z };
 						vertices.add(vertex);
 					}
-					
-					//now grab all the faces
+
+					// now grab all the faces
 				}
 			}
 		} catch (IOException e) {

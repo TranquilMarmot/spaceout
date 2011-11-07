@@ -35,7 +35,7 @@ public abstract class Entity {
 	public int texture = TextureHandler.WHITE;
 
 	/** the last time that this entity was updated */
-	private static long lastUpdate;
+	protected long lastUpdate;
 
 	public Entity() {
 		location = new Vector3f(0.0f, 0.0f, 0.0f);
@@ -248,7 +248,7 @@ public abstract class Entity {
 	 * 
 	 * @return The time passed since the last frame
 	 */
-	protected static int getDelta() {
+	protected int getDelta() {
 		long time = Debug.getTime();
 		int delta = (int) (time - lastUpdate);
 		lastUpdate = time;

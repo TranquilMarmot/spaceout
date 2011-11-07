@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 
 import util.Runner;
+import util.debug.DebugManager;
 import util.helper.KeyboardHandler;
 import util.helper.ModelHandler;
 import util.helper.MouseHandler;
@@ -31,11 +32,11 @@ public class Player extends Entity {
 		maxZSpeed = 75.0f;
 		zAccel = 0.07f;
 		zDecel = 0.04f;
-		
+
 		maxXSpeed = 75.0f;
 		xAccel = 0.07f;
 		xDecel = 0.04f;
-		
+
 		maxYSpeed = 75.0f;
 		yAccel = 0.07f;
 		yDecel = 0.04f;
@@ -67,7 +68,7 @@ public class Player extends Entity {
 			} else if (zSpeed != 0) {
 				decelerateZ(delta);
 			}
-			
+
 			moveZ(zSpeed);
 
 			// control strafing left and right
@@ -78,24 +79,24 @@ public class Player extends Entity {
 				if (right) {
 					accelerateXNeg(delta);
 				}
-			} else if (xSpeed != 0){
+			} else if (xSpeed != 0) {
 				decelerateX(delta);
 			}
-			
+
 			moveX(xSpeed);
 
 			// handle going up/down
 			boolean up = KeyboardHandler.ascend;
 			boolean down = KeyboardHandler.descend;
-			if(up || down) {
-			if (up)
-				accelerateYNeg(delta);
-			if (down)
-				accelerateYPos(delta);
-			} else if(ySpeed != 0){
+			if (up || down) {
+				if (up)
+					accelerateYNeg(delta);
+				if (down)
+					accelerateYPos(delta);
+			} else if (ySpeed != 0) {
 				decelerateY(delta);
 			}
-			
+
 			moveY(ySpeed);
 
 			// apply any rotation changes
@@ -111,15 +112,17 @@ public class Player extends Entity {
 				rotateZ(-delta / 10.0f);
 			if (rollLeft)
 				rotateZ(delta / 10.0f);
-			
+
 			// shoot bullets if the player clicked
-			if(MouseHandler.button0 && !button0Down){
-				LaserBullet bullet = new LaserBullet(this.location.x, this.location.y, this.location.z, this.rotation);
+			if (MouseHandler.button0 && !button0Down
+					&& !(DebugManager.consoleOn)) {
+				LaserBullet bullet = new LaserBullet(this.location.x,
+						this.location.y, this.location.z, this.rotation);
 				Entities.addBuffer.add(bullet);
 				button0Down = true;
 			}
-			
-			if(!MouseHandler.button0){
+
+			if (!MouseHandler.button0) {
 				button0Down = false;
 			}
 		}
@@ -141,14 +144,13 @@ public class Player extends Entity {
 
 			// rotate so that the model is facing the right way
 			/*
-			 * For the monkey ship
-			GL11.glRotatef(-165.0f, 1.0f, 0.0f, 0.0f);
-			GL11.glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
-			*/
-			
+			 * For the monkey ship GL11.glRotatef(-165.0f, 1.0f, 0.0f, 0.0f);
+			 * GL11.glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
+			 */
+
 			GL11.glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
 			GL11.glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-			
+
 			// draw the model
 			GL11.glCallList(ModelHandler.getCallList(model));
 		}

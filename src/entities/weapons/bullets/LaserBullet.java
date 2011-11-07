@@ -6,8 +6,10 @@ import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 import util.Runner;
+import util.debug.Debug;
 import util.helper.ModelHandler;
 import util.helper.QuaternionHelper;
+import entities.Entities;
 import entities.Entity;
 
 public class LaserBullet extends Entity {
@@ -17,7 +19,7 @@ public class LaserBullet extends Entity {
 	private float traveled;
 
 	// how far the bullet goes before it dies
-	private static float life = 30.0f;
+	private static float life = 300.0f;
 
 	public LaserBullet(float x, float y, float z, Quaternion direction) {
 		super();
@@ -25,7 +27,7 @@ public class LaserBullet extends Entity {
 		this.rotation = new Quaternion(direction.x, direction.y, direction.z,
 				direction.w);
 
-		this.zSpeed = 1.0f;
+		this.zSpeed = 0.1f;
 
 		this.type = "bullet";
 
@@ -36,6 +38,8 @@ public class LaserBullet extends Entity {
 		Quaternion revQuat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		rotation.negate(revQuat);
 		QuaternionHelper.toFloatBuffer(revQuat, rotationBuffer);
+
+		this.lastUpdate = Debug.getTime();
 	}
 
 	@Override
@@ -61,6 +65,7 @@ public class LaserBullet extends Entity {
 	public void destroy() {
 		// FIXME concurrent modification exception thrown by this
 		// Entities.entities.remove(this);
+		Entities.removeBuffer.add(this);
 	}
 
 	@Override

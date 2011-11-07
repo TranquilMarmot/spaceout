@@ -4,7 +4,7 @@ import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 import util.Runner;
-import util.debug.console.ConsoleManager;
+import util.debug.DebugManager;
 import util.helper.KeyboardHandler;
 import util.helper.MouseHandler;
 
@@ -15,6 +15,9 @@ public class Camera extends Entity {
 	public float zoom;
 	public float yOffset;
 	public float xOffset;
+	
+	private float maxZoom = 3000.0f;
+	private float minZoom = 20.0f;
 
 	/**
 	 * If this is false, the camera rotates with whatever it's following. If
@@ -47,12 +50,12 @@ public class Camera extends Entity {
 			zoomSensitivity = 10.0f;
 
 		// handle zooming
-		if (!ConsoleManager.consoleOn)
+		if (!DebugManager.consoleOn)
 			zoom -= MouseHandler.wheel / zoomSensitivity;
-		if (zoom < 20.0f)
-			zoom = 20.0f;
-		else if (zoom > 3000.0f)
-			zoom = 3000.0f;
+		if (zoom < minZoom)
+			zoom = minZoom;
+		else if (zoom > maxZoom)
+			zoom = maxZoom;
 
 		// move the camera to be behind whatever it's following
 		location.x = following.location.x;

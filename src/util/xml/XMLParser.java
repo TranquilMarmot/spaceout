@@ -9,7 +9,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import util.debug.console.ConsoleManager;
+import util.debug.DebugManager;
 import util.helper.QuaternionHelper;
 import util.helper.TextureHandler;
 import entities.Entity;
@@ -74,11 +74,11 @@ public class XMLParser {
 			entities.Entities.player = p;
 		} else{
 			if(entities.Entities.player != null)
-				ConsoleManager.console.print("Player already exists!");
+				DebugManager.console.print("Player already exists!");
 			else if(playerNode == null)
-				ConsoleManager.console.print("Couldn't find player in XML file " + file + "! Everything is going to go to hell now... Enjoy!");
+				DebugManager.console.print("Couldn't find player in XML file " + file + "! Everything is going to go to hell now... Enjoy!");
 			else if(playerNode.getLength() != 1)
-				ConsoleManager.console.print("Found too many or not enough Players in XML file " + file);
+				DebugManager.console.print("Found too many or not enough Players in XML file " + file);
 		}
 
 		/*
@@ -102,11 +102,11 @@ public class XMLParser {
 					if (ent != null)
 						entities.Entities.entities.add(ent);
 					else
-						ConsoleManager.console.print("Null entity! " + nodes.item(i).getNodeName());
+						DebugManager.console.print("Null entity! " + nodes.item(i).getNodeName());
 				}
 			}
 		} else {
-			ConsoleManager.console
+			DebugManager.console
 					.print("Error in XMLParser! Either there was nothing in the given file ("
 							+ file + ") or the parser simply just didn't want to work");
 		}

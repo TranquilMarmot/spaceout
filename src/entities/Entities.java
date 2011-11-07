@@ -10,6 +10,7 @@ public class Entities {
 	public static ArrayList<Entity> entities = new ArrayList<Entity>();
 	public static ArrayList<Light> lights = new ArrayList<Light>();
 	public static ArrayList<Entity> addBuffer = new ArrayList<Entity>();
+	public static ArrayList<Entity> removeBuffer = new ArrayList<Entity>();
 	
 	/**
 	 * Gets the distance between two entities

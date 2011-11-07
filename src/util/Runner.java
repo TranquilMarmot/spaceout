@@ -9,7 +9,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
-import util.debug.console.ConsoleManager;
+import util.debug.DebugManager;
 import util.helper.DisplayHelper;
 import util.helper.KeyboardHandler;
 import util.helper.MouseHandler;
@@ -98,7 +98,7 @@ public class Runner {
 		// initialize the camera
 		Entities.camera = new Camera(Entities.player.location.x,
 				Entities.player.location.y, Entities.player.location.z);
-		Entities.camera.zoom = 30.0f;
+		Entities.camera.zoom = 20.0f;
 		Entities.camera.yOffset = -5.0f;
 		Entities.camera.xOffset = 1.0f;
 		Entities.camera.following = Entities.player;
@@ -165,7 +165,7 @@ public class Runner {
 		}
 
 		// release the mouse if the game's paused
-		if (!paused && !ConsoleManager.consoleOn)
+		if (!paused && !DebugManager.consoleOn)
 			Mouse.setGrabbed(true);
 		else
 			Mouse.setGrabbed(false);
@@ -240,7 +240,6 @@ public class Runner {
 			}
 			
 			/* BEGIN ENTITY DRAWING */
-			//for (Entity ent : Entities.entities) {
 			if(!Entities.addBuffer.isEmpty()){
 				Iterator<Entity> addIterator = Entities.addBuffer.iterator();
 				while(addIterator.hasNext()){
@@ -248,6 +247,11 @@ public class Runner {
 					Entities.entities.add(ent);
 					addIterator.remove();
 				}
+			}
+			
+			if(!Entities.removeBuffer.isEmpty()){
+				for(Entity ent : Entities.removeBuffer)
+					Entities.entities.remove(ent);
 			}
 			
 			Iterator<Entity> entityIterator = Entities.entities.iterator();
@@ -304,11 +308,11 @@ public class Runner {
 		GL11.glDisable(GL11.GL_LIGHTING);
 
 		// draw debug info
-		ConsoleManager.updateAndDraw();
+		DebugManager.updateAndDraw();
 
 		// draw 'PAUSED' in the middle of the screen if the game is paused
 		if (paused)
-			ConsoleManager.font.drawString((DisplayHelper.windowWidth / 2) - 25,
+			DebugManager.font.drawString((DisplayHelper.windowWidth / 2) - 25,
 					DisplayHelper.windowHeight / 2, "PAUSED");
 
 		/* END 2D DRAWING */
