@@ -239,8 +239,6 @@ public class Runner {
 				l.draw();
 			}
 			
-			Iterator<Entity> entityIterator = Entities.entities.iterator();
-
 			/* BEGIN ENTITY DRAWING */
 			//for (Entity ent : Entities.entities) {
 			if(!Entities.addBuffer.isEmpty()){
@@ -251,6 +249,8 @@ public class Runner {
 					addIterator.remove();
 				}
 			}
+			
+			Iterator<Entity> entityIterator = Entities.entities.iterator();
 			while(entityIterator.hasNext()) {
 				//FIXME concurrent modification exception
 				Entity ent = entityIterator.next();

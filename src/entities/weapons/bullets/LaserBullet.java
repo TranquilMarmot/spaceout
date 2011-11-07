@@ -24,18 +24,19 @@ public class LaserBullet extends Entity{
 		this.location = new Vector3f(x, y, z);
 		this.rotation = direction;
 		
-		this.zSpeed = 1.0f;
+		this.zSpeed = 0.5f;
 	}
 
 	@Override
 	public void update() {
+		System.out.println("update!");
 		int delta = getDelta();
 		if(!Runner.paused){
 			float moveAmount = delta * zSpeed;
 			this.moveZ(moveAmount);
 			traveled += moveAmount;
 			//if(traveled >= life)
-				//this.destroy();
+			//	this.destroy();
 		}
 	}
 	
