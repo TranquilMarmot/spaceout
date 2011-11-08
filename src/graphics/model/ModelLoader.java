@@ -163,10 +163,30 @@ public class ModelLoader {
 		return models;
 	}
 	
+	// TODO finish this!!!
 	public static Model loadObjFile(String file, String name){
-		//Model m = new Model();
+		ModelBuilder builder = new ModelBuilder(name);
 		
-		return null;
+		/*
+		 * while(vertex)
+		 * 	addVertex
+		 * 
+		 * while(normal)
+		 *  addNormal
+		 * 
+		 * while(face)
+		 * 	if(faceIsTriangle)
+		 * 		addTriangle
+		 *  else if(faceIsQuad)
+		 *  	addQuad
+		 *  
+		 *  makeModel
+		 */
+		
+		
+		
+		
+		return builder.makeModel(1.0f);
 	}
 
 	public static ArrayList<Integer> loadObjFileOld(String file) {

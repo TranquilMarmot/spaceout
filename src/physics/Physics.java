@@ -25,7 +25,7 @@ public class Physics {
 		//broadphase interface
 		BroadphaseInterface broadphase = new DbvtBroadphase();
 		
-		// collisiong configuration and dispatcher
+		// collision configuration and dispatcher
 		DefaultCollisionConfiguration collisionConfiguration = new DefaultCollisionConfiguration();
 		CollisionDispatcher dispatcher = new CollisionDispatcher(collisionConfiguration);
 		
