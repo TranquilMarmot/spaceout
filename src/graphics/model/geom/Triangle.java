@@ -1,4 +1,4 @@
-package util.model.geom;
+package graphics.model.geom;
 
 import org.lwjgl.opengl.GL11;
 

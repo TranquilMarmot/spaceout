@@ -1,6 +1,6 @@
 package util.helper;
 
-import util.model.ModelLoader;
+import graphics.model.ModelLoader;
 
 public class ModelHandler {
 	private static final String MODEL_PATH = "res/models/";

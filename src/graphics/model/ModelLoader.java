@@ -1,4 +1,8 @@
-package util.model;
+package graphics.model;
+
+import graphics.model.geom.Face;
+import graphics.model.geom.Quad;
+import graphics.model.geom.Triangle;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,9 +12,6 @@ import java.util.StringTokenizer;
 
 import org.lwjgl.opengl.GL11;
 
-import util.model.geom.Face;
-import util.model.geom.Quad;
-import util.model.geom.Triangle;
 
 public class ModelLoader {
 	/**
@@ -161,8 +162,14 @@ public class ModelLoader {
 
 		return models;
 	}
+	
+	public static Model loadObjFile(String file, String name){
+		//Model m = new Model();
+		
+		return null;
+	}
 
-	public static ArrayList<Integer> loadObjFile(String file) {
+	public static ArrayList<Integer> loadObjFileOld(String file) {
 		// TODO this is TOTALLY incomplete, should be finished
 		ArrayList<Integer> Models = new ArrayList<Integer>();
 

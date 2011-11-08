@@ -1,4 +1,4 @@
-package util.model.geom;
+package graphics.model.geom;
 
 public abstract class Face {
 	public float[][] vertices;

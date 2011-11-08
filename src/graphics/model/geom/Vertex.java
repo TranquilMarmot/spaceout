@@ -1,4 +1,4 @@
-package util.model.geom;
+package graphics.model.geom;
 
 public class Vertex {
 	public float x, y, z;

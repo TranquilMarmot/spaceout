@@ -19,7 +19,7 @@ public class LaserBullet extends Entity {
 	private float traveled;
 
 	// how far the bullet goes before it dies
-	private static float life = 300.0f;
+	private static float life = 750.0f;
 
 	public LaserBullet(float x, float y, float z, Quaternion direction) {
 		super();
@@ -63,8 +63,6 @@ public class LaserBullet extends Entity {
 	 * Destroys the bullet
 	 */
 	public void destroy() {
-		// FIXME concurrent modification exception thrown by this
-		// Entities.entities.remove(this);
 		Entities.removeBuffer.add(this);
 	}
 
