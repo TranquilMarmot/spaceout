@@ -14,9 +14,12 @@ import util.helper.TextureHandler;
 import entities.Entities;
 import entities.Entity;
 import entities.weapons.bullets.LaserBullet;
+import graphics.model.Model;
+import graphics.model.ModelLoader;
 
 public class Player extends Entity {
-	private int model = ModelHandler.SHIP1;
+	//private int model = ModelHandler.SHIP1;
+	private Model model;
 	private boolean button0Down = false;
 
 	public Player() {
@@ -40,6 +43,8 @@ public class Player extends Entity {
 		maxYSpeed = 75.0f;
 		yAccel = 0.07f;
 		yDecel = 0.04f;
+		
+		model = ModelLoader.loadObjFile("res/models/ships/ship1.obj", 1.0f);
 	}
 
 	@Override
@@ -152,7 +157,8 @@ public class Player extends Entity {
 			GL11.glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 
 			// draw the model
-			GL11.glCallList(ModelHandler.getCallList(model));
+			GL11.glCallList(model.getCallList());
+			//GL11.glCallList(ModelHandler.getCallList(model));
 		}
 		GL11.glPopMatrix();
 	}
