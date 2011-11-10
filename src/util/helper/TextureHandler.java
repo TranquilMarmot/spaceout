@@ -17,6 +17,7 @@ public class TextureHandler {
 	private static Texture mercury;
 	private static Texture venus;
 	private static Texture mars;
+	private static Texture ship1;
 
 	public static final int EARTH = 0;
 	public static final int STARS = 1;
@@ -25,6 +26,7 @@ public class TextureHandler {
 	public static final int MERCURY = 4;
 	public static final int VENUS = 5;
 	public static final int MARS = 6;
+	public static final int SHIP1 = 7;
 
 	public static Texture getTexture(int texture) {
 		switch (texture) {
@@ -56,6 +58,10 @@ public class TextureHandler {
 			if(mars == null)
 				initTexture(MARS);
 			return mars;
+		case SHIP1:
+			if(ship1 == null)
+				initTexture(SHIP1);
+			return ship1;
 		default:
 			return null;
 		}
@@ -91,6 +97,9 @@ public class TextureHandler {
 			case MARS:
 				mars = TextureLoader.getTexture("JPG", new FileInputStream(
 						TEXTURE_PATH + "mars.jpg"), true, GL11.GL_LINEAR);
+				break;
+			case SHIP1:
+				ship1 = TextureLoader.getTexture("PNG", new FileInputStream(TEXTURE_PATH + "ship1.png"));
 				break;
 			default:
 				System.out.println("Error creating texture! Parameter "

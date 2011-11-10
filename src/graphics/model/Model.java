@@ -11,6 +11,10 @@ public class Model {
 		this.callList = callList;
 	}
 	
+	public Model(int callList){
+		this.callList = callList;
+	}
+	
 	public CollisionShape getCollisionShape(){
 		return shape;
 	}

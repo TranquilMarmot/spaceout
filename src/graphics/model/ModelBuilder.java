@@ -11,32 +11,44 @@ public class ModelBuilder {
 	/** the name of the model */
 	public String name;
 
-	// the vertices of the model
+	/** the vertices of the model */
 	private ArrayList<Vector3f> vertices;
 
-	// the normals of the model
+	/** the normals of the model */
 	private ArrayList<Vector3f> normals;
 
-	// the texture coordinates of the model
+	/** the texture coordinates of the model */
 	private ArrayList<Point2f> textureCoords;
 
-	// which vertices to call
+	/** which vertices to call */
 	private ArrayList<int[]> vertexIndices;
 
-	// which normals to call
+	/** which normals to call */
 	private ArrayList<int[]> normalIndices;
 
-	// which texture coordinates to call
+	/** which texture coordinates to call */
 	private ArrayList<int[]> textureIndices;
 
 	/** for rendering the model */
 	private int callList;
 
 	public ModelBuilder() {
+		/*
+		 * Have to add a blank element to the beginning of each list, as the obj
+		 * file starts referencing elements at 1, but ArrayLists start at 0
+		 * FIXME can either do this, or offset each index by 1 at some point 
+		 */
 		vertices = new ArrayList<Vector3f>();
-		normals = new ArrayList<Vector3f>();
-		textureCoords = new ArrayList<Point2f>();
+		vertices.add(new Vector3f(0.0f, 0.0f, 0.0f));
 
+		normals = new ArrayList<Vector3f>();
+		normals.add(new Vector3f(0.0f, 0.0f, 0.0f));
+
+		textureCoords = new ArrayList<Point2f>();
+		textureCoords.add(new Point2f(0.0f, 0.0f));
+
+		// these just store which vertices to grab, don't need to add a blank
+		// element to them
 		vertexIndices = new ArrayList<int[]>();
 		normalIndices = new ArrayList<int[]>();
 		textureIndices = new ArrayList<int[]>();
@@ -93,6 +105,10 @@ public class ModelBuilder {
 			System.out.println("Normal indices not a triangle or a quad!");
 		}
 	}
+	
+	public void addTextureCoords(Point2f point){
+		textureCoords.add(point);
+	}
 
 	public void addTetxureIndices(int[] indices) {
 		if (indices.length == 3) {
@@ -125,7 +141,7 @@ public class ModelBuilder {
 
 		buildCallList();
 
-		return null;
+		return new Model(callList);
 	}
 
 	private void buildCallList() {
@@ -166,22 +182,22 @@ public class ModelBuilder {
 					}
 
 					GL11.glVertex3f(vertex1.x, vertex1.y, vertex1.z);
-					if (normal1 != null)
-						GL11.glNormal3f(normal1.x, normal1.y, normal1.z);
 					if (texture1 != null)
 						GL11.glTexCoord2f(texture1.x, texture1.y);
+					if (normal1 != null)
+						GL11.glNormal3f(normal1.x, normal1.y, normal1.z);
 
 					GL11.glVertex3f(vertex2.x, vertex2.y, vertex2.z);
-					if (normal2 != null)
-						GL11.glNormal3f(normal2.x, normal2.y, normal2.z);
 					if (texture2 != null)
 						GL11.glTexCoord2f(texture2.x, texture2.y);
+					if (normal2 != null)
+						GL11.glNormal3f(normal2.x, normal2.y, normal2.z);
 
 					GL11.glVertex3f(vertex3.x, vertex3.y, vertex3.z);
-					if (normal3 != null)
-						GL11.glNormal3f(normal3.x, normal3.y, normal3.z);
 					if (texture3 != null)
 						GL11.glTexCoord2f(texture3.x, texture3.y);
+					if (normal3 != null)
+						GL11.glNormal3f(normal3.x, normal3.y, normal3.z);
 				}
 			}
 			GL11.glEnd();

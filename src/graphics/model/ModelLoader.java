@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import javax.vecmath.Point2f;
 import javax.vecmath.Vector3f;
 
 import org.lwjgl.opengl.GL11;
@@ -187,93 +188,84 @@ public class ModelLoader {
 
 			ModelBuilder builder = new ModelBuilder();
 
-			String name;
-
 			// go through the whooole file
 			while ((line = reader.readLine()) != null) {
-				if (line.startsWith("o")) {
-					name = line.substring(2);
+				System.out.println(line);
+				// split the line up at spaces
+				StringTokenizer toker = new StringTokenizer(line, " ");
+				// grab the line's type
+				String lineType = toker.nextToken();
+				
+				if (lineType.equals("o")) {
+					builder.name = toker.nextToken().substring(2);
 				}
 
-				if (line.startsWith("v") && !line.startsWith("vn")) {
-					while (line.startsWith("v") && !line.startsWith("vn")) {
-						StringTokenizer toker = new StringTokenizer(line);
-						// skip the "v"
-						toker.nextToken();
+				if (lineType.equals("v")) {
+					// grab the coordinates
+					float x = Float.parseFloat(toker.nextToken()) * scale;
+					float y = Float.parseFloat(toker.nextToken()) * scale;
+					float z = Float.parseFloat(toker.nextToken()) * scale;
 
-						// grab the coordinates
-						float x = Float.parseFloat(toker.nextToken());
-						float y = Float.parseFloat(toker.nextToken());
-						float z = Float.parseFloat(toker.nextToken());
-
-						builder.addVertex(new Vector3f(x, y, z));
-
-						line = reader.readLine();
-					}
+					builder.addVertex(new Vector3f(x, y, z));
 				}
 
-				if (line.startsWith("vn")) {
-					while (line.startsWith("vn")) {
-						StringTokenizer toker = new StringTokenizer(line);
-						// skip the "vn"
-						toker.nextToken();
+				if (lineType.equals("vn")) {
+					// grab the coordinates
+					float x = Float.parseFloat(toker.nextToken()) * scale;
+					float y = Float.parseFloat(toker.nextToken()) * scale;
+					float z = Float.parseFloat(toker.nextToken()) * scale;
 
-						// grab the coordinates
-						float x = Float.parseFloat(toker.nextToken());
-						float y = Float.parseFloat(toker.nextToken());
-						float z = Float.parseFloat(toker.nextToken());
-
-						builder.addNormal(new Vector3f(x, y, z));
-
-						line = reader.readLine();
-					}
+					builder.addNormal(new Vector3f(x, y, z));
 				}
+
+				if (line.startsWith("vt")) {
+					float x = Float.parseFloat(toker.nextToken());
+					float y = Float.parseFloat(toker.nextToken());
+
+					builder.addTextureCoords(new Point2f(x, y));
+				}
+
 				if (line.startsWith("f")) {
-					while (line != null && line.startsWith("f")) {
-						StringTokenizer toker = new StringTokenizer(line);
-						// skip the "f"
-						toker.nextToken();
+					// to see if we're dealing with a triangle or a quad
+					int numVertices = toker.countTokens();
+					
+					/*
+					 * FIXME
+					 * This assumes that the obj file has vertices, normals,
+					 * and texture coordinates in it. If either of those
+					 * are not present, this will not work at all. 
+					 */
 
-						// to see if we're dealing with a triangle or a quad
-						int numVertices = toker.countTokens();
-
-						int[] vertexIndices = new int[numVertices];
-						int[] normalIndices = new int[numVertices];
-
-						for (int i = 0; i < numVertices; i++) {
-							String indices = toker.nextToken();
-
-							// split it at the "//", thats how the obj file
-							// separates the normal from the vertex
-							StringTokenizer splitter = new StringTokenizer(
-									indices, "//");
-							// grab the vertex and the normal indices
-							int vertex = Integer.parseInt(splitter.nextToken());
-							int normal = Integer.parseInt(splitter.nextToken());
-
-							// add them to their respective int[]
-							vertexIndices[i] = vertex;
-							normalIndices[i] = normal;
-						}
-
-						// add the indices to the model builder
-						builder.addVertexIndices(vertexIndices);
-						builder.addNormalIndices(normalIndices);
-						
-						line = reader.readLine();
+					int[] vertexIndices = new int[numVertices];
+					int[] normalIndices = new int[numVertices];
+					int[] textureIndices = new int[numVertices];
+					
+					for(int i = 0; i < numVertices; i++){
+						String indices = toker.nextToken();
+						StringTokenizer split = new StringTokenizer(indices, "/");
+						// the obj file goes vertex/texture-coordinate/normal
+						vertexIndices[i] = Integer.parseInt(split.nextToken());
+						textureIndices[i] = Integer.parseInt(split.nextToken());
+						normalIndices[i] = Integer.parseInt(split.nextToken());
 					}
+					
+					
+					// add the indices to the model builder
+					builder.addVertexIndices(vertexIndices);
+					builder.addNormalIndices(normalIndices);
+					builder.addTetxureIndices(textureIndices);
 				}
 			}
-			
+
 			m = builder.makeModel(scale);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NullPointerException e) {
 			System.out
-					.println("Oh no, NullPointer in ModelLoader! Maybe there wasn't an 'o' defined in the file?");
+					.println("Fuck fuck fuck fuck!");
 			e.printStackTrace();
 		}
-		
+
 		return m;
 	}
 
@@ -409,46 +401,5 @@ public class ModelLoader {
 		}
 
 		return m;
-	}
-
-	public static ArrayList<Integer> loadObjFileOld(String file) {
-		// TODO this is TOTALLY incomplete, should be finished
-		ArrayList<Integer> Models = new ArrayList<Integer>();
-
-		ArrayList<float[]> vertices = new ArrayList<float[]>();
-		try {
-			BufferedReader reader = new BufferedReader(new FileReader(file));
-
-			String line;
-
-			// read until there's nothing left to read
-			while ((line = reader.readLine()) != null) {
-				if (line.startsWith("o")) {
-					int list = GL11.glGenLists(1);
-
-					Models.add(list);
-
-					// grab all the vertices for the current Model
-					while ((line = reader.readLine()).startsWith("v")) {
-						StringTokenizer toker = new StringTokenizer(line, " ");
-						// skip the v
-						toker.nextToken();
-
-						float x = Float.parseFloat(toker.nextToken());
-						float y = Float.parseFloat(toker.nextToken());
-						float z = Float.parseFloat(toker.nextToken());
-
-						float[] vertex = { x, y, z };
-						vertices.add(vertex);
-					}
-
-					// now grab all the faces
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return Models;
 	}
 }

@@ -44,7 +44,7 @@ public class Player extends Entity {
 		yAccel = 0.07f;
 		yDecel = 0.04f;
 		
-		model = ModelLoader.loadObjFile("res/models/ships/ship1.obj", 1.0f);
+		model = ModelLoader.loadObjFile("res/models/ships/ship1.obj", 0.5f);
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public class Player extends Entity {
 	@Override
 	public void draw() {
 		// bind the texture FIXME does not work!
-		TextureHandler.getTexture(TextureHandler.CHECKERS);
+		TextureHandler.getTexture(TextureHandler.SHIP1).bind();
 		// make it blue FIXME also does not work!
 		GL11.glColor3f(0.0f, 1.0f, 0.0f);
 		GL11.glPushMatrix();
@@ -154,7 +154,7 @@ public class Player extends Entity {
 			 */
 
 			GL11.glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
-			GL11.glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+			//GL11.glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 
 			// draw the model
 			GL11.glCallList(model.getCallList());
