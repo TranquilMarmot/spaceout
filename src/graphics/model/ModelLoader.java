@@ -190,7 +190,6 @@ public class ModelLoader {
 
 			// go through the whooole file
 			while ((line = reader.readLine()) != null) {
-				System.out.println(line);
 				// split the line up at spaces
 				StringTokenizer toker = new StringTokenizer(line, " ");
 				// grab the line's type
@@ -219,10 +218,10 @@ public class ModelLoader {
 				}
 
 				if (line.startsWith("vt")) {
-					float x = Float.parseFloat(toker.nextToken());
-					float y = Float.parseFloat(toker.nextToken());
+					float u = Float.parseFloat(toker.nextToken());
+					float v = Float.parseFloat(toker.nextToken());
 
-					builder.addTextureCoords(new Point2f(x, y));
+					builder.addTextureCoords(new Point2f(u, v));
 				}
 
 				if (line.startsWith("f")) {

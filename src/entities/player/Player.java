@@ -135,10 +135,7 @@ public class Player extends Entity {
 
 	@Override
 	public void draw() {
-		// bind the texture FIXME does not work!
 		TextureHandler.getTexture(TextureHandler.SHIP1).bind();
-		// make it blue FIXME also does not work!
-		GL11.glColor3f(0.0f, 1.0f, 0.0f);
 		GL11.glPushMatrix();
 		{
 			// apply reverse rotation (counteracts the camera rotation)

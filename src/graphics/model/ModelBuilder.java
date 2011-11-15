@@ -36,7 +36,6 @@ public class ModelBuilder {
 		/*
 		 * Have to add a blank element to the beginning of each list, as the obj
 		 * file starts referencing elements at 1, but ArrayLists start at 0
-		 * FIXME can either do this, or offset each index by 1 at some point 
 		 */
 		vertices = new ArrayList<Vector3f>();
 		vertices.add(new Vector3f(0.0f, 0.0f, 0.0f));
@@ -59,6 +58,8 @@ public class ModelBuilder {
 	}
 
 	public void addVertexIndices(int[] indices) {
+		vertexIndices.add(indices);
+		/*
 		if (indices.length == 3) {
 			vertexIndices.add(indices);
 		} else if (indices.length == 4) {
@@ -78,6 +79,7 @@ public class ModelBuilder {
 		} else {
 			System.out.println("Vertex indices not a triangle or a quad!");
 		}
+		*/
 	}
 
 	public void addNormal(Vector3f vertex) {
@@ -85,6 +87,8 @@ public class ModelBuilder {
 	}
 
 	public void addNormalIndices(int[] indices) {
+		normalIndices.add(indices);
+		/*
 		if (indices.length == 3) {
 			normalIndices.add(indices);
 		} else if (indices.length == 4) {
@@ -104,6 +108,7 @@ public class ModelBuilder {
 		} else {
 			System.out.println("Normal indices not a triangle or a quad!");
 		}
+		*/
 	}
 	
 	public void addTextureCoords(Point2f point){
@@ -111,6 +116,8 @@ public class ModelBuilder {
 	}
 
 	public void addTetxureIndices(int[] indices) {
+		textureIndices.add(indices);
+		/*
 		if (indices.length == 3) {
 			textureIndices.add(indices);
 		} else if (indices.length == 4) {
@@ -130,6 +137,7 @@ public class ModelBuilder {
 		} else {
 			System.out.println("Texture indices not a triangle or a quad!");
 		}
+		*/
 	}
 
 	/**
@@ -149,6 +157,83 @@ public class ModelBuilder {
 
 		GL11.glNewList(callList, GL11.GL_COMPILE);
 		{
+			for(int i = 0; i < vertexIndices.size(); i++){
+				int[] verts = vertexIndices.get(i);
+				int[] norms = normalIndices.get(i);
+				int[] texts = textureIndices.get(i);
+				
+				// triangle
+				if(verts.length == 3 && norms.length == 3 && texts.length == 3){
+					GL11.glBegin(GL11.GL_TRIANGLES);{
+						Vector3f vertex1 = vertices.get(verts[0]);
+						Vector3f vertex2 = vertices.get(verts[1]);
+						Vector3f vertex3 = vertices.get(verts[2]);
+						
+						Vector3f normal1 = normals.get(norms[0]);
+						Vector3f normal2 = normals.get(norms[1]);
+						Vector3f normal3 = normals.get(norms[2]);
+						
+						Point2f texture1 = textureCoords.get(texts[0]);
+						Point2f texture2 = textureCoords.get(texts[1]);
+						Point2f texture3 = textureCoords.get(texts[2]);
+						
+						GL11.glVertex3f(vertex1.x, vertex1.y, vertex1.z);
+						GL11.glNormal3f(normal1.x, normal1.y, normal1.z);
+						GL11.glTexCoord2d(texture1.x, 1 - texture1.y);
+						
+						GL11.glVertex3f(vertex2.x, vertex2.y, vertex2.z);
+						GL11.glNormal3f(normal2.x, normal2.y, normal2.z);
+						GL11.glTexCoord2d(texture2.x, 1 - texture2.y);
+						
+						GL11.glVertex3f(vertex3.x, vertex3.y, vertex3.z);
+						GL11.glNormal3f(normal3.x, normal3.y, normal3.z);
+						GL11.glTexCoord2d(texture3.x, 1 - texture3.y);
+					}GL11.glEnd();
+				}
+				//quad
+				else if(verts.length == 4 && norms.length == 4 && texts.length == 4){
+					GL11.glBegin(GL11.GL_QUADS);{
+						Vector3f vertex1 = vertices.get(verts[0]);
+						Vector3f vertex2 = vertices.get(verts[1]);
+						Vector3f vertex3 = vertices.get(verts[2]);
+						Vector3f vertex4 = vertices.get(verts[3]);
+						
+						Vector3f normal1 = normals.get(norms[0]);
+						Vector3f normal2 = normals.get(norms[1]);
+						Vector3f normal3 = normals.get(norms[2]);
+						Vector3f normal4 = normals.get(norms[2]);
+						
+						Point2f texture1 = textureCoords.get(texts[0]);
+						Point2f texture2 = textureCoords.get(texts[1]);
+						Point2f texture3 = textureCoords.get(texts[2]);
+						Point2f texture4 = textureCoords.get(texts[3]);
+						
+						GL11.glVertex3f(vertex1.x, vertex1.y, vertex1.z);
+						GL11.glNormal3f(normal1.x, normal1.y, normal1.z);
+						GL11.glTexCoord2d(texture1.x, 1-texture1.y);
+						
+						GL11.glVertex3f(vertex2.x, vertex2.y, vertex2.z);
+						GL11.glNormal3f(normal2.x, normal2.y, normal2.z);
+						GL11.glTexCoord2d(texture2.x, 1-texture2.y);
+						
+						GL11.glVertex3f(vertex3.x, vertex3.y, vertex3.z);
+						GL11.glNormal3f(normal3.x, normal3.y, normal3.z);
+						GL11.glTexCoord2d(texture3.x, 1-texture3.y);
+						
+						GL11.glVertex3f(vertex4.x, vertex4.y, vertex4.z);
+						GL11.glNormal3f(normal4.x, normal4.y, normal4.z);
+						GL11.glTexCoord2d(texture4.x, 1-texture4.y);
+						
+					}GL11.glEnd();
+				} else{
+					System.out.println("Error! There's either not the right amount of indices for something, or there's not that same amount of geom, normal, and texture coordinates (ModelBuilder)");
+				}
+			}
+			
+			
+			
+			
+			/*
 			GL11.glBegin(GL11.GL_TRIANGLES);
 			{
 				for (int i = 0; i < vertexIndices.size(); i++) {
@@ -201,6 +286,7 @@ public class ModelBuilder {
 				}
 			}
 			GL11.glEnd();
+			*/
 		}
 		GL11.glEndList();
 	}
