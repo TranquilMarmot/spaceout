@@ -9,11 +9,13 @@ import util.Runner;
 import util.debug.Debug;
 import util.helper.ModelHandler;
 import util.helper.QuaternionHelper;
+import util.helper.TextureHandler;
 import entities.Entities;
 import entities.Entity;
 
 public class LaserBullet extends Entity {
 	private int model = ModelHandler.LASERBULLET;
+	private int texture = TextureHandler.LASERBULLET;
 
 	// how far the bullet has traveled
 	private float traveled;
@@ -68,10 +70,12 @@ public class LaserBullet extends Entity {
 
 	@Override
 	public void draw() {
+		TextureHandler.getTexture(texture).bind();
 		GL11.glPushMatrix();
 		{
 			GL11.glMultMatrix(rotationBuffer);
-			GL11.glCallList(ModelHandler.getCallList(model));
+			GL11.glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+			GL11.glCallList(ModelHandler.getModel(model).getCallList());
 		}
 		GL11.glPopMatrix();
 	}

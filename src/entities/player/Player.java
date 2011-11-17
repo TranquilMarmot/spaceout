@@ -7,6 +7,7 @@ import org.lwjgl.util.vector.Quaternion;
 import util.Runner;
 import util.debug.DebugManager;
 import util.helper.KeyboardHandler;
+import util.helper.ModelHandler;
 import util.helper.MouseHandler;
 import util.helper.QuaternionHelper;
 import util.helper.TextureHandler;
@@ -17,8 +18,7 @@ import graphics.model.Model;
 import graphics.model.ModelLoader;
 
 public class Player extends Entity {
-	//private int model = ModelHandler.SHIP1;
-	private Model model;
+	private int model = ModelHandler.SHIP1;
 	private boolean button0Down = false;
 
 	public Player() {
@@ -42,8 +42,6 @@ public class Player extends Entity {
 		maxYSpeed = 75.0f;
 		yAccel = 0.07f;
 		yDecel = 0.04f;
-		
-		model = ModelLoader.loadObjFile("res/models/ships/ship1.obj", 0.5f);
 	}
 
 	@Override
@@ -153,8 +151,7 @@ public class Player extends Entity {
 			//GL11.glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 
 			// draw the model
-			GL11.glCallList(model.getCallList());
-			//GL11.glCallList(ModelHandler.getCallList(model));
+			GL11.glCallList(ModelHandler.getModel(model).getCallList());
 		}
 		GL11.glPopMatrix();
 	}
