@@ -6,6 +6,14 @@
  * TODO Those min/max coordinates can then be used to make the bounding box for the object
  * TODO Find a way to rotate those boxes with the quaternions (there's equations for it)
  * TODO Find out how to see if two boxes have hit each other
+ * 
+ * ModelLoader TODO
+ * TODO Make it handle materials
+ * TODO Make it handle multiple objects in one file
+ * TODO Right now, it assumes that the obj file has vertices, normals, and texture coordinates in it.
+ * If any of those are not present, it will not work at all. Ideally, if normals aren't present they should be calculated
+ * TODO Give it more powers! Things like initial rotation, center offset, etc. (keep in mind that these also have to be translated to the physics engine)
+ * TODO Figure out how to create a CollisionObject with the vertex data
  *
  * In sort of order of importance:
  * TODO Enhance acceleration. Make it so that everything slows down at the same speed.
@@ -14,7 +22,6 @@
  * TODO create the rest of the solar system
  * TODO ConsoleCommands.java is pretty damn ugly still!
  * 
- * TODO figure out how to texture the ship and other things
  * TODO planets are impossible to find! Find a way to billboard text and have it drawn over a planet (text size probably based on distance from planet)
  * TODO Make the skybox a box instead of a sphere
  * TODO Make geometry (spheres specifically, but could also go for stars) draw with less polygons when you're far away and more the closer you get

@@ -15,8 +15,6 @@ import javax.vecmath.Vector3f;
 
 import org.lwjgl.opengl.GL11;
 
-import com.sun.istack.internal.Builder;
-
 public class ModelLoader {
 	/**
 	 * Loads in vertices from an external file to an Model, which has a display
@@ -32,7 +30,7 @@ public class ModelLoader {
 
 	/**
 	 * Loads in vertices from an external file to an Model, which has a display
-	 * list for the vertices
+	 * list for the vertices. NOTE: This does NOT handle textures!
 	 * 
 	 * @param file
 	 *            The file to load the Model from
@@ -167,19 +165,11 @@ public class ModelLoader {
 		return models;
 	}
 
-	// TODO finish this!!!
+	/*
+	 * See TODO
+	 */
 	public static Model loadObjFile(String file, float scale) {
 		Model m = null;
-		/*
-		 * while(vertex) addVertex
-		 * 
-		 * while(normal) addNormal
-		 * 
-		 * while(face) if(faceIsTriangle) addTriangle else if(faceIsQuad)
-		 * addQuad
-		 * 
-		 * makeModel
-		 */
 
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -227,13 +217,6 @@ public class ModelLoader {
 				if (line.startsWith("f")) {
 					// to see if we're dealing with a triangle or a quad
 					int numVertices = toker.countTokens();
-					
-					/*
-					 * FIXME
-					 * This assumes that the obj file has vertices, normals,
-					 * and texture coordinates in it. If either of those
-					 * are not present, this will not work at all. 
-					 */
 
 					int[] vertexIndices = new int[numVertices];
 					int[] normalIndices = new int[numVertices];
@@ -262,140 +245,6 @@ public class ModelLoader {
 		} catch (NullPointerException e) {
 			System.out
 					.println("Fuck fuck fuck fuck!");
-			e.printStackTrace();
-		}
-
-		return m;
-	}
-
-	// TODO finish this!!!
-	public static Model loadObjFileOld(String file, float scale) {
-		Model m = null;
-		/*
-		 * while(vertex) addVertex
-		 * 
-		 * while(normal) addNormal
-		 * 
-		 * while(face) if(faceIsTriangle) addTriangle else if(faceIsQuad)
-		 * addQuad
-		 * 
-		 * makeModel
-		 */
-
-		try {
-			BufferedReader reader = new BufferedReader(new FileReader(file));
-
-			String line;
-
-			// go through the whooole file
-			while ((line = reader.readLine()) != null) {
-				// go until we reach an o, which denotes an object
-				if (line.startsWith("o")) {
-					/*
-					 * Grab the name of the object This is usually put in by
-					 * Blender, and as such is normally "Cube" or "Sphere" or
-					 * whatever mesh you satrted the object with. It can easily
-					 * be changed in the obj file, next to the "o", although
-					 * it's not really used for anything, I just threw it in
-					 * there for completion.
-					 */
-					String name = line.substring(2);
-
-					// the ModelBuilder we'll use to make our model
-					ModelBuilder builder = new ModelBuilder();
-
-					// grab all the lines that start with "v" (vertices)
-					System.out.println("******getting vertices******");
-					line = reader.readLine();
-					while (line.startsWith("v") && !(line.startsWith("vn"))) {
-						line = reader.readLine();
-						if (line.startsWith("vn"))
-							break;
-						System.out.println(line);
-						StringTokenizer toker = new StringTokenizer(line);
-						// skip the "v"
-						toker.nextToken();
-
-						// grab the coordinates
-						float x = Float.parseFloat(toker.nextToken());
-						float y = Float.parseFloat(toker.nextToken());
-						float z = Float.parseFloat(toker.nextToken());
-
-						builder.addVertex(new Vector3f(x, y, z));
-					}
-
-					// grab all the lines that start with "vn" (normals)
-					System.out.println("******getting normals******");
-					line = reader.readLine();
-					while (line.startsWith("vn")) {
-						line = reader.readLine();
-						if (!line.startsWith("vn"))
-							break;
-						System.out.println(line);
-						StringTokenizer toker = new StringTokenizer(line);
-						// skip the "vn"
-						toker.nextToken();
-
-						// grab the coordinates
-						float x = Float.parseFloat(toker.nextToken());
-						float y = Float.parseFloat(toker.nextToken());
-						float z = Float.parseFloat(toker.nextToken());
-
-						builder.addNormal(new Vector3f(x, y, z));
-					}
-
-					// skip extra lines
-					while (!line.startsWith("f"))
-						line = reader.readLine();
-
-					// grab all the lines that start with "f" (faces)
-					System.out.println("******getting faces******");
-					while (line != null && line.startsWith("f")) {
-						line = reader.readLine();
-						if (line != null) {
-							System.out.println(line);
-							StringTokenizer toker = new StringTokenizer(line);
-							// skip the "f"
-							toker.nextToken();
-
-							// to see if we're dealing with a triangle or a quad
-							int numVertices = toker.countTokens();
-
-							int[] vertexIndices = new int[numVertices];
-							int[] normalIndices = new int[numVertices];
-
-							for (int i = 0; i < numVertices; i++) {
-								String indices = toker.nextToken();
-
-								// split it at the "//", thats how the obj file
-								// separates the normal from the vertex
-								StringTokenizer splitter = new StringTokenizer(
-										indices, "//");
-								// grab the vertex and the normal indices
-								int vertex = Integer.parseInt(splitter
-										.nextToken());
-								int normal = Integer.parseInt(splitter
-										.nextToken());
-
-								// add them to their respective int[]
-								vertexIndices[i] = vertex;
-								normalIndices[i] = normal;
-							}
-
-							// add the indices to the model builder
-							builder.addVertexIndices(vertexIndices);
-							builder.addNormalIndices(normalIndices);
-						}
-					}
-
-					m = builder.makeModel(scale);
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (NullPointerException e) {
-			System.out
-					.println("Oh no, NullPointer in ModelLoader! Maybe there wasn't an 'o' defined in the file?");
 			e.printStackTrace();
 		}
 

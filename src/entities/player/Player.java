@@ -7,7 +7,6 @@ import org.lwjgl.util.vector.Quaternion;
 import util.Runner;
 import util.debug.DebugManager;
 import util.helper.KeyboardHandler;
-import util.helper.ModelHandler;
 import util.helper.MouseHandler;
 import util.helper.QuaternionHelper;
 import util.helper.TextureHandler;
