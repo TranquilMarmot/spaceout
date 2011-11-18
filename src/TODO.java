@@ -28,6 +28,7 @@
  * TODO Mipmap textures so that they aren't as detailed from far away but are close up
  * TODO Make it so that only things that are visible are drawn (i.e. stuff behind the camera wouldn't be drawn)
  * TODO Make everything that extends 'Light' have a 'light' int that points to one of LIGHT0-LIGHT8
+ * TODO Right now, everything simply has a name string. It would make more sense to reference objects by some sort of hash tag
  * TODO Threads, threads and more threads! Make this more multi-processor friendly!
  * TODO Create a GUI (maybe using nifty gui? http://nifty-gui.lessvoid.com/) 
  * 
@@ -42,6 +43,7 @@
  * -TODO Chat color parsing
  * -TODO Make ctrl+v work with the console
  * -TODO If you're looking at an earlier line in the console, then submit something, it should jump back to the bottom
+ * -TODO Add help for all the commands
  * TODO XML
  * -TODO Figure out how to write to XML files
  * -TODO Store all options in XML files

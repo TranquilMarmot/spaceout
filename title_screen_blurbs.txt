@@ -1,9 +1,4 @@
-Quaternions!
 No gimble lock!
-OpenGL!
-LWJGL!
-Shoot for the stars!
-Clestial!
 Not a Minecraft clone! (We swear!)
 Go buy indie games!
 4:20 friendly!
@@ -17,9 +12,7 @@ Take off every zig!
 Somebody set us up the bomb!
 For great justice!
 You have no chance to survive make your time!
-NEDM
 You're the man now, dog!
-Reddit? More like Reddit 10 times!
 Will not blend!
 Don't breathe this...
 Is this real life?
@@ -42,12 +35,10 @@ Reloading!
 Don't panic!
 Zombies ate my neighbors!
 Obviously, you're not a golfer
-In space no one can hear you scream
+In space no one can hear ice cream
 Her?
 There's always money in the banana stand!
 Jinkies!
-Milk and cereal!
-Hello world!
 TESC!
 Supercollider? I just met 'er!
 Recycle!
@@ -57,7 +48,7 @@ This was a triumph!
 Call your mother!
 In Soviet Russia, Spaceout plays you!
 Use Linux!
-Build your own PC! (It's much cheaper!)
+Build your own PC!
 Support open-source projects!
 Take advice from a video game!
 U mad?
@@ -83,7 +74,6 @@ Hadoken!
 Kamehameha!
 As seen on TV!
 Kids these days...
-This... is my boomstick!
 How did I get here I am not good with computer
 A fooled man can't get fooled again!
 Stop! Hammertime!

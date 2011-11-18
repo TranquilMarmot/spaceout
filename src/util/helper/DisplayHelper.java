@@ -31,7 +31,7 @@ public class DisplayHelper {
 	private static final int minimumWindowHeight = 200;
 	
 	/** the window's title */
-	private static String windowTitle = "Spaceout Pre-alpha 0.0.5";
+	private static String windowTitle = "Spaceout Pre-alpha 0.0.7";
 
 	/** target fps (might not be reached on slower machines) */
 	public static int targetFPS = 100;

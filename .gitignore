@@ -1,3 +1,9 @@
+# ignore any compiled classes
 *.class
+
+# eclipse project files
 .classpath
 .project
+
+# screenshots
+res/screenshots

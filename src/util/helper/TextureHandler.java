@@ -105,7 +105,7 @@ public class TextureHandler {
 						TEXTURE_PATH + "mars.jpg"), true, GL11.GL_LINEAR);
 				break;
 			case SHIP1:
-				ship1 = TextureLoader.getTexture("PNG", new FileInputStream(TEXTURE_PATH + "ship1.png"));
+				ship1 = TextureLoader.getTexture("JPG", new FileInputStream(TEXTURE_PATH + "suzanne.jpg"));
 				break;
 			case LASERBULLET:
 				laserbullet = TextureLoader.getTexture("PNG", new FileInputStream(TEXTURE_PATH + "laserbullet.png"));

@@ -11,12 +11,12 @@ speed (variable) (newvalue)
 	xDecel/decelX or yDecel/decelY or zDecel/decelZ
 		Changes deceleration rate along a given axis
 	
-camera (command)
-	zoom (number)
+camera (variable) (newvalue)
+	zoom
 		zooms the camera to the given number
-	xOffset(number)
+	xOffset
 		offsets the camera on the x axis by the given number
-	yOffset(number)
+	yOffset
 		offsets the camera on the y axis by the given number
 	
 listentities

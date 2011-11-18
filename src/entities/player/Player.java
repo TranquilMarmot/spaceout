@@ -14,8 +14,6 @@ import util.helper.TextureHandler;
 import entities.Entities;
 import entities.Entity;
 import entities.weapons.bullets.LaserBullet;
-import graphics.model.Model;
-import graphics.model.ModelLoader;
 
 public class Player extends Entity {
 	private int model = ModelHandler.SHIP1;
@@ -59,7 +57,7 @@ public class Player extends Entity {
 			boolean left = KeyboardHandler.left;
 			boolean right = KeyboardHandler.right;
 
-			// control forawrd and backward movement
+			// control forward and backward movement
 			if (forward || backward) {
 				if (forward) {
 					accelerateZPos(delta);
@@ -141,14 +139,7 @@ public class Player extends Entity {
 			QuaternionHelper.toFloatBuffer(revQuat, rotationBuffer);
 			GL11.glMultMatrix(rotationBuffer);
 
-			// rotate so that the model is facing the right way
-			/*
-			 * For the monkey ship GL11.glRotatef(-165.0f, 1.0f, 0.0f, 0.0f);
-			 * GL11.glRotatef(180.0f, 0.0f, 0.0f, 1.0f);
-			 */
-
 			GL11.glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
-			//GL11.glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 
 			// draw the model
 			GL11.glCallList(ModelHandler.getModel(model).getCallList());
