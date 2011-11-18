@@ -18,7 +18,7 @@ public class MouseHandler {
 	/** how much the mouse wheel has moved */
 	public static float wheel;
 	
-	public static boolean inverted = true;
+	public static boolean inverted = false;
 
 	/** sensitivity values for mouse movement */
 	/**

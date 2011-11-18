@@ -1,11 +1,20 @@
 package graphics.model;
 
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
 import javax.vecmath.Point2f;
 import javax.vecmath.Vector3f;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+
+import com.bulletphysics.collision.shapes.BvhTriangleMeshShape;
+import com.bulletphysics.collision.shapes.CollisionShape;
+import com.bulletphysics.collision.shapes.IndexedMesh;
+import com.bulletphysics.collision.shapes.ScalarType;
+import com.bulletphysics.collision.shapes.TriangleIndexVertexArray;
 
 
 /*
@@ -37,9 +46,6 @@ public class ModelBuilder {
 	/** which texture coordinates to call */
 	private ArrayList<int[]> textureIndices;
 
-	/** for rendering the model */
-	private int callList;
-
 	public ModelBuilder() {
 		/*
 		 * Have to add a blank element to the beginning of each list, as the obj
@@ -66,7 +72,25 @@ public class ModelBuilder {
 	}
 
 	public void addVertexIndices(int[] indices) {
-		vertexIndices.add(indices);
+		if(indices.length == 3)
+			vertexIndices.add(indices);
+		else if(indices.length == 4){
+			int[] tri1 = new int[3];
+			tri1[0] = indices[0];
+			tri1[1] = indices[1];
+			tri1[2] = indices[2];
+			
+			vertexIndices.add(tri1);
+			
+			int[] tri2 = new int[3];
+			tri2[0] = indices[2];
+			tri2[1] = indices[3];
+			tri2[2] = indices[0];
+			
+			vertexIndices.add(tri2);
+		} else{
+			System.out.println("Error! Array not a triangle or a quad! (ModelBuilder)");
+		}
 	}
 
 	public void addNormal(Vector3f vertex) {
@@ -74,7 +98,25 @@ public class ModelBuilder {
 	}
 
 	public void addNormalIndices(int[] indices) {
-		normalIndices.add(indices);
+		if(indices.length == 3)
+			normalIndices.add(indices);
+		else if(indices.length == 4){
+			int[] tri1 = new int[3];
+			tri1[0] = indices[0];
+			tri1[1] = indices[1];
+			tri1[2] = indices[2];
+			
+			normalIndices.add(tri1);
+			
+			int[] tri2 = new int[3];
+			tri2[0] = indices[2];
+			tri2[1] = indices[3];
+			tri2[2] = indices[0];
+			
+			normalIndices.add(tri2);
+		} else{
+			System.out.println("Error! Array not a triangle or a quad! (ModelBuilder)");
+		}
 	}
 	
 	public void addTextureCoords(Point2f point){
@@ -82,7 +124,25 @@ public class ModelBuilder {
 	}
 
 	public void addTetxureIndices(int[] indices) {
-		textureIndices.add(indices);
+		if(indices.length == 3)
+			textureIndices.add(indices);
+		else if(indices.length == 4){
+			int[] tri1 = new int[3];
+			tri1[0] = indices[0];
+			tri1[1] = indices[1];
+			tri1[2] = indices[2];
+			
+			textureIndices.add(tri1);
+			
+			int[] tri2 = new int[3];
+			tri2[0] = indices[2];
+			tri2[1] = indices[3];
+			tri2[2] = indices[0];
+			
+			textureIndices.add(tri2);
+		} else{
+			System.out.println("Error! Array not a triangle or a quad! (ModelBuilder)");
+		}
 	}
 
 	/**
@@ -90,13 +150,52 @@ public class ModelBuilder {
 	 * and their respective indices have been added.
 	 */
 	public Model makeModel(float scale) {
-		buildCallList();
-
-		return new Model(callList);
+		//return new Model(buildCollisionShape(), buildCallList());
+		return new Model(buildCallList());
+	}
+	
+	private CollisionShape buildCollisionShape(){
+		/*
+		 *  Each Vector3f in vertices has 3 floats, and each float is 4 bytes so we need
+		 *  number of vertices * 3 floats per vertex * 4 bytes per float bytes
+		 */
+		ByteBuffer vertexBase = BufferUtils.createByteBuffer(vertices.size() * 3 * 4);
+		for(Vector3f vec : vertices){
+			vertexBase.putFloat(vec.x);
+			vertexBase.putFloat(vec.y);
+			vertexBase.putFloat(vec.z);
+		}
+		
+		/*
+		 *  Each int[] in vertexIndices has 3 ints, and each int is 4 bytes so we need
+		 *  number of arrays * 3 ints per array * 4 bytes per int bytes
+		 */
+		ByteBuffer triangleIndexBase = BufferUtils.createByteBuffer(vertexIndices.size() * 3 * 4);
+		for(int[] ind : vertexIndices){
+			for(int i : ind)
+				triangleIndexBase.putInt(i);
+		}
+		
+		IndexedMesh imesh = new IndexedMesh();
+		imesh.triangleIndexBase = triangleIndexBase;
+		imesh.numTriangles = vertexIndices.size();
+		// each int is 4 bytes
+		imesh.triangleIndexStride = 4;
+		
+		imesh.vertexBase = vertexBase;
+		imesh.numVertices = vertices.size();
+		// each float is 4 bytes
+		imesh.vertexStride = 4;
+		
+		TriangleIndexVertexArray vertArr = new TriangleIndexVertexArray();
+		
+		vertArr.addIndexedMesh(imesh);
+		
+		return new BvhTriangleMeshShape(vertArr, true);
 	}
 
-	private void buildCallList() {
-		callList = GL11.glGenLists(1);
+	private int buildCallList() {
+		int callList = GL11.glGenLists(1);
 
 		GL11.glNewList(callList, GL11.GL_COMPILE);
 		{
@@ -122,6 +221,8 @@ public class ModelBuilder {
 			}
 		}
 		GL11.glEndList();
+		
+		return callList;
 	}
 	
 	private void drawArrays(int[] verts, int[] norms, int[] texCoords){
@@ -134,10 +235,6 @@ public class ModelBuilder {
 			GL11.glVertex3f(vertex.x, vertex.y, vertex.z);
 			GL11.glNormal3f(normal.x, normal.y, normal.z);
 		}
-	}
-
-	public int getCallList() {
-		return callList;
 	}
 
 	public String getName() {
