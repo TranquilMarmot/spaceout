@@ -250,8 +250,12 @@ public class Runner {
 			}
 			
 			if(!Entities.removeBuffer.isEmpty()){
-				for(Entity ent : Entities.removeBuffer)
+				Iterator<Entity> removeIterator = Entities.removeBuffer.iterator();
+				while(removeIterator.hasNext()){
+					Entity ent = removeIterator.next();
 					Entities.entities.remove(ent);
+					removeIterator.remove();
+				}
 			}
 			
 			Iterator<Entity> entityIterator = Entities.entities.iterator();

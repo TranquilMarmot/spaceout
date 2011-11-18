@@ -18,7 +18,7 @@ public class MouseHandler {
 	/** how much the mouse wheel has moved */
 	public static float wheel;
 	
-	public static boolean inverted = false;
+	public static boolean inverted = true;
 
 	/** sensitivity values for mouse movement */
 	/**
@@ -42,10 +42,15 @@ public class MouseHandler {
 
 		if (!DebugManager.consoleOn) {
 			dx = (-(float) Mouse.getDX()) / verticalSensitivity;
+			dy = ((float) Mouse.getDY()) / horizontalSensitivity;
+			if(inverted)
+				dy = -dy;
+			/*
 			if(!inverted)
 				dy = ((float) Mouse.getDY()) / horizontalSensitivity;
 			else
 				dy = (-(float) Mouse.getDY()) / horizontalSensitivity;
+				*/
 		} else{
 			dx = 0.0f;
 			dy = 0.0f;
