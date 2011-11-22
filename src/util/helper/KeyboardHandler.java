@@ -2,6 +2,7 @@ package util.helper;
 
 import org.lwjgl.input.Keyboard;
 
+import util.debug.Debug;
 import util.debug.DebugManager;
 
 public class KeyboardHandler {
@@ -106,7 +107,7 @@ public class KeyboardHandler {
 						if (!Character.isIdentifierIgnorable(c)
 								&& !c.equals('`') && !c.equals('\n')
 								&& !c.equals('\r')) {
-							DebugManager.console.putCharacter(c);
+							Debug.console.putCharacter(c);
 						}
 						/* END CONSOLE INPUT */
 					}

@@ -6,7 +6,6 @@ import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
 import util.Screenshot;
-import util.debug.console.Console;
 import util.helper.DisplayHelper;
 import util.helper.KeyboardHandler;
 
@@ -22,10 +21,7 @@ public class DebugManager {
 
 	// font for printing stuff to the screen
 	public static UnicodeFont font = null;
-
-	// the console
-	public static Console console = new Console();
-
+	
 	// Key listener booleans
 	private static boolean debugDown = false;
 	private static boolean consoleDown = false;
@@ -49,7 +45,7 @@ public class DebugManager {
 
 		updateKeys();
 
-		console.draw();
+		Debug.console.draw();
 
 		if (displayDebug) {
 			Debug.drawDebugInfo();
@@ -135,7 +131,7 @@ public class DebugManager {
 
 		// handle the enter key being pressed to submit a line
 		if (Keyboard.isKeyDown(Keyboard.KEY_RETURN) && !returnDown) {
-			console.submit();
+			Debug.console.submit();
 			
 			if (autoClose) {
 				autoClose = false;
@@ -153,13 +149,13 @@ public class DebugManager {
 		// handle backspace
 		if (Keyboard.isKeyDown(Keyboard.KEY_BACK)) {
 			if(!backDown){
-				console.backspace();
+				Debug.console.backspace();
 				backDown = true;
 			} else{
 				if(backspaceRepeatCounter < backspaceRepeatWait)
 					backspaceRepeatCounter++;
 				else if(backspaceRepeatCounter == backspaceRepeatWait)
-					console.backspace();
+					Debug.console.backspace();
 			}
 		}
 		if (!Keyboard.isKeyDown(Keyboard.KEY_BACK)){
@@ -169,7 +165,7 @@ public class DebugManager {
 
 		// handle scrolling up and down in the console
 		if (Keyboard.isKeyDown(Keyboard.KEY_NEXT) && !scrollUpDown) {
-			console.scroll--;
+			Debug.console.scroll--;
 			scrollUpDown = true;
 		}
 
@@ -178,7 +174,7 @@ public class DebugManager {
 
 		// handle scrolling up and down in the console
 		if (Keyboard.isKeyDown(Keyboard.KEY_PRIOR) && !scrollDownDown) {
-			console.scroll++;
+			Debug.console.scroll++;
 			scrollDownDown = true;
 		}
 

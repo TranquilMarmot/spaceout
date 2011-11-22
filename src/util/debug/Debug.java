@@ -6,6 +6,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 
+import util.debug.console.Console;
 import util.helper.DisplayHelper;
 import util.helper.TextureHandler;
 import entities.Entities;
@@ -24,6 +25,9 @@ public class Debug {
 	public static boolean displayDebug = true;
 	
 	private static int rectangleCallList = 0;
+	
+	// the console
+	public static Console console = new Console();
 
 	public static void drawDebugInfo() {
 		

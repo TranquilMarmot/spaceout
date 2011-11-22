@@ -24,7 +24,7 @@ public class ModelLoader {
 	 *            The file to load the Model from
 	 * @return An ArrayList containing all the Models found in the file
 	 */
-	public static ArrayList<Integer> loadPlyFile(String file) {
+	public static Model loadPlyFile(String file) {
 		return loadPlyFile(file, 1.0f);
 	}
 
@@ -38,7 +38,7 @@ public class ModelLoader {
 	 *            The scale to load the model in at
 	 * @return An ArrayList containing all the Models found in the file
 	 */
-	public static ArrayList<Integer> loadPlyFile(String file, float scale) {
+	public static Model loadPlyFile(String file, float scale) {
 		ArrayList<Integer> models = new ArrayList<Integer>();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -162,7 +162,7 @@ public class ModelLoader {
 			e.printStackTrace();
 		}
 
-		return models;
+		return new Model(models.get(0));
 	}
 
 	/*

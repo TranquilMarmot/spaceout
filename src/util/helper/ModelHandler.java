@@ -31,7 +31,7 @@ public class ModelHandler {
 			ship1 = ModelLoader.loadObjFile(MODEL_PATH + "ships/ship1.obj", 0.5f);
 			break;
 		case LASERBULLET:
-			laserbullet = ModelLoader.loadObjFile(MODEL_PATH + "laserbullet.obj", 2.5f);
+			laserbullet = ModelLoader.loadPlyFile(MODEL_PATH + "arrow.ply", 2.5f);
 			break;
 		}
 	}

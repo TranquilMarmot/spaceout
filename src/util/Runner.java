@@ -141,6 +141,9 @@ public class Runner {
 
 		// Select the Modelview matrix
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		
+		// Select 2D textures
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
 	/**

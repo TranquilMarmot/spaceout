@@ -150,42 +150,51 @@ public class ModelBuilder {
 	 * and their respective indices have been added.
 	 */
 	public Model makeModel(float scale) {
-		//return new Model(buildCollisionShape(), buildCallList());
-		return new Model(buildCallList());
+		//return new Model(buildCallList());
+		return new Model(buildCollisionShape(), buildCallList());
 	}
 	
 	private CollisionShape buildCollisionShape(){
 		/*
 		 *  Each Vector3f in vertices has 3 floats, and each float is 4 bytes so we need
-		 *  number of vertices * 3 floats per vertex * 4 bytes per float bytes
+		 *  (number of vertices * 3 floats per vertex * 4 bytes per float) bytes
 		 */
-		ByteBuffer vertexBase = BufferUtils.createByteBuffer(vertices.size() * 3 * 4);
-		for(Vector3f vec : vertices){
+		ByteBuffer vertexBase = ByteBuffer.allocate((vertices.size() - 1) * 3 * 4);
+		//ByteBuffer vertexBase = BufferUtils.createByteBuffer(vertices.size() * 3 * 4);
+		for(int i = 1; i < vertices.size(); i++){
+			Vector3f vec = vertices.get(i);
 			vertexBase.putFloat(vec.x);
 			vertexBase.putFloat(vec.y);
 			vertexBase.putFloat(vec.z);
 		}
 		
+		vertexBase.rewind();
+		
 		/*
 		 *  Each int[] in vertexIndices has 3 ints, and each int is 4 bytes so we need
-		 *  number of arrays * 3 ints per array * 4 bytes per int bytes
+		 *  (number of arrays * 3 ints per array * 4 bytes per int) bytes
 		 */
-		ByteBuffer triangleIndexBase = BufferUtils.createByteBuffer(vertexIndices.size() * 3 * 4);
-		for(int[] ind : vertexIndices){
-			for(int i : ind)
-				triangleIndexBase.putInt(i);
+		ByteBuffer triangleIndexBase = ByteBuffer.allocate(vertexIndices.size() * 3 * 4);
+		//ByteBuffer triangleIndexBase = BufferUtils.createByteBuffer(vertexIndices.size() * 3 * 4);
+		for(int i = 0; i < vertexIndices.size(); i++){
+			int[] triangleIndices = vertexIndices.get(i);
+			for(int j : triangleIndices)
+				triangleIndexBase.putInt(j);
 		}
+		
+		triangleIndexBase.rewind();
 		
 		IndexedMesh imesh = new IndexedMesh();
 		imesh.triangleIndexBase = triangleIndexBase;
 		imesh.numTriangles = vertexIndices.size();
 		// each int is 4 bytes
-		imesh.triangleIndexStride = 4;
+		imesh.triangleIndexStride = 1;
 		
 		imesh.vertexBase = vertexBase;
-		imesh.numVertices = vertices.size();
+		// size - 1 because first element is a dummy
+		imesh.numVertices = vertices.size() - 1;
 		// each float is 4 bytes
-		imesh.vertexStride = 4;
+		imesh.vertexStride = 1;
 		
 		TriangleIndexVertexArray vertArr = new TriangleIndexVertexArray();
 		
