@@ -39,6 +39,7 @@ public class ModelLoader {
 	 * @return An ArrayList containing all the Models found in the file
 	 */
 	public static Model loadPlyFile(String file, float scale) {
+		System.out.println("build");
 		ArrayList<Integer> models = new ArrayList<Integer>();
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));

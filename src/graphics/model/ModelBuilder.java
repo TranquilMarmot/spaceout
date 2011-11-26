@@ -1,19 +1,16 @@
 package graphics.model;
 
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
 import javax.vecmath.Point2f;
 import javax.vecmath.Vector3f;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import com.bulletphysics.collision.shapes.BvhTriangleMeshShape;
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.collision.shapes.IndexedMesh;
-import com.bulletphysics.collision.shapes.ScalarType;
 import com.bulletphysics.collision.shapes.TriangleIndexVertexArray;
 
 
@@ -206,7 +203,7 @@ public class ModelBuilder {
 	private int buildCallList() {
 		int callList = GL11.glGenLists(1);
 
-		GL11.glNewList(callList, GL11.GL_COMPILE);
+		GL11.glNewList(callList, GL11.GL_COMPILE_AND_EXECUTE);
 		{
 			for(int i = 0; i < vertexIndices.size(); i++){
 				int[] verts = vertexIndices.get(i);
@@ -241,8 +238,8 @@ public class ModelBuilder {
 			Point2f coord = textureCoords.get(texCoords[i]);
 			
 			GL11.glTexCoord2f(coord.x, 1 - coord.y);
-			GL11.glVertex3f(vertex.x, vertex.y, vertex.z);
 			GL11.glNormal3f(normal.x, normal.y, normal.z);
+			GL11.glVertex3f(vertex.x, vertex.y, vertex.z);
 		}
 	}
 

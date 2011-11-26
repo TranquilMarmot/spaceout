@@ -5,6 +5,7 @@ import graphics.model.ModelLoader;
 
 public class ModelHandler {
 	private static final String MODEL_PATH = "res/models/";
+	
 	private static Model ship1;
 	private static Model laserbullet;
 	
@@ -31,7 +32,8 @@ public class ModelHandler {
 			ship1 = ModelLoader.loadObjFile(MODEL_PATH + "ships/ship1.obj", 0.5f);
 			break;
 		case LASERBULLET:
-			laserbullet = ModelLoader.loadPlyFile(MODEL_PATH + "arrow.ply", 2.5f);
+			//laserbullet = ModelLoader.loadPlyFile(MODEL_PATH + "laserbullet.ply", 2.5f);
+			laserbullet = ModelLoader.loadObjFile(MODEL_PATH + "laserbullet.obj", 2.5f);
 			break;
 		}
 	}

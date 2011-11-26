@@ -21,7 +21,7 @@ public class LaserBullet extends Entity {
 	private float traveled;
 
 	// how far the bullet goes before it dies
-	private static float life = 750.0f;
+	private static float life = 150.0f;
 
 	public LaserBullet(float x, float y, float z, Quaternion direction) {
 		super();
@@ -29,7 +29,7 @@ public class LaserBullet extends Entity {
 		this.rotation = new Quaternion(direction.x, direction.y, direction.z,
 				direction.w);
 
-		this.zSpeed = 0.1f;
+		this.zSpeed = 0.02f;
 
 		this.type = "bullet";
 
