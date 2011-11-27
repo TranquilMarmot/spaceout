@@ -3,7 +3,7 @@ package graphics.render;
 import org.lwjgl.opengl.GL11;
 
 import util.Runner;
-import util.debug.DebugManager;
+import util.debug.Debug;
 import util.helper.DisplayHelper;
 
 public class Render2D {
@@ -11,11 +11,11 @@ public class Render2D {
 		setUp2DRender();
 
 		// draw debug info
-		DebugManager.updateAndDraw();
+		Debug.updateAndDraw();
 
 		// draw 'PAUSED' in the middle of the screen if the game is paused
 		if (Runner.paused)
-			DebugManager.font.drawString((DisplayHelper.windowWidth / 2) - 25,
+			Debug.font.drawString((DisplayHelper.windowWidth / 2) - 25,
 					DisplayHelper.windowHeight / 2, "PAUSED");
 	}
 	

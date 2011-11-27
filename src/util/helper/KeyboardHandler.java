@@ -3,12 +3,14 @@ package util.helper;
 import org.lwjgl.input.Keyboard;
 
 import util.debug.Debug;
-import util.debug.DebugManager;
 
 public class KeyboardHandler {
 	// These allow for controls to easily be changed (just change the key for
 	// the action)
-	/* Player control keys (only checked when the console's not up- primarily keys needed for typing to the console) */
+	/*
+	 * Player control keys (only checked when the console's not up- primarily
+	 * keys needed for typing to the console)
+	 */
 	private static int forwardKey = Keyboard.KEY_W;
 	private static int backwardKey = Keyboard.KEY_S;
 	private static int leftKey = Keyboard.KEY_A;
@@ -18,9 +20,11 @@ public class KeyboardHandler {
 	private static int rollLeftKey = Keyboard.KEY_Q;
 	private static int rollRightKey = Keyboard.KEY_E;
 	private static int vanityModeKey = Keyboard.KEY_V;
-	
+
 	private static int previousConsoleCommandKey = Keyboard.KEY_UP;
 	private static int nextConsoleCommandKey = Keyboard.KEY_DOWN;
+	// TODO finish making this work
+	private static int consoleSubmitKey = Keyboard.KEY_RETURN;
 
 	/* Keys that are always checked */
 	private static int consoleKey = Keyboard.KEY_GRAVE;
@@ -41,10 +45,11 @@ public class KeyboardHandler {
 	public static boolean rollLeft;
 	public static boolean rollRight;
 	public static boolean vanityMode;
-	
+
 	public static boolean previousConsoleCommand;
 	public static boolean nextConsoleCommand;
-	
+	public static boolean consoleSubmit;
+
 	public static boolean console;
 	public static boolean command;
 	public static boolean chat;
@@ -54,7 +59,8 @@ public class KeyboardHandler {
 	public static boolean screenshot;
 
 	/**
-	 * This MUST be called every frame! It updates all the booleans in this class
+	 * This MUST be called every frame! It updates all the booleans in this
+	 * class
 	 */
 	public void update() {
 		// loop through all the event keys for this frame
@@ -80,7 +86,7 @@ public class KeyboardHandler {
 							chat = true;
 					}/* END ALWAYS CHECKED KEYS */
 
-					if (!DebugManager.consoleOn) {
+					if (!Debug.consoleOn) {
 						/* BEGIN CONTROL KEYS */
 						if (eventKey == forwardKey)
 							forward = true;
@@ -98,7 +104,7 @@ public class KeyboardHandler {
 							rollLeft = true;
 						else if (eventKey == rollRightKey)
 							rollRight = true;
-						else if(eventKey == vanityModeKey)
+						else if (eventKey == vanityModeKey)
 							vanityMode = true;
 						/* END CONTROL KEYS */
 					} else {
@@ -127,7 +133,7 @@ public class KeyboardHandler {
 							console = false;
 						else if (eventKey == commandKey)
 							command = false;
-						else if (eventKey == chatKey) 
+						else if (eventKey == chatKey)
 							chat = false;
 					}/* END ALWAYS CHECKED KEYS */
 
@@ -148,8 +154,8 @@ public class KeyboardHandler {
 							rollLeft = false;
 						else if (eventKey == rollRightKey)
 							rollRight = false;
-						else if(eventKey == vanityModeKey)
-							vanityMode= false;
+						else if (eventKey == vanityModeKey)
+							vanityMode = false;
 					}/* END CONTROL KEYS */
 
 				}/* END KEY UP EVENTS */

@@ -6,7 +6,6 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.UnicodeFont;
 
-import util.debug.DebugManager;
 import util.debug.Debug;
 import util.helper.DisplayHelper;
 import util.helper.MouseHandler;
@@ -41,11 +40,11 @@ public class Console {
 	// all the text that the console contains and will print out
 	public ArrayList<String> text = new ArrayList<String>();
 	
-	public void draw() {
+	public void updateAndDraw() {
 		// scroll with the mouse wheel
 		scroll += MouseHandler.wheel / 100;
 		// how tall each line is
-		int advanceY = DebugManager.font.getAscent();
+		int advanceY = Debug.font.getAscent();
 		// where to draw the console (x stays at 10)
 		y = DisplayHelper.windowHeight - advanceY - 10;
 
@@ -66,13 +65,13 @@ public class Console {
 		updateBlink();
 
 		// check for command
-		if (DebugManager.commandOn) {
+		if (Debug.commandOn) {
 			input = "/";
-			DebugManager.commandOn = false; 
+			Debug.commandOn = false; 
 		}
 		
 		// draw the input text
-		if (DebugManager.consoleOn) {
+		if (Debug.consoleOn) {
 			
 			// draw a semi-transparent box behind the console text
 			
@@ -97,13 +96,13 @@ public class Console {
 				// which line we're at in the console itself
 				int line = text.size() - (i + scroll);
 				// draw the string, going up on the y axis by how tall each line is
-				DebugManager.font.drawString(x, y - (advanceY * line), text.get(i), new Color(38, 255, 0));
+				Debug.font.drawString(x, y - (advanceY * line), text.get(i), new Color(38, 255, 0));
 			}
 			
 			String toPrint = "> " + input;
 			if (blink) 
 				toPrint += "_";
-			DebugManager.font.drawString(x, y, toPrint, new Color(38, 255, 0));
+			Debug.font.drawString(x, y, toPrint, new Color(38, 255, 0));
 		}
 		
 	}

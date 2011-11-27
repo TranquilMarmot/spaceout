@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 
 import util.Runner;
-import util.debug.DebugManager;
+import util.debug.Debug;
 import util.helper.KeyboardHandler;
 import util.helper.ModelHandler;
 import util.helper.MouseHandler;
@@ -115,7 +115,7 @@ public class Player extends Entity {
 
 			// shoot bullets if the player clicked
 			if (MouseHandler.button0 && !button0Down
-					&& !(DebugManager.consoleOn)) {
+					&& !(Debug.consoleOn)) {
 				LaserBullet bullet = new LaserBullet(this.location.x,
 						this.location.y, this.location.z, this.rotation);
 				Entities.addBuffer.add(bullet);

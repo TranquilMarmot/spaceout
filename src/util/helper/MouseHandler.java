@@ -2,7 +2,7 @@ package util.helper;
 
 import org.lwjgl.input.Mouse;
 
-import util.debug.DebugManager;
+import util.debug.Debug;
 
 public class MouseHandler {
 	/** whether or not button 0 is being pressed */
@@ -40,17 +40,11 @@ public class MouseHandler {
 		else
 			button1 = false;
 
-		if (!DebugManager.consoleOn) {
+		if (!Debug.consoleOn) {
 			dx = (-(float) Mouse.getDX()) / verticalSensitivity;
 			dy = ((float) Mouse.getDY()) / horizontalSensitivity;
 			if(inverted)
 				dy = -dy;
-			/*
-			if(!inverted)
-				dy = ((float) Mouse.getDY()) / horizontalSensitivity;
-			else
-				dy = (-(float) Mouse.getDY()) / horizontalSensitivity;
-				*/
 		} else{
 			dx = 0.0f;
 			dy = 0.0f;

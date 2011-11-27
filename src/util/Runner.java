@@ -7,7 +7,7 @@ import graphics.render.Graphics;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
-import util.debug.DebugManager;
+import util.debug.Debug;
 import util.helper.DisplayHelper;
 import util.helper.KeyboardHandler;
 import util.helper.MouseHandler;
@@ -16,6 +16,10 @@ import util.xml.XMLParser;
 // Rule number 1: Tell everyone about Spaceout (ask them for ideas! We need ideas!).
 // Rule number 2: Comment everything motherfucker.
 
+/**
+ * Initializes and runs the game.
+ * @author TranquilMarmot
+ */
 public class Runner {
 	/** prevents updates but still renders the scene */
 	public static boolean paused = true;
@@ -110,7 +114,7 @@ public class Runner {
 		}
 
 		// release the mouse if the game's paused
-		if (!paused && !DebugManager.consoleOn)
+		if (!paused && !Debug.consoleOn)
 			Mouse.setGrabbed(true);
 		else
 			Mouse.setGrabbed(false);

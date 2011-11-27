@@ -4,7 +4,7 @@ import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 import util.Runner;
-import util.debug.DebugManager;
+import util.debug.Debug;
 import util.helper.KeyboardHandler;
 import util.helper.MouseHandler;
 
@@ -50,7 +50,7 @@ public class Camera extends Entity {
 			zoomSensitivity = 10.0f;
 
 		// handle zooming
-		if (!DebugManager.consoleOn)
+		if (!Debug.consoleOn)
 			zoom -= MouseHandler.wheel / zoomSensitivity;
 		if (zoom < minZoom)
 			zoom = minZoom;

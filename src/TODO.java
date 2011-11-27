@@ -21,6 +21,7 @@
  * you continue going in the direction you're looking (instead of going the direction you were looking at before)
  * TODO create the rest of the solar system
  * TODO ConsoleCommands.java is pretty damn ugly still!
+ * TODO In DebugKeyManager there are keys that don't go through the KeyboardManager
  * 
  * TODO planets are impossible to find! Find a way to billboard text and have it drawn over a planet (text size probably based on distance from planet)
  * TODO Make the skybox a box instead of a sphere
