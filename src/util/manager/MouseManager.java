@@ -22,6 +22,8 @@ public class MouseManager {
 	public static float dy;
 	/** how much the mouse wheel has moved */
 	public static float wheel;
+	/** the mouse's current location */
+	public static float x, y;
 	
 	public static boolean inverted = false;
 
@@ -56,6 +58,9 @@ public class MouseManager {
 		}
 
 		wheel = (float) Mouse.getDWheel();
+		
+		x = Mouse.getX();
+		y = Mouse.getY();
 	}
 
 }

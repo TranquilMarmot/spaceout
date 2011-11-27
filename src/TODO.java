@@ -36,7 +36,8 @@
  * TODO Make everything that extends 'Light' have a 'light' int that points to one of LIGHT0-LIGHT8
  * TODO Right now, everything simply has a name string. It would make more sense to reference objects by some sort of hash tag
  * TODO Threads, threads and more threads! Make this more multi-processor friendly!
- * TODO Create a GUI (maybe using nifty gui? http://nifty-gui.lessvoid.com/) 
+ * TODO Create a GUI (maybe using nifty gui? http://nifty-gui.lessvoid.com/)
+ * TODO Whenever explosions get implemented, make sure to have the camera shake if it's near one!
  * 
  * 
  * NICK Tasks: Console, XML, Lua(?), By Category, Importance

@@ -53,7 +53,7 @@ public class Runner {
 				DisplayHelper.resizeWindow();
 				// update misc stuff (keyboard, mouse, etc.)
 				update();
-				// if we're not paused, update all the entities
+				// update all the entities
 				updateEntities();
 				// render the scene
 				Graphics.renderAndUpdateEntities();
@@ -61,14 +61,10 @@ public class Runner {
 				Display.update();
 				Display.sync(DisplayHelper.targetFPS);
 			}
-			// get rid of the display and the frame when we're done (otherwise
-			// we'll be left with a zombie screen)
-			Display.destroy();
-			DisplayHelper.frame.dispose();
+			shutdown();
 		} catch (Exception e) {
-			// if an exception is caught, destroy the display ad the frame
-			Display.destroy();
-			DisplayHelper.frame.dispose();
+			// if an exception is caught, destroy the display and the frame
+			shutdown();
 			e.printStackTrace();
 		}
 	}
@@ -136,5 +132,13 @@ public class Runner {
 		 *  In the future, Entities.entities should have two threads that can operate on it- reading threads and a writing thread
 		 *  The reading threads would be used for rendering and collision detection, while the writing thread would be used for things like updating locations 
 		 */
+	}
+	
+	/**
+	 * To be called when the game is quit
+	 */
+	private void shutdown(){
+		Display.destroy();
+		DisplayHelper.frame.dispose();
 	}
 }
