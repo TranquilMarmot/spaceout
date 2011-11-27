@@ -5,7 +5,17 @@ import org.lwjgl.util.glu.GLU;
 
 import util.helper.DisplayHelper;
 
+/**
+ * Handles all the calls for OpenGL. This includes initializing OpenGL and calling {@link Render2D} and {@link Render3D}.
+ * @author TranquilMarmot
+ * @see Render2D
+ * @see Render3D
+ *
+ */
 public class Graphics {
+	/**
+	 * Updates all entities and renders them. This should probably be called every frame.
+	 */
 	public static void renderAndUpdateEntities(){
 		// Clear the color and depth buffers
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
@@ -20,6 +30,9 @@ public class Graphics {
 			System.out.println("Error rendering! Error number: " + error + " string: " + GLU.gluGetString(error));
 	}
 	
+	/**
+	 * Initializes OpenGL
+	 */
 	public static void initGL(){
 		// Enable 2D textures
 		GL11.glEnable(GL11.GL_TEXTURE_2D);

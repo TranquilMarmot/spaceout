@@ -9,10 +9,16 @@ import org.lwjgl.util.vector.Vector3f;
 
 import util.Noise;
 import util.helper.QuaternionHelper;
-import util.helper.TextureHandler;
+import util.manager.TextureManager;
 import entities.Entities;
 import entities.Entity;
 
+/**
+ * Fancy-looking space debris effect using perlin noise.
+ * @author TranquilMarmot
+ * @see Entity
+ *
+ */
 public class Debris extends Entity {
 	/** array to hold all the stars */
 	public Particle[] particles;
@@ -198,7 +204,7 @@ public class Debris extends Entity {
 		// put the rotation quaternion into the rotation buffer
 		QuaternionHelper.toFloatBuffer(rotation, rotationBuffer);
 		// bind a white texture and color
-		TextureHandler.getTexture(TextureHandler.WHITE).bind();
+		TextureManager.getTexture(TextureManager.WHITE).bind();
 		GL11.glColor3f(0.9f, 0.9f, 0.9f);
 		
 		// loop through all the particles to draw them
@@ -227,7 +233,7 @@ public class Debris extends Entity {
 	}
 
 	/**
-	 * This inner class is used only by the debris field
+	 * A debris particle.
 	 *
 	 */
 	private class Particle {

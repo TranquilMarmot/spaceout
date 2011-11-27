@@ -11,7 +11,7 @@ import org.newdawn.slick.font.effects.ColorEffect;
 
 import util.debug.console.Console;
 import util.helper.DisplayHelper;
-import util.helper.TextureHandler;
+import util.manager.TextureManager;
 import entities.Entities;
 
 /**
@@ -123,7 +123,7 @@ public class Debug {
 
 			GL11.glNewList(rectangleCallList, GL11.GL_COMPILE);
 			{
-				TextureHandler.getTexture(TextureHandler.WHITE).bind();
+				TextureManager.getTexture(TextureManager.WHITE).bind();
 				GL11.glColor3f(0.07f, 0.07f, 0.07f);
 				GL11.glBegin(GL11.GL_QUADS);
 				{

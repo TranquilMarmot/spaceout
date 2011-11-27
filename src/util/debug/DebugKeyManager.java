@@ -4,10 +4,16 @@ import org.lwjgl.input.Keyboard;
 
 import util.Screenshot;
 import util.helper.DisplayHelper;
-import util.helper.KeyboardHandler;
+import util.manager.KeyboardManager;
 
+/**
+ * Manages all the keys that {@link Debug} uses
+ * @author TranquilMarmot
+ * @author arthurdent
+ * @see Debug
+ *
+ */
 public class DebugKeyManager {
-
 	// Booleans to keep buttons from repeating
 	private static boolean debugDown = false;
 	private static boolean consoleDown = false;
@@ -22,31 +28,35 @@ public class DebugKeyManager {
 	// whether or not to close the console when line is submitted
 	private static boolean autoClose = false;
 	
+	// make it so backspace can be held down
 	private static int backspaceRepeatCounter = 0;
 	private static int backspaceRepeatWait = 30;
 	
+	/**
+	 * Update all the booleans that Debug uses
+	 */
 	protected static void updateKeys() {
 		// debug button
-		if (KeyboardHandler.debug && !debugDown) {
+		if (KeyboardManager.debug && !debugDown) {
 			Debug.displayDebug = !Debug.displayDebug;
 			debugDown = true;
 		}
-		if (!KeyboardHandler.debug) {
+		if (!KeyboardManager.debug) {
 			debugDown = false;
 		}
 
 		// console button
-		if (KeyboardHandler.console && !consoleDown) {
+		if (KeyboardManager.console && !consoleDown) {
 			Debug.consoleOn = !Debug.consoleOn;
 			autoClose = false;
 			consoleDown = true;
 		}	
-		if (!KeyboardHandler.console) {
+		if (!KeyboardManager.console) {
 			consoleDown = false;
 		}
 		
 		// command button
-		if (KeyboardHandler.command && !commandDown) {
+		if (KeyboardManager.command && !commandDown) {
 			if (Debug.consoleOn == false) {
 				Debug.consoleOn = true;
 				Debug.commandOn = true;
@@ -54,19 +64,19 @@ public class DebugKeyManager {
 			}
 			commandDown = true;
 		}
-		if (!KeyboardHandler.command) {
+		if (!KeyboardManager.command) {
 			commandDown = false;
 		}
 
 		// chat button
-		if (KeyboardHandler.chat && !chatDown) {
+		if (KeyboardManager.chat && !chatDown) {
 			if (Debug.consoleOn == false) {
 				Debug.consoleOn = true;
 				autoClose = true;
 			}
 			chatDown = true;
 		}
-		if (!KeyboardHandler.chat) {
+		if (!KeyboardManager.chat) {
 			chatDown= false;
 		}
 
@@ -105,7 +115,7 @@ public class DebugKeyManager {
 
 		// handle scrolling up and down in the console
 		if (Keyboard.isKeyDown(Keyboard.KEY_NEXT) && !scrollUpDown) {
-			Debug.console.scroll--;
+			Debug.console.scrollUp(1);
 			scrollUpDown = true;
 		}
 		if (!Keyboard.isKeyDown(Keyboard.KEY_NEXT))
@@ -113,19 +123,19 @@ public class DebugKeyManager {
 
 		// handle scrolling up and down in the console
 		if (Keyboard.isKeyDown(Keyboard.KEY_PRIOR) && !scrollDownDown) {
-			Debug.console.scroll++;
+			Debug.console.scrollDown(1);
 			scrollDownDown = true;
 		}
 		if (!Keyboard.isKeyDown(Keyboard.KEY_PRIOR))
 			scrollDownDown = false;
 		
 		// screenshot button
-		if (KeyboardHandler.screenshot && !screenShotDown) {
+		if (KeyboardManager.screenshot && !screenShotDown) {
 			Screenshot.takeScreenshot(DisplayHelper.windowWidth,
 					DisplayHelper.windowHeight);
 			screenShotDown = true;
 		}
-		if (!KeyboardHandler.screenshot)
+		if (!KeyboardManager.screenshot)
 			screenShotDown = false;
 	}
 }

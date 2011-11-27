@@ -9,8 +9,8 @@ import org.lwjgl.opengl.Display;
 
 import util.debug.Debug;
 import util.helper.DisplayHelper;
-import util.helper.KeyboardHandler;
-import util.helper.MouseHandler;
+import util.manager.KeyboardManager;
+import util.manager.MouseManager;
 import util.xml.XMLParser;
 
 // Rule number 1: Tell everyone about Spaceout (ask them for ideas! We need ideas!).
@@ -30,8 +30,8 @@ public class Runner {
 	public static boolean done = false;
 
 	/** the keyboard and mouse handlers that need to be updated every frame */
-	public static KeyboardHandler keyboard = new KeyboardHandler();
-	public static MouseHandler mouse = new MouseHandler();
+	public static KeyboardManager keyboard = new KeyboardManager();
+	public static MouseManager mouse = new MouseManager();
 
 	public static void main(String[] args) {
 		// Instantiate a runner, otherwise everything would have to be static
@@ -104,12 +104,12 @@ public class Runner {
 		/* BEGIN PAUSE LOGIC */
 		// if pauseDown is true, it means that the pause button is being held,
 		// so it avoids repeatedly flipping paused when the key is held
-		if (KeyboardHandler.pause && !pauseDown) {
+		if (KeyboardManager.pause && !pauseDown) {
 			paused = !paused;
 			pauseDown = true;
 		}
 
-		if (!KeyboardHandler.pause) {
+		if (!KeyboardManager.pause) {
 			pauseDown = false;
 		}
 

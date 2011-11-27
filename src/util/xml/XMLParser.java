@@ -11,7 +11,7 @@ import org.w3c.dom.NodeList;
 
 import util.debug.Debug;
 import util.helper.QuaternionHelper;
-import util.helper.TextureHandler;
+import util.manager.TextureManager;
 import entities.Entity;
 import entities.Skybox;
 import entities.celestial.Planet;
@@ -19,6 +19,12 @@ import entities.celestial.Sun;
 import entities.particles.Debris;
 import entities.player.Player;
 
+/**
+ * Loads entities from an XML file and puts them into the ArrayList Entities.entities
+ * @author TranquilMarmot
+ * @see Entities
+ *
+ */
 public class XMLParser {
 	/**
 	 * Loads entities from an XML file
@@ -148,13 +154,13 @@ public class XMLParser {
 			int texture = 0;
 			String name = getString(ele, "name");
 			if(name.equals("Earth"))
-				texture = TextureHandler.EARTH;
+				texture = TextureManager.EARTH;
 			else if(name.equals("Mercury"))
-				texture = TextureHandler.MERCURY;
+				texture = TextureManager.MERCURY;
 			else if(name.equals("Venus"))
-				texture = TextureHandler.VENUS;
+				texture = TextureManager.VENUS;
 			else if(name.equals("Mars"))
-				texture = TextureHandler.MARS;
+				texture = TextureManager.MARS;
 			else
 				System.out.println("Error! Didn't find texture while creating Planet "+ name + " in XMLParser!");
 			

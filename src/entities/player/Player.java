@@ -6,19 +6,30 @@ import org.lwjgl.util.vector.Quaternion;
 
 import util.Runner;
 import util.debug.Debug;
-import util.helper.KeyboardHandler;
-import util.helper.ModelHandler;
-import util.helper.MouseHandler;
 import util.helper.QuaternionHelper;
-import util.helper.TextureHandler;
+import util.manager.KeyboardManager;
+import util.manager.ModelManager;
+import util.manager.MouseManager;
+import util.manager.TextureManager;
 import entities.Entities;
 import entities.Entity;
 import entities.weapons.bullets.LaserBullet;
 
+/**
+ * The player!
+ * @author TranquilMarmot
+ *
+ */
 public class Player extends Entity {
-	private int model = ModelHandler.SHIP1;
+	/** the player's model */
+	private int model = ModelManager.SHIP1;
+
+	// prevent shooting too fast
 	private boolean button0Down = false;
 
+	/**
+	 * Player constructor
+	 */
 	public Player() {
 		super();
 		type = "player";
@@ -51,11 +62,11 @@ public class Player extends Entity {
 		 */
 		int delta = getDelta();
 		if (!Runner.paused) {
-			boolean forward = KeyboardHandler.forward;
-			boolean backward = KeyboardHandler.backward;
+			boolean forward = KeyboardManager.forward;
+			boolean backward = KeyboardManager.backward;
 
-			boolean left = KeyboardHandler.left;
-			boolean right = KeyboardHandler.right;
+			boolean left = KeyboardManager.left;
+			boolean right = KeyboardManager.right;
 
 			// control forward and backward movement
 			if (forward || backward) {
@@ -86,8 +97,8 @@ public class Player extends Entity {
 			moveX(xSpeed);
 
 			// handle going up/down
-			boolean up = KeyboardHandler.ascend;
-			boolean down = KeyboardHandler.descend;
+			boolean up = KeyboardManager.ascend;
+			boolean down = KeyboardManager.descend;
 			if (up || down) {
 				if (up)
 					accelerateYNeg(delta);
@@ -101,20 +112,20 @@ public class Player extends Entity {
 
 			// apply any rotation changes
 			if (!Entities.camera.vanityMode) {
-				rotateX(MouseHandler.dy);
-				rotateY(MouseHandler.dx);
+				rotateX(MouseManager.dy);
+				rotateY(MouseManager.dx);
 			}
 
 			// roll left/right
-			boolean rollRight = KeyboardHandler.rollRight;
-			boolean rollLeft = KeyboardHandler.rollLeft;
+			boolean rollRight = KeyboardManager.rollRight;
+			boolean rollLeft = KeyboardManager.rollLeft;
 			if (rollRight)
 				rotateZ(-delta / 10.0f);
 			if (rollLeft)
 				rotateZ(delta / 10.0f);
 
 			// shoot bullets if the player clicked
-			if (MouseHandler.button0 && !button0Down
+			if (MouseManager.button0 && !button0Down
 					&& !(Debug.consoleOn)) {
 				LaserBullet bullet = new LaserBullet(this.location.x,
 						this.location.y, this.location.z, this.rotation);
@@ -122,7 +133,7 @@ public class Player extends Entity {
 				button0Down = true;
 			}
 
-			if (!MouseHandler.button0) {
+			if (!MouseManager.button0) {
 				button0Down = false;
 			}
 		}
@@ -130,7 +141,7 @@ public class Player extends Entity {
 
 	@Override
 	public void draw() {
-		TextureHandler.getTexture(TextureHandler.SHIP1).bind();
+		TextureManager.getTexture(TextureManager.SHIP1).bind();
 		GL11.glPushMatrix();
 		{
 			// apply reverse rotation (counteracts the camera rotation)
@@ -142,7 +153,7 @@ public class Player extends Entity {
 			GL11.glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
 
 			// draw the model
-			GL11.glCallList(ModelHandler.getModel(model).getCallList());
+			GL11.glCallList(ModelManager.getModel(model).getCallList());
 		}
 		GL11.glPopMatrix();
 	}

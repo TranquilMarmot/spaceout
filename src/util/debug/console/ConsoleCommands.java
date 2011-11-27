@@ -9,9 +9,22 @@ import util.Runner;
 import util.debug.Debug;
 import entities.Entities;
 
+/**
+ * Commands that the {@link Console} carries out. See console_commands.txt.
+ * 
+ * @author TranquilMarmot
+ * @see Console
+ * 
+ */
 public class ConsoleCommands {
 	private static Console console = Debug.console;
 
+	/**
+	 * Issues a command
+	 * 
+	 * @param comm
+	 *            The command to issue
+	 */
 	public static void issueCommand(String comm) {
 		// split the command at the spaces
 		StringTokenizer toker = new StringTokenizer(comm, " ");
@@ -75,6 +88,10 @@ public class ConsoleCommands {
 		}
 	}
 
+	/**
+	 * Carry out a command to change the player's position
+	 * @param toker StringTokenizer containing the command
+	 */
 	private static void positionCommand(StringTokenizer toker) {
 		float x = Float.parseFloat(toker.nextToken());
 		float y = Float.parseFloat(toker.nextToken());
@@ -92,6 +109,10 @@ public class ConsoleCommands {
 		Entities.player.location.z = z;
 	}
 
+	/**
+	 * Command to warp to an entity
+	 * @param toker StringTokenizer containing the command
+	 */
 	private static void warpCommand(StringTokenizer toker) {
 		String warp = toker.nextToken();
 		for (entities.Entity ent : Entities.entities) {
@@ -102,42 +123,65 @@ public class ConsoleCommands {
 		}
 	}
 
+	/**
+	 * Command to change the player's speed variables
+	 * @param toker StringTokenizer containing the command
+	 */
 	private static void speedCommand(StringTokenizer toker) {
 		String speedCommand = toker.nextToken().toLowerCase();
 		Float speedChange = Float.parseFloat(toker.nextToken());
-		
-		if(speedCommand.equals("maxx") || speedCommand.equals("xmax")){
-			console.print("Changing player max X speed from " + Entities.player.maxXSpeed + " to " + speedChange);
+
+		if (speedCommand.equals("maxx") || speedCommand.equals("xmax")) {
+			console.print("Changing player max X speed from "
+					+ Entities.player.maxXSpeed + " to " + speedChange);
 			Entities.player.maxXSpeed = speedChange;
-		} else if(speedCommand.equals("maxy") || speedCommand.equals("ymax")){
-			console.print("Changing player max Y speed from " + Entities.player.maxYSpeed + " to " + speedChange);
+		} else if (speedCommand.equals("maxy") || speedCommand.equals("ymax")) {
+			console.print("Changing player max Y speed from "
+					+ Entities.player.maxYSpeed + " to " + speedChange);
 			Entities.player.maxYSpeed = speedChange;
-		} else if(speedCommand.equals("maxz") || speedCommand.equals("zmax")){
-			console.print("Changing player max Z speed from " + Entities.player.maxZSpeed + " to " + speedChange);
+		} else if (speedCommand.equals("maxz") || speedCommand.equals("zmax")) {
+			console.print("Changing player max Z speed from "
+					+ Entities.player.maxZSpeed + " to " + speedChange);
 			Entities.player.maxZSpeed = speedChange;
-		} else if(speedCommand.equals("accelx") || speedCommand.equals("xaccel")){
-			console.print("Changing player X acceleration from " + Entities.player.xAccel + " to " + speedChange);
+		} else if (speedCommand.equals("accelx")
+				|| speedCommand.equals("xaccel")) {
+			console.print("Changing player X acceleration from "
+					+ Entities.player.xAccel + " to " + speedChange);
 			Entities.player.xAccel = speedChange;
-		} else if(speedCommand.equals("accely") || speedCommand.equals("yaccel")){
-			console.print("Changing player Y acceleration from " + Entities.player.yAccel + " to " + speedChange);
+		} else if (speedCommand.equals("accely")
+				|| speedCommand.equals("yaccel")) {
+			console.print("Changing player Y acceleration from "
+					+ Entities.player.yAccel + " to " + speedChange);
 			Entities.player.yAccel = speedChange;
-		} else if(speedCommand.equals("accelz") || speedCommand.equals("zaccel")){
-			console.print("Changing player Z acceleration from " + Entities.player.zAccel + " to " + speedChange);
+		} else if (speedCommand.equals("accelz")
+				|| speedCommand.equals("zaccel")) {
+			console.print("Changing player Z acceleration from "
+					+ Entities.player.zAccel + " to " + speedChange);
 			Entities.player.zAccel = speedChange;
-		} else if(speedCommand.equals("decelx") || speedCommand.equals("xdecel")){
-			console.print("Changing player X deceleration from " + Entities.player.xDecel + " to " + speedChange);
+		} else if (speedCommand.equals("decelx")
+				|| speedCommand.equals("xdecel")) {
+			console.print("Changing player X deceleration from "
+					+ Entities.player.xDecel + " to " + speedChange);
 			Entities.player.xDecel = speedChange;
-		} else if(speedCommand.equals("decely") || speedCommand.equals("ydecel")){
-			console.print("Changing player Y deceleration from " + Entities.player.yDecel + " to " + speedChange);
+		} else if (speedCommand.equals("decely")
+				|| speedCommand.equals("ydecel")) {
+			console.print("Changing player Y deceleration from "
+					+ Entities.player.yDecel + " to " + speedChange);
 			Entities.player.yDecel = speedChange;
-		} else if(speedCommand.equals("decelz") || speedCommand.equals("zdecel")){
-			console.print("Changing player Z deceleration from " + Entities.player.zDecel + " to " + speedChange);
+		} else if (speedCommand.equals("decelz")
+				|| speedCommand.equals("zdecel")) {
+			console.print("Changing player Z deceleration from "
+					+ Entities.player.zDecel + " to " + speedChange);
 			Entities.player.zDecel = speedChange;
-		} else{
+		} else {
 			console.print("Not a valid speed command!");
 		}
 	}
 
+	/**
+	 * Command to change how the camera behaves
+	 * @param toker StringTokenizer containing the command
+	 */
 	private static void cameraCommand(StringTokenizer toker) {
 		String cameraCommand = toker.nextToken().toLowerCase();
 		if (cameraCommand.equals("zoom")) {

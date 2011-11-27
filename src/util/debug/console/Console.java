@@ -8,9 +8,14 @@ import org.newdawn.slick.UnicodeFont;
 
 import util.debug.Debug;
 import util.helper.DisplayHelper;
-import util.helper.MouseHandler;
-import util.helper.TextureHandler;
+import util.manager.MouseManager;
+import util.manager.TextureManager;
 
+/**
+ * Console for printing text and interacting with the game. Note that there should only be one console at any time.
+ * @author TranquilMarmot
+ *
+ */
 public class Console {
 	// if blink is true, there's an underscore at the end of the input string,
 	// else there's not
@@ -20,7 +25,7 @@ public class Console {
 	// how often to blink (this is changed to match the current FPS)
 	private static int blinkInterval = 30;
 	
-	// font for printing stuff to the screen
+	/** font for printing stuff to the screen */
 	public static UnicodeFont font = null;
 
 	// location to draw the console at
@@ -32,7 +37,7 @@ public class Console {
 
 	// if scroll is 0, we're at the most recent line, 1 is one line up, 2 is two
 	// lines up, etc
-	public int scroll = 0;
+	private int scroll = 0;
 
 	// the text being typed into the console
 	public static String input = "";
@@ -40,9 +45,12 @@ public class Console {
 	// all the text that the console contains and will print out
 	public ArrayList<String> text = new ArrayList<String>();
 	
+	/**
+	 * Updates and draws the console
+	 */
 	public void updateAndDraw() {
 		// scroll with the mouse wheel
-		scroll += MouseHandler.wheel / 100;
+		scroll += MouseManager.wheel / 100;
 		// how tall each line is
 		int advanceY = Debug.font.getAscent();
 		// where to draw the console (x stays at 10)
@@ -78,7 +86,7 @@ public class Console {
 			// FIXME Currently drawing in front of text regardless of code location
 			// When this is solved, i can finish fixing the chat.
 			//GL11.glTranslatef(0.0f, 0.0f, 1.0f);
-			TextureHandler.getTexture(TextureHandler.WHITE).bind();
+			TextureManager.getTexture(TextureManager.WHITE).bind();
 			GL11.glColor4f(0.03f, 0.03f, 0.03f, 1.0f);
 			GL11.glBegin(GL11.GL_QUADS);{
 				GL11.glVertex2f(0.0f, DisplayHelper.windowHeight);
@@ -153,6 +161,14 @@ public class Console {
 	public void backspace() {
 		if (input.length() > 0)
 			input = input.substring(0, input.length() - 1);
+	}
+	
+	public void scrollUp(int amount){
+		scroll -= amount;
+	}
+	
+	public void scrollDown(int amount){
+		scroll += amount;
 	}
 
 	/**

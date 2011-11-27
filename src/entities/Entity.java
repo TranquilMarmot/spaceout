@@ -7,36 +7,48 @@ import org.lwjgl.util.vector.Vector3f;
 
 import util.debug.Debug;
 import util.helper.QuaternionHelper;
-import util.helper.TextureHandler;
+import util.manager.TextureManager;
 
+/**
+ * Class that pretty much anything in-game extends.
+ * @author TranquilMarmot
+ *
+ */
 public abstract class Entity {
 	// the entity's location
 	public Vector3f location;
 
-	// how fast the entity is moving
+	/** how fast this entity is moving */
 	public float xSpeed, ySpeed, zSpeed;
 	
+	/** maximum speeds */
 	public float maxXSpeed, maxYSpeed, maxZSpeed;
 	
+	/** acceleration speeds*/
 	public float xAccel, yAccel, zAccel;
 	
+	/** deceleration speeds */
 	public float xDecel, yDecel, zDecel;
 
-	// rotation variables
+	/** quaternion representing rotation */
 	public Quaternion rotation;
 	protected FloatBuffer rotationBuffer;
 
-	// the type, used for lots of things
+	/** type, used for lots of things */
 	public String type;
 
-	// the entity's color
+	/** color (not really used) */
 	public float[] color;
 
-	public int texture = TextureHandler.WHITE;
+	/** texture */
+	public int texture = TextureManager.WHITE;
 
 	/** the last time that this entity was updated */
 	protected long lastUpdate;
 
+	/**
+	 * Entity constructor
+	 */
 	public Entity() {
 		location = new Vector3f(0.0f, 0.0f, 0.0f);
 		rotation = new Quaternion(1.0f, 0.0f, 0.0f, 1.0f);
@@ -47,6 +59,10 @@ public abstract class Entity {
 		zSpeed = 0.0f;
 	}
 
+	/**
+	 * Move this entity along the X axis
+	 * @param amount Amount to move this entity
+	 */
 	public void moveX(float amount) {
 		Vector3f multi = QuaternionHelper.MulQuaternionVector(rotation,
 				new Vector3f(1.0f, 0.0f, 0.0f));
@@ -55,6 +71,10 @@ public abstract class Entity {
 		Vector3f.add(location, multiMulti, location);
 	}
 
+	/**
+	 * Move this entity along the Y axis
+	 * @param amount Amount to move this entity
+	 */
 	public void moveY(float amount) {
 		Vector3f multi = QuaternionHelper.MulQuaternionVector(rotation,
 				new Vector3f(0.0f, 1.0f, 0.0f));
@@ -63,6 +83,10 @@ public abstract class Entity {
 		Vector3f.add(location, multiMulti, location);
 	}
 
+	/**
+	 * Move this entity along the Z axis
+	 * @param amount Amount to move this entity
+	 */
 	public void moveZ(float amount) {
 		Vector3f multi = QuaternionHelper.MulQuaternionVector(rotation,
 				new Vector3f(0.0f, 0.0f, 1.0f));
@@ -71,6 +95,10 @@ public abstract class Entity {
 		Vector3f.add(location, multiMulti, location);
 	}
 
+	/**
+	 * Rotate this entity along the X axis
+	 * @param amount Amount to rotate this entity
+	 */
 	public void rotateX(float amount) {
 		double radHalfAngle = Math.toRadians((double) amount) / 2.0;
 		float sinVal = (float) Math.sin(radHalfAngle);
@@ -79,6 +107,10 @@ public abstract class Entity {
 		Quaternion.mul(rotation, rot, rotation);
 	}
 
+	/**
+	 * Rotate this entity along the Y axis
+	 * @param amount Amount to rotate this entity
+	 */
 	public void rotateY(float amount) {
 		double radHalfAngle = Math.toRadians((double) amount) / 2.0;
 		float sinVal = (float) Math.sin(radHalfAngle);
@@ -87,6 +119,10 @@ public abstract class Entity {
 		Quaternion.mul(rotation, rot, rotation);
 	}
 
+	/**
+	 * Rotate this entity along the Z axis
+	 * @param amount Amount to rotate this entity
+	 */
 	public void rotateZ(float amount) {
 		double radHalfAngle = Math.toRadians((double) amount) / 2.0;
 		float sinVal = (float) Math.sin(radHalfAngle);
@@ -244,7 +280,7 @@ public abstract class Entity {
 
 	/**
 	 * This should be called for any entity that moves around. The amount passed
-	 * into move*() should be multiplied by this.
+	 * into <code>move</code> should be multiplied by this.
 	 * 
 	 * @return The time passed since the last frame
 	 */
@@ -256,7 +292,13 @@ public abstract class Entity {
 		return delta;
 	}
 
+	/**
+	 * Updates this entity
+	 */
 	public abstract void update();
 
+	/**
+	 * Draws this entity
+	 */
 	public abstract void draw();
 }

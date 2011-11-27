@@ -6,8 +6,14 @@ import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.Sphere;
 
 import util.helper.QuaternionHelper;
-import util.helper.TextureHandler;
+import util.manager.TextureManager;
 
+/**
+ * Skybox to make it seem like there's stars everywhere. Follows an Entity around, so the end of it can never be reached.
+ * @author TranquilMarmot
+ * @see Entity
+ *
+ */
 public class Skybox extends Entity {
 	public Sphere sphere;
 	public float size;
@@ -15,6 +21,14 @@ public class Skybox extends Entity {
 	// the skybox's center will always be on the entity that it is following
 	public Entity following;
 
+	/**
+	 * Skybox constructor
+	 * @param following The entity this skybox is following
+	 * @param size The size of this skybox
+	 * @param pitch Initial pitch
+	 * @param yaw Initial yaw
+	 * @param roll Initial roll
+	 */
 	public Skybox(Entity following, float size, float pitch, float yaw,
 			float roll) {
 		super();
@@ -46,7 +60,7 @@ public class Skybox extends Entity {
 		GL11.glPushMatrix();
 		{
 			// bind the entity's texture before drawing
-			TextureHandler.getTexture(TextureHandler.STARS).bind();
+			TextureManager.getTexture(TextureManager.STARS).bind();
 			GL11.glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
 			sphere.draw(size, 6, 6);
 		}

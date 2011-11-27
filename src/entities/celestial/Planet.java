@@ -7,19 +7,40 @@ import org.lwjgl.util.glu.Sphere;
 
 import util.Runner;
 import util.helper.QuaternionHelper;
-import util.helper.TextureHandler;
+import util.manager.TextureManager;
 import entities.Entity;
 
+/**
+ * A planet
+ * 
+ * @author TranquilMarmot
+ * @see Entity
+ */
 public class Planet extends Entity {
-
-	protected Sphere sphere;
-	public float[] color;
+	// this planet's sphere
+	private Sphere sphere;
+	// this planet's size
 	public float size;
 
+	// planet's rotation variables
 	public float dxrot = 0;
 	public float dyrot = 0;
 	public float dzrot = 0;
 
+	/**
+	 * Planet constructor
+	 * 
+	 * @param x
+	 *            X location
+	 * @param y
+	 *            Y location
+	 * @param z
+	 *            Z location
+	 * @param texture
+	 *            Texture to use
+	 * @param name
+	 *            The planet's name
+	 */
 	public Planet(float x, float y, float z, int texture, String name) {
 		super();
 		type = name;
@@ -50,12 +71,12 @@ public class Planet extends Entity {
 		GL11.glPushMatrix();
 		{
 			// bind the entity's texture before drawing
-			TextureHandler.getTexture(texture).bind();
+			TextureManager.getTexture(texture).bind();
 			QuaternionHelper.toFloatBuffer(rotation, rotationBuffer);
 			GL11.glMultMatrix(rotationBuffer);
 
 			// GL11.glColor3f(color[0], color[1], color[2]);
-			TextureHandler.getTexture(texture).bind();
+			TextureManager.getTexture(texture).bind();
 
 			GL11.glRotatef(90.0f, 1.0f, 1.0f, 0.0f);
 			sphere.draw(size, 24, 24);

@@ -6,7 +6,16 @@ import util.Runner;
 import util.debug.Debug;
 import util.helper.DisplayHelper;
 
+/**
+ * Handles all 2D rendering
+ * @author TranquilMarmot
+ * @see Graphics 
+ *
+ */
 public class Render2D {
+	/**
+	 * Updates any 2D things and renders them
+	 */
 	protected static void updateAndRender2DScene(){
 		setUp2DRender();
 
@@ -19,6 +28,9 @@ public class Render2D {
 					DisplayHelper.windowHeight / 2, "PAUSED");
 	}
 	
+	/**
+	 * Sets up OpenGL matrices for 2D drawing
+	 */
 	private static void setUp2DRender(){
 		// reset the projection matrix
 		GL11.glMatrixMode(GL11.GL_PROJECTION);

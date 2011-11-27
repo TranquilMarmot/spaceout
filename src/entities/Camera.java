@@ -5,18 +5,28 @@ import org.lwjgl.util.vector.Vector3f;
 
 import util.Runner;
 import util.debug.Debug;
-import util.helper.KeyboardHandler;
-import util.helper.MouseHandler;
+import util.manager.KeyboardManager;
+import util.manager.MouseManager;
 
+/**
+ * A camera that tells how the scene is being looked at
+ * @author TranquilMarmot
+ * @see Entity
+ */
 public class Camera extends Entity {
-	// the entity that the camera is following
+	/** the entity that the camera is following */
 	public Entity following;
 
+	/** zoom level */
 	public float zoom;
+	/** Offset along Y axis */
 	public float yOffset;
+	/** Offset along X axis*/
 	public float xOffset;
 	
+	/** maximum zoom level */
 	private float maxZoom = 3000.0f;
+	/** minimum zoom level */
 	private float minZoom = 20.0f;
 
 	/**
@@ -24,11 +34,18 @@ public class Camera extends Entity {
 	 * it's false, the camera rotates around what it's following
 	 */
 	public boolean vanityMode = false;
+	// keep key from repeating
 	private boolean vanityKeyDown = false;
 
-	/** how fast the camera moves */
+	/** how fast the camera rolls */
 	float rollSpeed = 13.0f;
 
+	/**
+	 * Camera constructor 
+	 * @param x Initial X position
+	 * @param y Initial Y position
+	 * @param z Initial Z position
+	 */
 	public Camera(float x, float y, float z) {
 		super();
 		location = new Vector3f(x, y, z);
@@ -51,7 +68,7 @@ public class Camera extends Entity {
 
 		// handle zooming
 		if (!Debug.consoleOn)
-			zoom -= MouseHandler.wheel / zoomSensitivity;
+			zoom -= MouseManager.wheel / zoomSensitivity;
 		if (zoom < minZoom)
 			zoom = minZoom;
 		else if (zoom > maxZoom)
@@ -63,20 +80,20 @@ public class Camera extends Entity {
 		location.z = following.location.z;
 		
 		//check for vanity mode key
-		if(KeyboardHandler.vanityMode && !vanityKeyDown){
+		if(KeyboardManager.vanityMode && !vanityKeyDown){
 			vanityMode = !vanityMode;
 			// if we're switching into vanity mode, the camera gets its own rotation (instead of being tied to what it's following)
 			if(vanityMode)
 				rotation = new Quaternion(following.rotation.x, following.rotation.y, following.rotation.z, following.rotation.w);
 			vanityKeyDown = true;
 		}
-		if(!KeyboardHandler.vanityMode)
+		if(!KeyboardManager.vanityMode)
 			vanityKeyDown = false;
 
 		if(vanityMode && !Runner.paused){
 			// if we're in vanity mode, apply any rotation changes
-			rotateX(MouseHandler.dy);
-			rotateY(MouseHandler.dx);
+			rotateX(MouseManager.dy);
+			rotateY(MouseManager.dx);
 		} else {
 			// if we're not in vanity mode, the camera rotates with what it's following
 			rotation = following.rotation;

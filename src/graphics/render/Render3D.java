@@ -13,11 +13,20 @@ import entities.Entities;
 import entities.Entity;
 import entities.Light;
 
+/**
+ * Handles all 3D rendering. For the moment, also updates Entities.entities.
+ * @author TranquilMarmot
+ * @see Graphics
+ */
 public class Render3D {
 	/** how far to draw objects */
 	public static float drawDistance = 5000000.0f;
 	
 	private static FloatBuffer cameraRotBuffer = BufferUtils.createFloatBuffer(16);
+	
+	/**
+	 * Updates and draws everything in Entities.entities
+	 */
 	protected static void renderAndUpdate3DScene(){
 		//prepare to do 3D rendering
 		setUp3DRender();
@@ -94,6 +103,9 @@ public class Render3D {
 		GL11.glPopMatrix();
 	}
 	
+	/**
+	 * Sets up any lighting for the scene
+	 */
 	private static void setUpLighting(){
 		// enable lighting and select a lighting model
 		GL11.glEnable(GL11.GL_LIGHTING);
@@ -101,6 +113,9 @@ public class Render3D {
 		GL11.glLightModeli(GL11.GL_LIGHT_MODEL_TWO_SIDE, GL11.GL_TRUE);
 	}
 	
+	/**
+	 * Prepares OpenGL matrices for 3D drawing
+	 */
 	private static void setUp3DRender(){
 		// select and reset the projection matrix
 		GL11.glMatrixMode(GL11.GL_PROJECTION);

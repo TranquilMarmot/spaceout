@@ -16,6 +16,13 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
+import util.manager.KeyboardManager;
+
+/**
+ * This class handles creating and displaying a resizeable window to render to
+ * @author TranquilMarmot
+ *
+ */
 public class DisplayHelper {
 	private static final String ICON_PATH = "res/images/";
 	
@@ -58,6 +65,9 @@ public class DisplayHelper {
 	/** boolean to check for fullscreen key being held down */
 	private static boolean fullscreenDown = false;
 	
+	/**
+	 * Creates a window to render to
+	 */
 	public static void createWindow(){
 		// create the frame that holds everything
 		frame = new Frame(windowTitle);
@@ -113,6 +123,9 @@ public class DisplayHelper {
 		}
 	}
 	
+	/**
+	 * Resizes the window if it's dimensions have been changed
+	 */
 	public static void resizeWindow(){
 		Dimension d = new Dimension();
 
@@ -135,17 +148,22 @@ public class DisplayHelper {
 		}
 	}
 	
+	/**
+	 * Checks to see if the fullscreen key has been pressed and, if it has, acts accordingly
+	 */
 	public static void doFullscreenLogic(){
-		if (KeyboardHandler.fullscreen && !fullscreenDown) {
+		//check for fullscreen key press
+		if (KeyboardManager.fullscreen && !fullscreenDown) {
 			DisplayHelper.fullscreen = !DisplayHelper.fullscreen;
 			fullscreenDown = true;
 		}
 
-		if (!KeyboardHandler.fullscreen) {
+		if (!KeyboardManager.fullscreen) {
 			fullscreenDown = false;
 		}
 		
 		
+		//take care of necessary OpenGL calls
 		try {
 			// switch from windowed to fullscreen
 			if (fullscreen && !Display.isFullscreen()) {
@@ -174,11 +192,12 @@ public class DisplayHelper {
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}
-		/* END FULLSCREEN LOGIC */
 
+		// make sure the frame's title is right (this allows for a changing title!)
 		if (!(frame.getTitle().equals(windowTitle)))
 			frame.setTitle(windowTitle);
 		
+		// make sure the display's title is right
 		if(!(Display.getTitle().equals(windowTitle)))
 			Display.setTitle(windowTitle);
 	}

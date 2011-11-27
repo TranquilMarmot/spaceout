@@ -7,15 +7,21 @@ import org.lwjgl.util.vector.Vector3f;
 
 import util.Runner;
 import util.debug.Debug;
-import util.helper.ModelHandler;
 import util.helper.QuaternionHelper;
-import util.helper.TextureHandler;
+import util.manager.ModelManager;
+import util.manager.TextureManager;
 import entities.Entities;
 import entities.Entity;
 
+/**
+ * A bullet that flies straight.
+ * @author TranquilMarmot
+ * @see Entity
+ *
+ */
 public class LaserBullet extends Entity {
-	private int model = ModelHandler.LASERBULLET;
-	private int texture = TextureHandler.LASERBULLET;
+	private int model = ModelManager.LASERBULLET;
+	private int texture = TextureManager.LASERBULLET;
 
 	// how far the bullet has traveled
 	private float traveled;
@@ -23,6 +29,13 @@ public class LaserBullet extends Entity {
 	// how far the bullet goes before it dies
 	private static float life = 500.0f;
 
+	/**
+	 * LaserBullet constructor
+	 * @param x Initial X location
+	 * @param y Initial Y location
+	 * @param z Initial Z location
+	 * @param direction Direction the bullet is flying in
+	 */
 	public LaserBullet(float x, float y, float z, Quaternion direction) {
 		super();
 		this.location = new Vector3f(x, y, z);
@@ -70,12 +83,12 @@ public class LaserBullet extends Entity {
 
 	@Override
 	public void draw() {
-		TextureHandler.getTexture(texture).bind();
+		TextureManager.getTexture(texture).bind();
 		GL11.glPushMatrix();
 		{
 			GL11.glMultMatrix(rotationBuffer);
 			GL11.glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-			GL11.glCallList(ModelHandler.getModel(model).getCallList());
+			GL11.glCallList(ModelManager.getModel(model).getCallList());
 		}
 		GL11.glPopMatrix();
 	}

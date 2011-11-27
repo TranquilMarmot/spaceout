@@ -22,6 +22,11 @@
  * TODO create the rest of the solar system
  * TODO ConsoleCommands.java is pretty damn ugly still!
  * TODO In DebugKeyManager there are keys that don't go through the KeyboardManager
+ * TODO Have all the data managers (ModelManager, TextureManager) keep track of how many objects are using the data. If none are for an extended period of time, delete them! (Be careful with this one!)
+ * TODO It might also be a good idea to replace everything that's references as an int (in ModelHandler and TextureHandler) and replace them with enumerations, but it's really no big deal
+ * TODO Create an AnimatedModel class that has a call list for every frame (probably in a good old ArrayList) Give it addFrame(int callList) and int curFrame.
+ * TODO It would make sense to have multiple types of Entities- ones that are solely for rendering (debris, skybox), and ones that can collide with stuff
+ * TODO create a Ship class that the player uses. Create a Gun class that the Ship uses to fire bullets.
  * 
  * TODO planets are impossible to find! Find a way to billboard text and have it drawn over a planet (text size probably based on distance from planet)
  * TODO Make the skybox a box instead of a sphere
