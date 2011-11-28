@@ -17,7 +17,7 @@ import util.manager.TextureManager;
  */
 public abstract class RectangleButton extends Button {
 	/** rectangle representing this button */
-	Rectangle rectangle;
+	protected Rectangle rectangle;
 
 	/** the button's size */
 	public int height, width;

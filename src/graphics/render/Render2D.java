@@ -4,7 +4,6 @@ import gui.GUI;
 
 import org.lwjgl.opengl.GL11;
 
-import util.Runner;
 import util.debug.Debug;
 import util.helper.DisplayHelper;
 

@@ -8,8 +8,11 @@
  * TODO Find out how to see if two boxes have hit each other
  * 
  * GUI branch TODO
+ * TODO Finish implementing the inactive state for a button
  * TODO Get actionlisteners and stuff in for the buttons, instead of just calling methods (does it really matter?)
  * TODO Make draggable boxes
+ * TODO Maybe make everything drawn by call lists instead of point-by-point-per-frame. Would it really be worth the performance increase? Probably not.
+ * TODO Might also make sense to have the constructor for a MenuButton take a directory that it rips the images from
  * 
  * ModelLoader TODO
  * TODO Make it handle materials
