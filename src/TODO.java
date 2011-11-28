@@ -7,6 +7,10 @@
  * TODO Find a way to rotate those boxes with the quaternions (there's equations for it)
  * TODO Find out how to see if two boxes have hit each other
  * 
+ * GUI branch TODO
+ * TODO Get actionlisteners and stuff in for the buttons, instead of just calling methods (does it really matter?)
+ * TODO Make draggable boxes
+ * 
  * ModelLoader TODO
  * TODO Make it handle materials
  * TODO Make it handle multiple objects in one file

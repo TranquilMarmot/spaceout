@@ -4,7 +4,7 @@ import entities.Camera;
 import entities.Entities;
 import graphics.render.Graphics;
 import gui.GUI;
-import gui.button.RectangleButton;
+import gui.button.PauseButton;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -90,8 +90,8 @@ public class Runner {
 		Entities.camera.following = Entities.player;
 		
 		/* GUI DEBUG INIT */
-		RectangleButton testButton = new RectangleButton(200, 200, 300, 300);
-		GUI.guiObjects.add(testButton);
+		PauseButton pauseButton = new PauseButton(115, 39);
+		GUI.guiObjects.add(pauseButton);
 	}
 
 	/**

@@ -26,11 +26,6 @@ public class Render2D {
 		
 		// draw the gui
 		GUI.updateAndRenderGUI();
-
-		// draw 'PAUSED' in the middle of the screen if the game is paused
-		if (Runner.paused)
-			Debug.font.drawString((DisplayHelper.windowWidth / 2) - 25,
-					DisplayHelper.windowHeight / 2, "PAUSED");
 	}
 	
 	/**
