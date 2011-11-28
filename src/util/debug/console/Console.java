@@ -86,6 +86,7 @@ public class Console {
 			// FIXME Currently drawing in front of text regardless of code location
 			// When this is solved, i can finish fixing the chat.
 			//GL11.glTranslatef(0.0f, 0.0f, 1.0f);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
 			TextureManager.getTexture(TextureManager.WHITE).bind();
 			GL11.glColor4f(0.03f, 0.03f, 0.03f, 1.0f);
 			GL11.glBegin(GL11.GL_QUADS);{

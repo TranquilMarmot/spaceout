@@ -9,8 +9,9 @@ import util.manager.MouseManager;
 import util.manager.TextureManager;
 
 /**
- * A rectangular button! To use this class, create a class and have it extend this.
- * Implement the <code>releasedEvent</code>,<code>mouseOverEvent</code>, <code>pressedEvent</code>
+ * A rectangular button! To use this class, create a class and have it extend
+ * this. Implement the <code>releasedEvent</code>,<code>mouseOverEvent</code>,
+ * <code>pressedEvent</code>
  * 
  * @author TranquilMarmot
  * 
@@ -26,10 +27,15 @@ public abstract class RectangleButton extends Button {
 
 	/**
 	 * RectangleButton constructor
-	 * @param x Initial X Position
-	 * @param y Initial Y Position
-	 * @param height Height of button
-	 * @param width Width of button
+	 * 
+	 * @param x
+	 *            Initial X Position
+	 * @param y
+	 *            Initial Y Position
+	 * @param height
+	 *            Height of button
+	 * @param width
+	 *            Width of button
 	 */
 	public RectangleButton(int x, int y, int height, int width) {
 		super(x, y);
@@ -50,86 +56,81 @@ public abstract class RectangleButton extends Button {
 	 * It then calls the appropriate methods (<code>mouseOverEvent</code>, <code>pressedEvent</code>, <code>releasedEvent</code>) based on the state of the button.
 	 */
 	public void update() {
-		if(active){
-		// check to see if the mouse is in the rectangle
-		if (rectangle.contains(MouseManager.x, MouseManager.y)) {
-			mouseOver = true;
-		} else {
-			mouseOver = false;
-		}
-
-		// the mouse is over the button, so it can be clicked
-		if (mouseOver) {
-			// test to see if the user is clicking
-			if (MouseManager.button0) {
-				pressed = true;
-			//Mouse is released after button was pressed
-			} else if(pressed && !released){
-				released = true;
+		if (active && isVisible) {
+			// check to see if the mouse is in the rectangle
+			if (rectangle.contains(MouseManager.x, MouseManager.y)) {
+				mouseOver = true;
+			} else {
+				mouseOver = false;
 			}
-			
-			if(!MouseManager.button0){
+
+			// the mouse is over the button, so it can be clicked
+			if (mouseOver) {
+				// test to see if the user is clicking
+				if (MouseManager.button0) {
+					pressed = true;
+					// Mouse is released after button was pressed
+				} else if (pressed && !released) {
+					released = true;
+				}
+
+				if (!MouseManager.button0) {
+					pressed = false;
+				}
+				// the button was pressed, then the mouse was moved off of it
+				// but
+				// the mouse button was held down
+			} else if (pressed && MouseManager.button0) {
+				pressed = true;
+			} else {
 				pressed = false;
 			}
-			// the button was pressed, then the mouse was moved off of it but
-			// the mouse button was held down
-		} else if (pressed && MouseManager.button0) {
-			pressed = true;
+
+			if (released) {
+				// take care of release event (changing something in-game)
+				releasedEvent();
+				released = false;
+			}
+
+			activeEvent();
+
+			if (mouseOver) {
+				mouseOverEvent();
+				// take care of mouseover event (changing image)
+			}
+
+			if (pressed) {
+				pressedEvent();
+				// take care of pressed event (change image)- actual button work
+				// is done on release
+			}
 		} else {
-			pressed = false;
-		}
-
-		
-		if (released) {
-			// take care of release event (changing something in-game)
-			releasedEvent();
-			released = false;
-		}
-		
-		
-		activeEvent();
-
-		if (mouseOver) {
-			mouseOverEvent();
-			// take care of mouseover event (changing image)
-			color.x = 0.0f;
-			color.y = 0.0f;
-			color.z = 1.0f;
-		}
-
-		if (pressed) {
-			pressedEvent();
-			// take care of pressed event (change image)- actual button work is done on release
-			color.x = 0.0f;
-			color.y = 1.0f;
-			color.z = 0.0f;
-		}
-		} else{
 			inactiveEvent();
 		}
 
 	}
-	
+
 	/**
 	 * What happens when the button is active (change the image)
 	 */
 	public abstract void activeEvent();
-	
+
 	/**
 	 * What happens when the button is inactive
 	 */
 	public abstract void inactiveEvent();
-	
+
 	/**
-	 * When implementing this, make sure you set <code>released</code> to <code>false</code> at the end
+	 * When implementing this, make sure you set <code>released</code> to
+	 * <code>false</code> at the end
 	 */
 	public abstract void releasedEvent();
-	
+
 	/**
 	 * This should probably just change the image/color of the button
 	 */
 	public abstract void mouseOverEvent();
-	
+
 	/**
 	 * This should probably just change the image/color of the button
 	 */
@@ -140,7 +141,7 @@ public abstract class RectangleButton extends Button {
 	 * Probably a good idea to override this if you're extending RectangleButton
 	 */
 	public void draw() {
-		//GL11.glDisable(GL11.GL_BLEND);
+		// GL11.glDisable(GL11.GL_BLEND);
 		GL11.glColor3f(color.x, color.y, color.z);
 		TextureManager.getTexture(TextureManager.CHECKERS).bind();
 		GL11.glBegin(GL11.GL_QUADS);
@@ -158,7 +159,7 @@ public abstract class RectangleButton extends Button {
 			GL11.glVertex2i(x, y + height);
 		}
 		GL11.glEnd();
-		//GL11.glEnable(GL11.GL_BLEND);
+		// GL11.glEnable(GL11.GL_BLEND);
 	}
 
 }

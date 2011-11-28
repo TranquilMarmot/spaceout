@@ -10,8 +10,8 @@
 	</Player>
 	
 	<Debris>
-		<numStars>1000</numStars>
-		<range>50000.0f</range>
+		<numStars>2000</numStars>
+		<range>100000.0f</range>
 		<seed>420133742L</seed>
 	</Debris>
 	

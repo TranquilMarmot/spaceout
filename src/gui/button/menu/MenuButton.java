@@ -98,6 +98,11 @@ public abstract class MenuButton extends RectangleButton {
 		this.y = (DisplayHelper.windowHeight / 2) - (this.height / 2) + yOffset;
 		this.rectangle.setX(this.x);
 		this.rectangle.setY(this.y);
+		
+		if(!Runner.paused)
+			isVisible = false;
+		else
+			isVisible = true;
 	}
 
 	@Override
@@ -105,9 +110,10 @@ public abstract class MenuButton extends RectangleButton {
 	 * Draw the button
 	 */
 	public void draw() {
-		if (Runner.paused) {
+		if (this.isVisible) {
 			//GL11.glDisable(GL11.GL_BLEND);
 			currentImage.bind();
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GL11.glBegin(GL11.GL_QUADS);
 			{
 				/*

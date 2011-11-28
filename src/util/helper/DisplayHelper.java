@@ -41,7 +41,7 @@ public class DisplayHelper {
 	private static String windowTitle = "Spaceout Pre-alpha 0.0.9";
 
 	/** target fps (might not be reached on slower machines) */
-	public static int targetFPS = 100;
+	public static int targetFPS = 60;
 
 	/** this is just to handle the resizeable window */
 	private final static AtomicReference<Dimension> newCanvasSize = new AtomicReference<Dimension>();
