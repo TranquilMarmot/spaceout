@@ -34,7 +34,7 @@ public class PauseButton extends MenuButton {
 			activeImage = TextureLoader.getTexture("PNG", new FileInputStream(
 					IMAGE_PATH + "active.png"), GL11.GL_NEAREST);
 			mouseOverImage = TextureLoader.getTexture("PNG",
-					new FileInputStream(IMAGE_PATH + "mouseOver.png"),
+					new FileInputStream(IMAGE_PATH + "mouseover.png"),
 					GL11.GL_NEAREST);
 			pressedImage = TextureLoader.getTexture("PNG", new FileInputStream(
 					IMAGE_PATH + "pressed.png"), GL11.GL_NEAREST);
