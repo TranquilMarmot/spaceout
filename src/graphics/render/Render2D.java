@@ -1,5 +1,7 @@
 package graphics.render;
 
+import gui.GUI;
+
 import org.lwjgl.opengl.GL11;
 
 import util.Runner;
@@ -21,6 +23,9 @@ public class Render2D {
 
 		// draw debug info
 		Debug.updateAndDraw();
+		
+		// draw the gui
+		GUI.updateAndRenderGUI();
 
 		// draw 'PAUSED' in the middle of the screen if the game is paused
 		if (Runner.paused)
@@ -48,5 +53,6 @@ public class Render2D {
 		// enable blending and disable lighting
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
 	}
 }

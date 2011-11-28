@@ -1,4 +1,6 @@
-package gui;
+package gui.button;
+
+import gui.GUIObject;
 
 /**
  * A clickable GUIObject
@@ -13,6 +15,12 @@ public abstract class Button extends GUIObject {
 	/** whether or not the button is active */
 	public boolean active;
 	
+	/** whether or not the button is being pressed right now */
+	public boolean pressed;
+	
+	/** whether or not the button has just been released */
+	public boolean released;
+	
 	/**
 	 * Button constructor
 	 * @param x Initial X position
@@ -23,5 +31,4 @@ public abstract class Button extends GUIObject {
 		mouseOver = false;
 		active = false;
 	}
-	
 }

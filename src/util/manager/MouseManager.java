@@ -3,6 +3,7 @@ package util.manager;
 import org.lwjgl.input.Mouse;
 
 import util.debug.Debug;
+import util.helper.DisplayHelper;
 
 /**
  * Manages everything to do with the mouse
@@ -23,7 +24,7 @@ public class MouseManager {
 	/** how much the mouse wheel has moved */
 	public static float wheel;
 	/** the mouse's current location */
-	public static float x, y;
+	public static int x, y;
 	
 	public static boolean inverted = false;
 
@@ -60,7 +61,8 @@ public class MouseManager {
 		wheel = (float) Mouse.getDWheel();
 		
 		x = Mouse.getX();
-		y = Mouse.getY();
+		// we want the top-left corner to be 0,0
+		y = DisplayHelper.windowHeight - Mouse.getY();
 	}
 
 }

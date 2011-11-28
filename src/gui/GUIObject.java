@@ -1,5 +1,7 @@
 package gui;
 
+import gui.button.Button;
+
 /**
  * Everything that the GUI uses should extend this class.
  * @author TranquilMarmot
@@ -24,10 +26,10 @@ public abstract class GUIObject {
 	/**
 	 * Updates this object. Should set the <code>mouseOver</code> variable depending on whether or not the mouse is over the object.
 	 */
-	abstract void update();
+	public abstract void update();
 	
 	/**
 	 * Draws the object.
 	 */
-	abstract void draw();
+	public abstract void draw();
 }

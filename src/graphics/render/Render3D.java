@@ -133,5 +133,6 @@ public class Render3D {
 
 		// disable blending for now
 		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 }
