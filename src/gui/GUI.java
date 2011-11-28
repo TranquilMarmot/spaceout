@@ -13,7 +13,8 @@ public class GUI {
 	public static void updateAndRenderGUI(){
 		for(GUIObject obj : guiObjects){
 			obj.update();
-			obj.draw();
+			if(obj.isVisible)
+				obj.draw();
 		}
 	}
 }

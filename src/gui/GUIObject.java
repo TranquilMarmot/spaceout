@@ -10,6 +10,9 @@ import gui.button.Button;
  *
  */
 public abstract class GUIObject {
+	/** whether or not the object is visible */
+	public boolean isVisible;
+	
 	/** top left of the object */
 	public int x, y;
 	
@@ -21,6 +24,7 @@ public abstract class GUIObject {
 	public GUIObject(int x, int y){
 		this.x = x;
 		this.y = y;
+		isVisible = true;
 	}
 	
 	/**

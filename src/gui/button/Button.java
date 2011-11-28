@@ -29,6 +29,6 @@ public abstract class Button extends GUIObject {
 	public Button(int x, int y) {
 		super(x, y);
 		mouseOver = false;
-		active = false;
+		active = true;
 	}
 }

@@ -9,6 +9,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
+import util.Runner;
 import util.debug.console.Console;
 import util.helper.DisplayHelper;
 import util.manager.TextureManager;
@@ -62,6 +63,11 @@ public class Debug {
 		if (displayDebug) {
 			Debug.drawDebugInfo();
 		}
+		
+		// draw 'PAUSED' in the middle of the screen if the game is paused
+		if (Runner.paused)
+			Debug.font.drawString((DisplayHelper.windowWidth / 2) - 25,
+					DisplayHelper.windowHeight / 2, "PAUSED");
 	}
 
 	public static void drawDebugInfo() {
