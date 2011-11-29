@@ -9,12 +9,12 @@
  * 
  * GUI branch TODO
  * TODO Finish implementing the inactive state for a button
- * TODO Get actionlisteners and stuff in for the buttons, instead of just calling methods (does it really matter?)
  * TODO Make draggable boxes
  * TODO Maybe make everything drawn by call lists instead of point-by-point-per-frame. Would it really be worth the performance increase? Probably not.
  * TODO Might make sense to have the constructor for a MenuButton take a directory that it rips the images from
  * TODO Make a menu screen; have an XML selection screen that checks the directory for XML files and lets you select one to load
  * TODO Make an options menu for that menu screen. Have as many graphics options as possible.
+ * TODO Might be a good idea to have the constructor take a scale in to control how big the image is (xScale and yScale?)
  * 
  * ModelLoader TODO
  * TODO Make it handle materials

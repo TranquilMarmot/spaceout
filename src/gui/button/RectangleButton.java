@@ -1,12 +1,8 @@
 package gui.button;
 
-import javax.vecmath.Color3f;
-
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.Rectangle;
 
 import util.manager.MouseManager;
-import util.manager.TextureManager;
 
 /**
  * A rectangular button! To use this class, create a class and have it extend
@@ -22,8 +18,6 @@ public abstract class RectangleButton extends Button {
 
 	/** the button's size */
 	public int height, width;
-
-	private Color3f color;
 
 	/**
 	 * RectangleButton constructor
@@ -46,8 +40,6 @@ public abstract class RectangleButton extends Button {
 		rectangle.setY(y);
 		rectangle.setWidth(width);
 		rectangle.setHeight(height);
-
-		color = new Color3f(1.0f, 0.0f, 0.0f);
 	}
 
 	@Override
@@ -140,26 +132,6 @@ public abstract class RectangleButton extends Button {
 	/**
 	 * Probably a good idea to override this if you're extending RectangleButton
 	 */
-	public void draw() {
-		// GL11.glDisable(GL11.GL_BLEND);
-		GL11.glColor3f(color.x, color.y, color.z);
-		TextureManager.getTexture(TextureManager.CHECKERS).bind();
-		GL11.glBegin(GL11.GL_QUADS);
-		{
-			GL11.glTexCoord2f(0, 0);
-			GL11.glVertex2i(x, y);
-
-			GL11.glTexCoord2f(1, 0);
-			GL11.glVertex2i(x + width, y);
-
-			GL11.glTexCoord2f(1, 1);
-			GL11.glVertex2i(x + width, y + height);
-
-			GL11.glTexCoord2f(0, 1);
-			GL11.glVertex2i(x, y + height);
-		}
-		GL11.glEnd();
-		// GL11.glEnable(GL11.GL_BLEND);
-	}
+	public abstract void draw();
 
 }

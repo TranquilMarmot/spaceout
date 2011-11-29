@@ -1,21 +1,37 @@
-package gui.button.menu;
+package gui.button;
 
-import gui.button.RectangleButton;
+import java.awt.event.ActionEvent;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
 
 import util.Runner;
+import util.debug.Debug;
 import util.helper.DisplayHelper;
 
 /**
- * A button that stays in the same place regardless of window size!
- * To use, extend this class and implement <code>initImages</code> to create the required images,
- * <code>activeImage</code>, <code>mouseOverImage</code>, <code>pressedImage</code> and <code>inactiveImage</code>
+ * A button that stays in the same place regardless of window size! It does this by being offset from the center.
+ * Example usage:
+ * <code>
+ * 	MenuButton button = new MenuButton("button", imageWidth, imageHeight, xOffset, yOffset);
+ *	pauseButton.addActionListener(new ActionListener(){
+ *		@Override
+ *		public void actionPerformed(ActionEvent e) {
+ *			//DO SOMETHING HERE
+ *		}
+ *	});
+ *	GUI.guiObjects.add(pauseButton);
+ *	</code>
  * @author TranquilMarmot
  *
  */
-public abstract class MenuButton extends RectangleButton {
+public class MenuButton extends RectangleButton {
+	private static final String IMAGE_PATH = "res/images/gui/PauseMenuButton/";
+	
 	/** image this button uses */
 	protected Texture activeImage, mouseOverImage, pressedImage, inactiveImage;
 
@@ -24,6 +40,8 @@ public abstract class MenuButton extends RectangleButton {
 	
 	/** the button's offset from the center of the screen (to keep it in the same spot regardless of window size) */
 	protected int xOffset, yOffset;
+	
+	public String text;
 
 	/**
 	 * Constructor for a menu button
@@ -35,23 +53,39 @@ public abstract class MenuButton extends RectangleButton {
 	 * @param height
 	 * @param width
 	 */
-	public MenuButton(int xOffsetFromCenter, int yOffsetFromCenter, int height, int width) {
+	public MenuButton(String text, int height, int width, int xOffsetFromCenter, int yOffsetFromCenter) {
 		super(0, 0, width, height);
 		this.xOffset = xOffsetFromCenter;
 		this.yOffset = yOffsetFromCenter;
+		this.text = text;
 		initImages();
 	}
 
 	/**
 	 * Initialize the images for this button; <code>activeImage</code>, <code>mouseOverImage</code>, <code>pressedImage</code> and <code>inactiveImage</code>
 	 */
-	protected abstract void initImages();
+	protected void initImages(){
+		try {
+			activeImage = TextureLoader.getTexture("PNG", new FileInputStream(
+					IMAGE_PATH + "active.png"), GL11.GL_NEAREST);
+			mouseOverImage = TextureLoader.getTexture("PNG",
+					new FileInputStream(IMAGE_PATH + "mouseover.png"),
+					GL11.GL_NEAREST);
+			pressedImage = TextureLoader.getTexture("PNG", new FileInputStream(
+					IMAGE_PATH + "pressed.png"), GL11.GL_NEAREST);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		currentImage = activeImage;
+	}
 
 	@Override
 	/**
 	 * What to do when the button is clicked and released (what the button does)
 	 */
-	public abstract void releasedEvent();
+	public void releasedEvent(){
+		buttonListener.actionPerformed(new ActionEvent(this, 1, "release"));
+	}
 
 	@Override
 	/**
@@ -99,6 +133,7 @@ public abstract class MenuButton extends RectangleButton {
 		this.rectangle.setX(this.x);
 		this.rectangle.setY(this.y);
 		
+		// this button is only visible when the game is paused (FIXME this should probably be somewhere else (PauseMenuButton?))
 		if(!Runner.paused)
 			isVisible = false;
 		else
@@ -115,7 +150,7 @@ public abstract class MenuButton extends RectangleButton {
 			currentImage.bind();
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GL11.glBegin(GL11.GL_QUADS);
-			{
+			{	
 				/*
 				 * currentImage.getWidth() and currentImage.getHeight() return the actual height of the texture.
 				 * My best guess is that the texture gets put into the smallest possible texture that has dimensions that are
@@ -134,6 +169,13 @@ public abstract class MenuButton extends RectangleButton {
 				GL11.glVertex2i(x, y + height);
 			}
 			GL11.glEnd();
+			
+			int textWidth = Debug.font.getWidth(text);
+			//int textHeight = Debug.font.getHeight(text);
+			int textHeight = Debug.font.getAscent();
+			//System.out.println(text + " " + textWidth + " " + textHeight);
+			
+			Debug.font.drawString(this.x + 25, this.y + (textHeight / 2) + 2, text, Color.cyan);
 			//GL11.glEnable(GL11.GL_BLEND);
 		}
 	}

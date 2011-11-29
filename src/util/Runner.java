@@ -4,8 +4,10 @@ import entities.Camera;
 import entities.Entities;
 import graphics.render.Graphics;
 import gui.GUI;
-import gui.button.menu.PauseButton;
-import gui.button.menu.QuitButton;
+import gui.button.MenuButton;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -91,10 +93,22 @@ public class Runner {
 		Entities.camera.following = Entities.player;
 		
 		/* GUI DEBUG INIT */
-		PauseButton pauseButton = new PauseButton(-75, 50, 115, 39);
+		MenuButton pauseButton = new MenuButton("resume", 115, 39, -75, 50);
+		pauseButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Runner.paused = false;
+			}
+		});
 		GUI.guiObjects.add(pauseButton);
 		
-		QuitButton quitButton = new QuitButton(75, 50, 115, 39);
+		MenuButton quitButton = new MenuButton("quit", 115, 39, 75, 50);
+		quitButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Runner.done = true;
+			}
+		});
 		GUI.guiObjects.add(quitButton);
 	}
 

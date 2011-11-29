@@ -2,13 +2,15 @@ package gui.button;
 
 import gui.GUIObject;
 
+import java.awt.event.ActionListener;
+
 /**
  * A clickable GUIObject
  * @author TranquilMarmot
  * @see RectangleButton
  *
  */
-public abstract class Button extends GUIObject {
+public abstract class Button extends GUIObject{
 	/** whether or not the mouse is over the object. This should be set using the <code>update</code> method every frame. */
 	public boolean mouseOver;
 	
@@ -21,6 +23,8 @@ public abstract class Button extends GUIObject {
 	/** whether or not the button has just been released */
 	public boolean released;
 	
+	protected ActionListener buttonListener;
+	
 	/**
 	 * Button constructor
 	 * @param x Initial X position
@@ -30,5 +34,9 @@ public abstract class Button extends GUIObject {
 		super(x, y);
 		mouseOver = false;
 		active = true;
+	}
+	
+	public void addActionListener(ActionListener listener){
+		this.buttonListener = listener;
 	}
 }
