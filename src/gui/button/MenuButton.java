@@ -153,7 +153,7 @@ public class MenuButton extends RectangleButton {
 			{	
 				/*
 				 * currentImage.getWidth() and currentImage.getHeight() return the actual height of the texture.
-				 * My best guess is that the texture gets put into the smallest possible texture that has dimensions that are
+				 * My best guess is that the image gets put into the smallest possible texture that has dimensions that are
 				 * powers of 2 by Slick, because OpenGL can handle those much better.
 				 */
 				GL11.glTexCoord2f(0, 0);
@@ -175,7 +175,11 @@ public class MenuButton extends RectangleButton {
 			int textHeight = Debug.font.getAscent();
 			//System.out.println(text + " " + textWidth + " " + textHeight);
 			
-			Debug.font.drawString(this.x + 25, this.y + (textHeight / 2) + 2, text, Color.cyan);
+			int textX = this.x + ((this.width - textWidth) / 2);
+			
+			//this.x + 25
+			
+			Debug.font.drawString(textX, this.y + (textHeight / 2) + 2, text, Color.cyan);
 			//GL11.glEnable(GL11.GL_BLEND);
 		}
 	}
