@@ -25,8 +25,7 @@ public class DebugKeyManager {
 	private static boolean scrollUpDown = false;
 	private static boolean scrollDownDown = false;
 	
-	// whether or not to close the console when line is submitted
-	private static boolean autoClose = false;
+
 	
 	// make it so backspace can be held down
 	private static int backspaceRepeatCounter = 0;
@@ -48,7 +47,7 @@ public class DebugKeyManager {
 		// console button
 		if (KeyboardManager.console && !consoleDown) {
 			Debug.consoleOn = !Debug.consoleOn;
-			autoClose = false;
+			Debug.console.autoClose = false;
 			consoleDown = true;
 		}	
 		if (!KeyboardManager.console) {
@@ -60,7 +59,7 @@ public class DebugKeyManager {
 			if (Debug.consoleOn == false) {
 				Debug.consoleOn = true;
 				Debug.commandOn = true;
-				autoClose = true;
+				Debug.console.autoClose = true;
 			}
 			commandDown = true;
 		}
@@ -72,7 +71,7 @@ public class DebugKeyManager {
 		if (KeyboardManager.chat && !chatDown) {
 			if (Debug.consoleOn == false) {
 				Debug.consoleOn = true;
-				autoClose = true;
+				Debug.console.autoClose = true;
 			}
 			chatDown = true;
 		}
@@ -84,11 +83,6 @@ public class DebugKeyManager {
 		// handle the enter key being pressed to submit a line
 		if (Keyboard.isKeyDown(Keyboard.KEY_RETURN) && !returnDown) {
 			Debug.console.submit();
-			
-			if (autoClose) {
-				autoClose = false;
-				Debug.consoleOn = false;
-			}
 			
 			returnDown = true;
 		}

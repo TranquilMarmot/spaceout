@@ -31,6 +31,9 @@ public class Console {
 	// location to draw the console at
 	private int x = 10;
 	private int y = 0;
+	
+	// whether or not to close the console when line is submitted
+	public boolean autoClose = false;
 
 	// number of lines to print
 	private int numLines = 14;
@@ -190,6 +193,11 @@ public class Console {
 		}
 		// clear the input string (this is important!)
 		input = "";
+		
+		if(autoClose){
+			autoClose = false;
+			Debug.consoleOn = false;
+		}
 	}
 	
 
