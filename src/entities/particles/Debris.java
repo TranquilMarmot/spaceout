@@ -75,9 +75,9 @@ public class Debris extends Entity {
 		this.location.z = following.location.z;
 
 		// each star is generated using the location of the previous star
-		float prevX = location.x + randy.nextFloat() * 100.0f;
-		float prevY = location.y + randy.nextFloat() * 100.0f;
-		float prevZ = location.z + randy.nextFloat() * 100.0f;
+		float prevX = location.x + randy.nextFloat() * 10.0f;
+		float prevY = location.y + randy.nextFloat() * 10.0f;
+		float prevZ = location.z - randy.nextFloat() * 100.0f;
 
 		// initialize the array of particles
 		particles = new Particle[numParticles];
