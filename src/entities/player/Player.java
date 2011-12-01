@@ -150,8 +150,6 @@ public class Player extends Entity {
 			QuaternionHelper.toFloatBuffer(revQuat, rotationBuffer);
 			GL11.glMultMatrix(rotationBuffer);
 
-			GL11.glRotatef(90.0f, 0.0f, 1.0f, 0.0f);
-
 			// draw the model
 			GL11.glCallList(ModelManager.getModel(model).getCallList());
 		}

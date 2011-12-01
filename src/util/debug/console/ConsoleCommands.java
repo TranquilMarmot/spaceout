@@ -8,6 +8,7 @@ import org.lwjgl.util.vector.Vector3f;
 import util.Runner;
 import util.debug.Debug;
 import entities.Entities;
+import entities.Entity;
 
 /**
  * Commands that the {@link Console} carries out. See console_commands.txt.
@@ -34,29 +35,35 @@ public class ConsoleCommands {
 		command = command.substring(1, command.length());
 
 		try {
+			// player position
 			if (command.equals("xyz") || command.equals("pos")
 					|| command.equals("position")) {
 				positionCommand(toker);
 			}
 
+			// clear console
 			else if (command.equals("clear")) {
 				console.text.clear();
 			}
 
+			// player speed
 			else if (command.equals("speed")) {
 				speedCommand(toker);
 			}
 
+			// list entities
 			else if (command.equals("listentities")) {
 				console.print("Listing entities...");
 				for (entities.Entity ent : Entities.entities)
 					console.print(ent.type);
 			}
 
+			// print number of entities
 			else if (command.equals("numentities")) {
 				console.print("Number of entities: " + Entities.entities.size());
 			}
 
+			// 99 bottles of beer on the wall
 			else if (command.equals("beer")) {
 				for (int i = 99; i > 0; i--) {
 					console.print(i + " bottles of beer on the wall, " + i
@@ -66,18 +73,24 @@ public class ConsoleCommands {
 				}
 			}
 
+			// camera command
 			else if (command.equals("camera")) {
 				cameraCommand(toker);
 			}
 
+			// quit
 			else if (command.equals("quit") || command.equals("exit")
 					|| command.equals("q")) {
 				Runner.done = true;
 			}
 
+			// warp command
 			else if (command.equals("warp")) {
 				warpCommand(toker);
-			} else {
+			}
+
+			// invalid
+			else {
 				console.print("Invalid command! (" + command + ")");
 			}
 		} catch (NoSuchElementException e) {
@@ -90,7 +103,9 @@ public class ConsoleCommands {
 
 	/**
 	 * Carry out a command to change the player's position
-	 * @param toker StringTokenizer containing the command
+	 * 
+	 * @param toker
+	 *            StringTokenizer containing the command
 	 */
 	private static void positionCommand(StringTokenizer toker) {
 		float x = Float.parseFloat(toker.nextToken());
@@ -111,12 +126,17 @@ public class ConsoleCommands {
 
 	/**
 	 * Command to warp to an entity
-	 * @param toker StringTokenizer containing the command
+	 * 
+	 * @param toker
+	 *            StringTokenizer containing the command
 	 */
 	private static void warpCommand(StringTokenizer toker) {
 		String warp = toker.nextToken();
-		for (entities.Entity ent : Entities.entities) {
+		for (Entity ent : Entities.entities) {
 			if (ent.type.toLowerCase().equals(warp)) {
+				console.print("Warping Player to " + ent.type + " ("
+						+ ent.location.x + "," + ent.location.y + ","
+						+ ent.location.z + ")...");
 				Entities.player.location = new Vector3f(ent.location.x,
 						ent.location.y, ent.location.z);
 			}
@@ -125,81 +145,143 @@ public class ConsoleCommands {
 
 	/**
 	 * Command to change the player's speed variables
-	 * @param toker StringTokenizer containing the command
+	 * 
+	 * @param toker
+	 *            StringTokenizer containing the command
 	 */
 	private static void speedCommand(StringTokenizer toker) {
 		String speedCommand = toker.nextToken().toLowerCase();
 		Float speedChange = Float.parseFloat(toker.nextToken());
 
+		// max x speed
 		if (speedCommand.equals("maxx") || speedCommand.equals("xmax")) {
 			console.print("Changing player max X speed from "
 					+ Entities.player.maxXSpeed + " to " + speedChange);
 			Entities.player.maxXSpeed = speedChange;
-		} else if (speedCommand.equals("maxy") || speedCommand.equals("ymax")) {
+		}
+
+		// max y speed
+		else if (speedCommand.equals("maxy") || speedCommand.equals("ymax")) {
 			console.print("Changing player max Y speed from "
 					+ Entities.player.maxYSpeed + " to " + speedChange);
 			Entities.player.maxYSpeed = speedChange;
-		} else if (speedCommand.equals("maxz") || speedCommand.equals("zmax")) {
+		}
+
+		// max z speed
+		else if (speedCommand.equals("maxz") || speedCommand.equals("zmax")) {
 			console.print("Changing player max Z speed from "
 					+ Entities.player.maxZSpeed + " to " + speedChange);
 			Entities.player.maxZSpeed = speedChange;
-		} else if (speedCommand.equals("accelx")
-				|| speedCommand.equals("xaccel")) {
+		}
+
+		// x acceleration
+		else if (speedCommand.equals("accelx") || speedCommand.equals("xaccel")) {
 			console.print("Changing player X acceleration from "
 					+ Entities.player.xAccel + " to " + speedChange);
 			Entities.player.xAccel = speedChange;
-		} else if (speedCommand.equals("accely")
-				|| speedCommand.equals("yaccel")) {
+		}
+
+		// y acceleration
+		else if (speedCommand.equals("accely") || speedCommand.equals("yaccel")) {
 			console.print("Changing player Y acceleration from "
 					+ Entities.player.yAccel + " to " + speedChange);
 			Entities.player.yAccel = speedChange;
-		} else if (speedCommand.equals("accelz")
-				|| speedCommand.equals("zaccel")) {
+		}
+
+		// z acceleration
+		else if (speedCommand.equals("accelz") || speedCommand.equals("zaccel")) {
 			console.print("Changing player Z acceleration from "
 					+ Entities.player.zAccel + " to " + speedChange);
 			Entities.player.zAccel = speedChange;
-		} else if (speedCommand.equals("decelx")
-				|| speedCommand.equals("xdecel")) {
+		}
+
+		// x deceleration
+		else if (speedCommand.equals("decelx") || speedCommand.equals("xdecel")) {
 			console.print("Changing player X deceleration from "
 					+ Entities.player.xDecel + " to " + speedChange);
 			Entities.player.xDecel = speedChange;
-		} else if (speedCommand.equals("decely")
-				|| speedCommand.equals("ydecel")) {
+		}
+
+		// y deceleration
+		else if (speedCommand.equals("decely") || speedCommand.equals("ydecel")) {
 			console.print("Changing player Y deceleration from "
 					+ Entities.player.yDecel + " to " + speedChange);
 			Entities.player.yDecel = speedChange;
-		} else if (speedCommand.equals("decelz")
-				|| speedCommand.equals("zdecel")) {
+		}
+
+		// z deceleration
+		else if (speedCommand.equals("decelz") || speedCommand.equals("zdecel")) {
 			console.print("Changing player Z deceleration from "
 					+ Entities.player.zDecel + " to " + speedChange);
 			Entities.player.zDecel = speedChange;
-		} else {
+		}
+
+		// invalid
+		else {
 			console.print("Not a valid speed command!");
 		}
 	}
 
 	/**
 	 * Command to change how the camera behaves
-	 * @param toker StringTokenizer containing the command
+	 * 
+	 * @param toker
+	 *            StringTokenizer containing the command
 	 */
 	private static void cameraCommand(StringTokenizer toker) {
 		String cameraCommand = toker.nextToken().toLowerCase();
+
+		// zoom
 		if (cameraCommand.equals("zoom")) {
 			float zoom = Float.parseFloat(toker.nextToken());
 			console.print("Changing camera zoom from " + Entities.camera.zoom
 					+ " to " + zoom);
 			Entities.camera.zoom = zoom;
-		} else if (cameraCommand.equals("yoffset")) {
+		}
+
+		// y offset
+		else if (cameraCommand.equals("yoffset")) {
 			float yOffset = Float.parseFloat(toker.nextToken());
 			console.print("Changing camera yOffset from "
 					+ Entities.camera.yOffset + " to " + yOffset);
 			Entities.camera.yOffset = yOffset;
-		} else if (cameraCommand.equals("xoffset")) {
+		}
+
+		// x offset
+		else if (cameraCommand.equals("xoffset")) {
 			float xOffset = Float.parseFloat(toker.nextToken());
 			console.print("Changing camera xOffset from "
 					+ Entities.camera.xOffset + " to " + xOffset);
 			Entities.camera.xOffset = xOffset;
-		} else {
+		}
+
+		// following
+		else if (cameraCommand.equals("follow")) {
+			boolean changed = false;
+			String toFollow = toker.nextToken();
+
+			if (toFollow.toLowerCase().equals("player")) {
+				console.print("Camera now following " + toFollow);
+				Entities.camera.following = Entities.player;
+				changed = true;
+			} else {
+				for (Entity ent : Entities.entities) {
+					if (ent.type.toLowerCase().equals(toFollow.toLowerCase())) {
+						console.print("Camera now following " + toFollow);
+						Entities.camera.following = ent;
+						changed = true;
+						break;
+					}
+				}
+			}
+
+			if (!changed) {
+				console.print("Couldn't find entity " + toFollow);
+			}
+		}
+
+		// invalid
+		else {
 			console.print("Invalid camera command! (" + cameraCommand + ")");
 		}
 	}

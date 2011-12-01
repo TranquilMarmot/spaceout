@@ -60,6 +60,7 @@
  * -TODO Make ctrl+v work with the console
  * -TODO If you're looking at an earlier line in the console, then submit something, it should jump back to the bottom
  * -TODO Add help for all the commands
+ * -TODO Add tabs to the console (one for chat, one for commands, one for combat, etc.)
  * TODO XML
  * -TODO Figure out how to write to XML files
  * -TODO Store all options in XML files

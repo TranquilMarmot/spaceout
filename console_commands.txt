@@ -18,6 +18,8 @@ camera (variable) (newvalue)
 		offsets the camera on the x axis by the given number
 	yOffset
 		offsets the camera on the y axis by the given number
+	follow
+		makes the camera follow the given entity (from listentities)
 	
 listentities
 	Lists all the current entities

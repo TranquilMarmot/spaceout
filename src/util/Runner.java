@@ -89,7 +89,7 @@ public class Runner {
 				Entities.player.location.y, Entities.player.location.z);
 		Entities.camera.zoom = 20.0f;
 		Entities.camera.yOffset = -5.0f;
-		Entities.camera.xOffset = 1.0f;
+		Entities.camera.xOffset = 0.3f;
 		Entities.camera.following = Entities.player;
 		
 		/* GUI DEBUG INIT */

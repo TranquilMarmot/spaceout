@@ -2,7 +2,6 @@ package util.manager;
 
 import org.lwjgl.input.Mouse;
 
-import util.debug.Debug;
 import util.helper.DisplayHelper;
 
 /**

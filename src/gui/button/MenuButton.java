@@ -176,10 +176,9 @@ public class MenuButton extends RectangleButton {
 			//System.out.println(text + " " + textWidth + " " + textHeight);
 			
 			int textX = this.x + ((this.width - textWidth) / 2);
+			int textY = this.y + ((this.height - textHeight) / 2) - 2;
 			
-			//this.x + 25
-			
-			Debug.font.drawString(textX, this.y + (textHeight / 2) + 2, text, Color.cyan);
+			Debug.font.drawString(textX, textY, text, Color.cyan);
 			//GL11.glEnable(GL11.GL_BLEND);
 		}
 	}
