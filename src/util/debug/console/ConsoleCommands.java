@@ -27,77 +27,82 @@ public class ConsoleCommands {
 	 *            The command to issue
 	 */
 	public static void issueCommand(String comm) {
-		// split the command at the spaces
-		StringTokenizer toker = new StringTokenizer(comm, " ");
+		// make sure the command isn't empty
+		if (comm.length() > 1) {
+			// split the command at the spaces
+			StringTokenizer toker = new StringTokenizer(comm, " ");
 
-		// grab the actual command and lop off the / at the beginning
-		String command = toker.nextToken();
-		command = command.substring(1, command.length());
+			// grab the actual command and lop off the / at the beginning
+			String command = toker.nextToken();
+			command = command.substring(1, command.length());
 
-		try {
-			// player position
-			if (command.equals("xyz") || command.equals("pos")
-					|| command.equals("position")) {
-				positionCommand(toker);
-			}
-
-			// clear console
-			else if (command.equals("clear")) {
-				console.text.clear();
-			}
-
-			// player speed
-			else if (command.equals("speed")) {
-				speedCommand(toker);
-			}
-
-			// list entities
-			else if (command.equals("listentities")) {
-				console.print("Listing entities...");
-				for (entities.Entity ent : Entities.entities)
-					console.print(ent.type);
-			}
-
-			// print number of entities
-			else if (command.equals("numentities")) {
-				console.print("Number of entities: " + Entities.entities.size());
-			}
-
-			// 99 bottles of beer on the wall
-			else if (command.equals("beer")) {
-				for (int i = 99; i > 0; i--) {
-					console.print(i + " bottles of beer on the wall, " + i
-							+ " bottles of beer");
-					console.print("Take one down, pass it around, " + (i - 1)
-							+ " bottles of beer on the wall");
+			try {
+				// player position
+				if (command.equals("xyz") || command.equals("pos")
+						|| command.equals("position")) {
+					positionCommand(toker);
 				}
-			}
 
-			// camera command
-			else if (command.equals("camera")) {
-				cameraCommand(toker);
-			}
+				// clear console
+				else if (command.equals("clear")) {
+					console.text.clear();
+				}
 
-			// quit
-			else if (command.equals("quit") || command.equals("exit")
-					|| command.equals("q")) {
-				Runner.done = true;
-			}
+				// player speed
+				else if (command.equals("speed")) {
+					speedCommand(toker);
+				}
 
-			// warp command
-			else if (command.equals("warp")) {
-				warpCommand(toker);
-			}
+				// list entities
+				else if (command.equals("listentities")) {
+					console.print("Listing entities...");
+					for (entities.Entity ent : Entities.entities)
+						console.print(ent.type);
+				}
 
-			// invalid
-			else {
-				console.print("Invalid command! (" + command + ")");
+				// print number of entities
+				else if (command.equals("numentities")) {
+					console.print("Number of entities: "
+							+ Entities.entities.size());
+				}
+
+				// 99 bottles of beer on the wall
+				else if (command.equals("beer")) {
+					for (int i = 99; i > 0; i--) {
+						console.print(i + " bottles of beer on the wall, " + i
+								+ " bottles of beer");
+						console.print("Take one down, pass it around, "
+								+ (i - 1) + " bottles of beer on the wall");
+					}
+				}
+
+				// camera command
+				else if (command.equals("camera")) {
+					cameraCommand(toker);
+				}
+
+				// quit
+				else if (command.equals("quit") || command.equals("exit")
+						|| command.equals("q")) {
+					Runner.done = true;
+				}
+
+				// warp command
+				else if (command.equals("warp")) {
+					warpCommand(toker);
+				}
+
+				// invalid
+				else {
+					console.print("Invalid command! (" + command + ")");
+				}
+			} catch (NoSuchElementException e) {
+				console.print("Not enough vairbales for command '" + command
+						+ "'!");
+			} catch (NumberFormatException e) {
+				console.print("Incorrect number format "
+						+ e.getLocalizedMessage().toLowerCase());
 			}
-		} catch (NoSuchElementException e) {
-			console.print("Not enough vairbales for command '" + command + "'!");
-		} catch (NumberFormatException e) {
-			console.print("Incorrect number format "
-					+ e.getLocalizedMessage().toLowerCase());
 		}
 	}
 
@@ -131,15 +136,22 @@ public class ConsoleCommands {
 	 *            StringTokenizer containing the command
 	 */
 	private static void warpCommand(StringTokenizer toker) {
+		boolean hasWarped = false;
 		String warp = toker.nextToken();
 		for (Entity ent : Entities.entities) {
-			if (ent.type.toLowerCase().equals(warp)) {
+			if (ent.type.toLowerCase().equals(warp.toLowerCase())) {
 				console.print("Warping Player to " + ent.type + " ("
 						+ ent.location.x + "," + ent.location.y + ","
 						+ ent.location.z + ")...");
 				Entities.player.location = new Vector3f(ent.location.x,
 						ent.location.y, ent.location.z);
+				hasWarped = true;
+				break;
 			}
+		}
+		
+		if(!hasWarped){
+			console.print("Couldn't find entity " + warp);
 		}
 	}
 
@@ -274,7 +286,7 @@ public class ConsoleCommands {
 					}
 				}
 			}
-
+			
 			if (!changed) {
 				console.print("Couldn't find entity " + toFollow);
 			}

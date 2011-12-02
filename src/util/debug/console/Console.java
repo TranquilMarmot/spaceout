@@ -70,7 +70,7 @@ public class Console {
 		if (scroll < 0)
 			scroll = 0;
 		if (scroll > text.size() - numLines && text.size() > numLines)
-			scroll = text.size() - numLines;
+			scroll = text.size() - numLines; 
 
 		// do blinking effect
 		updateBlink();
@@ -85,10 +85,6 @@ public class Console {
 		if (Debug.consoleOn) {
 			
 			// draw a semi-transparent box behind the console text
-			
-			// FIXME Currently drawing in front of text regardless of code location
-			// When this is solved, i can finish fixing the chat.
-			//GL11.glTranslatef(0.0f, 0.0f, 1.0f);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
 			TextureManager.getTexture(TextureManager.WHITE).bind();
 			GL11.glColor4f(0.03f, 0.03f, 0.03f, 1.0f);
@@ -101,6 +97,7 @@ public class Console {
 			
 			// print out however many strings, going backwards (we want the latest
 			// strings to be printed first)
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			for (int i = text.size() - 1 - scroll; i > stringsToPrint - scroll; i--) {
 				// break if we go out of the array
 				if (i < 0)

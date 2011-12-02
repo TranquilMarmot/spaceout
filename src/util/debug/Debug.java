@@ -74,6 +74,8 @@ public class Debug {
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
 		GL11.glCallList(rectangleCallList);
 		
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		
 		// formats the coordinates
 		Formatter coords = new Formatter();
 		coords.format("x: %,09.3f%n" + "y: %,09.3f%n" + "z: %,09.3f%n",
