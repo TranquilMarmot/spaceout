@@ -1,5 +1,9 @@
 package entities;
 
+import graphics.model.Model;
+import graphics.model.ModelLoader;
+import graphics.render.Render3D;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
@@ -15,8 +19,10 @@ import util.manager.TextureManager;
  *
  */
 public class Skybox extends Entity {
+	private static final String MODEL_PATH = "res/models/";
 	public Sphere sphere;
 	public float size;
+	private Model model;
 
 	// the skybox's center will always be on the entity that it is following
 	public Entity following;
@@ -29,7 +35,7 @@ public class Skybox extends Entity {
 	 * @param yaw Initial yaw
 	 * @param roll Initial roll
 	 */
-	public Skybox(Entity following, float size, float pitch, float yaw,
+	public Skybox(Entity following, float pitch, float yaw,
 			float roll) {
 		super();
 		this.type = "skybox";
@@ -45,6 +51,8 @@ public class Skybox extends Entity {
 		this.size = size;
 		
 		rotationBuffer = BufferUtils.createFloatBuffer(16);
+		
+		model = ModelLoader.loadObjFile(MODEL_PATH + "skybox.obj", Render3D.drawDistance);
 	}
 
 	@Override
@@ -61,8 +69,9 @@ public class Skybox extends Entity {
 		{
 			// bind the entity's texture before drawing
 			TextureManager.getTexture(TextureManager.STARS).bind();
-			GL11.glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-			sphere.draw(size, 6, 6);
+			GL11.glCallList(model.getCallList());
+			//GL11.glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+			//sphere.draw(size, 6, 6);
 		}
 		GL11.glPopMatrix();
 		GL11.glEnable(GL11.GL_LIGHTING);

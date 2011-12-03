@@ -16,7 +16,6 @@
 	</Debris>
 	
 	<Skybox>
-		<size>4999000.0f</size>
 		<yaw>90.0f</yaw>
 		<pitch>0.0f</pitch>
 		<roll>0.0f</roll>

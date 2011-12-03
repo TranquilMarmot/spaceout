@@ -132,13 +132,11 @@ public class XMLParser {
 			long seed = 1337420L;
 			return new Debris((Entity)entities.Entities.player, numStars, range, seed);
 		} else if(type.equals("skybox")){
-			float size = getFloat(ele, "size");
-			
 			float yaw = getFloat(ele, "yaw");
 			float pitch = getFloat(ele, "pitch");
 			float roll = getFloat(ele, "roll");
 			
-			return new Skybox((Entity)entities.Entities.player, size, pitch, yaw, roll);
+			return new Skybox((Entity)entities.Entities.player, pitch, yaw, roll);
 		} else if(type.equals("sun")){
 			float x = getFloat(ele, "x");
 			float y = getFloat(ele, "y");

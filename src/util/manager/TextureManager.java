@@ -95,8 +95,8 @@ public class TextureManager {
 						TEXTURE_PATH + "earthbig.jpg"), true, GL11.GL_LINEAR);
 				break;
 			case STARS:
-				stars = TextureLoader.getTexture("JPG", new FileInputStream(
-						TEXTURE_PATH + "stars.jpg"), true, GL11.GL_LINEAR);
+				stars = TextureLoader.getTexture("PNG", new FileInputStream(
+						TEXTURE_PATH + "skybox.png"), true, GL11.GL_LINEAR);
 				break;
 			case WHITE:
 				white = TextureLoader.getTexture("BMP", new FileInputStream(
