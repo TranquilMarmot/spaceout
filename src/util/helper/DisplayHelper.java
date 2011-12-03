@@ -16,6 +16,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
+import util.Runner;
 import util.manager.KeyboardManager;
 
 /**
@@ -34,11 +35,11 @@ public class DisplayHelper {
 	public static int windowHeight = 768;
 	
 	/** the minimum size that the window can be */
-	private static final int minimumWindowWidth = 200;
-	private static final int minimumWindowHeight = 200;
+	private static final int MIN_WINDOW_WIDTH = 200;
+	private static final int MIN_WINDOW_HEIGHT = 200;
 	
 	/** the window's title */
-	private static String windowTitle = "Spaceout Pre-alpha 0.0.10";
+	private static String windowTitle = "Spaceout Pre-alpha " + Runner.VERSION;
 
 	/** target fps (might not be reached on slower machines) */
 	public static int targetFPS = 60;
@@ -112,8 +113,8 @@ public class DisplayHelper {
 
 			// pretty self explanatory, boilerplate awt frame creation
 			frame.setPreferredSize(new Dimension(windowWidth, windowHeight));
-			frame.setMinimumSize(new Dimension(minimumWindowWidth,
-					minimumWindowHeight));
+			frame.setMinimumSize(new Dimension(MIN_WINDOW_WIDTH,
+					MIN_WINDOW_HEIGHT));
 			frame.pack();
 			frame.setVisible(true);
 			Display.create();

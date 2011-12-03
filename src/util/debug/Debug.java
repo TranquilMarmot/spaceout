@@ -94,11 +94,14 @@ public class Debug {
 		if (Entities.camera.vanityMode)
 			cameraInfo += " (vanity)";
 		font.drawString(3, 135, cameraInfo, Color.blue);
-
+		
+		// draw what version of Spaceout this is
+		font.drawString(DisplayHelper.windowWidth - 70,
+				font.getDescent() + 5, Runner.VERSION);
+		
 		// draw the current fps
 		font.drawString(DisplayHelper.windowWidth - 70,
-				font.getDescent() + 5, currentFPS + " fps");
-
+				font.getDescent() + 25, currentFPS + " fps");
 	}
 
 	/**

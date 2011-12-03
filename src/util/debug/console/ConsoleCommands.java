@@ -142,7 +142,7 @@ public class ConsoleCommands {
 			if (ent.type.toLowerCase().equals(warp.toLowerCase())) {
 				console.print("Warping Player to " + ent.type + " ("
 						+ ent.location.x + "," + ent.location.y + ","
-						+ ent.location.z + ")...");
+						+ ent.location.z + ")");
 				Entities.player.location = new Vector3f(ent.location.x,
 						ent.location.y, ent.location.z);
 				hasWarped = true;
