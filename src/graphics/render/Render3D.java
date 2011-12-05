@@ -31,6 +31,7 @@ public class Render3D {
 		//prepare to do 3D rendering
 		setUp3DRender();
 		
+		
 		//set up lights
 		setUpLighting();
 

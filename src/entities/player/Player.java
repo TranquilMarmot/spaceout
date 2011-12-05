@@ -40,17 +40,17 @@ public class Player extends Entity {
 		ySpeed = 0.0f;
 		zSpeed = 0.0f;
 
-		maxZSpeed = 75.0f;
-		zAccel = 0.07f;
-		zDecel = 0.04f;
+		maxZSpeed = 37.5f;
+		zAccel = 0.035f;
+		zDecel = 0.02f;
 
-		maxXSpeed = 75.0f;
-		xAccel = 0.07f;
-		xDecel = 0.04f;
+		maxXSpeed = 37.5f;
+		xAccel = 0.035f;
+		xDecel = 0.02f;
 
-		maxYSpeed = 75.0f;
-		yAccel = 0.07f;
-		yDecel = 0.04f;
+		maxYSpeed = 37.5f;
+		yAccel = 0.035f;
+		yDecel = 0.02f;
 	}
 
 	@Override

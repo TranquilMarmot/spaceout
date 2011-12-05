@@ -85,14 +85,14 @@ public class Runner {
 		Graphics.initGL();
 
 		// load the debug XML files
-		XMLParser.loadEntitiesFromXmlFile("res/XML/SolarSystem.xml");
+		XMLParser.loadEntitiesFromXmlFile("res/XML/SolarSystemHalved.xml");
 
 		// initialize the camera
 		Entities.camera = new Camera(Entities.player.location.x,
 				Entities.player.location.y, Entities.player.location.z);
-		Entities.camera.zoom = 20.0f;
-		Entities.camera.yOffset = -5.0f;
-		Entities.camera.xOffset = 0.3f;
+		Entities.camera.zoom = 10.0f;
+		Entities.camera.yOffset = -2.5f;
+		Entities.camera.xOffset = 0.0f;
 		Entities.camera.following = Entities.player;
 		
 		/* GUI DEBUG INIT */

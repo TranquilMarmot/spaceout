@@ -46,10 +46,10 @@ public class ModelManager {
 	private static void initModel(int model){
 		switch(model){
 		case SHIP1:
-			ship1 = ModelLoader.loadObjFile(MODEL_PATH + "ships/ship1.obj", 0.5f);
+			ship1 = ModelLoader.loadObjFile(MODEL_PATH + "ships/ship1.obj", 0.25f);
 			break;
 		case LASERBULLET:
-			laserbullet = ModelLoader.loadObjFile(MODEL_PATH + "laserbullet.obj", 2.5f);
+			laserbullet = ModelLoader.loadObjFile(MODEL_PATH + "laserbullet.obj", 1.5f);
 			break;
 		}
 	}
