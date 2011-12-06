@@ -22,22 +22,31 @@ public class MainMenu extends GUIObject {
 	/** image path */
 	private static final String IMAGE_PATH = "res/images/gui/MainMenu/Button/";
 	
-	/** whether or not we're dont with the main menu */
+	/** whether or not we're done with the main menu */
 	private boolean done;
 	
 	/** button to press to start the game */
 	private MenuButton startButton;
+	
+	/** button to quit */
+	private MenuButton quitButton;
 	
 	/**
 	 * Main menu constructor. Creates a startButton that loads from an XML file.
 	 */
 	public MainMenu(){
 		super(0, 0);
+		
 		done = false;
-		startButton = new MenuButton(IMAGE_PATH, "Start", 238, 55, 0, 0);
+		
+		// create the start button
+		startButton = new MenuButton(IMAGE_PATH, "Start", 238, 55, 0, -40);
+		
+		// this button does some pretty srs stuff
 		startButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				// load entities from XML (TODO make a menu for selecting a file)
 				XMLParser.loadEntitiesFromXmlFile("res/XML/SolarSystemHalved.xml");
 				
 				// initialize the camera
@@ -48,6 +57,8 @@ public class MainMenu extends GUIObject {
 				Entities.camera.xOffset = 0.5f;
 				Entities.camera.following = Entities.player;
 				
+				/* BEGIN PAUSE MENU BUILDING */
+				// button to resume the game if it's paused
 				PauseMenuButton pauseButton = new PauseMenuButton("resume", 115, 39, -75, 50);
 				pauseButton.addActionListener(new ActionListener(){
 					@Override
@@ -57,6 +68,8 @@ public class MainMenu extends GUIObject {
 				});
 				GUI.addBuffer.add(pauseButton);
 				
+				
+				// button to quit the game if it's paused
 				PauseMenuButton quitButton = new PauseMenuButton("quit", 115, 39, 75, 50);
 				quitButton.addActionListener(new ActionListener(){
 					@Override
@@ -65,8 +78,19 @@ public class MainMenu extends GUIObject {
 					}
 				});
 				GUI.addBuffer.add(quitButton);
+				/* END PAUSE MENU BUILDING */
 				
+				// we're done with the main menu if this button is pressed
 				done = true;
+			}
+		});
+		
+		// create the main menu quit button
+		quitButton = new MenuButton(IMAGE_PATH, "Exit", 238, 55, 0, 50);
+		quitButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Runner.done = true;
 			}
 		});
 	}
@@ -75,14 +99,20 @@ public class MainMenu extends GUIObject {
 	@Override
 	public void update() {
 		// remove the main menu if we're done with it
-		if(done)
+		if(this.done){
 			GUI.removeBuffer.add(this);
+		}
+		
+		// update the buttons
 		startButton.update();
+		quitButton.update();
 	}
 
 
 	@Override
 	public void draw() {
+		// draw the buttons
 		startButton.draw();
+		quitButton.draw();
 	}
 }

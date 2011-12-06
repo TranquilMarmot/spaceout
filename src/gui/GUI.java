@@ -3,9 +3,6 @@ package gui;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import entities.Entities;
-import entities.Entity;
-
 /**
  * Handles all the GUI objects
  * 

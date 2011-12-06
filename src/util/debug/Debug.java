@@ -66,7 +66,7 @@ public class Debug {
 		}
 
 		// draw 'PAUSED' in the middle of the screen if the game is paused
-		if (Runner.paused)
+		if (Runner.paused && Entities.entitiesExist())
 			Debug.font.drawString((DisplayHelper.windowWidth / 2) - 25,
 					DisplayHelper.windowHeight / 2, "PAUSED");
 	}
