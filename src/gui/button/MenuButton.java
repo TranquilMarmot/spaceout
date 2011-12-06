@@ -9,28 +9,36 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
-import util.Runner;
 import util.debug.Debug;
 import util.helper.DisplayHelper;
 
 /**
  * A button that stays in the same place regardless of window size! It does this by being offset from the center.
  * Example usage:
+ * <br>
  * <code>
  * 	MenuButton button = new MenuButton("button", imageWidth, imageHeight, xOffset, yOffset);
  *	pauseButton.addActionListener(new ActionListener(){
- *		@Override
  *		public void actionPerformed(ActionEvent e) {
  *			//DO SOMETHING HERE
  *		}
  *	});
  *	GUI.guiObjects.add(pauseButton);
  *	</code>
+ *  <br>
+ * This takes an imagePath string as an argument for the constructor. The given string should point to a folder that contains four images:
+ * <ul>
+ * 	<li>active.png</li>
+ * 	<li>mouseover.png</li>
+ * 	<li>pressed.png</li>
+ * 	<li>disabled.png</li>
+ * </ul>
  * @author TranquilMarmot
  *
  */
 public class MenuButton extends RectangleButton {
-	private static final String IMAGE_PATH = "res/images/gui/PauseMenuButton/";
+	/** where the images for this button are */
+	private String imagePath;
 	
 	/** image this button uses */
 	protected Texture activeImage, mouseOverImage, pressedImage, inactiveImage;
@@ -53,8 +61,9 @@ public class MenuButton extends RectangleButton {
 	 * @param height
 	 * @param width
 	 */
-	public MenuButton(String text, int height, int width, int xOffsetFromCenter, int yOffsetFromCenter) {
+	public MenuButton(String imagePath, String text, int height, int width, int xOffsetFromCenter, int yOffsetFromCenter) {
 		super(0, 0, width, height);
+		this.imagePath = imagePath;
 		this.xOffset = xOffsetFromCenter;
 		this.yOffset = yOffsetFromCenter;
 		this.text = text;
@@ -67,12 +76,14 @@ public class MenuButton extends RectangleButton {
 	protected void initImages(){
 		try {
 			activeImage = TextureLoader.getTexture("PNG", new FileInputStream(
-					IMAGE_PATH + "active.png"), GL11.GL_NEAREST);
+					imagePath + "active.png"), GL11.GL_NEAREST);
 			mouseOverImage = TextureLoader.getTexture("PNG",
-					new FileInputStream(IMAGE_PATH + "mouseover.png"),
+					new FileInputStream(imagePath + "mouseover.png"),
 					GL11.GL_NEAREST);
 			pressedImage = TextureLoader.getTexture("PNG", new FileInputStream(
-					IMAGE_PATH + "pressed.png"), GL11.GL_NEAREST);
+					imagePath + "pressed.png"), GL11.GL_NEAREST);
+			inactiveImage = TextureLoader.getTexture("PNG", new FileInputStream(imagePath + "inactive.png"), GL11.GL_NEAREST);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -116,8 +127,7 @@ public class MenuButton extends RectangleButton {
 	 * Change the current image to the inactive image
 	 */
 	public void inactiveEvent() {
-		//TODO give this an inactive image!
-		//currentImage = inactiveImage;
+		currentImage = inactiveImage;
 	}
 	
 	@Override
@@ -132,12 +142,6 @@ public class MenuButton extends RectangleButton {
 		this.y = (DisplayHelper.windowHeight / 2) - (this.height / 2) + yOffset;
 		this.rectangle.setX(this.x);
 		this.rectangle.setY(this.y);
-		
-		// this button is only visible when the game is paused (FIXME this should probably be somewhere else (PauseMenuButton?))
-		if(!Runner.paused)
-			isVisible = false;
-		else
-			isVisible = true;
 	}
 
 	@Override
@@ -145,8 +149,8 @@ public class MenuButton extends RectangleButton {
 	 * Draw the button
 	 */
 	public void draw() {
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		if (this.isVisible) {
-			//GL11.glDisable(GL11.GL_BLEND);
 			currentImage.bind();
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GL11.glBegin(GL11.GL_QUADS);
@@ -171,15 +175,12 @@ public class MenuButton extends RectangleButton {
 			GL11.glEnd();
 			
 			int textWidth = Debug.font.getWidth(text);
-			//int textHeight = Debug.font.getHeight(text);
 			int textHeight = Debug.font.getAscent();
-			//System.out.println(text + " " + textWidth + " " + textHeight);
 			
 			int textX = this.x + ((this.width - textWidth) / 2);
 			int textY = this.y + ((this.height - textHeight) / 2) - 2;
 			
 			Debug.font.drawString(textX, textY, text, Color.cyan);
-			//GL11.glEnable(GL11.GL_BLEND);
 		}
 	}
 }

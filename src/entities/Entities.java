@@ -28,6 +28,13 @@ public class Entities {
 	public static ArrayList<Entity> removeBuffer = new ArrayList<Entity>();
 	
 	/**
+	 * @return Whether or not there are any entities at the moment
+	 */
+	public static boolean entitiesExist(){
+		return entities.size() > 0;
+	}
+	
+	/**
 	 * Gets the distance between two entities
 	 * @param first The first entity
 	 * @param second The second entity

@@ -8,13 +8,12 @@
  * TODO Find out how to see if two boxes have hit each other
  * 
  * GUI branch TODO
- * TODO Finish implementing the inactive state for a button
  * TODO Make draggable boxes
  * TODO Maybe make everything drawn by call lists instead of point-by-point-per-frame. Would it really be worth the performance increase? Probably not.
- * TODO Might make sense to have the constructor for a MenuButton take a directory that it rips the images from
- * TODO Make a menu screen; have an XML selection screen that checks the directory for XML files and lets you select one to load
- * TODO Make an options menu for that menu screen. Have as many graphics options as possible.
- * TODO Might be a good idea to have the constructor take a scale in to control how big the image is (xScale and yScale?)
+ * TODO Make an XML selection screen that checks the directory for XML files and lets you select one to load
+ * TODO Make an options menu for the menu screen. Have as many graphics options as possible.
+ * TODO Might be a good idea to have the Button constructor take a scale in to control how big the image is (xScale and yScale) rather than the size of the image
+ * TODO Give the main menu's start button its own image
  * 
  * ModelLoader TODO
  * TODO Make it handle materials
@@ -25,6 +24,7 @@
  * TODO Figure out how to create a CollisionObject with the vertex data
  *
  * In sort of order of importance:
+ * TODO After the first time, the fullscreen key has to be pressed twice to have an effect
  * TODO Enhance acceleration. Make it so that everything slows down at the same speed.
  * TODO Also, the acceleration is not rotation independent. I.E. if you look down and speed up forward, then stop accelerating and look somewhere else, 
  * you continue going in the direction you're looking (instead of going the direction you were looking at before)

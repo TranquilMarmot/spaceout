@@ -1,13 +1,9 @@
 package util;
 
-import entities.Camera;
 import entities.Entities;
 import graphics.render.Graphics;
 import gui.GUI;
-import gui.button.MenuButton;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import menu.MainMenu;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -16,19 +12,19 @@ import util.debug.Debug;
 import util.helper.DisplayHelper;
 import util.manager.KeyboardManager;
 import util.manager.MouseManager;
-import util.xml.XMLParser;
 
 // Rule number 1: Tell everyone about Spaceout (ask them for ideas! We need ideas!).
 // Rule number 2: Comment everything motherfucker.
 
 /**
  * Initializes and runs the game.
+ * 
  * @author TranquilMarmot
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.10"; 
-	
+	public static final String VERSION = "0.0.11";
+
 	/** prevents updates but still renders the scene */
 	public static boolean paused = true;
 	/** keeps the pause button from repeatedly pausing and unpausing */
@@ -84,65 +80,46 @@ public class Runner {
 		DisplayHelper.createWindow();
 		Graphics.initGL();
 
-		// load the debug XML files
-		XMLParser.loadEntitiesFromXmlFile("res/XML/SolarSystemHalved.xml");
-
-		// initialize the camera
-		Entities.camera = new Camera(Entities.player.location.x,
-				Entities.player.location.y, Entities.player.location.z);
-		Entities.camera.zoom = 10.0f;
-		Entities.camera.yOffset = -2.5f;
-		Entities.camera.xOffset = 0.0f;
-		Entities.camera.following = Entities.player;
-		
-		/* GUI DEBUG INIT */
-		MenuButton pauseButton = new MenuButton("resume", 115, 39, -75, 50);
-		pauseButton.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Runner.paused = false;
-			}
-		});
-		GUI.guiObjects.add(pauseButton);
-		
-		MenuButton quitButton = new MenuButton("quit", 115, 39, 75, 50);
-		quitButton.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Runner.done = true;
-			}
-		});
-		GUI.guiObjects.add(quitButton);
+		/*
+		 * NOTE: Most of the initializing is done on the main menu, see
+		 * MainMenu.java
+		 */
+		MainMenu mainMenu = new MainMenu();
+		GUI.guiObjects.add(mainMenu);
 	}
 
 	/**
 	 * Updates everything
 	 */
 	private void update() {
-		//System.out.println("delta: " + Debug.getDelta());
+		// System.out.println("delta: " + Debug.getDelta());
 		// update the mouse and keyboard handlers
 		mouse.update();
 		keyboard.update();
 
 		/* BEGIN PAUSE LOGIC */
-		// if pauseDown is true, it means that the pause button is being held,
-		// so it avoids repeatedly flipping paused when the key is held
-		if (KeyboardManager.pause && !pauseDown) {
-			paused = !paused;
-			pauseDown = true;
-		}
+		// only allow unpausing if there are entities
+		if (Entities.entitiesExist()) {
+			// if pauseDown is true, it means that the pause button is being
+			// held,
+			// so it avoids repeatedly flipping paused when the key is held
+			if (KeyboardManager.pause && !pauseDown) {
+				paused = !paused;
+				pauseDown = true;
+			}
 
-		if (!KeyboardManager.pause) {
-			pauseDown = false;
-		}
+			if (!KeyboardManager.pause) {
+				pauseDown = false;
+			}
 
-		// release the mouse if the game's paused
-		if (!paused && !Debug.consoleOn)
-			Mouse.setGrabbed(true);
-		else
-			Mouse.setGrabbed(false);
+			// release the mouse if the game's paused
+			if (!paused && !Debug.consoleOn)
+				Mouse.setGrabbed(true);
+			else
+				Mouse.setGrabbed(false);
+		}
 		/* END PAUSE LOGIC */
-		
+
 		DisplayHelper.doFullscreenLogic();
 	}
 
@@ -151,20 +128,26 @@ public class Runner {
 	 */
 	private void updateEntities() {
 		// these two are special so they're updated here
-		Entities.player.update();
-		Entities.camera.update();
+		if (Entities.player != null)
+			Entities.player.update();
+
+		if (Entities.camera != null)
+			Entities.camera.update();
 
 		/*
-		 *  the rest of the entities are updated right before they're rendered to decrease the number of loops through Entities.entities
-		 *  In the future, Entities.entities should have two threads that can operate on it- reading threads and a writing thread
-		 *  The reading threads would be used for rendering and collision detection, while the writing thread would be used for things like updating locations 
+		 * the rest of the entities are updated right before they're rendered to
+		 * decrease the number of loops through Entities.entities In the future,
+		 * Entities.entities should have two threads that can operate on it-
+		 * reading threads and a writing thread The reading threads would be
+		 * used for rendering and collision detection, while the writing thread
+		 * would be used for things like updating locations
 		 */
 	}
-	
+
 	/**
 	 * To be called when the game is quit
 	 */
-	private void shutdown(){
+	private void shutdown() {
 		Display.destroy();
 		DisplayHelper.frame.dispose();
 	}

@@ -3,6 +3,8 @@ package graphics.render;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
+import entities.Entities;
+
 import util.helper.DisplayHelper;
 
 /**
@@ -20,7 +22,8 @@ public class Graphics {
 		// Clear the color and depth buffers
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
-		Render3D.renderAndUpdate3DScene();
+		if(Entities.entitiesExist())
+			Render3D.renderAndUpdate3DScene();
 		Render2D.updateAndRender2DScene();
 		
 		// handle any GL errors that might occur

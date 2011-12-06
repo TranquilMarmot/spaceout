@@ -24,7 +24,7 @@ import entities.Entities;
  */
 public class Debug {
 	private static final String FONT_PATH = "res/fonts/";
-	
+
 	/** the current FPS */
 	public static int currentFPS;
 
@@ -37,7 +37,7 @@ public class Debug {
 
 	/** whether or not debug info is being displayed */
 	public static boolean displayDebug = true;
-	
+
 	// whether or not the console is up
 	public static boolean consoleOn = false;
 	public static boolean commandOn = false;
@@ -47,12 +47,13 @@ public class Debug {
 
 	/** the console */
 	public static Console console = new Console();
-	
+
 	// font for printing stuff to the screen
 	public static UnicodeFont font = null;
-	
+
 	public static void updateAndDraw() {
-		// everything in this class is static so that it can be accessed whenever, so everything has to be initialized
+		// everything in this class is static so that it can be accessed
+		// whenever, so everything has to be initialized
 		checkForInit();
 
 		// update keys
@@ -63,7 +64,7 @@ public class Debug {
 		if (displayDebug) {
 			Debug.drawDebugInfo();
 		}
-		
+
 		// draw 'PAUSED' in the middle of the screen if the game is paused
 		if (Runner.paused)
 			Debug.font.drawString((DisplayHelper.windowWidth / 2) - 25,
@@ -71,37 +72,47 @@ public class Debug {
 	}
 
 	public static void drawDebugInfo() {
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
-		GL11.glCallList(rectangleCallList);
-		
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		
-		// formats the coordinates
-		Formatter coords = new Formatter();
-		coords.format("x: %,09.3f%n" + "y: %,09.3f%n" + "z: %,09.3f%n",
-				Entities.player.location.x, Entities.player.location.y,
-				Entities.player.location.z);
-
-		// draw the text
-		font.drawString(3, 3, coords.toString(), Color.cyan);
-		font.drawString(3, 59, "quatX: "
-				+ Entities.player.rotation.x + "\nquatY: "
-				+ Entities.player.rotation.y + "\nquatZ: "
-				+ Entities.player.rotation.z + "\nquatW: "
-				+ Entities.player.rotation.w, new Color(0, 123, 255));
-
-		String cameraInfo = "zoom: " + Entities.camera.zoom;
-		if (Entities.camera.vanityMode)
-			cameraInfo += " (vanity)";
-		font.drawString(3, 135, cameraInfo, Color.blue);
-		
+		// only draw if there's info to draw
+		if (Entities.entitiesExist()) {
+			// change blending and draw the rectangle
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
+			GL11.glCallList(rectangleCallList);
+			
+			// change blending for font drawing
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			
+			// formats the coordinates
+			Formatter coords = new Formatter();
+			coords.format("x: %,09.3f%n" + "y: %,09.3f%n" + "z: %,09.3f%n",
+					Entities.player.location.x, Entities.player.location.y,
+					Entities.player.location.z);
+			
+			// draw coordinates
+			font.drawString(3, 3, coords.toString(), Color.cyan);
+			
+			// draw quaternion info
+			font.drawString(3, 59, "quatX: " + Entities.player.rotation.x
+					+ "\nquatY: " + Entities.player.rotation.y + "\nquatZ: "
+					+ Entities.player.rotation.z + "\nquatW: "
+					+ Entities.player.rotation.w, new Color(0, 123, 255));
+			
+			Formatter zoom = new Formatter();
+			zoom.format("zoom: %,04.2f", Entities.camera.zoom);
+			
+			// draw camera info
+			//String cameraInfo = "zoom: " + Entities.camera.zoom;
+			String cameraInfo = zoom.toString();
+			if (Entities.camera.vanityMode)
+				cameraInfo += " (vanity)";
+			font.drawString(3, 135, cameraInfo, Color.blue);
+		}
 		// draw what version of Spaceout this is
-		font.drawString(DisplayHelper.windowWidth - 70,
-				font.getDescent() + 5, Runner.VERSION);
-		
+		font.drawString(DisplayHelper.windowWidth - 70, font.getDescent() + 5,
+				Runner.VERSION);
+
 		// draw the current fps
-		font.drawString(DisplayHelper.windowWidth - 70,
-				font.getDescent() + 25, currentFPS + " fps");
+		font.drawString(DisplayHelper.windowWidth - 70, font.getDescent() + 25,
+				currentFPS + " fps");
 	}
 
 	/**
@@ -112,7 +123,8 @@ public class Debug {
 		// initialize the font if this is the first draw
 		if (font == null) {
 			try {
-				font = new UnicodeFont(FONT_PATH + "VeraMono.ttf", 15, false, false);
+				font = new UnicodeFont(FONT_PATH + "VeraMono.ttf", 15, false,
+						false);
 				font.addAsciiGlyphs();
 				font.getEffects().add(new ColorEffect(java.awt.Color.WHITE));
 				font.loadGlyphs();
@@ -121,7 +133,7 @@ public class Debug {
 				e.printStackTrace();
 			}
 		}
-		
+
 		// initialize variables if this is the first draw
 		if (lastFrame == null)
 			lastFrame = getTime();
@@ -139,8 +151,8 @@ public class Debug {
 				GL11.glBegin(GL11.GL_QUADS);
 				{
 					GL11.glVertex2f(0.0f, 0.0f);
-					GL11.glVertex2f(190.0f, 0.0f);
-					GL11.glVertex2f(190.0f, 155.0f);
+					GL11.glVertex2f(192.0f, 0.0f);
+					GL11.glVertex2f(192.0f, 155.0f);
 					GL11.glVertex2f(0.0f, 155.0f);
 				}
 				GL11.glEnd();
