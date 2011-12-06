@@ -3,7 +3,7 @@ package util;
 import entities.Entities;
 import graphics.render.Graphics;
 import gui.GUI;
-import menu.MainMenu;
+import gui.menu.MainMenu;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;

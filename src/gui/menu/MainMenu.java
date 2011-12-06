@@ -1,4 +1,4 @@
-package menu;
+package gui.menu;
 
 import entities.Camera;
 import entities.Entities;
@@ -45,7 +45,7 @@ public class MainMenu extends GUIObject {
 						Entities.player.location.y, Entities.player.location.z);
 				Entities.camera.zoom = 10.0f;
 				Entities.camera.yOffset = -2.5f;
-				Entities.camera.xOffset = 0.0f;
+				Entities.camera.xOffset = 0.5f;
 				Entities.camera.following = Entities.player;
 				
 				PauseMenuButton pauseButton = new PauseMenuButton("resume", 115, 39, -75, 50);
