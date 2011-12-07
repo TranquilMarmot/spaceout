@@ -89,7 +89,7 @@ public class ModelLoader {
 						// the obj file goes vertex/texture-coordinate/normal
 						vertexIndices[i] = Integer.parseInt(split.nextToken());
 						textureIndices[i] = Integer.parseInt(split.nextToken());
-						normalIndices[i] = Integer.parseInt(split.nextToken());
+						//normalIndices[i] = Integer.parseInt(split.nextToken());
 					}
 					
 					

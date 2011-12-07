@@ -26,7 +26,7 @@ public class Runner {
 	public static final String VERSION = "0.0.11";
 
 	/** prevents updates but still renders the scene */
-	public static boolean paused = true;
+	public static boolean paused = false;
 	/** keeps the pause button from repeatedly pausing and unpausing */
 	private boolean pauseDown = false;
 
@@ -98,26 +98,23 @@ public class Runner {
 		keyboard.update();
 
 		/* BEGIN PAUSE LOGIC */
-		// only allow unpausing if there are entities
-		if (Entities.entitiesExist()) {
-			// if pauseDown is true, it means that the pause button is being
-			// held,
-			// so it avoids repeatedly flipping paused when the key is held
-			if (KeyboardManager.pause && !pauseDown) {
-				paused = !paused;
-				pauseDown = true;
-			}
-
-			if (!KeyboardManager.pause) {
-				pauseDown = false;
-			}
-
-			// release the mouse if the game's paused
-			if (!paused && !Debug.consoleOn)
-				Mouse.setGrabbed(true);
-			else
-				Mouse.setGrabbed(false);
+		// if pauseDown is true, it means that the pause button is being
+		// held,
+		// so it avoids repeatedly flipping paused when the key is held
+		if (KeyboardManager.pause && !pauseDown) {
+			paused = !paused;
+			pauseDown = true;
 		}
+
+		if (!KeyboardManager.pause) {
+			pauseDown = false;
+		}
+
+		// release the mouse if the game's paused or the console is on or the menu is up
+		if (!paused && !Debug.consoleOn && MainMenu.done)
+			Mouse.setGrabbed(true);
+		else
+			Mouse.setGrabbed(false);
 		/* END PAUSE LOGIC */
 
 		DisplayHelper.doFullscreenLogic();
