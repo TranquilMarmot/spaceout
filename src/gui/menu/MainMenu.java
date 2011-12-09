@@ -6,9 +6,12 @@ import gui.button.MenuButton;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
 
 import util.Runner;
 import util.helper.DisplayHelper;
@@ -24,6 +27,9 @@ public class MainMenu extends GUIObject {
 	/** button image path */
 	private static final String BUTTON_IMAGE_PATH = "res/images/gui/Menu/Button/";
 
+	private static final int spaceoutYOffset = -200;
+	private static final int spaceoutScale = 2;
+
 	/** XML path */
 	private static final String XML_PATH = "res/XML/";
 
@@ -35,18 +41,19 @@ public class MainMenu extends GUIObject {
 
 	/** button to quit */
 	private MenuButton quitButton;
-	
+
 	private Texture background;
+	private Texture spaceout;
 
 	/**
 	 * Main menu constructor. Creates a startButton that loads from an XML file.
 	 */
 	public MainMenu() {
 		super(0, 0);
-		
+
 		// initialize the background images
-		initBackgroundImages();
-		
+		initImages();
+
 		// grab the background
 		background = TextureManager.getTexture(TextureManager.BACKGROUND1);
 
@@ -83,10 +90,16 @@ public class MainMenu extends GUIObject {
 		// let the GUI know that a menu is up
 		GUI.menuUp = true;
 	}
-	
-	private void initBackgroundImages(){
+
+	private void initImages() {
 		TextureManager.initTexture(TextureManager.BACKGROUND1);
 		TextureManager.initTexture(TextureManager.BACKGROUND2);
+		try {
+			spaceout = TextureLoader.getTexture("PNG", new FileInputStream(
+					"res/images/gui/Menu/spaceout.png"), GL11.GL_NEAREST);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -105,7 +118,9 @@ public class MainMenu extends GUIObject {
 	public void draw() {
 		// draw the background
 		background.bind();
-		GL11.glBegin(GL11.GL_QUADS);{
+		GL11.glBegin(GL11.GL_QUADS);
+		{
+
 			/*
 			 * currentImage.getWidth() and currentImage.getHeight() return the
 			 * actual height of the texture. My best guess is that the image
@@ -125,6 +140,37 @@ public class MainMenu extends GUIObject {
 
 			GL11.glTexCoord2f(0, background.getHeight());
 			GL11.glVertex2i(0, DisplayHelper.windowHeight);
+		}
+		GL11.glEnd();
+
+		// draw 'spaceout'
+		spaceout.bind();
+		
+		int x1 = (DisplayHelper.windowWidth / 2) - (spaceout.getImageWidth()  * spaceoutScale);
+		int y1 = (DisplayHelper.windowHeight / 2) - (spaceout.getImageHeight() * spaceoutScale) + spaceoutYOffset;
+		
+		int x2 = (DisplayHelper.windowWidth / 2) + (spaceout.getImageWidth() * spaceoutScale);
+		int y2 = (DisplayHelper.windowHeight / 2) -  (spaceout.getImageHeight() * spaceoutScale) + spaceoutYOffset;
+		
+		int x3 = (DisplayHelper.windowWidth / 2) + (spaceout.getImageWidth() * spaceoutScale);
+		int y3 = (DisplayHelper.windowHeight / 2) + (spaceout.getImageHeight() * spaceoutScale) + spaceoutYOffset;
+		
+		int x4 = (DisplayHelper.windowWidth / 2) - (spaceout.getImageWidth() * spaceoutScale);
+		int y4 = (DisplayHelper.windowHeight / 2) + (spaceout.getImageHeight() * spaceoutScale) + spaceoutYOffset;
+
+		GL11.glBegin(GL11.GL_QUADS);
+		{
+			GL11.glTexCoord2f(0, 0);
+			GL11.glVertex2i(x1, y1);
+
+			GL11.glTexCoord2f(spaceout.getWidth(), 0);
+			GL11.glVertex2i(x2, y2);
+
+			GL11.glTexCoord2f(spaceout.getWidth(), spaceout.getHeight());
+			GL11.glVertex2i(x3, y3);
+
+			GL11.glTexCoord2f(0, spaceout.getHeight());
+			GL11.glVertex2i(x4, y4);
 		}
 		GL11.glEnd();
 
