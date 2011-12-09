@@ -24,6 +24,11 @@ public class TextureManager {
 	private static Texture mars;
 	private static Texture ship1;
 	private static Texture laserbullet;
+	
+	private static final String BACKGROUND_IMAGE_PATH = "res/images/gui/Menu/Background/";
+	
+	private static Texture background1;
+	private static Texture background2;
 
 	public static final int EARTH = 0;
 	public static final int STARS = 1;
@@ -34,6 +39,8 @@ public class TextureManager {
 	public static final int MARS = 6;
 	public static final int SHIP1 = 7;
 	public static final int LASERBULLET = 8;
+	public static final int BACKGROUND1 = 9;
+	public static final int BACKGROUND2 = 10;
 
 	/**
 	 * Returns the requested texture and initializes it if need be
@@ -78,6 +85,14 @@ public class TextureManager {
 			if(laserbullet == null)
 				initTexture(LASERBULLET);
 			return laserbullet;
+		case BACKGROUND1:
+			if(background1 == null)
+				initTexture(BACKGROUND1);
+			return background1;
+		case BACKGROUND2:
+			if(background2 == null)
+				initTexture(BACKGROUND2);
+			return background2;
 		default:
 			return null;
 		}
@@ -87,42 +102,59 @@ public class TextureManager {
 	 * Initializes the given texture
 	 * @param texture Texture to initialize
 	 */
-	private static void initTexture(int texture) {
+	public static void initTexture(int texture) {
 		try {
 			switch (texture) {
 			case EARTH:
-				earth = TextureLoader.getTexture("JPG", new FileInputStream(
+				if(earth == null)
+					earth = TextureLoader.getTexture("JPG", new FileInputStream(
 						TEXTURE_PATH + "earthbig.jpg"), true, GL11.GL_LINEAR);
 				break;
 			case STARS:
-				stars = TextureLoader.getTexture("PNG", new FileInputStream(
+				if(stars == null)
+					stars = TextureLoader.getTexture("PNG", new FileInputStream(
 						TEXTURE_PATH + "skybox.png"), true, GL11.GL_LINEAR);
 				break;
 			case WHITE:
-				white = TextureLoader.getTexture("BMP", new FileInputStream(
+				if(white == null)
+					white = TextureLoader.getTexture("BMP", new FileInputStream(
 						TEXTURE_PATH + "white.bmp"), true, GL11.GL_LINEAR);
 				break;
 			case CHECKERS:
-				checkers = TextureLoader.getTexture("BMP", new FileInputStream(
+				if(checkers == null)
+					checkers = TextureLoader.getTexture("BMP", new FileInputStream(
 						TEXTURE_PATH + "checkers.bmp"), true, GL11.GL_LINEAR);
 				break;
 			case MERCURY:
-				mercury = TextureLoader.getTexture("JPG", new FileInputStream(
+				if(mercury == null)
+					mercury = TextureLoader.getTexture("JPG", new FileInputStream(
 						TEXTURE_PATH + "mercury.jpg"), true, GL11.GL_LINEAR);
 				break;
 			case VENUS:
-				venus = TextureLoader.getTexture("JPG", new FileInputStream(
+				if(venus == null)
+					venus = TextureLoader.getTexture("JPG", new FileInputStream(
 						TEXTURE_PATH + "venus.jpg"), true, GL11.GL_LINEAR);
 				break;
 			case MARS:
-				mars = TextureLoader.getTexture("JPG", new FileInputStream(
+				if(mars == null)
+					mars = TextureLoader.getTexture("JPG", new FileInputStream(
 						TEXTURE_PATH + "mars.jpg"), true, GL11.GL_LINEAR);
 				break;
 			case SHIP1:
-				ship1 = TextureLoader.getTexture("PNG", new FileInputStream(TEXTURE_PATH + "ship1.png"));
+				if(ship1 == null)
+					ship1 = TextureLoader.getTexture("PNG", new FileInputStream(TEXTURE_PATH + "ship1.png"));
 				break;
 			case LASERBULLET:
-				laserbullet = TextureLoader.getTexture("PNG", new FileInputStream(TEXTURE_PATH + "laserbullet.png"));
+				if(laserbullet == null)
+					laserbullet = TextureLoader.getTexture("PNG", new FileInputStream(TEXTURE_PATH + "laserbullet.png"));
+				break;
+			case BACKGROUND1:
+				if(background1 == null)
+					background1 = TextureLoader.getTexture("JPG", new FileInputStream(BACKGROUND_IMAGE_PATH + "apod1.jpg"), GL11.GL_NEAREST);
+				break;
+			case BACKGROUND2:
+				if(background2 == null)
+					background2 = TextureLoader.getTexture("JPG", new FileInputStream(BACKGROUND_IMAGE_PATH + "apod2.jpg"), GL11.GL_NEAREST);
 				break;
 			default:
 				System.out.println("Error creating texture! Parameter "

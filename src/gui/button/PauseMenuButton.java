@@ -9,7 +9,7 @@ import util.Runner;
  *
  */
 public class PauseMenuButton extends MenuButton {
-	private static final String IMAGE_PATH = "res/images/gui/PauseMenu/Button/"; 
+	private static final String IMAGE_PATH = "res/images/gui/Menu/Button/"; 
 
 	public PauseMenuButton(String text, int height, int width,
 			int xOffsetFromCenter, int yOffsetFromCenter) {

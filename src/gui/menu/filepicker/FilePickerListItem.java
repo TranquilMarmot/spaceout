@@ -21,7 +21,7 @@ public class FilePickerListItem extends RectangleButton{
 	public boolean selected = false;
 	
 	/** image this button uses */
-	protected Texture activeImage, mouseOverImage, selectedImage, pressedImage;
+	protected static Texture activeImage, mouseOverImage, selectedImage, pressedImage;
 	
 	protected Texture currentImage;
 	
@@ -42,10 +42,14 @@ public class FilePickerListItem extends RectangleButton{
 	
 	private void initImages(){
 		try{
-			activeImage = TextureLoader.getTexture("PNG", new FileInputStream(IMAGE_PATH + "active.png"));
-			mouseOverImage = TextureLoader.getTexture("PNG", new FileInputStream(IMAGE_PATH + "mouseover.png"));
-			selectedImage = TextureLoader.getTexture("PNG", new FileInputStream(IMAGE_PATH +"selected.png"));
-			pressedImage = TextureLoader.getTexture("PNG", new FileInputStream(IMAGE_PATH + "pressed.png"));
+			if(activeImage == null)
+				activeImage = TextureLoader.getTexture("PNG", new FileInputStream(IMAGE_PATH + "active.png"));
+			if(mouseOverImage == null)
+				mouseOverImage = TextureLoader.getTexture("PNG", new FileInputStream(IMAGE_PATH + "mouseover.png"));
+			if(selectedImage == null)
+				selectedImage = TextureLoader.getTexture("PNG", new FileInputStream(IMAGE_PATH +"selected.png"));
+			if(pressedImage == null)
+				pressedImage = TextureLoader.getTexture("PNG", new FileInputStream(IMAGE_PATH + "pressed.png"));
 		} catch (IOException e){
 			e.printStackTrace();
 		}

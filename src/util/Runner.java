@@ -85,6 +85,7 @@ public class Runner {
 		 * MainMenu.java
 		 */
 		MainMenu mainMenu = new MainMenu();
+		GUI.addBuffer.add(mainMenu);
 	}
 
 	/**
