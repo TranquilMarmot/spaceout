@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 
+import util.debug.Debug;
 import util.helper.DisplayHelper;
 import util.manager.TextureManager;
 import util.xml.XMLParser;
@@ -164,5 +165,7 @@ public class LoadMenu extends GUIObject {
 		picker.draw();
 		loadButton.draw();
 		backButton.draw();
+		
+		Debug.drawVersion();
 	}
 }

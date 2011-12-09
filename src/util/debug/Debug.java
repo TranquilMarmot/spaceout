@@ -62,7 +62,7 @@ public class Debug {
 		Debug.console.updateAndDraw();
 
 		if (displayDebug) {
-			Debug.drawDebugInfo();
+			drawDebugInfo();
 		}
 
 		// draw 'PAUSED' in the middle of the screen if the game is paused
@@ -106,13 +106,21 @@ public class Debug {
 				cameraInfo += " (vanity)";
 			font.drawString(3, 135, cameraInfo, Color.blue);
 		}
-		// draw what version of Spaceout this is
-		font.drawString(DisplayHelper.windowWidth - 70, font.getDescent() + 5,
-				Runner.VERSION);
 
+		drawVersion();
+		
 		// draw the current fps
 		font.drawString(DisplayHelper.windowWidth - 70, font.getDescent() + 25,
 				currentFPS + " fps");
+	}
+	
+	/**
+	 * Draws what version the game is in the top left of the screen
+	 */
+	public static void drawVersion(){
+		// draw what version of Spaceout this is
+		font.drawString(DisplayHelper.windowWidth - 70, font.getDescent() + 5,
+				Runner.VERSION);
 	}
 
 	/**

@@ -14,6 +14,7 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 import util.Runner;
+import util.debug.Debug;
 import util.helper.DisplayHelper;
 import util.manager.TextureManager;
 
@@ -177,5 +178,7 @@ public class MainMenu extends GUIObject {
 		// draw the buttons
 		loadMenuButton.draw();
 		quitButton.draw();
+		
+		Debug.drawVersion();
 	}
 }
