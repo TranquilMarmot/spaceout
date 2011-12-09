@@ -1,17 +1,13 @@
 package gui.menu;
 
-import entities.Camera;
-import entities.Entities;
 import gui.GUI;
 import gui.GUIObject;
 import gui.button.MenuButton;
-import gui.button.PauseMenuButton;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import util.Runner;
-import util.xml.XMLParser;
 
 /**
  * Main menu to show when the game runs
@@ -22,6 +18,8 @@ import util.xml.XMLParser;
 public class MainMenu extends GUIObject {
 	/** image path */
 	private static final String IMAGE_PATH = "res/images/gui/MainMenu/Button/";
+	
+	private static final String XML_PATH = "res/XML/";
 
 	/** whether or not we're done with the main menu */
 	public static boolean done;
@@ -41,50 +39,15 @@ public class MainMenu extends GUIObject {
 		done = false;
 
 		// create the start button
-		startButton = new MenuButton(IMAGE_PATH, "Start", 238, 55, 0, -40);
+		startButton = new MenuButton(IMAGE_PATH, "Load File", 238, 55, 0, -40);
 
 		// this button does some pretty srs stuff
 		startButton.addActionListener(new ActionListener() {
+			@SuppressWarnings("unused")
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// load entities from XML (TODO make a menu for selecting a
-				// file)
-				XMLParser
-						.loadEntitiesFromXmlFile("res/XML/SolarSystemHalved.xml");
-
-				// initialize the camera
-				Entities.camera = new Camera(Entities.player.location.x,
-						Entities.player.location.y, Entities.player.location.z);
-				Entities.camera.zoom = 10.0f;
-				Entities.camera.yOffset = -2.5f;
-				Entities.camera.xOffset = 0.1f;
-				Entities.camera.following = Entities.player;
-
-				/* BEGIN PAUSE MENU BUILDING */
-				// button to resume the game if it's paused
-				PauseMenuButton pauseButton = new PauseMenuButton("resume",
-						115, 39, -75, 50);
-				pauseButton.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						Runner.paused = false;
-					}
-				});
-				GUI.addBuffer.add(pauseButton);
-
-				// button to quit the game if it's paused
-				PauseMenuButton quitButton = new PauseMenuButton("quit", 115,
-						39, 75, 50);
-				quitButton.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						Runner.done = true;
-					}
-				});
-				GUI.addBuffer.add(quitButton);
-				/* END PAUSE MENU BUILDING */
-
-				// we're done with the main menu if this button is pressed
+				LoadMenu lmenu = new LoadMenu(0, 0, XML_PATH);
+				
 				done = true;
 			}
 		});
@@ -97,6 +60,9 @@ public class MainMenu extends GUIObject {
 				Runner.done = true;
 			}
 		});
+		
+		GUI.addBuffer.add(this);
+		GUI.menuUp = true;
 	}
 
 	@Override

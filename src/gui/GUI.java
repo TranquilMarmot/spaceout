@@ -10,6 +10,8 @@ import java.util.Iterator;
  * 
  */
 public class GUI {
+	public static boolean menuUp = false;
+	
 	public static ArrayList<GUIObject> guiObjects = new ArrayList<GUIObject>();
 	public static ArrayList<GUIObject> addBuffer = new ArrayList<GUIObject>();
 	public static ArrayList<GUIObject> removeBuffer = new ArrayList<GUIObject>();

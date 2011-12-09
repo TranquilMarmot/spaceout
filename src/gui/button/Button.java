@@ -34,6 +34,8 @@ public abstract class Button extends GUIObject{
 		super(x, y);
 		mouseOver = false;
 		active = true;
+		pressed = false;
+		released = false;
 	}
 	
 	public void addActionListener(ActionListener listener){

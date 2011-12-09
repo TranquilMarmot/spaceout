@@ -85,7 +85,6 @@ public class Runner {
 		 * MainMenu.java
 		 */
 		MainMenu mainMenu = new MainMenu();
-		GUI.guiObjects.add(mainMenu);
 	}
 
 	/**
@@ -111,7 +110,7 @@ public class Runner {
 		}
 
 		// release the mouse if the game's paused or the console is on or the menu is up
-		if (!paused && !Debug.consoleOn && MainMenu.done)
+		if (!paused && !Debug.consoleOn && !GUI.menuUp)
 			Mouse.setGrabbed(true);
 		else
 			Mouse.setGrabbed(false);

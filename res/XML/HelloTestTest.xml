@@ -1,0 +1,90 @@
+<Entities>
+	<Player>
+		<x>1002109.0f</x>
+		<y>0.0f</y>
+		<z>89829.125f</z>
+		<yaw>0.0f</yaw>
+		<pitch>0.0f</pitch>
+		<roll>0.0f</roll>
+		<model>ARROW</model>
+	</Player>
+	
+	<Debris>
+		<numStars>2000</numStars>
+		<range>100000.0f</range>
+		<seed>420133742L</seed>
+	</Debris>
+	
+	<Skybox>
+		<yaw>90.0f</yaw>
+		<pitch>0.0f</pitch>
+		<roll>0.0f</roll>
+		<texture>STARS</texture>
+	</Skybox>
+	
+	<Sun>
+		<x>0.0f</x>
+		<y>0.0f</y>
+		<z>0.0f</z>
+		<size>100000.0f</size>
+		<color>1.0f,1.0f,0.3f</color>
+		<lightAmbient>1.0f,1.0f,1.0f</lightAmbient>
+		<lightDiffuse>1.0f,1.0f,1.0f</lightDiffuse>
+	</Sun>
+	
+	<Planet>
+		<name>Earth</name>
+		<size>10000.0f</size>
+		<x>1000000.0f</x>
+		<y>0.0f</y>
+		<z>115000.0f</z>
+		<yaw>90.0f</yaw>
+		<pitch>0.0f</pitch>
+		<roll>0.0f</roll>
+		<dxrot>0.0f</dxrot>
+		<dyrot>0.0f</dyrot>
+		<dzrot>0.075f</dzrot>
+	</Planet>
+	
+	<Planet>
+		<name>Earth</name>
+		<size>1000.0f</size>
+		<x>1000000.0f</x>
+		<y>0.0f</y>
+		<z>115000.0f</z>
+		<yaw>90.0f</yaw>
+		<pitch>0.0f</pitch>
+		<roll>0.0f</roll>
+		<dxrot>0.0f</dxrot>
+		<dyrot>0.0f</dyrot>
+		<dzrot>0.075f</dzrot>
+	</Planet>
+	
+	<Planet>
+		<name>Earth</name>
+		<size>100.0f</size>
+		<x>1000000.0f</x>
+		<y>0.0f</y>
+		<z>115000.0f</z>
+		<yaw>90.0f</yaw>
+		<pitch>0.0f</pitch>
+		<roll>0.0f</roll>
+		<dxrot>0.0f</dxrot>
+		<dyrot>0.0f</dyrot>
+		<dzrot>0.075f</dzrot>
+	</Planet>
+	
+	<Planet>
+		<name>Earth</name>
+		<size>10.0f</size>
+		<x>1000000.0f</x>
+		<y>0.0f</y>
+		<z>115000.0f</z>
+		<yaw>90.0f</yaw>
+		<pitch>0.0f</pitch>
+		<roll>0.0f</roll>
+		<dxrot>0.0f</dxrot>
+		<dyrot>0.0f</dyrot>
+		<dzrot>0.075f</dzrot>
+	</Planet>
+</Entities>
