@@ -8,11 +8,9 @@
  * TODO Find out how to see if two boxes have hit each other
  * 
  * GUI branch TODO
- * TODO why doesn't the mouse cursor change back after a resize on the main menu?
- * TODO Change the "quit" button on the pause screen to a "main menu" button that gets rid of the pause buttons and returns to the main menu. NOTE would probably be easiest to create a PauseMenu class that tells the game which buttons to use for the pause menu.
+ * TODO Make the arrow keys/WASD control which item is selected and have enter load that item
  * TODO Make draggable boxes
  * TODO Maybe make everything drawn by call lists instead of point-by-point-per-frame. Would it really be worth the performance increase? Probably not.
- * TODO Make an XML selection screen that checks the directory for XML files and lets you select one to load
  * TODO Make an options menu for the menu screen. Have as many graphics options as possible.
  * TODO Might be a good idea to have the Button constructor take a scale in to control how big the image is (xScale and yScale) rather than the size of the image
  * TODO Add a "/save" command that will (in the future) save the game and return to the main menu
