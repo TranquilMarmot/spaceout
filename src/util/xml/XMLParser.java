@@ -5,6 +5,8 @@ import java.util.StringTokenizer;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -147,7 +149,7 @@ public class XMLParser {
 			float[] lightAmbient = getColor(ele, "lightAmbient");
 			float[] lightDiffuse = getColor(ele, "lightDiffuse");
 			
-			return new Sun(x, y, z, size, color, lightAmbient, lightDiffuse);
+			return new Sun(new Vector3f(x, y, z), size, GL11.GL_LIGHT1, color, lightAmbient, lightDiffuse);
 		} else if(type.equals("planet")){
 			int texture = 0;
 			String name = getString(ele, "name");
