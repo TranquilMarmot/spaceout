@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.Sphere;
@@ -75,21 +76,21 @@ public class MainMenu extends GUIObject {
 		done = false;
 
 		// create the button to go to the load menu
-		loadMenuButton = new MenuButton(BUTTON_IMAGE_PATH, "Load File", 238,
+		loadMenuButton = new MenuButton(BUTTON_IMAGE_PATH, "Start Sim", 238,
 				55, 0, -40);
 		loadMenuButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				/* BEGIN PHYSICS DEBUG WORLD CREATION */
 				/* BEGIN SUN */
-				Vector3f sunLocation = new Vector3f(0.0f, 1000.0f, -1000.0f);
+				Vector3f sunLocation = new Vector3f(0.0f, -1000.0f, 1000.0f);
 				float sunSize = 10.0f;
 				int sunLight = GL11.GL_LIGHT1;
 				float[] sunColor = { 1.0f, 1.0f, 0.3f };
 				float[] sunAmbient = { 1.0f, 1.0f, 1.0f };
 				float[] sunDiffuse = { 1.0f, 1.0f, 1.0f };
 				Sun sun = new Sun(sunLocation, sunSize, sunLight, sunColor, sunAmbient, sunDiffuse);
-				Entities.entities.add(sun);
+				Entities.lights.add(sun);
 				/* END SUN */
 				
 				
@@ -97,9 +98,10 @@ public class MainMenu extends GUIObject {
 				CollisionShape groundShape = new BoxShape(
 						new javax.vecmath.Vector3f(50.0f, 50.0f, 50.0f));
 
-				int groundCallList = 0;
+				int groundCallList = GL11.glGenLists(1);
 				GL11.glNewList(groundCallList, GL11.GL_COMPILE);
 				{
+					GL11.glTranslatef(0.0f, 0.75f, 0.0f);
 					GL11.glBegin(GL11.GL_QUADS);
 					{
 					    // Bottom Face
@@ -137,9 +139,10 @@ public class MainMenu extends GUIObject {
 				Model groundModel = new Model(groundShape, groundCallList, groundTexture);
 				
 				Vector3f groundLocation = new Vector3f(0.0f, 50.0f, 0.0f);
-				Quaternion groundRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+				Quaternion groundRotation = new Quaternion(0.0f, 0.0f, 0.05f, 1.0f);
 				
 				DynamicEntity ground = new DynamicEntity(groundLocation, groundRotation, groundModel, 0.0f);
+				ground.type = "Ground";
 				Entities.entities.add(ground);
 				/* END GROUND */
 				
@@ -150,7 +153,7 @@ public class MainMenu extends GUIObject {
 				drawSphere.setNormals(GLU.GLU_SMOOTH);
 				drawSphere.setTextureFlag(true);
 				
-				int sphereCallList = 0;
+				int sphereCallList = GL11.glGenLists(1);
 				GL11.glNewList(sphereCallList, GL11.GL_COMPILE);{
 					drawSphere.draw(1, 24, 24);
 				}GL11.glEndList();
@@ -159,22 +162,31 @@ public class MainMenu extends GUIObject {
 				
 				Model sphereModel = new Model(sphereShape, sphereCallList, sphereTexture);
 				
-				Vector3f sphereLocation = new Vector3f(0.0f, 50.0f, 0.0f);
+				Vector3f sphereLocation = new Vector3f(0.0f, 120.0f, 0.0f);
 				Quaternion sphereRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 				
 				float sphereMass = 1.0f;
 				
+				javax.vecmath.Vector3f fallInertia = new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f);
+				sphereShape.calculateLocalInertia(sphereMass, fallInertia);
+				
 				DynamicEntity sphere = new DynamicEntity(sphereLocation, sphereRotation, sphereModel, sphereMass);
+				sphere.type = "Sphere";
 				Entities.entities.add(sphere);
 				/* END SPHERE */
 				
 				/* BEGIN CAMERA */
 				// initialize the camera
 				Entities.camera = new Camera(sphere.location.x, sphere.location.y, sphere.location.z);
-				Entities.camera.zoom = 20.0f;
+				Entities.camera.zoom = 100.0f;
 				Entities.camera.yOffset = 0.0f;
 				Entities.camera.xOffset = 0.0f;
 				Entities.camera.following = sphere;
+				Entities.camera.rotation = new Quaternion(0.98061955f, -0.042101286f, 0.0016744693f, -0.042101286f);
+				Entities.camera.vanityMode = true;
+				
+				
+				GUI.menuUp = false;
 				/* END CAMERA */
 				
 				/* END PHYSICS DEBUG WORLD CREATION */

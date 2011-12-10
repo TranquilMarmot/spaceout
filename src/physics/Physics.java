@@ -41,6 +41,8 @@ public class Physics {
 
 		// no gravity, we're in space!
 		dynamicsWorld.setGravity(new Vector3f(0, -10, 0));
+		
+		//temp();
 	}
 	
 	public static void update(){

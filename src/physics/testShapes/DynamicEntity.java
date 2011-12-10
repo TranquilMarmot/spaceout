@@ -16,6 +16,7 @@ import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
 
+import entities.Entities;
 import entities.Entity;
 import graphics.model.Model;
 
@@ -43,6 +44,7 @@ public class DynamicEntity extends Entity {
 		
 		RigidBodyConstructionInfo rigidBodyCI = new RigidBodyConstructionInfo(
 				mass, defaultState, model.getCollisionShape(), loca);
+		rigidBodyCI.restitution = 0.75f;
 		rigidBody = new RigidBody(rigidBodyCI);
 
 		Physics.dynamicsWorld.addRigidBody(rigidBody);
@@ -56,7 +58,8 @@ public class DynamicEntity extends Entity {
 		rigidBody.getMotionState().getWorldTransform(trans);
 
 		javax.vecmath.Vector3f origin = trans.origin;
-		this.location.set(origin.z, origin.y, origin.z);
+		this.location.set(origin.x, origin.y, origin.z);
+		this.location = new Vector3f(origin.x, origin.y, origin.z);
 
 		Quat4f rot = new Quat4f();
 		trans.getRotation(rot);
@@ -65,6 +68,7 @@ public class DynamicEntity extends Entity {
 
 	public void draw() {
 		model.getTexture().bind();
+		GL11.glColor3f(0.0f, 0.25f, 0.0f);
 		GL11.glPushMatrix();
 		{
 			QuaternionHelper.toFloatBuffer(rotation, rotationBuffer);
