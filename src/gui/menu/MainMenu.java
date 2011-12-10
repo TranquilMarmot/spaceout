@@ -95,40 +95,51 @@ public class MainMenu extends GUIObject {
 				
 				
 				/* BEGIN GROUND */
+				float boxXSize = 15.0f;
+				float boxYSize = 5.0f;
+				float boxZSize = 15.0f;
+				
 				CollisionShape groundShape = new BoxShape(
-						new javax.vecmath.Vector3f(50.0f, 50.0f, 50.0f));
+						new javax.vecmath.Vector3f(boxXSize, boxYSize, boxZSize));
 
 				int groundCallList = GL11.glGenLists(1);
 				GL11.glNewList(groundCallList, GL11.GL_COMPILE);
 				{
-					GL11.glTranslatef(0.0f, 0.75f, 0.0f);
 					GL11.glBegin(GL11.GL_QUADS);
 					{
 					    // Bottom Face
-					    GL11.glTexCoord2f(1.0f, 1.0f); GL11.glVertex3f(-50.0f, -50.0f, -50.0f);  // Top Right Of The Texture and Quad
-					    GL11.glTexCoord2f(0.0f, 1.0f); GL11.glVertex3f( 50.0f, -50.0f, -50.0f);  // Top Left Of The Texture and Quad
-					    GL11.glTexCoord2f(0.0f, 0.0f); GL11.glVertex3f( 50.0f, -50.0f,  50.0f);  // Bottom Left Of The Texture and Quad
-					    GL11.glTexCoord2f(1.0f, 0.0f); GL11.glVertex3f(-50.0f, -50.0f,  50.0f);  // Bottom Right Of The Texture and Quad
+					    GL11.glTexCoord2f(1.0f, 1.0f); GL11.glVertex3f(-boxXSize, -boxYSize, -boxZSize);  // Top Right Of The Texture and Quad
+					    GL11.glTexCoord2f(0.0f, 1.0f); GL11.glVertex3f( boxXSize, -boxYSize, -boxZSize);  // Top Left Of The Texture and Quad
+					    GL11.glTexCoord2f(0.0f, 0.0f); GL11.glVertex3f( boxXSize, -boxYSize,  boxZSize);  // Bottom Left Of The Texture and Quad
+					    GL11.glTexCoord2f(1.0f, 0.0f); GL11.glVertex3f(-boxXSize, -boxYSize,  boxZSize);  // Bottom Right Of The Texture and Quad
 					    // Front Face
-					    GL11.glTexCoord2f(0.0f, 0.0f); GL11.glVertex3f(-50.0f, -50.0f,  50.0f);  // Bottom Left Of The Texture and Quad
-					    GL11.glTexCoord2f(1.0f, 0.0f); GL11.glVertex3f( 50.0f, -50.0f,  50.0f);  // Bottom Right Of The Texture and Quad
-					    GL11.glTexCoord2f(1.0f, 1.0f); GL11.glVertex3f( 50.0f,  50.0f,  50.0f);  // Top Right Of The Texture and Quad
-					    GL11.glTexCoord2f(0.0f, 1.0f); GL11.glVertex3f(-50.0f,  50.0f,  50.0f);  // Top Left Of The Texture and Quad
+					    GL11.glTexCoord2f(0.0f, 0.0f); GL11.glVertex3f(-boxXSize, -boxYSize,  boxZSize);  // Bottom Left Of The Texture and Quad
+					    GL11.glTexCoord2f(1.0f, 0.0f); GL11.glVertex3f( boxXSize, -boxYSize,  boxZSize);  // Bottom Right Of The Texture and Quad
+					    GL11.glTexCoord2f(1.0f, 1.0f); GL11.glVertex3f( boxXSize,  boxYSize,  boxZSize);  // Top Right Of The Texture and Quad
+					    GL11.glTexCoord2f(0.0f, 1.0f); GL11.glVertex3f(-boxXSize,  boxYSize,  boxZSize);  // Top Left Of The Texture and Quad
 					    // Back Face
-					    GL11.glTexCoord2f(1.0f, 0.0f); GL11.glVertex3f(-50.0f, -50.0f, -50.0f);  // Bottom Right Of The Texture and Quad
-					    GL11.glTexCoord2f(1.0f, 1.0f); GL11.glVertex3f(-50.0f,  50.0f, -50.0f);  // Top Right Of The Texture and Quad
-					    GL11.glTexCoord2f(0.0f, 1.0f); GL11.glVertex3f( 50.0f,  50.0f, -50.0f);  // Top Left Of The Texture and Quad
-					    GL11.glTexCoord2f(0.0f, 0.0f); GL11.glVertex3f( 50.0f, -50.0f, -50.0f);  // Bottom Left Of The Texture and Quad
+					    GL11.glTexCoord2f(1.0f, 0.0f); GL11.glVertex3f(-boxXSize, -boxYSize, -boxZSize);  // Bottom Right Of The Texture and Quad
+					    GL11.glTexCoord2f(1.0f, 1.0f); GL11.glVertex3f(-boxXSize,  boxYSize, -boxZSize);  // Top Right Of The Texture and Quad
+					    GL11.glTexCoord2f(0.0f, 1.0f); GL11.glVertex3f( boxXSize,  boxYSize, -boxZSize);  // Top Left Of The Texture and Quad
+					    GL11.glTexCoord2f(0.0f, 0.0f); GL11.glVertex3f( boxXSize, -boxYSize, -boxZSize);  // Bottom Left Of The Texture and Quad
 					    // Right face
-					    GL11.glTexCoord2f(1.0f, 0.0f); GL11.glVertex3f( 50.0f, -50.0f, -50.0f);  // Bottom Right Of The Texture and Quad
-					    GL11.glTexCoord2f(1.0f, 1.0f); GL11.glVertex3f( 50.0f,  50.0f, -50.0f);  // Top Right Of The Texture and Quad
-					    GL11.glTexCoord2f(0.0f, 1.0f); GL11.glVertex3f( 50.0f,  50.0f,  50.0f);  // Top Left Of The Texture and Quad
-					    GL11.glTexCoord2f(0.0f, 0.0f); GL11.glVertex3f( 50.0f, -50.0f,  50.0f);  // Bottom Left Of The Texture and Quad
+					    GL11.glTexCoord2f(1.0f, 0.0f); GL11.glVertex3f( boxXSize, -boxYSize, -boxZSize);  // Bottom Right Of The Texture and Quad
+					    GL11.glTexCoord2f(1.0f, 1.0f); GL11.glVertex3f( boxXSize,  boxYSize, -boxZSize);  // Top Right Of The Texture and Quad
+					    GL11.glTexCoord2f(0.0f, 1.0f); GL11.glVertex3f( boxXSize,  boxYSize,  boxZSize);  // Top Left Of The Texture and Quad
+					    GL11.glTexCoord2f(0.0f, 0.0f); GL11.glVertex3f( boxXSize, -boxYSize,  boxZSize);  // Bottom Left Of The Texture and Quad
 					    // Left Face
-					    GL11.glTexCoord2f(0.0f, 0.0f); GL11.glVertex3f(-50.0f, -50.0f, -50.0f);  // Bottom Left Of The Texture and Quad
-					    GL11.glTexCoord2f(1.0f, 0.0f); GL11.glVertex3f(-50.0f, -50.0f,  50.0f);  // Bottom Right Of The Texture and Quad
-					    GL11.glTexCoord2f(1.0f, 1.0f); GL11.glVertex3f(-50.0f,  50.0f,  50.0f);  // Top Right Of The Texture and Quad
-					    GL11.glTexCoord2f(0.0f, 1.0f); GL11.glVertex3f(-50.0f,  50.0f, -50.0f);  // Top Left Of The Texture and Quad
+					    GL11.glTexCoord2f(0.0f, 0.0f); GL11.glVertex3f(-boxXSize, -boxYSize, -boxZSize);  // Bottom Left Of The Texture and Quad
+					    GL11.glTexCoord2f(1.0f, 0.0f); GL11.glVertex3f(-boxXSize, -boxYSize,  boxZSize);  // Bottom Right Of The Texture and Quad
+					    GL11.glTexCoord2f(1.0f, 1.0f); GL11.glVertex3f(-boxXSize,  boxYSize,  boxZSize);  // Top Right Of The Texture and Quad
+					    GL11.glTexCoord2f(0.0f, 1.0f); GL11.glVertex3f(-boxXSize,  boxYSize, -boxZSize);  // Top Left Of The Texture and Quad
+					    
+					    // Bottom Face
+					    GL11.glTexCoord2f(1.0f, 1.0f); GL11.glVertex3f(-boxXSize, boxYSize, -boxZSize);  // Top Right Of The Texture and Quad
+					    GL11.glTexCoord2f(0.0f, 1.0f); GL11.glVertex3f( boxXSize, boxYSize, -boxZSize);  // Top Left Of The Texture and Quad
+					    GL11.glTexCoord2f(0.0f, 0.0f); GL11.glVertex3f( boxXSize, boxYSize,  boxZSize);  // Bottom Left Of The Texture and Quad
+					    GL11.glTexCoord2f(1.0f, 0.0f); GL11.glVertex3f(-boxXSize, boxYSize,  boxZSize);  // Bottom Right Of The Texture and Quad
+					    
+	
 					}
 					GL11.glEnd();
 				}
@@ -139,7 +150,7 @@ public class MainMenu extends GUIObject {
 				Model groundModel = new Model(groundShape, groundCallList, groundTexture);
 				
 				Vector3f groundLocation = new Vector3f(0.0f, 50.0f, 0.0f);
-				Quaternion groundRotation = new Quaternion(0.0f, 0.0f, 0.05f, 1.0f);
+				Quaternion groundRotation = new Quaternion(0.0f, 0.0f, -0.0f, 1.0f);
 				
 				DynamicEntity ground = new DynamicEntity(groundLocation, groundRotation, groundModel, 0.0f);
 				ground.type = "Ground";
@@ -147,7 +158,8 @@ public class MainMenu extends GUIObject {
 				/* END GROUND */
 				
 				/* BEGIN SPHERE */
-				CollisionShape sphereShape = new SphereShape(1);
+				int sphereSize = 3;
+				CollisionShape sphereShape = new SphereShape(sphereSize);
 				
 				Sphere drawSphere = new Sphere();
 				drawSphere.setNormals(GLU.GLU_SMOOTH);
@@ -155,7 +167,7 @@ public class MainMenu extends GUIObject {
 				
 				int sphereCallList = GL11.glGenLists(1);
 				GL11.glNewList(sphereCallList, GL11.GL_COMPILE);{
-					drawSphere.draw(1, 24, 24);
+					drawSphere.draw(sphereSize, 24, 24);
 				}GL11.glEndList();
 				
 				int sphereTexture = TextureManager.EARTH;
@@ -165,7 +177,7 @@ public class MainMenu extends GUIObject {
 				Vector3f sphereLocation = new Vector3f(0.0f, 120.0f, 0.0f);
 				Quaternion sphereRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 				
-				float sphereMass = 1.0f;
+				float sphereMass = 3.0f;
 				
 				javax.vecmath.Vector3f fallInertia = new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f);
 				sphereShape.calculateLocalInertia(sphereMass, fallInertia);
@@ -173,6 +185,66 @@ public class MainMenu extends GUIObject {
 				DynamicEntity sphere = new DynamicEntity(sphereLocation, sphereRotation, sphereModel, sphereMass);
 				sphere.type = "Sphere";
 				Entities.entities.add(sphere);
+				/* END SPHERE */
+				
+				/* BEGIN SPHERE */
+				int sphereSize2 = 2;
+				CollisionShape sphereShape2 = new SphereShape(sphereSize2);
+				
+				Sphere drawSphere2 = new Sphere();
+				drawSphere2.setNormals(GLU.GLU_SMOOTH);
+				drawSphere2.setTextureFlag(true);
+				
+				int sphereCallList2 = GL11.glGenLists(1);
+				GL11.glNewList(sphereCallList2, GL11.GL_COMPILE);{
+					drawSphere2.draw(sphereSize2, 24, 24);
+				}GL11.glEndList();
+				
+				int sphereTexture2 = TextureManager.MARS;
+				
+				Model sphereModel2 = new Model(sphereShape2, sphereCallList2, sphereTexture2);
+				
+				Vector3f sphereLocation2 = new Vector3f(0.0f, 150.0f, 0.0f);
+				Quaternion sphereRotation2 = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+				
+				float sphereMass2 = 2.0f;
+				
+				javax.vecmath.Vector3f fallInertia2 = new javax.vecmath.Vector3f(0.0f, 10.0f, 0.0f);
+				sphereShape.calculateLocalInertia(sphereMass2, fallInertia2);
+				
+				DynamicEntity sphere2 = new DynamicEntity(sphereLocation2, sphereRotation2, sphereModel2, sphereMass2);
+				sphere2.type = "Sphere";
+				Entities.entities.add(sphere2);
+				/* END SPHERE */
+				
+				/* BEGIN SPHERE */
+				int sphereSize3 = 1;
+				CollisionShape sphereShape3 = new SphereShape(sphereSize3);
+				
+				Sphere drawSphere3 = new Sphere();
+				drawSphere3.setNormals(GLU.GLU_SMOOTH);
+				drawSphere3.setTextureFlag(true);
+				
+				int sphereCallList3 = GL11.glGenLists(1);
+				GL11.glNewList(sphereCallList3, GL11.GL_COMPILE);{
+					drawSphere3.draw(sphereSize3, 24, 24);
+				}GL11.glEndList();
+				
+				int sphereTexture3 = TextureManager.VENUS;
+				
+				Model sphereModel3 = new Model(sphereShape3, sphereCallList3, sphereTexture3);
+				
+				Vector3f sphereLocation3 = new Vector3f(0.0f, 170.0f, 0.0f);
+				Quaternion sphereRotation3 = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+				
+				float sphereMass3 = 1.0f;
+				
+				javax.vecmath.Vector3f fallInertia3 = new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f);
+				sphereShape.calculateLocalInertia(sphereMass3, fallInertia3);
+				
+				DynamicEntity sphere3 = new DynamicEntity(sphereLocation3, sphereRotation3, sphereModel3, sphereMass3);
+				sphere3.type = "Sphere";
+				Entities.entities.add(sphere3);
 				/* END SPHERE */
 				
 				/* BEGIN CAMERA */

@@ -3,6 +3,8 @@ package physics;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
+import physics.debug.PhysicsDebugDrawer;
+
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
 import com.bulletphysics.collision.dispatch.CollisionDispatcher;
@@ -40,7 +42,9 @@ public class Physics {
 				solver, collisionConfiguration);
 
 		// no gravity, we're in space!
-		dynamicsWorld.setGravity(new Vector3f(0, -10, 0));
+		dynamicsWorld.setGravity(new Vector3f(0, -5.0f, 0));
+		
+		dynamicsWorld.setDebugDrawer(new PhysicsDebugDrawer());
 		
 		//temp();
 	}

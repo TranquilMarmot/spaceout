@@ -68,7 +68,7 @@ public class DynamicEntity extends Entity {
 
 	public void draw() {
 		model.getTexture().bind();
-		GL11.glColor3f(0.0f, 0.25f, 0.0f);
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		GL11.glPushMatrix();
 		{
 			QuaternionHelper.toFloatBuffer(rotation, rotationBuffer);
