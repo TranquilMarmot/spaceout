@@ -14,12 +14,12 @@ import javax.vecmath.Vector3f;
  *
  */
 public class ModelLoader {
-	public static Model loadObjFile(String file){
-		return loadObjFile(file, new Vector3f(0.0f, 0.0f, 0.0f), 1.0f);
+	public static Model loadObjFile(String file, int texture){
+		return loadObjFile(file, new Vector3f(0.0f, 0.0f, 0.0f), 1.0f, texture);
 	}
 	
-	public static Model loadObjFile(String file, float scale){
-		return loadObjFile(file, new Vector3f(0.0f, 0.0f, 0.0f), scale);
+	public static Model loadObjFile(String file, float scale, int texture){
+		return loadObjFile(file, new Vector3f(0.0f, 0.0f, 0.0f), scale, texture);
 	}
 	
 	/**
@@ -29,7 +29,7 @@ public class ModelLoader {
 	 * @param scale The scale to create the model at
 	 * @return A model representing the given file
 	 */
-	public static Model loadObjFile(String file, Vector3f offset, float scale) {
+	public static Model loadObjFile(String file, Vector3f offset, float scale, int texture) {
 		Model m = null;
 
 		try {
@@ -100,7 +100,7 @@ public class ModelLoader {
 				}
 			}
 
-			m = builder.makeModel(scale);
+			m = builder.makeModel(scale, texture);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NullPointerException e) {

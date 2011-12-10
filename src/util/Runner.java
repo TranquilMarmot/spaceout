@@ -8,6 +8,8 @@ import gui.menu.MainMenu;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
+import physics.Physics;
+
 import util.debug.Debug;
 import util.helper.DisplayHelper;
 import util.manager.KeyboardManager;
@@ -79,6 +81,7 @@ public class Runner {
 	private void init() {
 		DisplayHelper.createWindow();
 		Graphics.initGL();
+		Physics.initPhysics();
 
 		/*
 		 * NOTE: Most of the initializing is done on the main menu, see

@@ -40,11 +40,11 @@ public abstract class Entity {
 	/** color (not really used) */
 	public float[] color;
 
-	/** texture */
-	public int texture = TextureManager.WHITE;
-
 	/** the last time that this entity was updated */
 	protected long lastUpdate;
+	
+	/** the model to use for this entity- see ModelManager*/
+	public int model;
 
 	/**
 	 * Entity constructor

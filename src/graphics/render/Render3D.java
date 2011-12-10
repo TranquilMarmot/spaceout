@@ -94,11 +94,11 @@ public class Render3D {
 			}
 			
 			//draw the player (since it's not contained in Entities.entities)
-			float transx = Entities.camera.location.x - Entities.player.location.x;
-			float transy = Entities.camera.location.y - Entities.player.location.y;
-			float transz = Entities.camera.location.z - Entities.player.location.z;
-			GL11.glTranslatef(transx, transy, transz);
-			Entities.player.draw();
+			//float transx = Entities.camera.location.x - Entities.player.location.x;
+			//float transy = Entities.camera.location.y - Entities.player.location.y;
+			//float transz = Entities.camera.location.z - Entities.player.location.z;
+			//GL11.glTranslatef(transx, transy, transz);
+			//Entities.player.draw();
 			/* END ENTITY DRAWING */
 		}
 		GL11.glPopMatrix();

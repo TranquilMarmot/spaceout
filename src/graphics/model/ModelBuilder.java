@@ -197,8 +197,8 @@ public class ModelBuilder {
 	 * and their respective indices have been added.
 	 * @return A model built using the current indices
 	 */
-	public Model makeModel(float scale) {
-		return new Model(buildCollisionShape(), buildCallList());
+	public Model makeModel(float scale, int texture) {
+		return new Model(buildCollisionShape(), buildCallList(), texture);
 	}
 
 	/**

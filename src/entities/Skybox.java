@@ -48,7 +48,7 @@ public class Skybox extends Entity {
 		
 		//rotationBuffer = BufferUtils.createFloatBuffer(16);
 		
-		model = ModelLoader.loadObjFile(MODEL_PATH + "skybox.obj", Render3D.drawDistance * 0.75f);
+		model = ModelLoader.loadObjFile(MODEL_PATH + "skybox.obj", Render3D.drawDistance * 0.75f, TextureManager.STARS);
 	}
 
 	@Override
@@ -64,7 +64,8 @@ public class Skybox extends Entity {
 		GL11.glPushMatrix();
 		{
 			// bind the entity's texture before drawing
-			TextureManager.getTexture(TextureManager.STARS).bind();
+			model.getTexture().bind();
+			//TextureManager.getTexture(TextureManager.STARS).bind();
 			GL11.glCallList(model.getCallList());
 		}
 		GL11.glPopMatrix();

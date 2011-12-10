@@ -21,6 +21,8 @@ public class Planet extends Entity {
 	private Sphere sphere;
 	// this planet's size
 	public float size;
+	
+	public int texture;
 
 	// planet's rotation variables
 	public float dxrot = 0;
