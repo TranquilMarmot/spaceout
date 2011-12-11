@@ -40,17 +40,17 @@ public class Player extends Entity {
 		ySpeed = 0.0f;
 		zSpeed = 0.0f;
 
-		maxZSpeed = 37.5f;
-		zAccel = 0.035f;
-		zDecel = 0.02f;
+		maxZSpeed = 10.0f;
+		zAccel = 0.0175f;
+		zDecel = 0.01f;
 
-		maxXSpeed = 37.5f;
-		xAccel = 0.035f;
-		xDecel = 0.02f;
+		maxXSpeed = 10.0f;
+		xAccel = 0.0175f;
+		xDecel = 0.01f;
 
-		maxYSpeed = 37.5f;
-		yAccel = 0.035f;
-		yDecel = 0.02f;
+		maxYSpeed = 15.0f;
+		yAccel = 0.0175f;
+		yDecel = 0.01f;
 	}
 
 	@Override
@@ -120,9 +120,9 @@ public class Player extends Entity {
 			boolean rollRight = KeyboardManager.rollRight;
 			boolean rollLeft = KeyboardManager.rollLeft;
 			if (rollRight)
-				rotateZ(-delta / 10.0f);
+				rotateZ(-delta / 20.0f);
 			if (rollLeft)
-				rotateZ(delta / 10.0f);
+				rotateZ(delta / 20.0f);
 
 			// shoot bullets if the player clicked
 			if (MouseManager.button0 && !button0Down

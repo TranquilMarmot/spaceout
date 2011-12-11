@@ -73,7 +73,7 @@ public class Debug {
 
 	public static void drawDebugInfo() {
 		// only draw if there's info to draw
-		if (false/*FIXME Entities.entitiesExist()*/) {
+		if (Entities.entitiesExist()) {
 			// change blending and draw the rectangle
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
 			GL11.glCallList(rectangleCallList);

@@ -1,11 +1,20 @@
 package physics;
 
+import java.util.Random;
+
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
+import org.lwjgl.util.glu.Sphere;
 import org.lwjgl.util.vector.Quaternion;
 
 import physics.debug.PhysicsDebugDrawer;
+import physics.sandbox.DynamicEntity;
+import physics.sandbox.Sandbox;
+import util.manager.TextureManager;
 
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
@@ -22,6 +31,7 @@ import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
 
 import entities.Entities;
+import graphics.model.Model;
 
 public class Physics {
 	public static DiscreteDynamicsWorld dynamicsWorld;
@@ -55,56 +65,9 @@ public class Physics {
 	
 	public static void update(){		
 		dynamicsWorld.stepSimulation(1.0f / 60.0f, 10);
-	}
-	
-	private static void temp(){
-		/* BEGIN TEST SHAPES */
-		// CollisionShape groundShape = new StaticPlaneShape(new Vector3f(0, 1,
-		// 0), 1);
-		CollisionShape groundShape = new BoxShape(new Vector3f(50.0f, 50.0f,
-				50.0f));
-
-		CollisionShape fallShape = new SphereShape(1);
-
-		Transform groundTransform = new Transform();
-		groundTransform.setRotation(new Quat4f(0.0f, 0.0f, 0.0f, 1.0f));
-		groundTransform.origin.set(0, -56, 0);
-
-		DefaultMotionState groundMotionState = new DefaultMotionState(
-				groundTransform);
-
-		// first variable here is mass
-		RigidBodyConstructionInfo groundRigidBodyCI = new RigidBodyConstructionInfo(
-				0, groundMotionState, groundShape, new Vector3f(0, 0, 0));
-		RigidBody groundRigidBody = new RigidBody(groundRigidBodyCI);
-
-		dynamicsWorld.addRigidBody(groundRigidBody);
-
-		Transform fallTransform = new Transform();
-		fallTransform.setRotation(new Quat4f(0.0f, 0.0f, 0.0f, 1.0f));
-		fallTransform.origin.set(0.0f, 50.0f, 0.0f);
-
-		DefaultMotionState fallMotionState = new DefaultMotionState(
-				fallTransform);
-
-		float mass = 1.0f;
-		Vector3f fallInertia = new Vector3f(0.0f, 0.0f, 0.0f);
-		fallShape.calculateLocalInertia(mass, fallInertia);
-
-		RigidBodyConstructionInfo fallRigidBodyCI = new RigidBodyConstructionInfo(
-				mass, fallMotionState, fallShape, fallInertia);
-		RigidBody fallRigidBody = new RigidBody(fallRigidBodyCI);
-		dynamicsWorld.addRigidBody(fallRigidBody);
-
-		/* END TEST SHAPES */
-
-		for (int i = 0; i < 300; i++) {
-			dynamicsWorld.stepSimulation(1.0f / 60.0f, 10);
-
-			Transform trans = new Transform();
-			fallRigidBody.getMotionState().getWorldTransform(trans);
-
-			System.out.println("Sphere height: " + trans.origin.y);
+		
+		if(Keyboard.isKeyDown(Keyboard.KEY_P)){
+			Sandbox.addRandomSphere();
 		}
 	}
 }

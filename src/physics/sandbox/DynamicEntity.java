@@ -1,4 +1,4 @@
-package physics.testShapes;
+package physics.sandbox;
 
 import javax.vecmath.Quat4f;
 
@@ -59,7 +59,6 @@ public class DynamicEntity extends Entity {
 
 		javax.vecmath.Vector3f origin = trans.origin;
 		this.location.set(origin.x, origin.y, origin.z);
-		this.location = new Vector3f(origin.x, origin.y, origin.z);
 
 		Quat4f rot = new Quat4f();
 		trans.getRotation(rot);
