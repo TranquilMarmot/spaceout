@@ -3,6 +3,8 @@ package physics;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
+import org.lwjgl.util.vector.Quaternion;
+
 import physics.debug.PhysicsDebugDrawer;
 
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
@@ -18,6 +20,8 @@ import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
+
+import entities.Entities;
 
 public class Physics {
 	public static DiscreteDynamicsWorld dynamicsWorld;
@@ -49,7 +53,7 @@ public class Physics {
 		//temp();
 	}
 	
-	public static void update(){
+	public static void update(){		
 		dynamicsWorld.stepSimulation(1.0f / 60.0f, 10);
 	}
 	

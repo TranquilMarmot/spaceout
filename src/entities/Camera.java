@@ -90,7 +90,7 @@ public class Camera extends Entity {
 		if(!KeyboardManager.vanityMode)
 			vanityKeyDown = false;
 
-		if(vanityMode && !Runner.paused){
+		if(vanityMode){
 			// if we're in vanity mode, apply any rotation changes
 			rotateX(MouseManager.dy);
 			rotateY(MouseManager.dx);

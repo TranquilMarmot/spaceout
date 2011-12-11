@@ -2,7 +2,9 @@ package gui.menu;
 
 import entities.Camera;
 import entities.Entities;
+import entities.Skybox;
 import entities.celestial.Sun;
+import entities.particles.Debris;
 import graphics.model.Model;
 import gui.GUI;
 import gui.GUIObject;
@@ -83,7 +85,7 @@ public class MainMenu extends GUIObject {
 			public void actionPerformed(ActionEvent e) {
 				/* BEGIN PHYSICS DEBUG WORLD CREATION */
 				/* BEGIN SUN */
-				Vector3f sunLocation = new Vector3f(0.0f, -1000.0f, 1000.0f);
+				Vector3f sunLocation = new Vector3f(100.0f, 100.0f, -2.0f);
 				float sunSize = 10.0f;
 				int sunLight = GL11.GL_LIGHT1;
 				float[] sunColor = { 1.0f, 1.0f, 0.3f };
@@ -101,6 +103,11 @@ public class MainMenu extends GUIObject {
 				
 				CollisionShape groundShape = new BoxShape(
 						new javax.vecmath.Vector3f(boxXSize, boxYSize, boxZSize));
+				
+				int groundTexture = TextureManager.CHECKERS;
+				Texture grnd = TextureManager.getTexture(groundTexture);
+				int texWidth = grnd.getTextureWidth();
+				int textHeight = grnd.getTextureHeight();
 
 				int groundCallList = GL11.glGenLists(1);
 				GL11.glNewList(groundCallList, GL11.GL_COMPILE);
@@ -144,8 +151,6 @@ public class MainMenu extends GUIObject {
 					GL11.glEnd();
 				}
 				GL11.glEndList();
-				
-				int groundTexture = TextureManager.WHITE;
 				
 				Model groundModel = new Model(groundShape, groundCallList, groundTexture);
 				
@@ -250,16 +255,31 @@ public class MainMenu extends GUIObject {
 				/* BEGIN CAMERA */
 				// initialize the camera
 				Entities.camera = new Camera(sphere.location.x, sphere.location.y, sphere.location.z);
-				Entities.camera.zoom = 100.0f;
+				Entities.camera.zoom =  133.6f;
 				Entities.camera.yOffset = 0.0f;
 				Entities.camera.xOffset = 0.0f;
 				Entities.camera.following = sphere;
-				Entities.camera.rotation = new Quaternion(0.98061955f, -0.042101286f, 0.0016744693f, -0.042101286f);
+				Entities.camera.rotation = new Quaternion(0.88447446f, -0.05902738f, 0.3328688f, 0.3328688f);
 				Entities.camera.vanityMode = true;
 				
 				
 				GUI.menuUp = false;
 				/* END CAMERA */
+				
+				/* BEGIN SKYBOX  */
+				Skybox skybox = new Skybox(sphere, 0, 0, 0);
+				Entities.entities.add(skybox);
+				/* END SKYBOX */
+				
+				/* BEGIN DEBRIS */
+				Debris debris = new Debris(sphere, 5000, 100000, 420L);
+				debris.update();
+				debris.update();
+				Entities.entities.add(debris);
+				/* END DEBRIS */
+				
+				PauseMenu pmenu = new PauseMenu();
+				GUI.addBuffer.add(pmenu);
 				
 				/* END PHYSICS DEBUG WORLD CREATION */
 
