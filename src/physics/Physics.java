@@ -56,7 +56,7 @@ public class Physics {
 				solver, collisionConfiguration);
 
 		// no gravity, we're in space!
-		dynamicsWorld.setGravity(new Vector3f(0, -5.0f, 0));
+		dynamicsWorld.setGravity(new Vector3f(0, 0, 0));
 		
 		dynamicsWorld.setDebugDrawer(new PhysicsDebugDrawer());
 		

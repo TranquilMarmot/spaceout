@@ -197,7 +197,7 @@ public class Sandbox {
 		
 		Model sphereModel = new Model(sphereShape, sphereCallList, sphereTexture);
 		
-		Vector3f sphereLocation = new Vector3f(0.0f, 120.0f, 0.0f);
+		Vector3f sphereLocation = new Vector3f(0.0f + (randy.nextFloat() * 10.0f), 120.0f + (randy.nextFloat() * 10.0f), 0.0f + (randy.nextFloat() * 10.0f));
 		Quaternion sphereRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		
 		float sphereMass = randy.nextFloat() * 10;
