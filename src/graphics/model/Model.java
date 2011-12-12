@@ -46,4 +46,8 @@ public class Model {
 	public int getCallList(){
 		return callList;
 	}
+	
+	public void cleanup(){
+		
+	}
 }

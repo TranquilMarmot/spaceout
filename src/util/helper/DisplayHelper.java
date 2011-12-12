@@ -109,7 +109,7 @@ public class DisplayHelper {
 		try {
 			// set the display to use the canvas
 			Display.setParent(canvas);
-			Display.setVSyncEnabled(true);
+			//Display.setVSyncEnabled(true);
 
 			// pretty self explanatory, boilerplate awt frame creation
 			frame.setPreferredSize(new Dimension(windowWidth, windowHeight));

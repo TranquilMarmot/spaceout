@@ -9,10 +9,8 @@ import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.Sphere;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
-import org.newdawn.slick.opengl.Texture;
 
 import physics.Physics;
-
 import util.manager.TextureManager;
 
 import com.bulletphysics.collision.shapes.BoxShape;
@@ -37,8 +35,8 @@ public class Sandbox {
 	public static void createSandboxWorld(){
 		/* BEGIN PHYSICS DEBUG WORLD CREATION */
 		/* BEGIN SUN */
-		Vector3f sunLocation = new Vector3f(1000.0f, 1000.0f, -2.0f);
-		float sunSize = 10.0f;
+		Vector3f sunLocation = new Vector3f(1500.0f, 1500.0f, -2.0f);
+		float sunSize = 150.0f;
 		int sunLight = GL11.GL_LIGHT1;
 		float[] sunColor = { 1.0f, 1.0f, 0.3f };
 		float[] sunAmbient = { 1.0f, 1.0f, 1.0f };
@@ -49,13 +47,13 @@ public class Sandbox {
 		
 		/* BEGIN BOX */
 		Vector3f box0Location = new Vector3f(0.0f, 0.0f, 0.0f);
-		Vector3f box0Size = new Vector3f(1000.0f, 5.0f, 1000.0f);
+		Vector3f box0Size = new Vector3f(1000.0f, 0.001f, 1000.0f);
 		createBox(box0Location, box0Size);
 		/* END BOX */
 		
 		/* BEGIN BOX */
-		Vector3f box1Location = new Vector3f(0.0f, 400.0f, 0.0f);
-		Vector3f box1Size = new Vector3f(1000.0f, 5.0f, 1000.0f);
+		Vector3f box1Location = new Vector3f(0.0f, 600.0f, 0.0f);
+		Vector3f box1Size = new Vector3f(1000.0f, 0.001f, 1000.0f);
 		createBox(box1Location, box1Size);
 		/* END BOX */
 		
@@ -156,7 +154,7 @@ public class Sandbox {
 		Vector3f groundLocation = new Vector3f(location.x, location.y, location.z);
 		Quaternion groundRotation = new Quaternion(0.0f, 0.0f, -0.0f, 1.0f);
 		
-		DynamicEntity ground = new DynamicEntity(groundLocation, groundRotation, groundModel, 0.0f);
+		DynamicEntity ground = new DynamicEntity(groundLocation, groundRotation, groundModel, 0.0f, 1.0f);
 		ground.type = "Ground";
 		ground.location = location;
 		Entities.entities.add(ground);
@@ -165,7 +163,7 @@ public class Sandbox {
 	
 	public static void addRandomSphere(){
 		Random randy = new Random();
-		int sphereSize = randy.nextInt(10);
+		float sphereSize = randy.nextInt(250) / 10.0f;
 		CollisionShape sphereShape = new SphereShape(sphereSize);
 		
 		Sphere drawSphere = new Sphere();
@@ -174,11 +172,11 @@ public class Sandbox {
 		
 		int sphereCallList = GL11.glGenLists(1);
 		GL11.glNewList(sphereCallList, GL11.GL_COMPILE);{
-			drawSphere.draw(sphereSize, 24, 24);
+			drawSphere.draw(sphereSize, 15, 15);
 		}GL11.glEndList();
 		
 		int sphereTexture;
-		switch(randy.nextInt(3)){
+		switch(randy.nextInt(4)){
 		case 0:
 			sphereTexture = TextureManager.EARTH;
 			break;
@@ -200,12 +198,12 @@ public class Sandbox {
 		Vector3f sphereLocation = new Vector3f(0.0f + (randy.nextFloat() * 10.0f), 120.0f + (randy.nextFloat() * 10.0f), 0.0f + (randy.nextFloat() * 10.0f));
 		Quaternion sphereRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		
-		float sphereMass = randy.nextFloat() * 10;
+		float sphereMass = randy.nextFloat() * 100;
 		
 		javax.vecmath.Vector3f fallInertia = new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f);
 		sphereShape.calculateLocalInertia(sphereMass, fallInertia);
 		
-		DynamicEntity sphere = new DynamicEntity(sphereLocation, sphereRotation, sphereModel, sphereMass);
+		DynamicEntity sphere = new DynamicEntity(sphereLocation, sphereRotation, sphereModel, sphereMass, randy.nextFloat());
 		sphere.type = "Sphere";
 		Entities.entities.add(sphere);
 	}

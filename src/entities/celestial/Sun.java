@@ -24,6 +24,9 @@ public class Sun extends Light {
 
 	/** this sun's sphere */
 	private Sphere sphere;
+	
+	/** the color of this sun */
+	private float[] color;
 
 	/**
 	 * Sun constructor

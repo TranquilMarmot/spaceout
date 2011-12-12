@@ -16,18 +16,35 @@ import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
 
-import entities.Entities;
 import entities.Entity;
 import graphics.model.Model;
 
+/**
+ * And entity that also keeps track of it's own rigid body and model
+ * @author TranquilMarmot
+ *
+ */
 public class DynamicEntity extends Entity {
 	public RigidBody rigidBody;
 	public float mass;
 	public Model model;
-	// FIXME change this back to using an int from ModelManager instead of an actual model
+
+	/**
+	 * Overloaded constructor
+	 * @param location
+	 * @param rotation
+	 * @param model
+	 * @param mass
+	 * @param restitution
+	 */
+	public DynamicEntity(Vector3f location, Quaternion rotation, int model,
+			float mass, float restitution) {
+		this(location, rotation, ModelManager.getModel(model), mass,
+				restitution);
+	}
 
 	public DynamicEntity(Vector3f location, Quaternion rotation, Model model,
-			float mass) {
+			float mass, float restitution) {
 		this.location = location;
 		this.rotation = rotation;
 		this.model = model;
@@ -38,13 +55,13 @@ public class DynamicEntity extends Entity {
 				rotation.w));
 		transform.origin.set(location.x, location.y, location.z);
 		DefaultMotionState defaultState = new DefaultMotionState(transform);
-		
+
 		javax.vecmath.Vector3f loca = new javax.vecmath.Vector3f(location.x,
 				location.y, location.z);
-		
+
 		RigidBodyConstructionInfo rigidBodyCI = new RigidBodyConstructionInfo(
 				mass, defaultState, model.getCollisionShape(), loca);
-		rigidBodyCI.restitution = 0.75f;
+		rigidBodyCI.restitution = restitution;
 		rigidBody = new RigidBody(rigidBodyCI);
 
 		Physics.dynamicsWorld.addRigidBody(rigidBody);
@@ -65,6 +82,7 @@ public class DynamicEntity extends Entity {
 		this.rotation.set(rot.x, rot.y, rot.z, rot.w);
 	}
 
+	@Override
 	public void draw() {
 		model.getTexture().bind();
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
@@ -75,5 +93,10 @@ public class DynamicEntity extends Entity {
 			GL11.glCallList(model.getCallList());
 		}
 		GL11.glPopMatrix();
+	}
+
+	@Override
+	public void cleanup() {
+		Physics.dynamicsWorld.removeRigidBody(rigidBody);
 	}
 }

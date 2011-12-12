@@ -7,7 +7,6 @@ import org.lwjgl.util.vector.Vector3f;
 
 import util.debug.Debug;
 import util.helper.QuaternionHelper;
-import util.manager.TextureManager;
 
 /**
  * Class that pretty much anything in-game extends.
@@ -15,30 +14,29 @@ import util.manager.TextureManager;
  *
  */
 public abstract class Entity {
-	// the entity's location
+	/** the entity's current location */
 	public Vector3f location;
 
 	/** how fast this entity is moving */
 	public float xSpeed, ySpeed, zSpeed;
 	
-	/** maximum speeds */
+	/** maximum speed */
 	public float maxXSpeed, maxYSpeed, maxZSpeed;
 	
-	/** acceleration speeds*/
+	/** acceleration speed */
 	public float xAccel, yAccel, zAccel;
 	
-	/** deceleration speeds */
+	/** deceleration speed */
 	public float xDecel, yDecel, zDecel;
 
 	/** quaternion representing rotation */
 	public Quaternion rotation;
+	
+	/** buffer used to apply rotation to an OpenGL matrix */
 	protected FloatBuffer rotationBuffer;
 
 	/** type, used for lots of things */
 	public String type;
-
-	/** color (not really used) */
-	public float[] color;
 
 	/** the last time that this entity was updated */
 	protected long lastUpdate;
@@ -53,7 +51,6 @@ public abstract class Entity {
 		location = new Vector3f(0.0f, 0.0f, 0.0f);
 		rotation = new Quaternion(1.0f, 0.0f, 0.0f, 1.0f);
 		type = "entity";
-		color = new float[] { 1.0f, 1.0f, 1.0f };
 		xSpeed = 0.0f;
 		ySpeed = 0.0f;
 		zSpeed = 0.0f;
@@ -301,4 +298,9 @@ public abstract class Entity {
 	 * Draws this entity
 	 */
 	public abstract void draw();
+	
+	/**
+	 * Have the entity provide any necessary clenup procedures, like gettting rid of textures
+	 */
+	public abstract void cleanup();
 }

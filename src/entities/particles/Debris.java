@@ -282,4 +282,9 @@ public class Debris extends Entity {
 			GL11.glDeleteLists(callList, 1);
 		}
 	}
+	
+	@Override
+	public void cleanup(){
+		
+	}
 }

@@ -1,44 +1,30 @@
 package physics;
 
-import java.util.Random;
-
-import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
-import org.lwjgl.util.glu.Sphere;
-import org.lwjgl.util.vector.Quaternion;
 
 import physics.debug.PhysicsDebugDrawer;
-import physics.sandbox.DynamicEntity;
 import physics.sandbox.Sandbox;
-import util.manager.TextureManager;
 
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
 import com.bulletphysics.collision.dispatch.CollisionDispatcher;
 import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
-import com.bulletphysics.collision.shapes.BoxShape;
-import com.bulletphysics.collision.shapes.CollisionShape;
-import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
-import com.bulletphysics.dynamics.RigidBody;
-import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
-import com.bulletphysics.linearmath.DefaultMotionState;
-import com.bulletphysics.linearmath.Transform;
-
-import entities.Entities;
-import graphics.model.Model;
+import com.bulletphysics.linearmath.Clock;
 
 public class Physics {
+	private final static int SUBSTEPS = 7;
+	
 	public static DiscreteDynamicsWorld dynamicsWorld;
 
 	public static BroadphaseInterface broadphase;
 	public static CollisionDispatcher dispatcher;
 	public static SequentialImpulseConstraintSolver solver;
+	
+	private static Clock clock = new Clock();
 
 	public static void initPhysics() {
 		// broadphase interface
@@ -59,15 +45,20 @@ public class Physics {
 		dynamicsWorld.setGravity(new Vector3f(0, 0, 0));
 		
 		dynamicsWorld.setDebugDrawer(new PhysicsDebugDrawer());
-		
-		//temp();
 	}
 	
-	public static void update(){		
-		dynamicsWorld.stepSimulation(1.0f / 60.0f, 10);
+	public static void update(){
+		//dynamicsWorld.stepSimulation(1.0f / 60.0f, 10);
+		dynamicsWorld.stepSimulation(getDeltaTimeMicroseconds() / 1000000.0f, SUBSTEPS);
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_P)){
 			Sandbox.addRandomSphere();
 		}
+	}
+	
+	private static float getDeltaTimeMicroseconds(){
+		float delta = clock.getTimeMicroseconds();
+		clock.reset();
+		return delta;
 	}
 }

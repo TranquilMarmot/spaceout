@@ -92,5 +92,9 @@ public class LaserBullet extends Entity {
 		}
 		GL11.glPopMatrix();
 	}
-
+	
+	@Override
+	public void cleanup(){
+		
+	}
 }

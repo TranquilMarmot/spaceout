@@ -53,4 +53,16 @@ public class Entities {
 		
 		return (float)Math.sqrt(total);
 	}
+	
+	public static void cleanup(){
+		for(Entity ent : entities){
+			ent.cleanup();
+		}
+		player = null;
+		camera = null;
+		entities.clear();
+		lights.clear();
+		addBuffer.clear();
+		removeBuffer.clear();
+	}
 }

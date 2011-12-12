@@ -55,9 +55,7 @@ public class PauseMenu extends GUIObject{
 		resumeButton.update();
 		
 		if(backToMainMenu){
-			Entities.entities.clear();
-			Entities.player = null;
-			Entities.camera = null;
+			Entities.cleanup();
 			GUI.removeBuffer.add(this);
 			GUI.addBuffer.add(new MainMenu());
 		}

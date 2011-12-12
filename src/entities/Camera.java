@@ -3,7 +3,6 @@ package entities;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-import util.Runner;
 import util.debug.Debug;
 import util.manager.KeyboardManager;
 import util.manager.MouseManager;
@@ -103,6 +102,11 @@ public class Camera extends Entity {
 	@Override
 	public void draw() {
 		// camera dont need no drawin camera better than that
+	}
+	
+	@Override
+	public void cleanup(){
+		// camera is clean, man
 	}
 
 }

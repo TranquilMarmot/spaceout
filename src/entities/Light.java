@@ -39,9 +39,9 @@ public abstract class Light extends Entity{
 		
 		// set up light position
 		lightPosBuffer = BufferUtils.createFloatBuffer(4);
-		lightPosBuffer.put(color[0]);
-		lightPosBuffer.put(color[1]);
-		lightPosBuffer.put(color[2]);
+		lightPosBuffer.put(location.x);
+		lightPosBuffer.put(location.y);
+		lightPosBuffer.put(location.z);
 		lightPosBuffer.put(1.0f);
 		lightPosBuffer.rewind();
 
@@ -74,5 +74,10 @@ public abstract class Light extends Entity{
 		// set up ambient and diffuse light
 		GL11.glLight(light, GL11.GL_DIFFUSE, diffuseLightBuffer);
 		GL11.glLight(light, GL11.GL_AMBIENT, ambientLightBuffer);
+	}
+	
+	@Override
+	public void cleanup(){
+		GL11.glDisable(light);
 	}
 }

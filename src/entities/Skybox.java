@@ -71,5 +71,11 @@ public class Skybox extends Entity {
 		GL11.glPopMatrix();
 		GL11.glEnable(GL11.GL_LIGHTING);
 	}
-
+	
+	
+	@Override
+	public void cleanup(){
+		
+	}
+	
 }

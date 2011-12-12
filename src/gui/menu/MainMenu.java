@@ -1,12 +1,5 @@
 package gui.menu;
 
-import entities.Camera;
-import entities.Entities;
-import entities.Skybox;
-import entities.celestial.Sun;
-import entities.particles.Debris;
-import entities.player.Player;
-import graphics.model.Model;
 import gui.GUI;
 import gui.GUIObject;
 import gui.button.MenuButton;
@@ -16,22 +9,11 @@ import java.awt.event.ActionListener;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
-import org.lwjgl.util.glu.Sphere;
-import org.lwjgl.util.vector.Quaternion;
-import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
-import physics.sandbox.DynamicEntity;
 import physics.sandbox.Sandbox;
-
-import com.bulletphysics.collision.shapes.BoxShape;
-import com.bulletphysics.collision.shapes.CollisionShape;
-import com.bulletphysics.collision.shapes.SphereShape;
-
 import util.Runner;
 import util.debug.Debug;
 import util.helper.DisplayHelper;

@@ -155,4 +155,9 @@ public class Player extends Entity {
 		}
 		GL11.glPopMatrix();
 	}
+	
+	@Override
+	public void cleanup(){
+		
+	}
 }

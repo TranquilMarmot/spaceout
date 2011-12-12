@@ -15,11 +15,15 @@ import javax.vecmath.Vector3f;
  */
 public class ModelLoader {
 	public static Model loadObjFile(String file, int texture){
-		return loadObjFile(file, new Vector3f(0.0f, 0.0f, 0.0f), 1.0f, texture);
+		return loadObjFile(file, new Vector3f(0.0f, 0.0f, 0.0f), 1.0f, 1.0f, 1.0f, texture);
 	}
 	
 	public static Model loadObjFile(String file, float scale, int texture){
-		return loadObjFile(file, new Vector3f(0.0f, 0.0f, 0.0f), scale, texture);
+		return loadObjFile(file, new Vector3f(0.0f, 0.0f, 0.0f), scale, scale, scale, texture);
+	}
+	
+	public static Model loadObjFile(String file, float xScale, float yScale, float zScale, int texture){
+		return loadObjFile(file, new Vector3f(0.0f, 0.0f, 0.0f), xScale, yScale, zScale, texture);
 	}
 	
 	/**
@@ -29,7 +33,7 @@ public class ModelLoader {
 	 * @param scale The scale to create the model at
 	 * @return A model representing the given file
 	 */
-	public static Model loadObjFile(String file, Vector3f offset, float scale, int texture) {
+	public static Model loadObjFile(String file, Vector3f offset, float xScale, float yScale, float zScale, int texture) {
 		Model m = null;
 
 		try {
@@ -52,9 +56,9 @@ public class ModelLoader {
 
 				if (lineType.equals("v")) {
 					// grab the coordinates
-					float x = (Float.parseFloat(toker.nextToken()) + offset.x) * scale;
-					float y = (Float.parseFloat(toker.nextToken()) + offset.y) * scale;
-					float z = (Float.parseFloat(toker.nextToken()) + offset.z) * scale;
+					float x = (Float.parseFloat(toker.nextToken()) + offset.x) * xScale;
+					float y = (Float.parseFloat(toker.nextToken()) + offset.y) * yScale;
+					float z = (Float.parseFloat(toker.nextToken()) + offset.z) * zScale;
 
 					builder.addVertex(new Vector3f(x, y, z));
 				}
@@ -100,7 +104,7 @@ public class ModelLoader {
 				}
 			}
 
-			m = builder.makeModel(scale, texture);
+			m = builder.makeModel(texture);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NullPointerException e) {
