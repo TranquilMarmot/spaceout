@@ -31,8 +31,19 @@ public class DynamicPlayer extends DynamicEntity{
 		
 		if(forward || backward){
 			if(forward){
-				System.out.println("pshhhh");
+				rigidBody.applyCentralForce(new javax.vecmath.Vector3f(0.0f, 0.0f, 10000.0f));
+			}
+			if(backward){
 				rigidBody.applyCentralForce(new javax.vecmath.Vector3f(0.0f, 0.0f, -10000.0f));
+			}
+		}
+		
+		if (left || right) {
+			if (left) {
+				rigidBody.applyCentralForce(new javax.vecmath.Vector3f(-10000.0f, 0.0f, 0.0f));
+			}
+			if (right) {
+				rigidBody.applyCentralForce(new javax.vecmath.Vector3f(10000.0f, 0.0f, 0.0f));
 			}
 		}
 	}

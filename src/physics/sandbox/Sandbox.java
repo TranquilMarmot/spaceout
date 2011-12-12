@@ -64,7 +64,7 @@ public class Sandbox {
 		
 		Vector3f playerLocation = new Vector3f(-107.111f, 198.284f, -659.311f);
 		Quaternion playerRotation = new Quaternion(0.002583359f, -0.0559893f, 0.9984302f, 0.00012266426f);
-		Model playerModel = ModelLoader.loadObjFile("res/models/ships/ship1.obj", 10.0f, TextureManager.SHIP1);
+		Model playerModel = ModelLoader.loadObjFile("res/models/ships/ship1.obj", 1.0f, TextureManager.SHIP1);
 		float playerMass = 100.0f;
 		float playerRestitution = 1.0f;
 		DynamicEntity player = new DynamicPlayer(playerLocation, playerRotation, playerModel, playerMass, playerRestitution);
@@ -77,7 +77,7 @@ public class Sandbox {
 		/* BEGIN CAMERA */
 		// initialize the camera
 		Entities.camera = new Camera(Entities.player.location.x, Entities.player.location.y, Entities.player.location.z);
-		Entities.camera.zoom = 10.0f;
+		Entities.camera.zoom = 30.0f;
 		Entities.camera.yOffset = -2.5f;
 		Entities.camera.xOffset = 0.1f;
 		Entities.camera.following = Entities.player;
