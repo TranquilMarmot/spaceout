@@ -39,6 +39,7 @@ public class KeyboardManager {
 	private static int fullscreenKey = Keyboard.KEY_F11;
 	private static int debugKey = Keyboard.KEY_F3;
 	private static int screenshotKey = Keyboard.KEY_F2;
+	private static int physicsDebugKey = Keyboard.KEY_F4;
 
 	/* These represent whether or not a key is down */
 	public static boolean forward;
@@ -62,6 +63,7 @@ public class KeyboardManager {
 	public static boolean fullscreen;
 	public static boolean debug;
 	public static boolean screenshot;
+	public static boolean physicsDebug;
 
 	/**
 	 * This MUST be called every frame! It updates all the booleans in this
@@ -89,6 +91,8 @@ public class KeyboardManager {
 							command = true;
 						else if (eventKey == chatKey)
 							chat = true;
+						else if(eventKey == physicsDebugKey)
+							physicsDebug = true;
 					}/* END ALWAYS CHECKED KEYS */
 
 					if (!Debug.consoleOn) {
@@ -140,6 +144,8 @@ public class KeyboardManager {
 							command = false;
 						else if (eventKey == chatKey)
 							chat = false;
+						else if(eventKey == physicsDebugKey)
+							physicsDebug = false;
 					}/* END ALWAYS CHECKED KEYS */
 
 					/* BEGIN CONTROL KEYS */{

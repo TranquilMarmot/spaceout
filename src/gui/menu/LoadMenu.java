@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 
+import physics.sandbox.Sandbox;
 import util.debug.Debug;
 import util.helper.DisplayHelper;
 import util.manager.TextureManager;
@@ -74,9 +75,15 @@ public class LoadMenu extends GUIObject {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					// load entities from XML
-					XMLParser.loadEntitiesFromXmlFile(path
-							+ picker.getSelected().getFile());
+					String selectedFile = picker.getSelected().getFile();
+					/* FIXME this if statement is only temporary!!! */
+					if (selectedFile.equals("PhysicsSandbox.xml")) {
+						Sandbox.createSandboxWorld();
+					} else {
+						// load entities from XML
+						XMLParser.loadEntitiesFromXmlFile(path
+								+ picker.getSelected().getFile());
+					}
 					// create the pause menu
 					GUI.addBuffer.add(new PauseMenu());
 
@@ -92,7 +99,8 @@ public class LoadMenu extends GUIObject {
 					// raise the file loaded flag
 					fileLoaded = true;
 				} catch (NullPointerException exc) {
-					// if there's a NullPointerException, it means nothing has been slected yet
+					// if there's a NullPointerException, it means nothing has
+					// been slected yet
 				}
 			}
 
@@ -165,7 +173,7 @@ public class LoadMenu extends GUIObject {
 		picker.draw();
 		loadButton.draw();
 		backButton.draw();
-		
+
 		Debug.drawVersion();
 	}
 }

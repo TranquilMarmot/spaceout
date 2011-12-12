@@ -11,6 +11,7 @@ import physics.Physics;
 import util.helper.QuaternionHelper;
 import util.manager.ModelManager;
 
+import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.linearmath.DefaultMotionState;
@@ -88,11 +89,25 @@ public class DynamicEntity extends Entity {
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		GL11.glPushMatrix();
 		{
-			QuaternionHelper.toFloatBuffer(rotation, rotationBuffer);
+			if(Physics.drawDebug)
+				drawPhysicsDebug();
+			
+			Quaternion revQuat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+			rotation.negate(revQuat);
+			QuaternionHelper.toFloatBuffer(revQuat, rotationBuffer);
 			GL11.glMultMatrix(rotationBuffer);
 			GL11.glCallList(model.getCallList());
 		}
 		GL11.glPopMatrix();
+	}
+	
+	private void drawPhysicsDebug(){
+		Transform worldTransform = new Transform();
+		rigidBody.getWorldTransform(worldTransform);
+		
+		CollisionShape shape = model.getCollisionShape();
+	
+		Physics.dynamicsWorld.debugDrawObject(worldTransform, shape, new javax.vecmath.Vector3f(0.0f, 0.0f, 1.0f));
 	}
 
 	@Override

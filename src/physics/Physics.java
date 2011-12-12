@@ -6,6 +6,7 @@ import org.lwjgl.input.Keyboard;
 
 import physics.debug.PhysicsDebugDrawer;
 import physics.sandbox.Sandbox;
+import util.manager.KeyboardManager;
 
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
@@ -25,6 +26,9 @@ public class Physics {
 	public static SequentialImpulseConstraintSolver solver;
 	
 	private static Clock clock = new Clock();
+	
+	private static boolean debugDown = false;
+	public static boolean drawDebug = true;
 
 	public static void initPhysics() {
 		// broadphase interface
@@ -53,6 +57,14 @@ public class Physics {
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_P)){
 			Sandbox.addRandomSphere();
+		}
+		
+		if(KeyboardManager.physicsDebug && !debugDown){
+			drawDebug = !drawDebug;
+			debugDown = true;
+		}
+		if(!KeyboardManager.physicsDebug){
+			debugDown = false;
 		}
 	}
 	

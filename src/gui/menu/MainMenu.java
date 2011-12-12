@@ -13,7 +13,6 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
-import physics.sandbox.Sandbox;
 import util.Runner;
 import util.debug.Debug;
 import util.helper.DisplayHelper;
@@ -67,15 +66,12 @@ public class MainMenu extends GUIObject {
 		loadMenuButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Sandbox.createSandboxWorld();
-				GUI.menuUp = false;
-				
 				// create the load menu
-				// LoadMenu lmenu = new LoadMenu(0, 0, XML_PATH);
-				// GUI.addBuffer.add(lmenu);
+				 LoadMenu lmenu = new LoadMenu(0, 0, XML_PATH);
+				 GUI.addBuffer.add(lmenu);
 
 				// let the GUI know that a menu is up
-				// GUI.menuUp = true;
+				 GUI.menuUp = true;
 
 				// done with the main menu
 				done = true;
@@ -94,6 +90,8 @@ public class MainMenu extends GUIObject {
 
 		// let the GUI know that a menu is up
 		GUI.menuUp = true;
+		
+		Runner.paused = false;
 	}
 
 	private void initImages() {

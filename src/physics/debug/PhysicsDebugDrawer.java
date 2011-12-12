@@ -21,13 +21,21 @@ public class PhysicsDebugDrawer extends IDebugDraw {
 
 	@Override
 	public void drawLine(Vector3f from, Vector3f to, Vector3f color) {
-		GL11.glColor3f(color.x, color.y, color.z);
-		GL11.glBegin(GL11.GL_LINE); {
-			GL11.glVertex3f(from.x, from.y, from.z);
-			GL11.glVertex3f(to.x, to.y, to.z);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glLineWidth(1.0f);
+		
+		GL11.glColor3f(1.0f, 0.0f, 1.0f);
+		GL11.glPushMatrix();{
+			//GL11.glTranslatef(from.x, from.y, from.z);
+			GL11.glBegin(GL11.GL_LINES); {
+				GL11.glVertex3f(0.0f, 0.0f, 0.0f);
+				GL11.glVertex3f((to.x - from.x) * 30, (to.y - from.y) * 30, (to.z - from.z) * 30);
+			}
+			GL11.glEnd();
 		}
-		GL11.glEnd();
-
+		GL11.glPopMatrix();
+		
+		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 
 	@Override
@@ -45,6 +53,7 @@ public class PhysicsDebugDrawer extends IDebugDraw {
 
 	@Override
 	public void draw3dText(Vector3f location, String textString) {
+		System.out.println(textString);
 		// TODO Auto-generated method stub
 
 	}
