@@ -28,12 +28,12 @@ import entities.celestial.Sun;
 import entities.particles.Debris;
 import entities.player.Player;
 import graphics.model.Model;
+import graphics.model.ModelLoader;
 import gui.GUI;
 import gui.menu.PauseMenu;
 
 public class Sandbox {
 	public static void createSandboxWorld(){
-		/* BEGIN PHYSICS DEBUG WORLD CREATION */
 		/* BEGIN SUN */
 		Vector3f sunLocation = new Vector3f(1500.0f, 1500.0f, -2.0f);
 		float sunSize = 150.0f;
@@ -58,9 +58,19 @@ public class Sandbox {
 		/* END BOX */
 		
 		/* BEGIN PLAYER */
-		Entities.player = new Player();
-		Entities.player.location = new Vector3f(-46.766f, 229.257f, -2304.809f);
-		Entities.player.rotation = new Quaternion(0.002583359f, -0.0559893f, 0.9984302f, 0.00012266426f);
+		//Entities.player = new Player();
+		//Entities.player.location = new Vector3f(-46.766f, 229.257f, -2304.809f);
+		//Entities.player.rotation = new Quaternion(0.002583359f, -0.0559893f, 0.9984302f, 0.00012266426f);
+		
+		Vector3f playerLocation = new Vector3f(-107.111f, 198.284f, -659.311f);
+		Quaternion playerRotation = new Quaternion(0.002583359f, -0.0559893f, 0.9984302f, 0.00012266426f);
+		Model playerModel = ModelLoader.loadObjFile("res/models/ships/ship1.obj", 10.0f, TextureManager.SHIP1);
+		float playerMass = 100.0f;
+		float playerRestitution = 1.0f;
+		DynamicEntity player = new DynamicPlayer(playerLocation, playerRotation, playerModel, playerMass, playerRestitution);
+		player.type = "dynamicPlayer";
+		Entities.player = player;
+		
 		/* END PLAYER */
 		
 		
@@ -91,8 +101,6 @@ public class Sandbox {
 		
 		PauseMenu pmenu = new PauseMenu();
 		GUI.addBuffer.add(pmenu);
-		
-		/* END PHYSICS DEBUG WORLD CREATION */
 	}
 	
 	public static void createBox(Vector3f location, Vector3f size){

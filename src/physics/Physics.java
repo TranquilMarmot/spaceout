@@ -59,6 +59,7 @@ public class Physics {
 			Sandbox.addRandomSphere();
 		}
 		
+		// handle the physics debug key
 		if(KeyboardManager.physicsDebug && !debugDown){
 			drawDebug = !drawDebug;
 			debugDown = true;

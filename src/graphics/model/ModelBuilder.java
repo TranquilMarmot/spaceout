@@ -10,8 +10,12 @@ import org.lwjgl.opengl.GL11;
 
 import com.bulletphysics.collision.shapes.BvhTriangleMeshShape;
 import com.bulletphysics.collision.shapes.CollisionShape;
+import com.bulletphysics.collision.shapes.ConvexHullShape;
+import com.bulletphysics.collision.shapes.ConvexShape;
 import com.bulletphysics.collision.shapes.IndexedMesh;
+import com.bulletphysics.collision.shapes.ShapeHull;
 import com.bulletphysics.collision.shapes.TriangleIndexVertexArray;
+import com.bulletphysics.util.ObjectArrayList;
 
 /*
  * NOTENOTENOTE
@@ -33,7 +37,7 @@ public class ModelBuilder {
 	public String name;
 
 	/** the vertices of the model */
-	private ArrayList<Vector3f> vertices;
+	private ObjectArrayList<Vector3f> vertices;
 
 	/** the normals of the model */
 	private ArrayList<Vector3f> normals;
@@ -58,7 +62,7 @@ public class ModelBuilder {
 		 * We have to add a blank element to the beginning of each list, as the obj
 		 * file starts referencing elements at 1, but ArrayLists start at 0
 		 */
-		vertices = new ArrayList<Vector3f>();
+		vertices = new ObjectArrayList<Vector3f>();
 		vertices.add(new Vector3f(0.0f, 0.0f, 0.0f));
 
 		normals = new ArrayList<Vector3f>();
@@ -200,12 +204,22 @@ public class ModelBuilder {
 	public Model makeModel(int texture) {
 		return new Model(buildCollisionShape(), buildCallList(), texture);
 	}
+	
+	private CollisionShape buildCollisionShape(){
+		ConvexShape originalConvexShape = new ConvexHullShape(vertices);
+		
+		ShapeHull hull = new ShapeHull(originalConvexShape);
+		float margin = originalConvexShape.getMargin();
+		hull.buildHull(margin);
+		
+		return new ConvexHullShape(hull.getVertexPointer());
+	}
 
 	/**
 	 * Builds a collision shape based on the current indices.
 	 * @return A CollisionShape representing the model
 	 */
-	private CollisionShape buildCollisionShape() {
+	private CollisionShape buildCollisionShapeOld() {
 		/*
 		 * Each Vector3f in vertices has 3 floats, and each float is 4 bytes so
 		 * we need (number of vertices * 3 floats per vertex * 4 bytes per

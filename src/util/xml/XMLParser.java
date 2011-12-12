@@ -79,7 +79,7 @@ public class XMLParser {
 			
 			p.rotation = QuaternionHelper.getQuaternionFromAngles(yaw, pitch, roll);
 			
-			entities.Entities.player = p;
+			//entities.Entities.player = p;
 		} else{
 			if(entities.Entities.player != null)
 				Debug.console.print("Player already exists!");

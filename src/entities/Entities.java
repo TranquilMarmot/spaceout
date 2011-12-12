@@ -2,6 +2,8 @@ package entities;
 
 import java.util.ArrayList;
 
+import physics.sandbox.DynamicEntity;
+
 import entities.player.Player;
 
 /**
@@ -11,7 +13,7 @@ import entities.player.Player;
  */
 public class Entities {
 	/** player instance */
-	public static Player player;
+	public static DynamicEntity player;
 	/** camera instance */
 	public static Camera camera;
 	
