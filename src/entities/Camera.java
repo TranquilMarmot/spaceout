@@ -225,8 +225,6 @@ public class Camera extends Entity {
 				rotateZ(-delta / 20.0f);
 			if (rollLeft)
 				rotateZ(delta / 20.0f);
-
-		System.out.println(rotation.x + " " + rotation.y + " " + rotation.z);
 		}
 	}
 
