@@ -126,7 +126,7 @@ public class Player extends Entity {
 
 			// shoot bullets if the player clicked
 			if (MouseManager.button0 && !button0Down
-					&& !(Debug.consoleOn)) {
+					&& !Debug.consoleOn) {
 				LaserBullet bullet = new LaserBullet(this.location.x,
 						this.location.y, this.location.z, this.rotation);
 				Entities.addBuffer.add(bullet);

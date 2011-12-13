@@ -25,6 +25,7 @@ public class KeyboardManager {
 	private static int rollLeftKey = Keyboard.KEY_Q;
 	private static int rollRightKey = Keyboard.KEY_E;
 	private static int vanityModeKey = Keyboard.KEY_V;
+	private static int stopKey = Keyboard.KEY_LCONTROL;
 
 	private static int previousConsoleCommandKey = Keyboard.KEY_UP;
 	private static int nextConsoleCommandKey = Keyboard.KEY_DOWN;
@@ -51,6 +52,7 @@ public class KeyboardManager {
 	public static boolean rollLeft;
 	public static boolean rollRight;
 	public static boolean vanityMode;
+	public static boolean stop;
 
 	public static boolean previousConsoleCommand;
 	public static boolean nextConsoleCommand;
@@ -115,6 +117,8 @@ public class KeyboardManager {
 							rollRight = true;
 						else if (eventKey == vanityModeKey)
 							vanityMode = true;
+						else if(eventKey == stopKey)
+							stop = true;
 						/* END CONTROL KEYS */
 					} else {
 						/* BEGIN CONSOLE INPUT */
@@ -167,6 +171,8 @@ public class KeyboardManager {
 							rollRight = false;
 						else if (eventKey == vanityModeKey)
 							vanityMode = false;
+						else if(eventKey == stopKey)
+							stop = false;
 					}/* END CONTROL KEYS */
 
 				}/* END KEY UP EVENTS */
