@@ -11,6 +11,7 @@ import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 import physics.Physics;
+import util.manager.ModelManager;
 import util.manager.TextureManager;
 
 import com.bulletphysics.collision.shapes.BoxShape;
@@ -47,13 +48,13 @@ public class Sandbox {
 		
 		/* BEGIN BOX */
 		Vector3f box0Location = new Vector3f(0.0f, 0.0f, 0.0f);
-		Vector3f box0Size = new Vector3f(1000.0f, 0.001f, 1000.0f);
+		Vector3f box0Size = new Vector3f(1000.0f, 0.1f, 1000.0f);
 		createBox(box0Location, box0Size);
 		/* END BOX */
 		
 		/* BEGIN BOX */
 		Vector3f box1Location = new Vector3f(0.0f, 600.0f, 0.0f);
-		Vector3f box1Size = new Vector3f(1000.0f, 0.001f, 1000.0f);
+		Vector3f box1Size = new Vector3f(1000.0f, 0.1f, 1000.0f);
 		createBox(box1Location, box1Size);
 		/* END BOX */
 		
@@ -64,10 +65,10 @@ public class Sandbox {
 		
 		Vector3f playerLocation = new Vector3f(-107.111f, 198.284f, -659.311f);
 		Quaternion playerRotation = new Quaternion(0.002583359f, -0.0559893f, 0.9984302f, 0.00012266426f);
-		Model playerModel = ModelLoader.loadObjFile("res/models/ships/ship1.obj", 1.0f, TextureManager.SHIP1);
+		Model playerModel = ModelLoader.loadObjFile("res/models/ships/ship1.obj", 0.5f, TextureManager.SHIP1);
 		float playerMass = 100.0f;
 		float playerRestitution = 0.01f;
-		DynamicEntity player = new DynamicPlayer(playerLocation, playerRotation, playerModel, playerMass, playerRestitution);
+		DynamicEntity player = new DynamicPlayer(playerLocation, playerRotation, ModelManager.SHIP1, playerMass, playerRestitution);
 		player.type = "dynamicPlayer";
 		Entities.player = player;
 		
@@ -206,12 +207,12 @@ public class Sandbox {
 		Vector3f sphereLocation = new Vector3f(0.0f + (randy.nextFloat() * 10.0f), 120.0f + (randy.nextFloat() * 10.0f), 0.0f + (randy.nextFloat() * 10.0f));
 		Quaternion sphereRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		
-		float sphereMass = randy.nextFloat() * 100;
+		float sphereMass = randy.nextFloat() * 10;
 		
 		javax.vecmath.Vector3f fallInertia = new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f);
 		sphereShape.calculateLocalInertia(sphereMass, fallInertia);
 		
-		DynamicEntity sphere = new DynamicEntity(sphereLocation, sphereRotation, sphereModel, sphereMass, randy.nextFloat());
+		DynamicEntity sphere = new DynamicEntity(sphereLocation, sphereRotation, sphereModel, sphereMass, 0.01f);
 		sphere.type = "Sphere";
 		Entities.entities.add(sphere);
 	}
