@@ -66,7 +66,7 @@ public class Sandbox {
 		Quaternion playerRotation = new Quaternion(0.002583359f, -0.0559893f, 0.9984302f, 0.00012266426f);
 		Model playerModel = ModelLoader.loadObjFile("res/models/ships/ship1.obj", 1.0f, TextureManager.SHIP1);
 		float playerMass = 100.0f;
-		float playerRestitution = 1.0f;
+		float playerRestitution = 0.01f;
 		DynamicEntity player = new DynamicPlayer(playerLocation, playerRotation, playerModel, playerMass, playerRestitution);
 		player.type = "dynamicPlayer";
 		Entities.player = player;
@@ -162,7 +162,7 @@ public class Sandbox {
 		Vector3f groundLocation = new Vector3f(location.x, location.y, location.z);
 		Quaternion groundRotation = new Quaternion(0.0f, 0.0f, -0.0f, 1.0f);
 		
-		DynamicEntity ground = new DynamicEntity(groundLocation, groundRotation, groundModel, 0.0f, 1.0f);
+		DynamicEntity ground = new DynamicEntity(groundLocation, groundRotation, groundModel, 0.0f, 0.0f);
 		ground.type = "Ground";
 		ground.location = location;
 		Entities.entities.add(ground);

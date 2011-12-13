@@ -105,14 +105,57 @@ public class QuaternionHelper {
 		Quaternion resQuat = new Quaternion(0.0f, 0.0f, 0.0f, 0.0f);
 		
 		// negate the given quaternion
-		Quaternion inverseQuat = new Quaternion(-quat.x, -quat.y, -quat.z, quat.w);
+		Quaternion inverseQuat = new Quaternion(quat.x, quat.y, quat.z, quat.w);
 		
 		// multiply the vector quaternion by the inverse of the given quaternion
-		Quaternion.mul(vecQuat, inverseQuat, resQuat);
+		Quaternion.mul(quat, inverseQuat, resQuat);
 		// then multiply that by the regular quaternion
 		Quaternion.mul(quat, resQuat, resQuat);
 		
 		// return a vector representing the multiplied quaternions
 		return new Vector3f(resQuat.x, resQuat.y, resQuat.z);
+	}
+	
+	public static Vector3f RotateVectorByQuaternion(Vector3f vector, Quaternion quat){
+		Quaternion vecQuat = new Quaternion(vector.x, vector.y, vector.z, 0.0f);
+		
+		Quaternion quatNegate = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		quat.negate(quatNegate);
+		
+		Quaternion resQuat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		Quaternion.mul(vecQuat, quatNegate, resQuat);
+		Quaternion.mul(quat, resQuat, resQuat);
+		
+		return new Vector3f(resQuat.x, resQuat.y, resQuat.z);
+	}
+	
+	public static Quaternion rotateQuaternion(Quaternion quat, Vector3f amount){
+		Quaternion result = new Quaternion(quat.x, quat.y, quat.z, quat.w);
+		
+		if(amount.x != 0){
+			double radHalfAngle = Math.toRadians(((double) amount.x) / 2.0);
+			float sinVal = (float) Math.sin(radHalfAngle);
+			float cosVal = (float) Math.sin(radHalfAngle);
+			Quaternion rot = new Quaternion(sinVal, 0.0f, 0.0f, cosVal);
+			Quaternion.mul(result, rot, result);
+		}
+		
+		if(amount.y != 0){
+			double radHalfAngle = Math.toRadians(((double) amount.y) / 2.0);
+			float sinVal = (float) Math.sin(radHalfAngle);
+			float cosVal = (float) Math.sin(radHalfAngle);
+			Quaternion rot = new Quaternion(0.0f, sinVal, 0.0f, cosVal);
+			Quaternion.mul(result, rot, result);
+		}
+		
+		if(amount.z != 0){
+			double radHalfAngle = Math.toRadians(((double) amount.z) / 2.0);
+			float sinVal = (float) Math.sin(radHalfAngle);
+			float cosVal = (float) Math.sin(radHalfAngle);
+			Quaternion rot = new Quaternion(0.0f, 0.0f, sinVal, cosVal);
+			Quaternion.mul(result, rot, result);
+		}
+		
+		return result;
 	}
 }
