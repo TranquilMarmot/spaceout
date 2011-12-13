@@ -1,5 +1,13 @@
 package util.xml;
 
+import entities.Entities;
+import entities.Entity;
+import entities.Skybox;
+import entities.celestial.Planet;
+import entities.celestial.Sun;
+import entities.particles.Debris;
+import graphics.model.Model;
+
 import java.util.StringTokenizer;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -13,18 +21,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import physics.sandbox.DynamicPlayer;
-
 import util.debug.Debug;
 import util.helper.QuaternionHelper;
 import util.manager.ModelManager;
 import util.manager.TextureManager;
-import entities.Entity;
-import entities.Skybox;
-import entities.celestial.Planet;
-import entities.celestial.Sun;
-import entities.particles.Debris;
-import entities.player.Player;
-import graphics.model.Model;
 
 /**
  * Loads entities from an XML file and puts them into the ArrayList Entities.entities

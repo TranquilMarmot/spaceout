@@ -22,16 +22,11 @@ import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
 
-import entities.Camera;
 import entities.Entities;
 import entities.Skybox;
 import entities.celestial.Sun;
 import entities.particles.Debris;
-import entities.player.Player;
 import graphics.model.Model;
-import graphics.model.ModelLoader;
-import gui.GUI;
-import gui.menu.PauseMenu;
 
 public class Sandbox {
 	public static void createSandboxWorld(){

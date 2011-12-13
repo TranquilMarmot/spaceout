@@ -20,7 +20,7 @@ import entities.Light;
  */
 public class Render3D {
 	/** how far to draw objects */
-	public static float drawDistance = 5000000.0f;
+	public static float drawDistance = 500000.0f;
 	
 	private static FloatBuffer cameraRotBuffer = BufferUtils.createFloatBuffer(16);
 	
