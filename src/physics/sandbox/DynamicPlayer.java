@@ -17,10 +17,10 @@ import util.manager.ModelManager;
 import util.manager.MouseManager;
 
 public class DynamicPlayer extends DynamicEntity{
-	public float xAccel = 1000.0f;
-	public float yAccel = 1000.0f;
-	public float zAccel = 1000.0f;
-	public float bulletSpeed = 100000.0f;
+	public float xAccel = 100.0f;
+	public float yAccel = 100.0f;
+	public float zAccel = 100.0f;
+	public float bulletSpeed = 3500.0f;
 	
 	private boolean button0Down = false;
 	
@@ -60,14 +60,15 @@ public class DynamicPlayer extends DynamicEntity{
 		Vector3f bulletLocation = new Vector3f(this.location.x, this.location.y, this.location.z);
 		Quaternion bulletRotation = new Quaternion(this.rotation.x, this.rotation.y, this.rotation.z, this.rotation.w);
 		
-		Vector3f bulletMoveAmount = new Vector3f(0.0f, 0.0f, 100.0f);
+		Vector3f bulletMoveAmount = new Vector3f(0.0f, 0.0f, 10.0f);
 		bulletMoveAmount = QuaternionHelper.RotateVectorByQuaternion(bulletMoveAmount, bulletRotation);
 		Vector3f.add(bulletLocation, bulletMoveAmount, bulletLocation);
 		
 		int bulletModel = ModelManager.LASERBULLET;
-		float bulletMass = 100.0f;
+		float bulletMass = 10.0f;
 		float bulletRestitution = 1.0f;
 		DynamicEntity bullet = new DynamicEntity(bulletLocation, bulletRotation, bulletModel, bulletMass, bulletRestitution);
+		bullet.type = "bullet";
 		Entities.addBuffer.add(bullet);
 		Vector3f vec = QuaternionHelper.RotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, bulletSpeed), rotation);
 		bullet.rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x, vec.y, vec.z));

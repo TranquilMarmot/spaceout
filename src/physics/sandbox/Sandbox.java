@@ -48,13 +48,13 @@ public class Sandbox {
 		
 		/* BEGIN BOX */
 		Vector3f box0Location = new Vector3f(0.0f, -200.0f, 0.0f);
-		Vector3f box0Size = new Vector3f(1000.0f, 50.0f, 1000.0f);
+		Vector3f box0Size = new Vector3f(500.0f, 1.00f, 500.0f);
 		createBox(box0Location, box0Size);
 		/* END BOX */
 		
 		/* BEGIN BOX */
-		Vector3f box1Location = new Vector3f(0.0f, 600.0f, 0.0f);
-		Vector3f box1Size = new Vector3f(1000.0f, 50.f, 1000.0f);
+		Vector3f box1Location = new Vector3f(0.0f, 200.0f, 0.0f);
+		Vector3f box1Size = new Vector3f(500.0f, 1.00f, 500.0f);
 		createBox(box1Location, box1Size);
 		/* END BOX */
 		
@@ -65,7 +65,7 @@ public class Sandbox {
 		
 		Vector3f playerLocation = new Vector3f(-107.111f, 198.284f, -659.311f);
 		Quaternion playerRotation = new Quaternion(0.002583359f, -0.0559893f, 0.9984302f, 0.00012266426f);
-		float playerMass = 100.0f;
+		float playerMass = 50.0f;
 		float playerRestitution = 0.01f;
 		DynamicEntity player = new DynamicPlayer(playerLocation, playerRotation, ModelManager.SHIP1, playerMass, playerRestitution);
 		player.type = "dynamicPlayer";
@@ -73,28 +73,13 @@ public class Sandbox {
 		
 		/* END PLAYER */
 		
-		
-		/* BEGIN CAMERA */
-		// initialize the camera
-		Entities.camera = new Camera(Entities.player.location.x, Entities.player.location.y, Entities.player.location.z);
-		Entities.camera.zoom = 30.0f;
-		Entities.camera.yOffset = -2.5f;
-		Entities.camera.xOffset = 0.1f;
-		Entities.camera.following = Entities.player;
-		Entities.camera.rotation = new Quaternion(0.087611444f, -0.12701073f, 0.9879578f, 0.011701694f);
-		Entities.camera.vanityMode = false;
-		
-		
-		GUI.menuUp = false;
-		/* END CAMERA */
-		
 		/* BEGIN SKYBOX  */
 		Skybox skybox = new Skybox(Entities.player, 0, 0, 0);
 		Entities.entities.add(skybox);
 		/* END SKYBOX */
 		
 		/* BEGIN DEBRIS */
-		Debris debris = new Debris(Entities.player, 1000, 100000.0f, 420420L);
+		Debris debris = new Debris(Entities.player, 500, 50000.0f, 420420L);
 		debris.update();
 		Entities.entities.add(debris);
 		/* END DEBRIS */
@@ -140,7 +125,7 @@ public class Sandbox {
 			    GL11.glTexCoord2f(1.0f, 1.0f); GL11.glVertex3f(-boxXSize,  boxYSize,  boxZSize);  // Top Right Of The Texture and Quad
 			    GL11.glTexCoord2f(0.0f, 1.0f); GL11.glVertex3f(-boxXSize,  boxYSize, -boxZSize);  // Top Left Of The Texture and Quad
 			    
-			    // Bottom Face
+			    // Top Face
 			    GL11.glTexCoord2f(1.0f, 1.0f); GL11.glVertex3f(-boxXSize, boxYSize, -boxZSize);  // Top Right Of The Texture and Quad
 			    GL11.glTexCoord2f(0.0f, 1.0f); GL11.glVertex3f( boxXSize, boxYSize, -boxZSize);  // Top Left Of The Texture and Quad
 			    GL11.glTexCoord2f(0.0f, 0.0f); GL11.glVertex3f( boxXSize, boxYSize,  boxZSize);  // Bottom Left Of The Texture and Quad

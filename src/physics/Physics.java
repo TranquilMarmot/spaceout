@@ -17,7 +17,7 @@ import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSo
 import com.bulletphysics.linearmath.Clock;
 
 public class Physics {
-	private final static int SUBSTEPS = 7;
+	private final static int SUBSTEPS = 10;
 	
 	public static DiscreteDynamicsWorld dynamicsWorld;
 
@@ -28,7 +28,7 @@ public class Physics {
 	private static Clock clock = new Clock();
 	
 	private static boolean debugDown = false;
-	public static boolean drawDebug = true;
+	public static boolean drawDebug = false;
 
 	public static void initPhysics() {
 		// broadphase interface
