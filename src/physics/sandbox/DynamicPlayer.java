@@ -8,6 +8,7 @@ import graphics.model.Model;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.bulletphysics.linearmath.MotionState;
 import com.bulletphysics.linearmath.Transform;
 
 import util.debug.Debug;
@@ -20,7 +21,7 @@ public class DynamicPlayer extends DynamicEntity{
 	public float xAccel = 100.0f;
 	public float yAccel = 100.0f;
 	public float zAccel = 100.0f;
-	public float bulletSpeed = 3500.0f;
+	public float bulletSpeed = 100.0f;
 	
 	private boolean button0Down = false;
 	
@@ -70,8 +71,11 @@ public class DynamicPlayer extends DynamicEntity{
 		DynamicEntity bullet = new DynamicEntity(bulletLocation, bulletRotation, bulletModel, bulletMass, bulletRestitution);
 		bullet.type = "bullet";
 		Entities.addBuffer.add(bullet);
-		Vector3f vec = QuaternionHelper.RotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, bulletSpeed), rotation);
-		bullet.rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x, vec.y, vec.z));
+		javax.vecmath.Vector3f currentVelocity = new javax.vecmath.Vector3f();
+		rigidBody.getInterpolationLinearVelocity(currentVelocity);
+		Vector3f vec = QuaternionHelper.RotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, currentVelocity.z + bulletSpeed), rotation);
+		bullet.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(vec.x, vec.y, vec.z));
+		//bullet.rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x, vec.y, vec.z));
 	}
 	
 	private void zLogic(){

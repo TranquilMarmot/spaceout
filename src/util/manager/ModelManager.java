@@ -49,7 +49,7 @@ public class ModelManager {
 			ship1 = ModelLoader.loadObjFile(MODEL_PATH + "ships/ship1.obj", 0.125f, TextureManager.SHIP1);
 			break;
 		case LASERBULLET:
-			laserbullet = ModelLoader.loadObjFile(MODEL_PATH + "laserbullet.obj", 2.5f, TextureManager.LASERBULLET);
+			laserbullet = ModelLoader.loadObjFile(MODEL_PATH + "laserbullet.obj", 5.0f, TextureManager.LASERBULLET);
 			break;
 		}
 	}
