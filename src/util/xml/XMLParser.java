@@ -6,13 +6,17 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import physics.sandbox.DynamicPlayer;
+
 import util.debug.Debug;
 import util.helper.QuaternionHelper;
+import util.manager.ModelManager;
 import util.manager.TextureManager;
 import entities.Entity;
 import entities.Skybox;
@@ -20,6 +24,7 @@ import entities.celestial.Planet;
 import entities.celestial.Sun;
 import entities.particles.Debris;
 import entities.player.Player;
+import graphics.model.Model;
 
 /**
  * Loads entities from an XML file and puts them into the ArrayList Entities.entities
@@ -67,19 +72,23 @@ public class XMLParser {
 		 */
 		if(entities.Entities.player == null && playerNode != null && playerNode.getLength() == 1){
 			Element ele = (Element) playerNode.item(0);
-			Player p = new Player();
 
-			p.location.x = getFloat(ele, "x");
-			p.location.y = getFloat(ele, "y");
-			p.location.z = getFloat(ele, "z");
+			float x = getFloat(ele, "x");
+			float y = getFloat(ele, "y");
+			float z = getFloat(ele, "z");
+			Vector3f location = new Vector3f(x, y, z);
 
 			float yaw = getFloat(ele, "yaw");
 			float pitch = getFloat(ele, "pitch");
 			float roll = getFloat(ele, "roll");
+			Quaternion rotation = QuaternionHelper.getQuaternionFromAngles(yaw, pitch, roll);
 			
-			p.rotation = QuaternionHelper.getQuaternionFromAngles(yaw, pitch, roll);
+			Model model = ModelManager.getModel(ModelManager.SHIP1);
 			
-			//entities.Entities.player = p;
+			float mass = 100.0f;
+			float restitution = 0.01f;
+			
+			entities.Entities.player = new DynamicPlayer(location, rotation, model, mass, restitution);;
 		} else{
 			if(entities.Entities.player != null)
 				Debug.console.print("Player already exists!");

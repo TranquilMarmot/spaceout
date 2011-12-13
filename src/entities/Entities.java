@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import physics.sandbox.DynamicEntity;
 
-import entities.player.Player;
-
 /**
  * Handles all the current entities
  * @author TranquilMarmot

@@ -48,13 +48,14 @@ public class Physics {
 		// no gravity, we're in space!
 		dynamicsWorld.setGravity(new Vector3f(0, 0, 0));
 		
+		// see the PhysicsDebugDrawer class
 		dynamicsWorld.setDebugDrawer(new PhysicsDebugDrawer());
 	}
 	
 	public static void update(){
-		//dynamicsWorld.stepSimulation(1.0f / 60.0f, 10);
 		dynamicsWorld.stepSimulation(getDeltaTimeMicroseconds() / 1000000.0f, SUBSTEPS);
 		
+		// FIXME this is temporary
 		if(Keyboard.isKeyDown(Keyboard.KEY_P)){
 			Sandbox.addRandomSphere();
 		}
@@ -67,6 +68,15 @@ public class Physics {
 		if(!KeyboardManager.physicsDebug){
 			debugDown = false;
 		}
+	}
+	
+	public static void cleanup(){
+		dynamicsWorld.destroy();
+		dynamicsWorld = null;
+		broadphase = null;
+		dispatcher = null;
+		solver = null;
+		
 	}
 	
 	private static float getDeltaTimeMicroseconds(){

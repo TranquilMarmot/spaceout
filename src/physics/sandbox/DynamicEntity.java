@@ -113,5 +113,6 @@ public class DynamicEntity extends Entity {
 	@Override
 	public void cleanup() {
 		Physics.dynamicsWorld.removeRigidBody(rigidBody);
+		rigidBody.destroy();
 	}
 }

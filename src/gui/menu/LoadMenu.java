@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 
+import physics.Physics;
 import physics.sandbox.Sandbox;
 import util.debug.Debug;
 import util.helper.DisplayHelper;
@@ -75,6 +76,8 @@ public class LoadMenu extends GUIObject {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
+					Physics.initPhysics();
+					
 					String selectedFile = picker.getSelected().getFile();
 					/* FIXME this if statement is only temporary!!! */
 					if (selectedFile.equals("PhysicsSandbox.xml")) {

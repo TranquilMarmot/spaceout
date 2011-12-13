@@ -61,7 +61,7 @@ public class MainMenu extends GUIObject {
 		done = false;
 
 		// create the button to go to the load menu
-		loadMenuButton = new MenuButton(BUTTON_IMAGE_PATH, "Start Sim", 238,
+		loadMenuButton = new MenuButton(BUTTON_IMAGE_PATH, "Load", 238,
 				55, 0, -40);
 		loadMenuButton.addActionListener(new ActionListener() {
 			@Override

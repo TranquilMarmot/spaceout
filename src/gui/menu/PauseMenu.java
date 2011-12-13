@@ -8,6 +8,8 @@ import gui.button.PauseMenuButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import physics.Physics;
+
 import util.Runner;
 
 /**
@@ -56,6 +58,7 @@ public class PauseMenu extends GUIObject{
 		
 		if(backToMainMenu){
 			Entities.cleanup();
+			Physics.cleanup();
 			GUI.removeBuffer.add(this);
 			GUI.addBuffer.add(new MainMenu());
 		}

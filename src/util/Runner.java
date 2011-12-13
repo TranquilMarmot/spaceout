@@ -81,7 +81,6 @@ public class Runner {
 	private void init() {
 		DisplayHelper.createWindow();
 		Graphics.initGL();
-		Physics.initPhysics();
 
 		/*
 		 * NOTE: Most of the initializing is done on the main menu, see
@@ -122,7 +121,7 @@ public class Runner {
 
 		DisplayHelper.doFullscreenLogic();
 		
-		if(!paused)
+		if(!paused && Physics.dynamicsWorld != null)
 			Physics.update();
 	}
 

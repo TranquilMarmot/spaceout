@@ -39,6 +39,41 @@ public class DynamicPlayer extends DynamicEntity{
 	public void update(){
 		super.update();
 		
+		zLogic();
+		
+		xLogic();
+		
+		yLogic();
+		
+		rotationLogic();
+		
+		if(MouseManager.button0 && !button0Down && !Debug.consoleOn){
+			button0Down = true;
+			shootBullet();
+		}
+		
+		if(!MouseManager.button0)
+			button0Down = false;
+	}
+	
+	private void shootBullet(){
+		Vector3f bulletLocation = new Vector3f(this.location.x, this.location.y, this.location.z);
+		Quaternion bulletRotation = new Quaternion(this.rotation.x, this.rotation.y, this.rotation.z, this.rotation.w);
+		
+		Vector3f bulletMoveAmount = new Vector3f(0.0f, 0.0f, 100.0f);
+		bulletMoveAmount = QuaternionHelper.RotateVectorByQuaternion(bulletMoveAmount, bulletRotation);
+		Vector3f.add(bulletLocation, bulletMoveAmount, bulletLocation);
+		
+		int bulletModel = ModelManager.LASERBULLET;
+		float bulletMass = 100.0f;
+		float bulletRestitution = 1.0f;
+		DynamicEntity bullet = new DynamicEntity(bulletLocation, bulletRotation, bulletModel, bulletMass, bulletRestitution);
+		Entities.addBuffer.add(bullet);
+		Vector3f vec = QuaternionHelper.RotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, bulletSpeed), rotation);
+		bullet.rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x, vec.y, vec.z));
+	}
+	
+	private void zLogic(){
 		boolean forward = KeyboardManager.forward;
 		boolean backward = KeyboardManager.backward;
 		
@@ -52,7 +87,9 @@ public class DynamicPlayer extends DynamicEntity{
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x, vec.y, vec.z));
 			}
 		}
-		
+	}
+	
+	private void xLogic(){
 		boolean left = KeyboardManager.left;
 		boolean right = KeyboardManager.right;
 		
@@ -66,7 +103,9 @@ public class DynamicPlayer extends DynamicEntity{
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x, vec.y, vec.z));
 			}
 		}
-		
+	}
+	
+	private void yLogic(){
 		boolean ascend = KeyboardManager.ascend;
 		boolean descend = KeyboardManager.descend;
 		
@@ -80,7 +119,9 @@ public class DynamicPlayer extends DynamicEntity{
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x, vec.y, vec.z));
 			}
 		}
-		
+	}
+	
+	private void rotationLogic(){
 		if(!Entities.camera.vanityMode){
 			Transform worldTransform = new Transform();
 			rigidBody.getWorldTransform(worldTransform);
@@ -102,26 +143,6 @@ public class DynamicPlayer extends DynamicEntity{
 			
 			rigidBody.setWorldTransform(newTransform);
 		}
-		
-		if(MouseManager.button0 && !button0Down && !Debug.consoleOn){
-			button0Down = true;
-			Vector3f bulletLocation = new Vector3f(this.location.x, this.location.y, this.location.z);
-			Quaternion bulletRotation = new Quaternion(this.rotation.x, this.rotation.y, this.rotation.z, this.rotation.w);
-			
-			Vector3f bulletMoveAmount = new Vector3f(0.0f, 0.0f, 100.0f);
-			QuaternionHelper.RotateVectorByQuaternion(bulletMoveAmount, bulletRotation);
-			
-			Model bulletModel = ModelManager.getModel(ModelManager.LASERBULLET);
-			float bulletMass = 100.0f;
-			float bulletRestitution = 1.0f;
-			DynamicEntity bullet = new DynamicEntity(bulletLocation, bulletRotation, bulletModel, bulletMass, bulletRestitution);
-			Entities.addBuffer.add(bullet);
-			Vector3f vec = QuaternionHelper.RotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, bulletSpeed), rotation);
-			bullet.rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x, vec.y, vec.z));
-		}
-		
-		if(!MouseManager.button0)
-			button0Down = false;
 	}
 
 }

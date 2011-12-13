@@ -47,14 +47,14 @@ public class Sandbox {
 		/* END SUN */
 		
 		/* BEGIN BOX */
-		Vector3f box0Location = new Vector3f(0.0f, 0.0f, 0.0f);
-		Vector3f box0Size = new Vector3f(1000.0f, 0.1f, 1000.0f);
+		Vector3f box0Location = new Vector3f(0.0f, -200.0f, 0.0f);
+		Vector3f box0Size = new Vector3f(1000.0f, 50.0f, 1000.0f);
 		createBox(box0Location, box0Size);
 		/* END BOX */
 		
 		/* BEGIN BOX */
 		Vector3f box1Location = new Vector3f(0.0f, 600.0f, 0.0f);
-		Vector3f box1Size = new Vector3f(1000.0f, 0.1f, 1000.0f);
+		Vector3f box1Size = new Vector3f(1000.0f, 50.f, 1000.0f);
 		createBox(box1Location, box1Size);
 		/* END BOX */
 		
@@ -65,7 +65,6 @@ public class Sandbox {
 		
 		Vector3f playerLocation = new Vector3f(-107.111f, 198.284f, -659.311f);
 		Quaternion playerRotation = new Quaternion(0.002583359f, -0.0559893f, 0.9984302f, 0.00012266426f);
-		Model playerModel = ModelLoader.loadObjFile("res/models/ships/ship1.obj", 0.5f, TextureManager.SHIP1);
 		float playerMass = 100.0f;
 		float playerRestitution = 0.01f;
 		DynamicEntity player = new DynamicPlayer(playerLocation, playerRotation, ModelManager.SHIP1, playerMass, playerRestitution);
@@ -99,9 +98,6 @@ public class Sandbox {
 		debris.update();
 		Entities.entities.add(debris);
 		/* END DEBRIS */
-		
-		PauseMenu pmenu = new PauseMenu();
-		GUI.addBuffer.add(pmenu);
 	}
 	
 	public static void createBox(Vector3f location, Vector3f size){
