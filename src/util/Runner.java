@@ -59,8 +59,6 @@ public class Runner {
 				DisplayHelper.resizeWindow();
 				// update misc stuff (keyboard, mouse, etc.)
 				update();
-				// update all the entities
-				updateEntities();
 				// render the scene
 				Graphics.renderAndUpdateEntities();
 				// update the display (this swaps the buffers)
@@ -123,27 +121,6 @@ public class Runner {
 		
 		if(!paused && Physics.dynamicsWorld != null)
 			Physics.update();
-	}
-
-	/**
-	 * Updates all the entities
-	 */
-	private void updateEntities() {
-		// these two are special so they're updated here
-		if (Entities.player != null)
-			Entities.player.update();
-
-		if (Entities.camera != null)
-			Entities.camera.update();
-
-		/*
-		 * the rest of the entities are updated right before they're rendered to
-		 * decrease the number of loops through Entities.entities In the future,
-		 * Entities.entities should have two threads that can operate on it-
-		 * reading threads and a writing thread The reading threads would be
-		 * used for rendering and collision detection, while the writing thread
-		 * would be used for things like updating locations
-		 */
 	}
 
 	/**

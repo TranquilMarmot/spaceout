@@ -104,6 +104,8 @@ public class Debug {
 			String cameraInfo = zoom.toString();
 			if (Entities.camera.vanityMode)
 				cameraInfo += " (vanity)";
+			else if(Entities.camera.freeMode)
+				cameraInfo += " (free)";
 			font.drawString(3, 135, cameraInfo, Color.blue);
 		}
 

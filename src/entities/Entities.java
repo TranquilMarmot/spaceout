@@ -1,8 +1,10 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
-import physics.sandbox.DynamicEntity;
+import entities.dynamic.DynamicEntity;
+
 
 /**
  * Handles all the current entities
@@ -52,6 +54,28 @@ public class Entities {
 		double total = (double)(xSqr + ySqr + zSqr);
 		
 		return (float)Math.sqrt(total);
+	}
+	
+	public static void checkBuffers(){
+		// add any Entities in the addBuffer
+		if (!addBuffer.isEmpty()) {
+			Iterator<Entity> addIterator = addBuffer.iterator();
+			while (addIterator.hasNext()) {
+				Entity ent = addIterator.next();
+				entities.add(ent);
+				addIterator.remove();
+			}
+		}
+
+		// remove any entities from the removeBuffer
+		if (!removeBuffer.isEmpty()) {
+			Iterator<Entity> removeIterator = removeBuffer.iterator();
+			while (removeIterator.hasNext()) {
+				Entity ent = removeIterator.next();
+				entities.remove(ent);
+				removeIterator.remove();
+			}
+		}
 	}
 	
 	public static void cleanup(){

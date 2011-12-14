@@ -25,6 +25,8 @@ import com.bulletphysics.linearmath.Transform;
 import entities.Entities;
 import entities.Skybox;
 import entities.celestial.Sun;
+import entities.dynamic.DynamicEntity;
+import entities.dynamic.Player;
 import entities.particles.Debris;
 import graphics.model.Model;
 
@@ -54,16 +56,13 @@ public class Sandbox {
 		/* END BOX */
 		
 		/* BEGIN PLAYER */
-		//Entities.player = new Player();
-		//Entities.player.location = new Vector3f(-46.766f, 229.257f, -2304.809f);
-		//Entities.player.rotation = new Quaternion(0.002583359f, -0.0559893f, 0.9984302f, 0.00012266426f);
-		
 		Vector3f playerLocation = new Vector3f(-107.111f, 198.284f, -659.311f);
 		Quaternion playerRotation = new Quaternion(0.002583359f, -0.0559893f, 0.9984302f, 0.00012266426f);
 		float playerMass = 50.0f;
 		float playerRestitution = 0.01f;
-		DynamicEntity player = new DynamicPlayer(playerLocation, playerRotation, ModelManager.SHIP1, playerMass, playerRestitution);
+		DynamicEntity player = new Player(playerLocation, playerRotation, ModelManager.SHIP1, playerMass, playerRestitution);
 		player.type = "dynamicPlayer";
+		player.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(0.001f, 0.001f, 0.001f));
 		Entities.player = player;
 		
 		/* END PLAYER */

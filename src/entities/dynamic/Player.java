@@ -1,16 +1,13 @@
-package physics.sandbox;
-
-import javax.vecmath.Quat4f;
+package entities.dynamic;
 
 import entities.Entities;
 import graphics.model.Model;
 import gui.GUI;
 
+import javax.vecmath.Quat4f;
+
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
-
-import com.bulletphysics.linearmath.MotionState;
-import com.bulletphysics.linearmath.Transform;
 
 import util.Runner;
 import util.debug.Debug;
@@ -19,7 +16,9 @@ import util.manager.KeyboardManager;
 import util.manager.ModelManager;
 import util.manager.MouseManager;
 
-public class DynamicPlayer extends DynamicEntity {
+import com.bulletphysics.linearmath.Transform;
+
+public class Player extends DynamicEntity {
 	public float xAccel = 100.0f;
 	public float yAccel = 100.0f;
 	public float zAccel = 100.0f;
@@ -27,12 +26,12 @@ public class DynamicPlayer extends DynamicEntity {
 
 	private boolean button0Down = false;
 
-	public DynamicPlayer(Vector3f location, Quaternion rotation, int model,
+	public Player(Vector3f location, Quaternion rotation, int model,
 			float mass, float restitution) {
 		super(location, rotation, model, mass, restitution);
 	}
 
-	public DynamicPlayer(Vector3f location, Quaternion rotation, Model model,
+	public Player(Vector3f location, Quaternion rotation, Model model,
 			float mass, float restitution) {
 		super(location, rotation, model, mass, restitution);
 	}
@@ -42,11 +41,11 @@ public class DynamicPlayer extends DynamicEntity {
 		super.update();
 		if (!Runner.paused && !GUI.menuUp && !Entities.camera.freeMode) {
 			zLogic();
-
+			
 			xLogic();
 
 			yLogic();
-
+			
 			rotationLogic();
 
 			if (MouseManager.button0 && !button0Down && !Debug.consoleOn) {
@@ -73,7 +72,7 @@ public class DynamicPlayer extends DynamicEntity {
 		int bulletModel = ModelManager.LASERBULLET;
 		float bulletMass = 10.0f;
 		float bulletRestitution = 1.0f;
-		DynamicBullet bullet = new DynamicBullet(bulletLocation,
+		LaserBullet bullet = new LaserBullet(bulletLocation,
 				bulletRotation, bulletModel, bulletMass, bulletRestitution);
 		bullet.type = "bullet";
 		Entities.addBuffer.add(bullet);

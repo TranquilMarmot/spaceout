@@ -5,6 +5,7 @@ import entities.Entity;
 import entities.Skybox;
 import entities.celestial.Planet;
 import entities.celestial.Sun;
+import entities.dynamic.Player;
 import entities.particles.Debris;
 import graphics.model.Model;
 
@@ -20,7 +21,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import physics.sandbox.DynamicPlayer;
 import util.debug.Debug;
 import util.helper.QuaternionHelper;
 import util.manager.ModelManager;
@@ -88,7 +88,7 @@ public class XMLParser {
 			float mass = 100.0f;
 			float restitution = 0.01f;
 			
-			entities.Entities.player = new DynamicPlayer(location, rotation, model, mass, restitution);;
+			entities.Entities.player = new Player(location, rotation, model, mass, restitution);;
 		} else{
 			if(entities.Entities.player != null)
 				Debug.console.print("Player already exists!");

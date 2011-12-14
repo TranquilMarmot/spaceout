@@ -1,5 +1,6 @@
 package entities.particles;
 
+import java.nio.FloatBuffer;
 import java.util.Random;
 
 import org.lwjgl.BufferUtils;
@@ -20,6 +21,7 @@ import entities.Entity;
  *
  */
 public class Debris extends Entity {
+	private FloatBuffer billboardBuffer;
 	/** array to hold all the stars */
 	public Particle[] particles;
 
@@ -64,7 +66,7 @@ public class Debris extends Entity {
 		
 		rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		// initialize the rotation buffer (this is used for billboarding the particles)
-		rotationBuffer = BufferUtils.createFloatBuffer(16);
+		billboardBuffer = BufferUtils.createFloatBuffer(16);
 		
 		// initialize random number generator
 		randy = new Random(seed);
@@ -199,10 +201,11 @@ public class Debris extends Entity {
 		// we don't want lighting for our particles
 		GL11.glDisable(GL11.GL_LIGHTING);
 		
-		// find the conjugate of the camera's quaternion and put it into the debris field's quaternion
-		Quaternion.negate(Entities.camera.rotation, rotation);
-		// put the rotation quaternion into the rotation buffer
-		QuaternionHelper.toFloatBuffer(rotation, rotationBuffer);
+		Quaternion revQuat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		Entities.camera.rotation.negate(revQuat);
+		
+		// put the camera's rotation quaternion into the rotation buffer
+		QuaternionHelper.toFloatBuffer(revQuat, billboardBuffer);
 		// bind a white texture and color
 		TextureManager.getTexture(TextureManager.WHITE).bind();
 		GL11.glColor3f(0.9f, 0.9f, 0.9f);
@@ -218,9 +221,9 @@ public class Debris extends Entity {
 			{
 				// translate to the star's location
 				GL11.glTranslatef(transx, transy, transz);
-
+				
 				// apply the reverse rotation
-				GL11.glMultMatrix(rotationBuffer);
+				GL11.glMultMatrix(billboardBuffer);
 
 				// draw the star
 				s.draw();

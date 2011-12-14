@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Quaternion;
 import org.newdawn.slick.opengl.Texture;
 
 import physics.Physics;
@@ -97,8 +96,6 @@ public class LoadMenu extends GUIObject {
 					Entities.camera.yOffset = -1.25f;
 					Entities.camera.xOffset = 0.1f;
 					Entities.camera.following = Entities.player;
-					Entities.camera.rotation = new Quaternion(0.087611444f, -0.12701073f, 0.9879578f, 0.011701694f);
-					Entities.camera.vanityMode = false;
 
 					// raise the file loaded flag
 					fileLoaded = true;

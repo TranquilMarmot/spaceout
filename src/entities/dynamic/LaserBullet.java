@@ -1,4 +1,4 @@
-package physics.sandbox;
+package entities.dynamic;
 
 import entities.Entities;
 import graphics.model.Model;
@@ -8,19 +8,19 @@ import org.lwjgl.util.vector.Vector3f;
 
 import util.debug.Debug;
 
-public class DynamicBullet extends DynamicEntity {
+public class LaserBullet extends DynamicEntity {
 	public float life = 1000.0f;
 	public float timeAlive = 0.0f;
 	private long lastUpdate;
 	private javax.vecmath.Vector3f currentSpeed = new javax.vecmath.Vector3f();
 
-	public DynamicBullet(Vector3f location, Quaternion rotation, int model,
+	public LaserBullet(Vector3f location, Quaternion rotation, int model,
 			float mass, float restitution) {
 		super(location, rotation, model, mass, restitution);
 		lastUpdate = Debug.getTime();
 	}
 
-	public DynamicBullet(Vector3f location, Quaternion rotation, Model model,
+	public LaserBullet(Vector3f location, Quaternion rotation, Model model,
 			float mass, float restitution) {
 		super(location, rotation, model, mass, restitution);
 		lastUpdate = Debug.getTime();

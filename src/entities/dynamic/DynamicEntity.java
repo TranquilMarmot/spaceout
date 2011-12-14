@@ -1,14 +1,12 @@
-package physics.sandbox;
+package entities.dynamic;
 
 import javax.vecmath.Quat4f;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 import physics.Physics;
-import util.helper.QuaternionHelper;
 import util.manager.ModelManager;
 
 import com.bulletphysics.collision.shapes.CollisionShape;
@@ -66,8 +64,6 @@ public class DynamicEntity extends Entity {
 		rigidBody = new RigidBody(rigidBodyCI);
 
 		Physics.dynamicsWorld.addRigidBody(rigidBody);
-
-		rotationBuffer = BufferUtils.createFloatBuffer(16);
 	}
 
 	@Override
@@ -87,21 +83,13 @@ public class DynamicEntity extends Entity {
 	public void draw() {
 		model.getTexture().bind();
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
-		GL11.glPushMatrix();
-		{
-			if(Physics.drawDebug)
-				drawPhysicsDebug();
-			
-			Quaternion revQuat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-			rotation.negate(revQuat);
-			QuaternionHelper.toFloatBuffer(revQuat, rotationBuffer);
-			GL11.glMultMatrix(rotationBuffer);
-			GL11.glCallList(model.getCallList());
-		}
-		GL11.glPopMatrix();
+		//if(Physics.drawDebug)
+		//	drawPhysicsDebug();
+
+		GL11.glCallList(model.getCallList());
 	}
 	
-	private void drawPhysicsDebug(){
+	public void drawPhysicsDebug(){
 		Transform worldTransform = new Transform();
 		rigidBody.getWorldTransform(worldTransform);
 		

@@ -24,7 +24,7 @@ public class KeyboardManager {
 	private static int ascendKey = Keyboard.KEY_SPACE;
 	private static int rollLeftKey = Keyboard.KEY_Q;
 	private static int rollRightKey = Keyboard.KEY_E;
-	private static int vanityModeKey = Keyboard.KEY_V;
+	private static int cameraModeKey = Keyboard.KEY_C;
 	private static int stopKey = Keyboard.KEY_LCONTROL;
 
 	private static int previousConsoleCommandKey = Keyboard.KEY_UP;
@@ -51,7 +51,7 @@ public class KeyboardManager {
 	public static boolean ascend;
 	public static boolean rollLeft;
 	public static boolean rollRight;
-	public static boolean vanityMode;
+	public static boolean cameraMode;
 	public static boolean stop;
 
 	public static boolean previousConsoleCommand;
@@ -115,8 +115,8 @@ public class KeyboardManager {
 							rollLeft = true;
 						else if (eventKey == rollRightKey)
 							rollRight = true;
-						else if (eventKey == vanityModeKey)
-							vanityMode = true;
+						else if (eventKey == cameraModeKey)
+							cameraMode = true;
 						else if(eventKey == stopKey)
 							stop = true;
 						/* END CONTROL KEYS */
@@ -169,8 +169,8 @@ public class KeyboardManager {
 							rollLeft = false;
 						else if (eventKey == rollRightKey)
 							rollRight = false;
-						else if (eventKey == vanityModeKey)
-							vanityMode = false;
+						else if (eventKey == cameraModeKey)
+							cameraMode = false;
 						else if(eventKey == stopKey)
 							stop = false;
 					}/* END CONTROL KEYS */

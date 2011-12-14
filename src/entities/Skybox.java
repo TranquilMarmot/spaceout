@@ -48,7 +48,7 @@ public class Skybox extends Entity {
 		
 		//rotationBuffer = BufferUtils.createFloatBuffer(16);
 		
-		model = ModelLoader.loadObjFile(MODEL_PATH + "skybox.obj", Render3D.drawDistance * 0.75f, TextureManager.STARS);
+		model = ModelLoader.loadObjFile(MODEL_PATH + "skybox.obj", Render3D.drawDistance * 0.7f, TextureManager.STARS);
 	}
 
 	@Override

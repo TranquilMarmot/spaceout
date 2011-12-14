@@ -1,6 +1,5 @@
 package entities.celestial;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.Sphere;
@@ -51,17 +50,14 @@ public class Sun extends Light {
 		this.color = color;
 		
 		this.light = light;
-
-		// create the rotation buffer
-		rotationBuffer = BufferUtils.createFloatBuffer(16);
 	}
 
 	@Override
 	public void draw() {
 		// calculate sun's position
-		float transx = Entities.camera.location.x - location.x;
-		float transy = Entities.camera.location.y - location.y;
-		float transz = Entities.camera.location.z - location.z;
+		float transx = Entities.camera.location.x + Entities.camera.xOffset - location.x;
+		float transy = Entities.camera.location.y + Entities.camera.yOffset - location.y;
+		float transz = Entities.camera.location.z - Entities.camera.zoom - location.z;
 
 		// create a FloatBuffer for the light's position
 		lightPosBuffer.clear();
@@ -73,7 +69,6 @@ public class Sun extends Light {
 
 		GL11.glPushMatrix();
 		{
-			// translate to the sun's location
 			GL11.glTranslatef(transx, transy, transz);
 			// disable lighting to draw the sun, oh the irony
 			GL11.glDisable(GL11.GL_LIGHTING);

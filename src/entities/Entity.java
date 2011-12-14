@@ -1,11 +1,8 @@
 package entities;
 
-import java.nio.FloatBuffer;
-
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-import util.debug.Debug;
 import util.helper.QuaternionHelper;
 
 /**
@@ -19,15 +16,9 @@ public abstract class Entity {
 
 	/** quaternion representing rotation */
 	public Quaternion rotation;
-	
-	/** buffer used to apply rotation to an OpenGL matrix */
-	protected FloatBuffer rotationBuffer;
 
 	/** type, used for lots of things */
 	public String type;
-	
-	/** the model to use for this entity- see ModelManager*/
-	public int model;
 
 	/**
 	 * Entity constructor
@@ -37,6 +28,21 @@ public abstract class Entity {
 		rotation = new Quaternion(1.0f, 0.0f, 0.0f, 1.0f);
 		type = "entity";
 	}
+	
+	/**
+	 * Updates this entity
+	 */
+	public abstract void update();
+
+	/**
+	 * Draws this entity
+	 */
+	public abstract void draw();
+	
+	/**
+	 * Have the entity provide any necessary clenup procedures, like gettting rid of textures
+	 */
+	public abstract void cleanup();
 
 	/**
 	 * Rotate this entity along the X axis
@@ -79,19 +85,37 @@ public abstract class Entity {
 		Quaternion rot = new Quaternion(0.0f, 0.0f, sinVal, cosVal);
 		Quaternion.mul(rotation, rot, rotation);
 	}
-
-	/**
-	 * Updates this entity
-	 */
-	public abstract void update();
-
-	/**
-	 * Draws this entity
-	 */
-	public abstract void draw();
 	
 	/**
-	 * Have the entity provide any necessary clenup procedures, like gettting rid of textures
+	 * Move this entity along the X axis
+	 * 
+	 * @param amount
+	 *            Amount to move this entity
 	 */
-	public abstract void cleanup();
+	public void moveX(float amount) {
+		Vector3f multi = QuaternionHelper.RotateVectorByQuaternion(new Vector3f(amount, 0.0f, 0.0f), rotation);
+		Vector3f.add(location, multi, location);
+	}
+
+	/**
+	 * Move this entity along the Y axis
+	 * 
+	 * @param amount
+	 *            Amount to move this entity
+	 */
+	public void moveY(float amount) {
+		Vector3f multi = QuaternionHelper.RotateVectorByQuaternion(new Vector3f(0.0f, amount, 0.0f), rotation);
+		Vector3f.add(location, multi, location);
+	}
+
+	/**
+	 * Move this entity along the Z axis
+	 * 
+	 * @param amount
+	 *            Amount to move this entity
+	 */
+	public void moveZ(float amount) {
+		Vector3f multi = QuaternionHelper.RotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, amount), rotation);
+		Vector3f.add(location, multi, location);
+	}
 }
