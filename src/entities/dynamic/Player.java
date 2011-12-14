@@ -4,8 +4,6 @@ import entities.Entities;
 import graphics.model.Model;
 import gui.GUI;
 
-import javax.vecmath.Quat4f;
-
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -17,8 +15,6 @@ import util.manager.ModelManager;
 import util.manager.MouseManager;
 
 import com.bulletphysics.collision.dispatch.CollisionObject;
-import com.bulletphysics.linearmath.DefaultMotionState;
-import com.bulletphysics.linearmath.Transform;
 
 public class Player extends DynamicEntity {
 	public float xAccel = 100.0f;
@@ -67,7 +63,6 @@ public class Player extends DynamicEntity {
 				button0Down = false;
 			
 			if(KeyboardManager.stop && !stopDown){
-				rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
 				rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
 				stopDown = true;
 			}
