@@ -4,6 +4,7 @@ import java.util.Formatter;
 
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
@@ -12,6 +13,7 @@ import org.newdawn.slick.font.effects.ColorEffect;
 import util.Runner;
 import util.debug.console.Console;
 import util.helper.DisplayHelper;
+import util.helper.QuaternionHelper;
 import util.manager.TextureManager;
 import entities.Entities;
 
@@ -77,49 +79,58 @@ public class Debug {
 			// change blending and draw the rectangle
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
 			GL11.glCallList(rectangleCallList);
-			
+
 			// change blending for font drawing
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			
+
 			// formats the coordinates
 			Formatter coords = new Formatter();
-			coords.format("x: %,09.3f%n" + "y: %,09.3f%n" + "z: %,09.3f%n",
-					Entities.player.location.x, Entities.player.location.y,
-					Entities.player.location.z);
-			
+			if (!Entities.camera.freeMode) {
+				coords.format("x: %,09.3f%n" + "y: %,09.3f%n" + "z: %,09.3f%n",
+						Entities.player.location.x, Entities.player.location.y,
+						Entities.player.location.z);
+			} else {
+				coords.format("x: %,09.3f%n" + "y: %,09.3f%n" + "z: %,09.3f%n",
+						Entities.camera.location.x, Entities.camera.location.y,
+						Entities.camera.location.z);
+			}
+
 			// draw coordinates
 			font.drawString(3, 3, coords.toString(), Color.cyan);
+
+			Vector3f angles;
+			if(!Entities.camera.freeMode)
+				angles = QuaternionHelper.getEulerAnglesFromQuaternion(Entities.player.rotation);
+			else 
+				angles = QuaternionHelper.getEulerAnglesFromQuaternion(Entities.camera.rotation);
 			
-			// draw quaternion info
-			font.drawString(3, 59, "quatX: " + Entities.player.rotation.x
-					+ "\nquatY: " + Entities.player.rotation.y + "\nquatZ: "
-					+ Entities.player.rotation.z + "\nquatW: "
-					+ Entities.player.rotation.w, new Color(0, 123, 255));
-			
+			font.drawString(3, 59, "roll: " + angles.x
+					+ "\npitch: " + angles.y + "\nyaw: "
+					+ angles.z, new Color(0, 123, 255));
+
 			Formatter zoom = new Formatter();
 			zoom.format("zoom: %,04.2f", Entities.camera.zoom);
-			
+
 			// draw camera info
-			//String cameraInfo = "zoom: " + Entities.camera.zoom;
 			String cameraInfo = zoom.toString();
 			if (Entities.camera.vanityMode)
-				cameraInfo += " (vanity)";
-			else if(Entities.camera.freeMode)
-				cameraInfo += " (free)";
-			font.drawString(3, 135, cameraInfo, Color.blue);
+				cameraInfo += "\n(vanity)";
+			else if (Entities.camera.freeMode)
+				cameraInfo += "\n(free)";
+			font.drawString(3, 114, cameraInfo, Color.blue);
 		}
 
 		drawVersion();
-		
+
 		// draw the current fps
 		font.drawString(DisplayHelper.windowWidth - 70, font.getDescent() + 25,
 				currentFPS + " fps");
 	}
-	
+
 	/**
 	 * Draws what version the game is in the top left of the screen
 	 */
-	public static void drawVersion(){
+	public static void drawVersion() {
 		// draw what version of Spaceout this is
 		font.drawString(DisplayHelper.windowWidth - 70, font.getDescent() + 5,
 				Runner.VERSION);

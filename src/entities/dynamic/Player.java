@@ -16,6 +16,8 @@ import util.manager.KeyboardManager;
 import util.manager.ModelManager;
 import util.manager.MouseManager;
 
+import com.bulletphysics.collision.dispatch.CollisionObject;
+import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
 
 public class Player extends DynamicEntity {
@@ -25,10 +27,16 @@ public class Player extends DynamicEntity {
 	public float bulletSpeed = 250.0f;
 
 	private boolean button0Down = false;
-
+	private boolean stopDown = false;
+	
+	private float rollSpeed = 10.0f;
+	
 	public Player(Vector3f location, Quaternion rotation, int model,
 			float mass, float restitution) {
 		super(location, rotation, model, mass, restitution);
+		//System.out.println(rigidBody.getDeactivationTime());
+		//rigidBody.setDeactivationTime(1000.0f);
+		rigidBody.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 	}
 
 	public Player(Vector3f location, Quaternion rotation, Model model,
@@ -40,6 +48,8 @@ public class Player extends DynamicEntity {
 	public void update() {
 		super.update();
 		if (!Runner.paused && !GUI.menuUp && !Entities.camera.freeMode) {
+			if(!rigidBody.isActive())
+				rigidBody.activate();
 			zLogic();
 			
 			xLogic();
@@ -55,6 +65,14 @@ public class Player extends DynamicEntity {
 
 			if (!MouseManager.button0)
 				button0Down = false;
+			
+			if(KeyboardManager.stop && !stopDown){
+				rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
+				rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
+				stopDown = true;
+			}
+			if(!KeyboardManager.stop)
+				stopDown = false;
 		}
 	}
 
@@ -148,6 +166,28 @@ public class Player extends DynamicEntity {
 
 	private void rotationLogic() {
 		if (!Entities.camera.vanityMode) {
+			Vector3f xTorque = new Vector3f(-MouseManager.dy, 0.0f, 0.0f);
+			xTorque = QuaternionHelper.RotateVectorByQuaternion(xTorque, rotation);
+			rigidBody.applyTorqueImpulse(new javax.vecmath.Vector3f(xTorque.x, xTorque.y, xTorque.z));
+			
+			Vector3f yTorque = new Vector3f(0.0f, MouseManager.dx, 0.0f);
+			yTorque = QuaternionHelper.RotateVectorByQuaternion(yTorque, rotation);
+			rigidBody.applyTorqueImpulse(new javax.vecmath.Vector3f(yTorque.x, yTorque.y, yTorque.z));
+			
+			boolean rollRight = KeyboardManager.rollRight;
+			boolean rollLeft = KeyboardManager.rollLeft;
+			
+			if(rollRight || rollLeft){
+				Vector3f zTorque;
+				if(rollRight)
+					zTorque = new Vector3f(0.0f, 0.0f, rollSpeed);
+				else
+					zTorque = new Vector3f(0.0f, 0.0f, -rollSpeed);
+				zTorque = QuaternionHelper.RotateVectorByQuaternion(zTorque, rotation);
+				rigidBody.applyTorqueImpulse(new javax.vecmath.Vector3f(zTorque.x, zTorque.y, zTorque.z));
+			}
+			
+			/*
 			Transform worldTransform = new Transform();
 			rigidBody.getWorldTransform(worldTransform);
 
@@ -168,6 +208,7 @@ public class Player extends DynamicEntity {
 					rotation.z, rotation.w));
 
 			rigidBody.setWorldTransform(newTransform);
+			*/
 		}
 	}
 

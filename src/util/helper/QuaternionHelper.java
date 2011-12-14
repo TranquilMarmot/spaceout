@@ -158,4 +158,23 @@ public class QuaternionHelper {
 		
 		return result;
 	}
+	
+	public static Vector3f getEulerAnglesFromQuaternion(Quaternion quat){
+		// x y z w
+		// 0 1 2 3
+		float xn = (2 * ((quat.x * quat.y) + (quat.z * quat.w))) / (1 - (2 * ((quat.y * quat.y) + (quat.z * quat.z))));
+		float x = (float)(Math.atan((double)xn));
+		
+		float yn = 2 * ((quat.x * quat.z) - (quat.w * quat.y));
+		float y = (float)(Math.asin((double)yn));
+		
+		float zn = (2 * ((quat.x * quat.w) + (quat.y * quat.z))) / (1 - (2 * ((quat.z * quat.z) + (quat.w * quat.w))));
+		float z = (float)(Math.atan((double)zn));
+		
+		x = x * (180.0f / (float)Math.PI);
+		y = y * (180.0f / (float)Math.PI);
+		z = z * (180.0f / (float)Math.PI);
+		
+		return new Vector3f(x, y, z);
+	}
 }
