@@ -1,6 +1,5 @@
 package util;
 
-import entities.Entities;
 import graphics.render.Graphics;
 import gui.GUI;
 import gui.menu.MainMenu;
@@ -9,7 +8,6 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
 import physics.Physics;
-
 import util.debug.Debug;
 import util.helper.DisplayHelper;
 import util.manager.KeyboardManager;

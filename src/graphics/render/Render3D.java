@@ -7,17 +7,15 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Quaternion;
-import org.lwjgl.util.vector.Vector3f;
 
 import physics.Physics;
-
 import util.helper.DisplayHelper;
 import util.helper.QuaternionHelper;
 import entities.Entities;
 import entities.Entity;
 import entities.Light;
-import entities.dynamic.LaserBullet;
 import entities.dynamic.DynamicEntity;
+import entities.dynamic.LaserBullet;
 
 /**
  * Handles all 3D rendering. For the moment, also updates Entities.entities.
