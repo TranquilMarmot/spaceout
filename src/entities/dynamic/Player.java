@@ -25,6 +25,9 @@ public class Player extends DynamicEntity {
 	private boolean button0Down = false;
 	private boolean stopDown = false;
 	
+	private javax.vecmath.Vector3f angularVelocity = new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f);
+	private float stabilizationSpeed = 0.010f;
+	
 	private float rollSpeed = 10.0f;
 	
 	public Player(Vector3f location, Quaternion rotation, int model,
@@ -62,12 +65,55 @@ public class Player extends DynamicEntity {
 			if (!MouseManager.button0)
 				button0Down = false;
 			
-			if(KeyboardManager.stop && !stopDown){
-				rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
-				stopDown = true;
+			if(KeyboardManager.stop /*&& !stopDown*/){
+				rigidBody.getAngularVelocity(angularVelocity);
+				System.out.println(angularVelocity.x + "  " + angularVelocity.y + "  " + angularVelocity.z);
+				float stableX = angularVelocity.x;
+				if(stableX > 0){
+					stableX -= stabilizationSpeed;
+					if(stableX < 0.0f)
+						stableX = 0.0f;
+				} else if(stableX < 0){
+					stableX += stabilizationSpeed;
+					if(stableX > 0.0f)
+						stableX = 0.0f;
+				} else{
+					stableX = 0.0f;
+				}
+				
+				float stableY = angularVelocity.y;
+				if(stableY > 0){
+					stableY -= stabilizationSpeed;
+					if(stableY < 0.0f)
+						stableY = 0.0f;
+				} else if(stableY < 0){
+					stableY += stabilizationSpeed;
+					if(stableY > 0.0f)
+						stableY = 0.0f;
+				} else{
+					stableY = 0.0f;
+				}
+				
+				float stableZ = angularVelocity.z;
+				if(stableZ > 0){
+					stableZ -= stabilizationSpeed;
+					if(stableZ < 0.0f)
+						stableZ = 0.0f;
+				} else if(stableZ < 0){
+					stableZ += stabilizationSpeed;
+					if(stableZ > 0.0f)
+						stableZ = 0.0f;
+				} else{
+					stableX = 0.0f;
+				}
+				
+				rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(stableX, stableY, stableZ));
+				//stopDown = true;
 			}
+			/*
 			if(!KeyboardManager.stop)
 				stopDown = false;
+				*/
 		}
 	}
 
