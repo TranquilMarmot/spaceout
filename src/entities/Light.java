@@ -16,8 +16,7 @@ import org.lwjgl.util.vector.Vector3f;
 public abstract class Light extends Entity{
 	// buffers used for lighting
 	protected FloatBuffer lightPosBuffer;
-	protected FloatBuffer diffuseLightBuffer;
-	protected FloatBuffer ambientLightBuffer;
+	protected FloatBuffer colorBuffer;
 	
 	protected int light;
 	/**
@@ -37,6 +36,35 @@ public abstract class Light extends Entity{
 		this.location = location;
 		this.light = light;
 		
+		initLight(location, ambient, diffuse);
+	}
+	
+	/**
+	 * Sets up the light with OpenGL
+	 */
+	private void initLight(Vector3f location, float[] ambient, float[] diffuse){
+		// we'll use light1 for the sun
+		GL11.glEnable(light);
+
+		colorBuffer = BufferUtils.createFloatBuffer(4);
+		// set up ambient and diffuse light
+		colorBuffer.put(diffuse[0]);
+		colorBuffer.put(diffuse[1]);
+		colorBuffer.put(diffuse[2]);
+		colorBuffer.put(1.0f);
+		colorBuffer.rewind();
+		GL11.glLight(light, GL11.GL_DIFFUSE, colorBuffer);
+		
+
+		colorBuffer.clear();
+		colorBuffer.put(ambient[0]);
+		colorBuffer.put(ambient[1]);
+		colorBuffer.put(ambient[2]);
+		colorBuffer.put(1.0f);
+		colorBuffer.rewind();
+		GL11.glLight(light, GL11.GL_AMBIENT, colorBuffer);
+		
+		
 		// set up light position
 		lightPosBuffer = BufferUtils.createFloatBuffer(4);
 		lightPosBuffer.put(location.x);
@@ -44,36 +72,24 @@ public abstract class Light extends Entity{
 		lightPosBuffer.put(location.z);
 		lightPosBuffer.put(1.0f);
 		lightPosBuffer.rewind();
-
-		// set up diffuse lighting
-		diffuseLightBuffer = BufferUtils.createFloatBuffer(4);
-		diffuseLightBuffer.put(diffuse[0]);
-		diffuseLightBuffer.put(diffuse[1]);
-		diffuseLightBuffer.put(diffuse[2]);
-		diffuseLightBuffer.put(1.0f);
-		diffuseLightBuffer.rewind();
-
-		// set up ambient lighting
-		ambientLightBuffer = BufferUtils.createFloatBuffer(4);
-		ambientLightBuffer.put(ambient[0]);
-		ambientLightBuffer.put(ambient[1]);
-		ambientLightBuffer.put(ambient[2]);
-		ambientLightBuffer.put(1.0f);
-		ambientLightBuffer.rewind();
-		
-		setUpLight();
+		GL11.glLight(light, GL11.GL_POSITION, lightPosBuffer);
 	}
 	
-	/**
-	 * Sets up the light with OpenGL
-	 */
-	private void setUpLight(){
-		// we'll use light1 for the sun
-		GL11.glEnable(light);
-
-		// set up ambient and diffuse light
-		GL11.glLight(light, GL11.GL_DIFFUSE, diffuseLightBuffer);
-		GL11.glLight(light, GL11.GL_AMBIENT, ambientLightBuffer);
+	public void setUpLight(){
+		// calculate sun's position
+		float transx = Entities.camera.location.x - location.x;
+		float transy = Entities.camera.location.y - location.y;
+		float transz = Entities.camera.location.z - location.z;
+		
+		// create a FloatBuffer for the light's position
+		lightPosBuffer.clear();
+		lightPosBuffer.put(transx);
+		lightPosBuffer.put(transy);
+		lightPosBuffer.put(transz);
+		lightPosBuffer.put(1.0f);
+		lightPosBuffer.rewind();
+		
+		GL11.glLight(light, GL11.GL_POSITION, lightPosBuffer);
 	}
 	
 	@Override

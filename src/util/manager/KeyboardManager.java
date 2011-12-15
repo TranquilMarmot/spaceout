@@ -25,8 +25,8 @@ public class KeyboardManager {
 	private static int rollLeftKey = Keyboard.KEY_Q;
 	private static int rollRightKey = Keyboard.KEY_E;
 	private static int cameraModeKey = Keyboard.KEY_C;
-	private static int stabilizeKey = Keyboard.KEY_F;
-	private static int stopKey = Keyboard.KEY_LCONTROL;
+	private static int stabilizeKey = Keyboard.KEY_LCONTROL;
+	private static int stopKey = Keyboard.KEY_F;
 
 	private static int previousConsoleCommandKey = Keyboard.KEY_UP;
 	private static int nextConsoleCommandKey = Keyboard.KEY_DOWN;

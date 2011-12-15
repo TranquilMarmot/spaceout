@@ -47,6 +47,14 @@ public class Render3D {
 		// set up lights
 		setUpLighting();
 		
+		transformToCamera();
+
+		drawLights();
+		drawEntities();
+		drawPlayer();
+	}
+	
+	private static void transformToCamera(){
 		// handle any camera offset
 		GL11.glTranslatef(Entities.camera.xOffset, Entities.camera.yOffset,
 				-Entities.camera.zoom);
@@ -55,13 +63,9 @@ public class Render3D {
 		QuaternionHelper.toFloatBuffer(Entities.camera.rotation,
 				cameraRotBuffer);
 		GL11.glMultMatrix(cameraRotBuffer);
-		
-		// l.draw() should set up any light that the entity owns, and then
-		// draw the entity itself. Lights need to be the first things set up in the scene.
-		for (Light l : Entities.lights) {
-			l.draw();
-		}
-
+	}
+	
+	private static void drawEntities(){
 		Iterator<Entity> entityIterator = Entities.entities.iterator();
 		while (entityIterator.hasNext()) {
 			Entity ent = entityIterator.next();
@@ -90,8 +94,27 @@ public class Render3D {
 				ent.draw();
 			}GL11.glPopMatrix();
 		}
-		
-		/* BEGIN PLAYER DRAWING */
+	}
+	
+	private static void drawLights(){
+		Iterator<Light> entityIterator = Entities.lights.iterator();
+		while (entityIterator.hasNext()) {
+			Light ent = entityIterator.next();
+			
+			// figure out where to translate to
+			float transX = Entities.camera.location.x - ent.location.x;
+			float transY = Entities.camera.location.y - ent.location.y;
+			float transZ = Entities.camera.location.z - ent.location.z;
+
+			GL11.glPushMatrix();{
+				GL11.glTranslatef(transX, transY, transZ);
+				
+				ent.draw();
+			}GL11.glPopMatrix();
+		}
+	}
+	
+	private static void drawPlayer(){
 		float transX = Entities.camera.location.x - Entities.player.location.x;
 		float transY = Entities.camera.location.y - Entities.player.location.y;
 		float transZ = Entities.camera.location.z - Entities.player.location.z;
@@ -106,7 +129,6 @@ public class Render3D {
 			
 			Entities.player.draw();
 		}GL11.glPopMatrix();
-		/* END PLAYER DRAWING */
 	}
 
 	/**
@@ -117,6 +139,10 @@ public class Render3D {
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glLightModeli(GL11.GL_LIGHT_MODEL_LOCAL_VIEWER, GL11.GL_TRUE);
 		GL11.glLightModeli(GL11.GL_LIGHT_MODEL_TWO_SIDE, GL11.GL_TRUE);
+		
+		for (Light l : Entities.lights) {
+			l.setUpLight();
+		}
 	}
 
 	/**
