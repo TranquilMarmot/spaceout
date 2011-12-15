@@ -27,6 +27,9 @@ public class Player extends DynamicEntity {
 	private javax.vecmath.Vector3f angularVelocity = new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f);
 	private float stabilizationSpeed = 40.0f;
 	
+	private javax.vecmath.Vector3f linearVelocity = new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f);
+	private float stopSpeed = 40.0f;
+	
 	private float rollSpeed = 10.0f;
 	
 	public Player(Vector3f location, Quaternion rotation, int model,
@@ -65,7 +68,20 @@ public class Player extends DynamicEntity {
 			
 			if(KeyboardManager.stabilize)
 				stabilize();
+			
+			if(KeyboardManager.stop)
+				stop();
 		}
+	}
+	
+	private void stop(){
+		rigidBody.getLinearVelocity(linearVelocity);
+		
+		float stopX = linearVelocity.x - (linearVelocity.x / stopSpeed);
+		float stopY = linearVelocity.y - (linearVelocity.y / stopSpeed);
+		float stopZ = linearVelocity.z - (linearVelocity.z / stopSpeed);
+		
+		rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(stopX, stopY, stopZ));
 	}
 	
 	private void stabilize(){

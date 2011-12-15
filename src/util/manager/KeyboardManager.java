@@ -26,6 +26,7 @@ public class KeyboardManager {
 	private static int rollRightKey = Keyboard.KEY_E;
 	private static int cameraModeKey = Keyboard.KEY_C;
 	private static int stabilizeKey = Keyboard.KEY_F;
+	private static int stopKey = Keyboard.KEY_LCONTROL;
 
 	private static int previousConsoleCommandKey = Keyboard.KEY_UP;
 	private static int nextConsoleCommandKey = Keyboard.KEY_DOWN;
@@ -53,6 +54,7 @@ public class KeyboardManager {
 	public static boolean rollRight;
 	public static boolean cameraMode;
 	public static boolean stabilize;
+	public static boolean stop;
 
 	public static boolean previousConsoleCommand;
 	public static boolean nextConsoleCommand;
@@ -119,6 +121,8 @@ public class KeyboardManager {
 							cameraMode = true;
 						else if(eventKey == stabilizeKey)
 							stabilize = true;
+						else if(eventKey == stopKey)
+							stop = true;
 						/* END CONTROL KEYS */
 					} else {
 						/* BEGIN CONSOLE INPUT */
@@ -173,6 +177,8 @@ public class KeyboardManager {
 							cameraMode = false;
 						else if(eventKey == stabilizeKey)
 							stabilize = false;
+						else if(eventKey == stopKey)
+							stop = false;
 					}/* END CONTROL KEYS */
 
 				}/* END KEY UP EVENTS */
