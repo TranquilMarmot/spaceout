@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import entities.dynamic.DynamicEntity;
+import entities.dynamic.Player;
 
 
 /**
@@ -13,7 +14,7 @@ import entities.dynamic.DynamicEntity;
  */
 public class Entities {
 	/** player instance */
-	public static DynamicEntity player;
+	public static Player player;
 	/** camera instance */
 	public static Camera camera;
 	

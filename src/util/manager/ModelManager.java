@@ -46,10 +46,10 @@ public class ModelManager {
 	private static void initModel(int model){
 		switch(model){
 		case SHIP1:
-			ship1 = ModelLoader.loadObjFile(MODEL_PATH + "ships/ship1.obj", 0.125f, TextureManager.SHIP1);
+			ship1 = ModelLoader.loadObjFile(MODEL_PATH + "ships/ship1.obj", 0.04f, TextureManager.SHIP1);
 			break;
 		case LASERBULLET:
-			laserbullet = ModelLoader.loadObjFile(MODEL_PATH + "laserbullet.obj", 5.0f, TextureManager.LASERBULLET);
+			laserbullet = ModelLoader.loadObjFile(MODEL_PATH + "laserbullet.obj", 2.5f, TextureManager.LASERBULLET);
 			break;
 		}
 	}

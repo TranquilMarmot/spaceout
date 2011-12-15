@@ -53,6 +53,8 @@ public class ModelBuilder {
 
 	/** which texture coordinates to call */
 	private ArrayList<int[]> textureIndices;
+	
+	public float maxX, minX, maxY, minY, maxZ, minZ = 0.0f;
 
 	/**
 	 * ModelBuilder initializer
@@ -85,6 +87,22 @@ public class ModelBuilder {
 	 *            The vertex to add
 	 */
 	public void addVertex(Vector3f vertex) {
+		if(vertex.x > maxX)
+			maxX = vertex.x;
+		
+		if(vertex.x < minX)
+			minX = vertex.x;
+		
+		if(vertex.y > maxY)
+			maxY = vertex.y;
+		if(vertex.y < minY)
+			minY = vertex.y;
+		
+		if(vertex.z > maxZ)
+			maxZ = vertex.z;
+		if(vertex.z < minZ)
+			minZ = vertex.z;
+		
 		vertices.add(vertex);
 	}
 
@@ -202,6 +220,7 @@ public class ModelBuilder {
 	 * @return A model built using the current indices
 	 */
 	public Model makeModel(int texture) {
+		System.out.println(maxX * 100.0f + " " + minX * 100.0f + " " + maxY * 100.0f + " " + minY * 100.0f + " " + maxZ * 100.0f + " " + minZ * 100.0f);
 		return new Model(buildCollisionShape(), buildCallList(), texture);
 	}
 	
@@ -213,64 +232,6 @@ public class ModelBuilder {
 		hull.buildHull(margin);
 		
 		return new ConvexHullShape(hull.getVertexPointer());
-	}
-
-	/**
-	 * Builds a collision shape based on the current indices.
-	 * @return A CollisionShape representing the model
-	 */
-	private CollisionShape buildCollisionShapeOld() {
-		/*
-		 * Each Vector3f in vertices has 3 floats, and each float is 4 bytes so
-		 * we need (number of vertices * 3 floats per vertex * 4 bytes per
-		 * float) bytes
-		 */
-		ByteBuffer vertexBase = ByteBuffer
-				.allocate((vertices.size() - 1) * 3 * 4);
-		// ByteBuffer vertexBase = BufferUtils.createByteBuffer(vertices.size()
-		// * 3 * 4);
-		for (int i = 1; i < vertices.size(); i++) {
-			Vector3f vec = vertices.get(i);
-			vertexBase.putFloat(vec.x);
-			vertexBase.putFloat(vec.y);
-			vertexBase.putFloat(vec.z);
-		}
-
-		vertexBase.rewind();
-
-		/*
-		 * Each int[] in vertexIndices has 3 ints, and each int is 4 bytes so we
-		 * need (number of arrays * 3 ints per array * 4 bytes per int) bytes
-		 */
-		ByteBuffer triangleIndexBase = ByteBuffer
-				.allocate(vertexIndices.size() * 3 * 4);
-		// ByteBuffer triangleIndexBase =
-		// BufferUtils.createByteBuffer(vertexIndices.size() * 3 * 4);
-		for (int i = 0; i < vertexIndices.size(); i++) {
-			int[] triangleIndices = vertexIndices.get(i);
-			for (int j : triangleIndices)
-				triangleIndexBase.putInt(j);
-		}
-
-		triangleIndexBase.rewind();
-
-		IndexedMesh imesh = new IndexedMesh();
-		imesh.triangleIndexBase = triangleIndexBase;
-		imesh.numTriangles = vertexIndices.size();
-		// each int is 4 bytes
-		imesh.triangleIndexStride = 1;
-
-		imesh.vertexBase = vertexBase;
-		// size - 1 because first element is a dummy
-		imesh.numVertices = vertices.size() - 1;
-		// each float is 4 bytes
-		imesh.vertexStride = 1;
-
-		TriangleIndexVertexArray vertArr = new TriangleIndexVertexArray();
-
-		vertArr.addIndexedMesh(imesh);
-
-		return new BvhTriangleMeshShape(vertArr, true);
 	}
 
 	/**

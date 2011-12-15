@@ -48,6 +48,12 @@ public class Render3D {
 		setUpLighting();
 		
 		transformToCamera();
+		
+		// l.draw() should set up any light that the entity owns, and then
+		// draw the entity itself. Lights need to be the first things set up in the scene.
+		for (Light l : Entities.lights) {
+			l.setUpLight();
+		}
 
 		drawLights();
 		drawEntities();
@@ -139,10 +145,6 @@ public class Render3D {
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glLightModeli(GL11.GL_LIGHT_MODEL_LOCAL_VIEWER, GL11.GL_TRUE);
 		GL11.glLightModeli(GL11.GL_LIGHT_MODEL_TWO_SIDE, GL11.GL_TRUE);
-		
-		for (Light l : Entities.lights) {
-			l.setUpLight();
-		}
 	}
 
 	/**

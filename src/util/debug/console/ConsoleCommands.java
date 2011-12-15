@@ -3,10 +3,18 @@ package util.debug.console;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
+import javax.vecmath.Quat4f;
+
+import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
+
+import com.bulletphysics.linearmath.DefaultMotionState;
+import com.bulletphysics.linearmath.MotionState;
+import com.bulletphysics.linearmath.Transform;
 
 import util.Runner;
 import util.debug.Debug;
+import util.helper.QuaternionHelper;
 import entities.Entities;
 import entities.Entity;
 
@@ -123,6 +131,13 @@ public class ConsoleCommands {
 
 		console.print("Moving player to x: " + x + " y: " + y + " z: " + z
 				+ " from x: " + oldX + " y: " + oldY + " z: " + oldZ);
+		
+		Transform trans = new Transform();
+		Entities.player.rigidBody.getWorldTransform(trans);
+		
+		trans.transform(new javax.vecmath.Vector3f(x, y, z));
+		
+		Entities.player.rigidBody.setMotionState(new DefaultMotionState(trans));
 
 		Entities.player.location.x = x;
 		Entities.player.location.y = y;
@@ -139,12 +154,23 @@ public class ConsoleCommands {
 		boolean hasWarped = false;
 		String warp = toker.nextToken();
 		for (Entity ent : Entities.entities) {
+			//FIXME does not work
 			if (ent.type.toLowerCase().equals(warp.toLowerCase())) {
 				console.print("Warping Player to " + ent.type + " ("
 						+ ent.location.x + "," + ent.location.y + ","
 						+ ent.location.z + ")");
-				Entities.player.location = new Vector3f(ent.location.x,
-						ent.location.y, ent.location.z);
+				Transform playerTransform = new Transform();
+				Entities.player.rigidBody.getWorldTransform(playerTransform);
+				Vector3f moveAmount = new Vector3f(0.0f, 0.0f, -10.0f);
+				Quat4f playerRot = new Quat4f();
+				playerTransform.getRotation(playerRot);
+				Vector3f rotated = QuaternionHelper.RotateVectorByQuaternion(moveAmount, new Quaternion(playerRot.x, playerRot.y, playerRot.z, playerRot.w));
+				Vector3f newLocation = new Vector3f();
+				Vector3f.add(new Vector3f(ent.location.x, ent.location.y, ent.location.z), rotated, newLocation);
+				
+				playerTransform.transform(new javax.vecmath.Vector3f(newLocation.x, newLocation.y, newLocation.z));
+				
+				Entities.player.rigidBody.setWorldTransform(playerTransform);
 				hasWarped = true;
 				break;
 			}
@@ -164,70 +190,26 @@ public class ConsoleCommands {
 	private static void speedCommand(StringTokenizer toker) {
 		String speedCommand = toker.nextToken().toLowerCase();
 		Float speedChange = Float.parseFloat(toker.nextToken());
-
-		// max x speed
-		if (speedCommand.equals("maxx") || speedCommand.equals("xmax")) {
-			console.print("Changing player max X speed from "
-					+ Entities.player.maxXSpeed + " to " + speedChange);
-			Entities.player.maxXSpeed = speedChange;
-		}
-
-		// max y speed
-		else if (speedCommand.equals("maxy") || speedCommand.equals("ymax")) {
-			console.print("Changing player max Y speed from "
-					+ Entities.player.maxYSpeed + " to " + speedChange);
-			Entities.player.maxYSpeed = speedChange;
-		}
-
-		// max z speed
-		else if (speedCommand.equals("maxz") || speedCommand.equals("zmax")) {
-			console.print("Changing player max Z speed from "
-					+ Entities.player.maxZSpeed + " to " + speedChange);
-			Entities.player.maxZSpeed = speedChange;
-		}
-
-		// x acceleration
-		else if (speedCommand.equals("accelx") || speedCommand.equals("xaccel")) {
-			console.print("Changing player X acceleration from "
-					+ Entities.player.xAccel + " to " + speedChange);
+		
+		if(speedCommand.equals("x")){
+			console.print("Changing player X acceleration from " + Entities.player.xAccel + " to " + speedChange);
 			Entities.player.xAccel = speedChange;
-		}
-
-		// y acceleration
-		else if (speedCommand.equals("accely") || speedCommand.equals("yaccel")) {
-			console.print("Changing player Y acceleration from "
-					+ Entities.player.yAccel + " to " + speedChange);
+		} else if(speedCommand.equals("y")){
+			console.print("Changing player Y acceleration from " + Entities.player.yAccel + " to " + speedChange);
 			Entities.player.yAccel = speedChange;
-		}
-
-		// z acceleration
-		else if (speedCommand.equals("accelz") || speedCommand.equals("zaccel")) {
-			console.print("Changing player Z acceleration from "
-					+ Entities.player.zAccel + " to " + speedChange);
+		} else if(speedCommand.equals("z")){
+			console.print("Changing player Z acceleration from " + Entities.player.zAccel + " to " + speedChange);
 			Entities.player.zAccel = speedChange;
+		} else if(speedCommand.equals("stable")){
+			console.print("Changing player stabilization speed from " + Entities.player.stabilizationSpeed + " to " + speedChange);
+			Entities.player.stabilizationSpeed = speedChange;
+		} else if(speedCommand.equals("stop")){
+			console.print("Changing player stop speed from " + Entities.player.stopSpeed + " to " + speedChange);
+			Entities.player.stopSpeed = speedChange;
+		} else if(speedCommand.equals("roll")){
+			console.print("Changing player roll speed from " + Entities.player.rollSpeed + " to " + speedChange);
+			Entities.player.rollSpeed = speedChange;
 		}
-
-		// x deceleration
-		else if (speedCommand.equals("decelx") || speedCommand.equals("xdecel")) {
-			console.print("Changing player X deceleration from "
-					+ Entities.player.xDecel + " to " + speedChange);
-			Entities.player.xDecel = speedChange;
-		}
-
-		// y deceleration
-		else if (speedCommand.equals("decely") || speedCommand.equals("ydecel")) {
-			console.print("Changing player Y deceleration from "
-					+ Entities.player.yDecel + " to " + speedChange);
-			Entities.player.yDecel = speedChange;
-		}
-
-		// z deceleration
-		else if (speedCommand.equals("decelz") || speedCommand.equals("zdecel")) {
-			console.print("Changing player Z deceleration from "
-					+ Entities.player.zDecel + " to " + speedChange);
-			Entities.player.zDecel = speedChange;
-		}
-
 		// invalid
 		else {
 			console.print("Not a valid speed command!");

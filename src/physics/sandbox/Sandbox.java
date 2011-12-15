@@ -60,9 +60,8 @@ public class Sandbox {
 		Quaternion playerRotation = new Quaternion(0.002583359f, -0.0559893f, 0.9984302f, 0.00012266426f);
 		float playerMass = 50.0f;
 		float playerRestitution = 0.01f;
-		DynamicEntity player = new Player(playerLocation, playerRotation, ModelManager.SHIP1, playerMass, playerRestitution);
+		Player player = new Player(playerLocation, playerRotation, ModelManager.SHIP1, playerMass, playerRestitution);
 		player.type = "dynamicPlayer";
-		player.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(0.001f, 0.001f, 0.001f));
 		Entities.player = player;
 		
 		/* END PLAYER */
@@ -147,7 +146,8 @@ public class Sandbox {
 	
 	public static void addRandomSphere(){
 		Random randy = new Random();
-		float sphereSize = randy.nextInt(250) / 10.0f;
+		//float sphereSize = randy.nextInt(250) / 10.0f;
+		float sphereSize = 63.71f;
 		CollisionShape sphereShape = new SphereShape(sphereSize);
 		
 		Sphere drawSphere = new Sphere();
@@ -179,10 +179,11 @@ public class Sandbox {
 		
 		Model sphereModel = new Model(sphereShape, sphereCallList, sphereTexture);
 		
-		Vector3f sphereLocation = new Vector3f(0.0f + (randy.nextFloat() * 50.0f), 0.0f + (randy.nextFloat() * 50.0f), 0.0f + (randy.nextFloat() * 50.0f));
+		Vector3f sphereLocation = new Vector3f(0.0f + (randy.nextFloat() * 1000.0f), 0.0f + (randy.nextFloat() * 1000.0f), 0.0f + (randy.nextFloat() * 1000.0f));
 		Quaternion sphereRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		
-		float sphereMass = randy.nextFloat() * 10;
+		//float sphereMass = randy.nextFloat() * 10000000.0f;
+		float sphereMass = 59736000000000000000000.0f;
 		
 		javax.vecmath.Vector3f fallInertia = new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f);
 		sphereShape.calculateLocalInertia(sphereMass, fallInertia);

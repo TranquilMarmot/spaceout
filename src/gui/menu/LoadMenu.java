@@ -92,9 +92,9 @@ public class LoadMenu extends GUIObject {
 
 					//initialize the camera
 					Entities.camera = new Camera(Entities.player.location.x, Entities.player.location.y, Entities.player.location.z);
-					Entities.camera.zoom = 5.0f;
-					Entities.camera.yOffset = -1.25f;
-					Entities.camera.xOffset = 0.1f;
+					Entities.camera.zoom = 1.5f;
+					Entities.camera.yOffset = -0.35f;
+					Entities.camera.xOffset = 0.0f;
 					Entities.camera.following = Entities.player;
 
 					// raise the file loaded flag

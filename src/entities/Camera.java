@@ -34,7 +34,7 @@ public class Camera extends Entity {
 	/** maximum zoom level */
 	private float maxZoom = 3000.0f;
 	/** minimum zoom level */
-	private float minZoom = 5.0f;
+	private float minZoom = 1.5f;
 
 	/**
 	 * If this is false, the camera rotates with whatever it's following. If

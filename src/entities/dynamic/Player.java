@@ -25,12 +25,12 @@ public class Player extends DynamicEntity {
 	private boolean button0Down = false;
 	
 	private javax.vecmath.Vector3f angularVelocity = new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f);
-	private float stabilizationSpeed = 40.0f;
+	public float stabilizationSpeed = 40.0f;
 	
 	private javax.vecmath.Vector3f linearVelocity = new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f);
-	private float stopSpeed = 40.0f;
+	public float stopSpeed = 40.0f;
 	
-	private float rollSpeed = 10.0f;
+	public float rollSpeed = 10.0f;
 	
 	public Player(Vector3f location, Quaternion rotation, int model,
 			float mass, float restitution) {
