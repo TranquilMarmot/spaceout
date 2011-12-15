@@ -46,13 +46,13 @@ public class Sandbox {
 		/* BEGIN BOX */
 		Vector3f box0Location = new Vector3f(0.0f, -200.0f, 0.0f);
 		Vector3f box0Size = new Vector3f(500.0f, 1.00f, 500.0f);
-		createBox(box0Location, box0Size);
+		//createBox(box0Location, box0Size);
 		/* END BOX */
 		
 		/* BEGIN BOX */
 		Vector3f box1Location = new Vector3f(0.0f, 200.0f, 0.0f);
 		Vector3f box1Size = new Vector3f(500.0f, 1.00f, 500.0f);
-		createBox(box1Location, box1Size);
+		//createBox(box1Location, box1Size);
 		/* END BOX */
 		
 		/* BEGIN PLAYER */
@@ -147,7 +147,7 @@ public class Sandbox {
 	public static void addRandomSphere(){
 		Random randy = new Random();
 		//float sphereSize = randy.nextInt(250) / 10.0f;
-		float sphereSize = 63.71f;
+		float sphereSize = 63710.0f;
 		CollisionShape sphereShape = new SphereShape(sphereSize);
 		
 		Sphere drawSphere = new Sphere();
@@ -156,7 +156,7 @@ public class Sandbox {
 		
 		int sphereCallList = GL11.glGenLists(1);
 		GL11.glNewList(sphereCallList, GL11.GL_COMPILE);{
-			drawSphere.draw(sphereSize, 15, 15);
+			drawSphere.draw(sphereSize, 100, 100);
 		}GL11.glEndList();
 		
 		int sphereTexture;
