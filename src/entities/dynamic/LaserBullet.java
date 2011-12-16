@@ -8,11 +8,24 @@ import org.lwjgl.util.vector.Vector3f;
 
 import util.debug.Debug;
 
+/**
+ * Bullet that just keeps going straight
+ * 
+ * @author TranquilMarmot
+ * 
+ */
 public class LaserBullet extends DynamicEntity {
+	/** how long the bullet stays alive for */
 	public float life = 1000.0f;
+
+	/** how long the bullet has been alive */
 	public float timeAlive = 0.0f;
+
+	/**
+	 * the last time the bullet was updated, to keep its time alive framerate
+	 * independent
+	 */
 	private long lastUpdate;
-	private javax.vecmath.Vector3f currentSpeed = new javax.vecmath.Vector3f();
 
 	public LaserBullet(Vector3f location, Quaternion rotation, int model,
 			float mass, float restitution) {
@@ -29,23 +42,26 @@ public class LaserBullet extends DynamicEntity {
 	@Override
 	public void update() {
 		super.update();
-		rigidBody.getLinearVelocity(currentSpeed);
-		
-		float delta = (float)getDelta() / 10.0f;
-		
+
+		// add the delta to the time alive
+		float delta = (float) getDelta() / 10.0f;
 		timeAlive += delta;
-		
-		if(timeAlive >= life){
+
+		// if the time is up, remove and delete this bullet
+		if (timeAlive >= life) {
 			this.cleanup();
 			Entities.removeBuffer.add(this);
 		}
 	}
-	
-	private int getDelta(){
+
+	/**
+	 * @return Amount of time passed since the last update
+	 */
+	private int getDelta() {
 		long time = Debug.getTime();
-		int delta = (int)(time - lastUpdate);
+		int delta = (int) (time - lastUpdate);
 		lastUpdate = time;
-		
+
 		return delta;
 	}
 }

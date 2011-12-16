@@ -46,14 +46,14 @@ public class Sandbox {
 		/* END SUN */
 		
 		/* BEGIN BOX */
-		Vector3f box0Location = new Vector3f(0.0f, -200.0f, 0.0f);
-		Vector3f box0Size = new Vector3f(500.0f, 1.00f, 500.0f);
+		//Vector3f box0Location = new Vector3f(0.0f, -200.0f, 0.0f);
+		//Vector3f box0Size = new Vector3f(500.0f, 1.00f, 500.0f);
 		//createBox(box0Location, box0Size);
 		/* END BOX */
 		
 		/* BEGIN BOX */
-		Vector3f box1Location = new Vector3f(0.0f, 200.0f, 0.0f);
-		Vector3f box1Size = new Vector3f(500.0f, 1.00f, 500.0f);
+		//Vector3f box1Location = new Vector3f(0.0f, 200.0f, 0.0f);
+		//Vector3f box1Size = new Vector3f(500.0f, 1.00f, 500.0f);
 		//createBox(box1Location, box1Size);
 		/* END BOX */
 		
@@ -155,7 +155,7 @@ public class Sandbox {
 		Random randy = new Random();
 		//float sphereSize = randy.nextInt(250) / 10.0f;
 		float sphereSize = 637.1f;
-		CollisionShape sphereShape = new SphereShape(sphereSize);
+		//CollisionShape sphereShape = new SphereShape(sphereSize);
 		
 		Sphere drawSphere = new Sphere();
 		drawSphere.setNormals(GLU.GLU_SMOOTH);
@@ -166,7 +166,7 @@ public class Sandbox {
 			drawSphere.draw(sphereSize, 100, 100);
 		}GL11.glEndList();
 		
-		int sphereTexture = TextureManager.EARTH;
+		//int sphereTexture = TextureManager.EARTH;
 		/*
 		switch(randy.nextInt(4)){
 		case 0:
@@ -186,7 +186,7 @@ public class Sandbox {
 		}
 		*/
 		
-		Model sphereModel = new Model(sphereShape, sphereCallList, sphereTexture);
+		//Model sphereModel = new Model(sphereShape, sphereCallList, sphereTexture);
 		
 		Vector3f sphereLocation = new Vector3f(0.0f + (randy.nextFloat() * 1000.0f), 0.0f + (randy.nextFloat() * 1000.0f), 0.0f + (randy.nextFloat() * 1000.0f));
 		Quaternion sphereRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);

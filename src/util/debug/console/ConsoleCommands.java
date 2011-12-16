@@ -8,13 +8,13 @@ import javax.vecmath.Quat4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.bulletphysics.linearmath.DefaultMotionState;
-import com.bulletphysics.linearmath.MotionState;
-import com.bulletphysics.linearmath.Transform;
-
 import util.Runner;
 import util.debug.Debug;
 import util.helper.QuaternionHelper;
+
+import com.bulletphysics.linearmath.DefaultMotionState;
+import com.bulletphysics.linearmath.Transform;
+
 import entities.Entities;
 import entities.Entity;
 
@@ -164,7 +164,7 @@ public class ConsoleCommands {
 				Vector3f moveAmount = new Vector3f(0.0f, 0.0f, -10.0f);
 				Quat4f playerRot = new Quat4f();
 				playerTransform.getRotation(playerRot);
-				Vector3f rotated = QuaternionHelper.RotateVectorByQuaternion(moveAmount, new Quaternion(playerRot.x, playerRot.y, playerRot.z, playerRot.w));
+				Vector3f rotated = QuaternionHelper.rotateVectorByQuaternion(moveAmount, new Quaternion(playerRot.x, playerRot.y, playerRot.z, playerRot.w));
 				Vector3f newLocation = new Vector3f();
 				Vector3f.add(new Vector3f(ent.location.x, ent.location.y, ent.location.z), rotated, newLocation);
 				

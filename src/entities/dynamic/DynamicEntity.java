@@ -20,16 +20,20 @@ import graphics.model.Model;
 
 /**
  * And entity that also keeps track of it's own rigid body and model
+ * 
  * @author TranquilMarmot
- *
+ * 
  */
 public class DynamicEntity extends Entity {
+	/** the rigid body for this entity */
 	public RigidBody rigidBody;
-	public float mass;
+
+	/** the model to use for this entity */
 	public Model model;
 
 	/**
 	 * Overloaded constructor
+	 * 
 	 * @param location
 	 * @param rotation
 	 * @param model
@@ -47,8 +51,8 @@ public class DynamicEntity extends Entity {
 		this.location = location;
 		this.rotation = rotation;
 		this.model = model;
-		this.mass = mass;
 
+		/* BEGIN RIGID BODY CREATION */
 		Transform transform = new Transform();
 		transform.setRotation(new Quat4f(rotation.x, rotation.y, rotation.z,
 				rotation.w));
@@ -64,43 +68,55 @@ public class DynamicEntity extends Entity {
 		rigidBody = new RigidBody(rigidBodyCI);
 
 		Physics.dynamicsWorld.addRigidBody(rigidBody);
+		/* END RIGID BODY CREATION */
 	}
 
 	@Override
+	/**
+	 * Grabs the entity's location and rotation
+	 */
 	public void update() {
+		// get the rigid body's world transform
 		Transform trans = new Transform();
 		rigidBody.getMotionState().getWorldTransform(trans);
 
+		// set this entity's location
 		javax.vecmath.Vector3f origin = trans.origin;
 		this.location.set(origin.x, origin.y, origin.z);
 
+		// set this entity's rotation
 		Quat4f rot = new Quat4f();
 		trans.getRotation(rot);
 		this.rotation.set(rot.x, rot.y, rot.z, rot.w);
 	}
 
 	@Override
+	/**
+	 * Simple as possible drawing call. This assumes that it's called when the entity's location and rotation have already been applied to the modelview matrix.
+	 */
 	public void draw() {
-		if(this.type.equals("sphere"))
-			GL11.glDisable(GL11.GL_LIGHTING);
 		model.getTexture().bind();
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
-		//if(Physics.drawDebug)
-		//	drawPhysicsDebug();
-
 		GL11.glCallList(model.getCallList());
 	}
-	
-	public void drawPhysicsDebug(){
+
+	/**
+	 * Draws the physics debug info for this entity. Should be called before rotations are applied.
+	 */
+	public void drawPhysicsDebug() {
 		Transform worldTransform = new Transform();
 		rigidBody.getWorldTransform(worldTransform);
-		
+
 		CollisionShape shape = model.getCollisionShape();
-	
-		Physics.dynamicsWorld.debugDrawObject(worldTransform, shape, new javax.vecmath.Vector3f(0.0f, 0.0f, 1.0f));
+
+		Physics.dynamicsWorld.debugDrawObject(worldTransform, shape,
+				new javax.vecmath.Vector3f(0.0f, 0.0f, 1.0f));
 	}
 
 	@Override
+	/**
+	 * Removes the rigid body from the dynamics world it's in
+	 */
 	public void cleanup() {
 		Physics.dynamicsWorld.removeRigidBody(rigidBody);
 		rigidBody.destroy();

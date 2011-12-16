@@ -2,10 +2,7 @@ package physics;
 
 import javax.vecmath.Vector3f;
 
-import org.lwjgl.input.Keyboard;
-
 import physics.debug.PhysicsDebugDrawer;
-import physics.sandbox.Sandbox;
 import util.manager.KeyboardManager;
 
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
@@ -16,20 +13,40 @@ import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.bulletphysics.linearmath.Clock;
 
+/**
+ * This class handles the dynamics world and everything related
+ * 
+ * @author TranquilMarmot
+ * 
+ */
 public class Physics {
+	/** maximum number of substeps to do on each tick */
 	private final static int SUBSTEPS = 10;
-	
+
+	/** the discrete dynamics world */
 	public static DiscreteDynamicsWorld dynamicsWorld;
 
+	/** broadphase interface */
 	public static BroadphaseInterface broadphase;
+
+	/** collision dispatcher */
 	public static CollisionDispatcher dispatcher;
+
+	/** impulse constraint solver */
 	public static SequentialImpulseConstraintSolver solver;
-	
+
+	/** clock to use for framerate independence */
 	private static Clock clock = new Clock();
-	
+
+	/** to keep the debug key from being held */
 	private static boolean debugDown = false;
+
+	/** whether or not to draw physics debug info */
 	public static boolean drawDebug = false;
 
+	/**
+	 * Initializes the physics engine
+	 */
 	public static void initPhysics() {
 		// broadphase interface
 		broadphase = new DbvtBroadphase();
@@ -47,39 +64,44 @@ public class Physics {
 
 		// no gravity, we're in space!
 		dynamicsWorld.setGravity(new Vector3f(0, 0, 0));
-		
+
 		// see the PhysicsDebugDrawer class
 		dynamicsWorld.setDebugDrawer(new PhysicsDebugDrawer());
 	}
-	
-	public static void update(){
-		dynamicsWorld.stepSimulation(getDeltaTimeMicroseconds() / 1000000.0f, SUBSTEPS);
-		
-		// FIXME this is temporary
-		//if(Keyboard.isKeyDown(Keyboard.KEY_P)){
-		//	Sandbox.addRandomSphere();
-		//}
-		
+
+	/**
+	 * Updates the dynamics world
+	 */
+	public static void update() {
+		dynamicsWorld.stepSimulation(getDeltaTimeMicroseconds() / 1000000.0f,
+				SUBSTEPS);
+
 		// handle the physics debug key
-		if(KeyboardManager.physicsDebug && !debugDown){
+		if (KeyboardManager.physicsDebug && !debugDown) {
 			drawDebug = !drawDebug;
 			debugDown = true;
 		}
-		if(!KeyboardManager.physicsDebug){
+		if (!KeyboardManager.physicsDebug) {
 			debugDown = false;
 		}
 	}
-	
-	public static void cleanup(){
+
+	/**
+	 * Cleans up all the physics stuff
+	 */
+	public static void cleanup() {
 		dynamicsWorld.destroy();
 		dynamicsWorld = null;
 		broadphase = null;
 		dispatcher = null;
 		solver = null;
-		
+
 	}
-	
-	private static float getDeltaTimeMicroseconds(){
+
+	/**
+	 * @return Change in time in microseconds
+	 */
+	private static float getDeltaTimeMicroseconds() {
 		float delta = clock.getTimeMicroseconds();
 		clock.reset();
 		return delta;

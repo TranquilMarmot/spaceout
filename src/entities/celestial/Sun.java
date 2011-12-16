@@ -6,27 +6,23 @@ import org.lwjgl.util.glu.Sphere;
 import org.lwjgl.util.vector.Vector3f;
 
 import util.manager.TextureManager;
-import entities.Entities;
-import entities.Entity;
 import entities.Light;
 
 /**
  * A sun that gives off light.
  * 
  * @author TranquilMarmot
- * @see Entity
- * @see Light
  * 
  */
 public class Sun extends Light {
 	/** size of this sun */
 	public float size;
 
-	/** this sun's sphere */
-	private Sphere sphere;
-
 	/** the color of this sun */
 	private float[] color;
+
+	/** call list to use to draw this sun */
+	private int list;
 
 	/**
 	 * Sun constructor
@@ -45,18 +41,28 @@ public class Sun extends Light {
 	public Sun(Vector3f location, float size, int light, float[] color,
 			float[] lightAmbient, float[] lightDiffuse) {
 		super(location, light, lightAmbient, lightDiffuse);
-
 		this.size = size;
-
 		this.type = "sun";
+		this.color = color;
+		this.light = light;
 
-		sphere = new Sphere();
+		initList();
+	}
+
+	/**
+	 * Initializes the call list for this sun
+	 */
+	private void initList() {
+		Sphere sphere = new Sphere();
 		sphere.setNormals(GLU.GLU_SMOOTH);
 		sphere.setTextureFlag(false);
 
-		this.color = color;
-
-		this.light = light;
+		list = GL11.glGenLists(1);
+		GL11.glNewList(list, GL11.GL_COMPILE);
+		{
+			sphere.draw(size, 30, 30);
+		}
+		GL11.glEndList();
 	}
 
 	@Override
@@ -64,9 +70,8 @@ public class Sun extends Light {
 		// disable lighting to draw the sun, oh the irony
 		GL11.glDisable(GL11.GL_LIGHTING);
 		TextureManager.getTexture(TextureManager.WHITE).bind();
-
 		GL11.glColor3f(color[0], color[1], color[2]);
-		sphere.draw(size, 30, 30);
+		GL11.glCallList(list);
 		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 

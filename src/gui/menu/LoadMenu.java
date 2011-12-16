@@ -1,7 +1,5 @@
 package gui.menu;
 
-import entities.Camera;
-import entities.Entities;
 import gui.GUI;
 import gui.GUIObject;
 import gui.button.MenuButton;

@@ -25,7 +25,7 @@ import entities.dynamic.LaserBullet;
  */
 public class Render3D {
 	/** how far to draw objects */
-	public static float drawDistance = 10000000.0f;
+	public static float drawDistance = 3000000.0f;
 
 	private static FloatBuffer cameraRotBuffer = BufferUtils
 			.createFloatBuffer(16);
@@ -39,8 +39,10 @@ public class Render3D {
 		
 		// update the player and the camera (it's important that the player is updated first)
 		Entities.player.update();
-		
 		Entities.camera.update();
+		
+		// update the skybox
+		Entities.skybox.update();
 
 		// prepare to do 3D rendering
 		setUp3DRender();
@@ -50,17 +52,27 @@ public class Render3D {
 		
 		transformToCamera();
 		
-		// l.draw() should set up any light that the entity owns, and then
-		// draw the entity itself. Lights need to be the first things set up in the scene.
+		// draw the skybox first
+		Entities.skybox.draw();
+		
+		// set up lights before we render our scene
 		for (Light l : Entities.lights) {
 			l.setUpLight();
 		}
 
+		// draw any lights
 		drawLights();
+		
+		// draw all entities
 		drawEntities();
+		
+		// draw the player
 		drawPlayer();
 	}
 	
+	/**
+	 * Transforms the ModelView matrix to the current camera position and rotation
+	 */
 	private static void transformToCamera(){
 		// handle any camera offset
 		GL11.glTranslatef(Entities.camera.xOffset, Entities.camera.yOffset,
@@ -72,6 +84,9 @@ public class Render3D {
 		GL11.glMultMatrix(cameraRotBuffer);
 	}
 	
+	/**
+	 * Draws all entities
+	 */
 	private static void drawEntities(){
 		Iterator<Entity> entityIterator = Entities.entities.iterator();
 		while (entityIterator.hasNext()) {
@@ -103,6 +118,9 @@ public class Render3D {
 		}
 	}
 	
+	/**
+	 * Draws all lights
+	 */
 	private static void drawLights(){
 		Iterator<Light> entityIterator = Entities.lights.iterator();
 		while (entityIterator.hasNext()) {
@@ -121,6 +139,9 @@ public class Render3D {
 		}
 	}
 	
+	/**
+	 * Draws the player
+	 */
 	private static void drawPlayer(){
 		float transX = Entities.camera.location.x - Entities.player.location.x;
 		float transY = Entities.camera.location.y - Entities.player.location.y;

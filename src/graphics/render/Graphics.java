@@ -22,6 +22,7 @@ public class Graphics {
 		// Clear the color and depth buffers
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
+		// can only render 3D stuff if there are entities and a camera
 		if(Entities.entitiesExist() && Entities.camera != null)
 			Render3D.renderAndUpdate3DScene();
 		Render2D.updateAndRender2DScene();

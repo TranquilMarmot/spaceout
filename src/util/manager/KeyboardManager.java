@@ -28,10 +28,10 @@ public class KeyboardManager {
 	private static int stabilizeKey = Keyboard.KEY_LCONTROL;
 	private static int stopKey = Keyboard.KEY_F;
 
-	private static int previousConsoleCommandKey = Keyboard.KEY_UP;
-	private static int nextConsoleCommandKey = Keyboard.KEY_DOWN;
+	//private static int previousConsoleCommandKey = Keyboard.KEY_UP;
+	//private static int nextConsoleCommandKey = Keyboard.KEY_DOWN;
 	// TODO finish making this work
-	private static int consoleSubmitKey = Keyboard.KEY_RETURN;
+	//private static int consoleSubmitKey = Keyboard.KEY_RETURN;
 
 	/* Keys that are always checked */
 	private static int consoleKey = Keyboard.KEY_GRAVE;

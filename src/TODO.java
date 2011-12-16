@@ -1,11 +1,8 @@
 /*
- * Collision branch TODO
- * TODO Check out JBullet!!!!!
- * Maybe do these:
- * TODO When the model loader is building the object from the file, it needs to keep track of all the min/max x/y/z coordinates
- * TODO Those min/max coordinates can then be used to make the bounding box for the object
- * TODO Find a way to rotate those boxes with the quaternions (there's equations for it)
- * TODO Find out how to see if two boxes have hit each other
+ * Colliison branch TODO
+ * TODO Give things thrusters
+ * TODO Figure out how to draw far away stuff
+ * 
  * 
  * GUI branch TODO
  * TODO Make the arrow keys/WASD control which item is selected and have enter load that item
@@ -25,16 +22,12 @@
  *
  * In sort of order of importance:
  * TODO After the first time, the fullscreen key has to be pressed twice to have an effect
- * TODO Enhance acceleration. Make it so that everything slows down at the same speed.
- * TODO Also, the acceleration is not rotation independent. I.E. if you look down and speed up forward, then stop accelerating and look somewhere else, 
- * you continue going in the direction you're looking (instead of going the direction you were looking at before)
  * TODO create the rest of the solar system
- * TODO ConsoleCommands.java is pretty damn ugly still!
  * TODO In DebugKeyManager there are keys that don't go through the KeyboardManager
  * TODO Have all the data managers (ModelManager, TextureManager) keep track of how many objects are using the data. If none are for an extended period of time, delete them! (Be careful with this one!)
  * TODO It might also be a good idea to replace everything that's references as an int (in ModelHandler and TextureHandler) and replace them with enumerations, but it's really no big deal
  * TODO Create an AnimatedModel class that has a call list for every frame (probably in a good old ArrayList) Give it addFrame(int callList) and int curFrame.
- * TODO It would make sense to have multiple types of Entities- ones that are solely for rendering (debris, skybox), and ones that can collide with stuff
+
  * TODO create a Ship class that the player uses. Create a Gun class that the Ship uses to fire bullets.
  * 
  * TODO planets are impossible to find! Find a way to billboard text and have it drawn over a planet (text size probably based on distance from planet)

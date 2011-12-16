@@ -10,12 +10,21 @@ import java.util.Iterator;
  * 
  */
 public class GUI {
+	/** whether or not a menu is up right now- needs to be set whenever a menu is added/removed */
 	public static boolean menuUp = false;
 	
+	/** all the GUI objects to draw */
 	public static ArrayList<GUIObject> guiObjects = new ArrayList<GUIObject>();
+	
+	/** GUI objects to add on the next update */
 	public static ArrayList<GUIObject> addBuffer = new ArrayList<GUIObject>();
+	
+	/** GUI objects to remove on the next update*/
 	public static ArrayList<GUIObject> removeBuffer = new ArrayList<GUIObject>();
 
+	/**
+	 * Updates and renders all GUI objects
+	 */
 	public static void updateAndRenderGUI() {
 		// remove any entities from the removeBuffer
 		if (!removeBuffer.isEmpty()) {
@@ -37,6 +46,7 @@ public class GUI {
 			}
 		}
 		
+		// update and render
 		for (GUIObject obj : guiObjects) {
 			obj.update();
 			if (obj.isVisible)

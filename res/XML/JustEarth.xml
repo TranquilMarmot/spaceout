@@ -9,7 +9,7 @@
 	
 	<Sun>
 		<location>0.0f,0.0f,0.0f</location>
-		<size>34.0f</size>
+		<size>139200.0f</size>
 		<color>1.0f,1.0f,0.3f</color>
 		<lightAmbient>1.0f,1.0f,1.0f</lightAmbient>
 		<lightDiffuse>1.0f,1.0f,1.0f</lightDiffuse>
@@ -21,7 +21,7 @@
 		<location>0.0f,0.0f,1495980.0f</location>
 		<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
 		<restitution>0.0f</restitution>
-		<mass>59736000000000000000.0f</mass>
+		<mass>5973600000000000000000.0f</mass>
 		<size>6371.0f</size>
 	</Planet>
 	

@@ -13,29 +13,30 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import util.debug.Debug;
-import util.helper.QuaternionHelper;
 import util.manager.ModelManager;
 import util.manager.TextureManager;
 import entities.Camera;
 import entities.Entities;
-import entities.Entity;
 import entities.Skybox;
 import entities.celestial.Planet;
 import entities.celestial.Sun;
 import entities.dynamic.Player;
 import entities.particles.Debris;
-import graphics.model.Model;
 
 /**
- * Loads entities from an XML file and puts them into the ArrayList Entities.entities
+ * Loads entities from an XML file and puts them into the ArrayList
+ * Entities.entities
+ * 
  * @author TranquilMarmot
  * @see Entities
- *
+ * 
  */
 public class XMLParser {
 	/**
 	 * Loads entities from an XML file
-	 * @param file The file to load
+	 * 
+	 * @param file
+	 *            The file to load
 	 */
 	public static void loadEntitiesFromXmlFile(String file) {
 		// list of all the nodes
@@ -66,15 +67,14 @@ public class XMLParser {
 		 */
 		if (nodes != null && nodes.getLength() > 0) {
 			Camera.createCamera();
-			
-			Skybox skybox = new Skybox(Entities.camera);
-			Entities.entities.add(skybox);
-			
+
+			Entities.skybox = new Skybox(Entities.camera);
+
 			// loop through all the nodes
 			for (int i = 0; i < nodes.getLength(); i++) {
 				/*
-				 *  any node with the name #text is, well, text so we skip it
-				 *  we also skip the player's node becayse we already grabbed it
+				 * any node with the name #text is, well, text so we skip it we
+				 * also skip the player's node becayse we already grabbed it
 				 */
 				if (!nodes.item(i).getNodeName().equals("#text")) {
 					// grab the element
@@ -89,98 +89,108 @@ public class XMLParser {
 		} else {
 			Debug.console
 					.print("Error in XMLParser! Either there was nothing in the given file ("
-							+ file + ") or the parser simply just didn't want to work");
+							+ file
+							+ ") or the parser simply just didn't want to work");
 		}
 	}
 
 	/**
 	 * Gets and entity from a given XML element
-	 * @param ele The element to create the entity from
+	 * 
+	 * @param ele
+	 *            The element to create the entity from
 	 * @return An entity representing the element
 	 */
 	private static void getEntity(Element ele) {
 		String type = ele.getNodeName().toLowerCase();
 
-		if(type.equals("player")){
+		if (type.equals("player")) {
 			Vector3f location = getLocation(ele);
 			Quaternion rotation = getRotation(ele);
 			float mass = getFloat(ele, "mass");
 			float restitution = getFloat(ele, "restitution");
-			
-			Entities.player = new Player(location, rotation, ModelManager.SHIP1, mass, restitution);
-			
-		} else if(type.equals("debris")){
+
+			Entities.player = new Player(location, rotation,
+					ModelManager.SHIP1, mass, restitution);
+
+		} else if (type.equals("debris")) {
 			int numStars = getInt(ele, "numStars");
 			float range = getFloat(ele, "range");
 			long seed = 1337420L;
-			Entities.entities.add(new Debris(Entities.camera, numStars, range, seed));
-		} else if(type.equals("sun")){
+			Entities.entities.add(new Debris(Entities.camera, numStars, range,
+					seed));
+		} else if (type.equals("sun")) {
 			Vector3f location = getLocation(ele);
 			float size = getFloat(ele, "size");
-			
+
 			float[] color = getColor(ele, "color");
 			float[] lightAmbient = getColor(ele, "lightAmbient");
 			float[] lightDiffuse = getColor(ele, "lightDiffuse");
-			
+
 			int light = getInt(ele, "light");
 			int glLight = GL11.GL_LIGHT0;
-			switch(light){
-			case(0):
+			switch (light) {
+			case (0):
 				glLight = GL11.GL_LIGHT0;
 				break;
-			case(1):
+			case (1):
 				glLight = GL11.GL_LIGHT1;
 				break;
-			case(2):
+			case (2):
 				glLight = GL11.GL_LIGHT2;
 				break;
-			case(3):
+			case (3):
 				glLight = GL11.GL_LIGHT3;
 				break;
-			case(4):
+			case (4):
 				glLight = GL11.GL_LIGHT4;
 				break;
-			case(5):
+			case (5):
 				glLight = GL11.GL_LIGHT5;
 				break;
-			case(6):
+			case (6):
 				glLight = GL11.GL_LIGHT6;
 				break;
-			case(7):
+			case (7):
 				glLight = GL11.GL_LIGHT7;
 				break;
 			default:
-				System.out.println("Error getting glLight for Sun! Using GL_LIGHT0");
+				System.out
+						.println("Error getting glLight for Sun! Using GL_LIGHT0");
 			}
-			
-			Entities.lights.add(new Sun(location, size, glLight, color, lightAmbient, lightDiffuse));
-		} else if(type.equals("planet")){
+
+			Entities.lights.add(new Sun(location, size, glLight, color,
+					lightAmbient, lightDiffuse));
+		} else if (type.equals("planet")) {
 			int texture = 0;
 			String name = getString(ele, "name");
-			if(name.equals("Earth"))
+			if (name.equals("Earth"))
 				texture = TextureManager.EARTH;
-			else if(name.equals("Mercury"))
+			else if (name.equals("Mercury"))
 				texture = TextureManager.MERCURY;
-			else if(name.equals("Venus"))
+			else if (name.equals("Venus"))
 				texture = TextureManager.VENUS;
-			else if(name.equals("Mars"))
+			else if (name.equals("Mars"))
 				texture = TextureManager.MARS;
 			else
-				System.out.println("Error! Didn't find texture while creating Planet "+ name + " in XMLParser!");
-			
+				System.out
+						.println("Error! Didn't find texture while creating Planet "
+								+ name + " in XMLParser!");
+
 			Vector3f location = getLocation(ele);
 			Quaternion rotation = getRotation(ele);
 			float mass = getFloat(ele, "mass");
 			float size = getFloat(ele, "size");
 			float restitution = getFloat(ele, "restitution");
-			
-			Planet p = new Planet(location, rotation, size, mass, restitution, texture);
-			
+
+			Planet p = new Planet(location, rotation, size, mass, restitution,
+					texture);
+
 			Entities.entities.add(p);
 		}
 	}
-	
-	private static Vector3f getLocation(Element ele){
+
+	private static Vector3f getLocation(Element ele) {
 		String loc = getString(ele, "location");
 		StringTokenizer toker = new StringTokenizer(loc, ",");
 		float x = Float.parseFloat(toker.nextToken());
@@ -188,8 +198,8 @@ public class XMLParser {
 		float z = Float.parseFloat(toker.nextToken());
 		return new Vector3f(x, y, z);
 	}
-	
-	private static Quaternion getRotation(Element ele){
+
+	private static Quaternion getRotation(Element ele) {
 		String rot = getString(ele, "rotation");
 		StringTokenizer toker = new StringTokenizer(rot, ",");
 		float x = Float.parseFloat(toker.nextToken());
@@ -198,22 +208,26 @@ public class XMLParser {
 		float w = Float.parseFloat(toker.nextToken());
 		return new Quaternion(x, y, z, w);
 	}
-	
+
 	/**
-	 * Returns a float arraty of 3 values given a string formatted like "1.0f,1.0f,1.0f" or similar three numbers
-	 * @param ele The element to get the color array from
-	 * @param tag	The tag to get the color from
+	 * Returns a float arraty of 3 values given a string formatted like
+	 * "1.0f,1.0f,1.0f" or similar three numbers
+	 * 
+	 * @param ele
+	 *            The element to get the color array from
+	 * @param tag
+	 *            The tag to get the color from
 	 * @return A float array containing the color
 	 */
-	private static float[] getColor(Element ele, String tag){
+	private static float[] getColor(Element ele, String tag) {
 		String text = getString(ele, tag);
 		StringTokenizer toker = new StringTokenizer(text, ",");
-		
+
 		float r = Float.parseFloat(toker.nextToken());
 		float g = Float.parseFloat(toker.nextToken());
 		float b = Float.parseFloat(toker.nextToken());
-		
-		return new float[]{ r, g, b};
+
+		return new float[] { r, g, b };
 	}
 
 	/**

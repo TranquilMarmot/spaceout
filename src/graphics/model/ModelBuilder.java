@@ -1,6 +1,5 @@
 package graphics.model;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import javax.vecmath.Point2f;
@@ -8,20 +7,11 @@ import javax.vecmath.Vector3f;
 
 import org.lwjgl.opengl.GL11;
 
-import com.bulletphysics.collision.shapes.BvhTriangleMeshShape;
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.collision.shapes.ConvexHullShape;
 import com.bulletphysics.collision.shapes.ConvexShape;
-import com.bulletphysics.collision.shapes.IndexedMesh;
 import com.bulletphysics.collision.shapes.ShapeHull;
-import com.bulletphysics.collision.shapes.TriangleIndexVertexArray;
 import com.bulletphysics.util.ObjectArrayList;
-
-/*
- * NOTENOTENOTE
- * Given indices 0,1,2,3 a quad can be split into two triangles:
- * 0,1,2 and 2,3,0
- */
 
 /**
  * Used to build a model being read in from a file. One of these should be
@@ -30,7 +20,6 @@ import com.bulletphysics.util.ObjectArrayList;
  * 
  * @author TranquilMarmot
  * @see ModelLoader
- * @see Model
  */
 public class ModelBuilder {
 	/** the name of the model */
@@ -54,6 +43,7 @@ public class ModelBuilder {
 	/** which texture coordinates to call */
 	private ArrayList<int[]> textureIndices;
 	
+	/** max and min values for the model being built */
 	public float maxX, minX, maxY, minY, maxZ, minZ = 0.0f;
 
 	/**
@@ -87,6 +77,7 @@ public class ModelBuilder {
 	 *            The vertex to add
 	 */
 	public void addVertex(Vector3f vertex) {
+		// check for max and min values
 		if(vertex.x > maxX)
 			maxX = vertex.x;
 		
@@ -118,6 +109,10 @@ public class ModelBuilder {
 			vertexIndices.add(indices);
 		// else split the quad into two triangles
 		else if (indices.length == 4) {
+			/*
+			 * Given indices 0,1,2,3 a quad can be split into two triangles:
+			 * 0,1,2 and 2,3,0
+			 */
 			int[] tri1 = new int[3];
 			tri1[0] = indices[0];
 			tri1[1] = indices[1];
@@ -220,13 +215,18 @@ public class ModelBuilder {
 	 * @return A model built using the current indices
 	 */
 	public Model makeModel(int texture) {
-		System.out.println(maxX * 1.0f + " " + minX * 1.0f + " " + maxY * 1.0f + " " + minY * 1.0f + " " + maxZ * 1.0f + " " + minZ * 1.0f);
+		//System.out.println(maxX * 1.0f + " " + minX * 1.0f + " " + maxY * 1.0f + " " + minY * 1.0f + " " + maxZ * 1.0f + " " + minZ * 1.0f);
 		return new Model(buildCollisionShape(), buildCallList(), texture);
 	}
 	
+	/**
+	 * Builds a collision shape for this model
+	 * @return A convex hull collision shape representing this model
+	 */
 	private CollisionShape buildCollisionShape(){
 		ConvexShape originalConvexShape = new ConvexHullShape(vertices);
 		
+		// create a hull based on the vertices
 		ShapeHull hull = new ShapeHull(originalConvexShape);
 		float margin = originalConvexShape.getMargin();
 		hull.buildHull(margin);
