@@ -8,7 +8,7 @@
 	</Player>
 	
 	<Sun>
-		<location>0.0f, 0.0f, 0.0f</location>
+		<location>0.0f,0.0f,0.0f</location>
 		<size>34775.0f</size>
 		<color>1.0f,1.0f,0.3f</color>
 		<lightAmbient>1.0f,1.0f,1.0f</lightAmbient>
@@ -17,52 +17,40 @@
 	</Sun>
 	
 	<Debris>
-		<numStars>2000</numStars>
-		<range>100000.0f</range>
+		<numStars>500</numStars>
+		<range>50000.0f</range>
 		<seed>420133742L</seed>
 	</Debris>
 	
 	<Planet>
-		<name>Earth</name>
-		<location>62.5f,0.0f,115000.0f</location>
-		<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
-		<mass>59736000000000000000000.0f</mass>
-		<size>63.71</size>
-		
-	</Planet>
-	
-	<Planet>
 		<name>Mercury</name>
-		<location>0.0f,0.0f,105000.0f</location>
+		<location>0.0f,0.0f,598392000.0f</location>
 		<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
-		<size>24.397</size>
+		<mass>3302200000000000000000.0f</mass>
+		<size>24397.0</size>
 	</Planet>
 	
 	<Planet>
 		<name>Venus</name>
-		<size>869.7463f</size>
-		<x>170.5f</x>
-		<y>0.0f</y>
-		<z>110000.0f</z>
-		<yaw>90.0f</yaw>
-		<pitch>0.0f</pitch>
-		<roll>0.0f</roll>
-		<dxrot>0.0f</dxrot>
-		<dyrot>0.0f</dyrot>
-		<dzrot>0.075f</dzrot>
+		<location>0.0f,0.0f,1047186000.0f</location>
+		<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
+		<mass>243400000000000000000000.0f</mass>
+		<size>60518.0f</size>
+	</Planet>
+	
+	<Planet>
+		<name>Earth</name>
+		<location>0.0f,0.0f,1495980000.0f</location>
+		<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
+		<mass>59736000000000000000000.0f</mass>
+		<size>63710.0f</size>
 	</Planet>
 	
 	<Planet>
 		<name>Mars</name>
-		<size>485.667f</size>
-		<x>202.f</x>
-		<y>0.0f</y>
-		<z>120000.0f</z>
-		<yaw>90.0f</yaw>
-		<pitch>0.0f</pitch>
-		<roll>0.0f</roll>
-		<dxrot>0.0f</dxrot>
-		<dyrot>0.0f</dyrot>
-		<dzrot>0.075f</dzrot>
-	</Planet>	
+		<location>0.0f,0.0f,2243970000.0f</location>
+		<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
+		<mass>6418500000000000000000.0f</mass>
+		<size>33962.0f</size>
+	</Planet>
 </Entities>

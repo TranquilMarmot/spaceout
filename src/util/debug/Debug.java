@@ -84,6 +84,7 @@ public class Debug {
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 			// formats the coordinates
+			if(Entities.camera != null){
 			Formatter coords = new Formatter();
 			if (!Entities.camera.freeMode) {
 				coords.format("x: %,09.3f%n" + "y: %,09.3f%n" + "z: %,09.3f%n",
@@ -94,9 +95,11 @@ public class Debug {
 						Entities.camera.location.x, Entities.camera.location.y,
 						Entities.camera.location.z);
 			}
+			
 
 			// draw coordinates
 			font.drawString(3, 3, coords.toString(), Color.cyan);
+			
 
 			Vector3f angles;
 			if(!Entities.camera.freeMode)
@@ -118,6 +121,14 @@ public class Debug {
 			else if (Entities.camera.freeMode)
 				cameraInfo += "\n(free)";
 			font.drawString(3, 114, cameraInfo, Color.blue);
+			
+			javax.vecmath.Vector3f linear = new javax.vecmath.Vector3f();
+			Entities.player.rigidBody.getLinearVelocity(linear);
+			float xSpeed = (linear.x * 100.0f) / 1000.0f;
+			float ySpeed = (linear.y * 100.0f) / 1000.0f;
+			float zSpeed = (linear.z * 100.0f) / 1000.0f;
+			font.drawString(DisplayHelper.windowWidth - 125, DisplayHelper.windowHeight - 75, xSpeed + "\n" + ySpeed + "\n" + zSpeed);
+			}
 		}
 
 		drawVersion();

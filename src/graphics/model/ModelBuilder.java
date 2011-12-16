@@ -220,7 +220,7 @@ public class ModelBuilder {
 	 * @return A model built using the current indices
 	 */
 	public Model makeModel(int texture) {
-		System.out.println(maxX * 1000.0f + " " + minX * 1000.0f + " " + maxY * 1000.0f + " " + minY * 1000.0f + " " + maxZ * 1000.0f + " " + minZ * 1000.0f);
+		System.out.println(maxX * 1.0f + " " + minX * 1.0f + " " + maxY * 1.0f + " " + minY * 1.0f + " " + maxZ * 1.0f + " " + minZ * 1.0f);
 		return new Model(buildCollisionShape(), buildCallList(), texture);
 	}
 	

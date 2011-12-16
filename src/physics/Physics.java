@@ -56,9 +56,9 @@ public class Physics {
 		dynamicsWorld.stepSimulation(getDeltaTimeMicroseconds() / 1000000.0f, SUBSTEPS);
 		
 		// FIXME this is temporary
-		if(Keyboard.isKeyDown(Keyboard.KEY_P)){
-			Sandbox.addRandomSphere();
-		}
+		//if(Keyboard.isKeyDown(Keyboard.KEY_P)){
+		//	Sandbox.addRandomSphere();
+		//}
 		
 		// handle the physics debug key
 		if(KeyboardManager.physicsDebug && !debugDown){

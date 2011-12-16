@@ -22,7 +22,7 @@ public class Graphics {
 		// Clear the color and depth buffers
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
-		if(Entities.entitiesExist())
+		if(Entities.entitiesExist() && Entities.camera != null)
 			Render3D.renderAndUpdate3DScene();
 		Render2D.updateAndRender2DScene();
 		
@@ -45,7 +45,7 @@ public class Graphics {
 
 		// Clear to a black background
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
-
+		
 		// Setup the depth buffer
 		GL11.glClearDepth(1.0f);
 		// Enable depth testing

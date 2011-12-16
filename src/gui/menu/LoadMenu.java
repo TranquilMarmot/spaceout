@@ -85,17 +85,10 @@ public class LoadMenu extends GUIObject {
 					} else {
 						// load entities from XML
 						XMLParser.loadEntitiesFromXmlFile(path
-								+ picker.getSelected().getFile());
+								+ selectedFile);
 					}
 					// create the pause menu
 					GUI.addBuffer.add(new PauseMenu());
-
-					//initialize the camera
-					Entities.camera = new Camera(Entities.player.location.x, Entities.player.location.y, Entities.player.location.z);
-					Entities.camera.zoom = 1.5f;
-					Entities.camera.yOffset = -0.35f;
-					Entities.camera.xOffset = 0.0f;
-					Entities.camera.following = Entities.player;
 
 					// raise the file loaded flag
 					fileLoaded = true;

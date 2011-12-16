@@ -25,7 +25,7 @@ import entities.dynamic.LaserBullet;
  */
 public class Render3D {
 	/** how far to draw objects */
-	public static float drawDistance = 500000.0f;
+	public static float drawDistance = 10000000.0f;
 
 	private static FloatBuffer cameraRotBuffer = BufferUtils
 			.createFloatBuffer(16);
@@ -39,6 +39,7 @@ public class Render3D {
 		
 		// update the player and the camera (it's important that the player is updated first)
 		Entities.player.update();
+		
 		Entities.camera.update();
 
 		// prepare to do 3D rendering

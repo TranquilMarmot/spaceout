@@ -81,6 +81,8 @@ public class DynamicEntity extends Entity {
 
 	@Override
 	public void draw() {
+		if(this.type.equals("sphere"))
+			GL11.glDisable(GL11.GL_LIGHTING);
 		model.getTexture().bind();
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		//if(Physics.drawDebug)

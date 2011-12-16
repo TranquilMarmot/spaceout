@@ -108,37 +108,37 @@ public class TextureManager {
 			case EARTH:
 				if(earth == null)
 					earth = TextureLoader.getTexture("JPG", new FileInputStream(
-						TEXTURE_PATH + "earthbig.jpg"), true, GL11.GL_LINEAR);
+						TEXTURE_PATH + "earthbig.jpg"), true, GL11.GL_NEAREST);
 				break;
 			case STARS:
 				if(stars == null)
 					stars = TextureLoader.getTexture("PNG", new FileInputStream(
-						TEXTURE_PATH + "skybox.png"), true, GL11.GL_LINEAR);
+						TEXTURE_PATH + "skybox.png"), true, GL11.GL_NEAREST);
 				break;
 			case WHITE:
 				if(white == null)
 					white = TextureLoader.getTexture("BMP", new FileInputStream(
-						TEXTURE_PATH + "white.bmp"), true, GL11.GL_LINEAR);
+						TEXTURE_PATH + "white.bmp"), true, GL11.GL_NEAREST);
 				break;
 			case CHECKERS:
 				if(checkers == null)
 					checkers = TextureLoader.getTexture("BMP", new FileInputStream(
-						TEXTURE_PATH + "checkers.bmp"), true, GL11.GL_LINEAR);
+						TEXTURE_PATH + "checkers.bmp"), true, GL11.GL_NEAREST);
 				break;
 			case MERCURY:
 				if(mercury == null)
 					mercury = TextureLoader.getTexture("JPG", new FileInputStream(
-						TEXTURE_PATH + "mercury.jpg"), true, GL11.GL_LINEAR);
+						TEXTURE_PATH + "mercury.jpg"), true, GL11.GL_NEAREST);
 				break;
 			case VENUS:
 				if(venus == null)
 					venus = TextureLoader.getTexture("JPG", new FileInputStream(
-						TEXTURE_PATH + "venus.jpg"), true, GL11.GL_LINEAR);
+						TEXTURE_PATH + "venus.jpg"), true, GL11.GL_NEAREST);
 				break;
 			case MARS:
 				if(mars == null)
 					mars = TextureLoader.getTexture("JPG", new FileInputStream(
-						TEXTURE_PATH + "mars.jpg"), true, GL11.GL_LINEAR);
+						TEXTURE_PATH + "mars.jpg"), true, GL11.GL_NEAREST);
 				break;
 			case SHIP1:
 				if(ship1 == null)

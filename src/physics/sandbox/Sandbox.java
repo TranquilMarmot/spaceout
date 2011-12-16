@@ -22,8 +22,10 @@ import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
 
+import entities.Camera;
 import entities.Entities;
 import entities.Skybox;
+import entities.celestial.Planet;
 import entities.celestial.Sun;
 import entities.dynamic.DynamicEntity;
 import entities.dynamic.Player;
@@ -56,7 +58,7 @@ public class Sandbox {
 		/* END BOX */
 		
 		/* BEGIN PLAYER */
-		Vector3f playerLocation = new Vector3f(-107.111f, 198.284f, -659.311f);
+		Vector3f playerLocation = new Vector3f(-107.111f, 198.284f, -65900.311f);
 		Quaternion playerRotation = new Quaternion(0.002583359f, -0.0559893f, 0.9984302f, 0.00012266426f);
 		float playerMass = 50.0f;
 		float playerRestitution = 0.01f;
@@ -64,15 +66,20 @@ public class Sandbox {
 		player.type = "dynamicPlayer";
 		Entities.player = player;
 		
+		addRandomSphere();
+		
+		Camera.createCamera();
+		Entities.camera.following = player;
+		
 		/* END PLAYER */
 		
 		/* BEGIN SKYBOX  */
-		Skybox skybox = new Skybox(Entities.player, 0, 0, 0);
+		Skybox skybox = new Skybox(Entities.camera);
 		Entities.entities.add(skybox);
 		/* END SKYBOX */
 		
 		/* BEGIN DEBRIS */
-		Debris debris = new Debris(Entities.player, 500, 50000.0f, 420420L);
+		Debris debris = new Debris(Entities.camera, 500, 50000.0f, 420420L);
 		debris.update();
 		Entities.entities.add(debris);
 		/* END DEBRIS */
@@ -147,7 +154,7 @@ public class Sandbox {
 	public static void addRandomSphere(){
 		Random randy = new Random();
 		//float sphereSize = randy.nextInt(250) / 10.0f;
-		float sphereSize = 63710.0f;
+		float sphereSize = 637.1f;
 		CollisionShape sphereShape = new SphereShape(sphereSize);
 		
 		Sphere drawSphere = new Sphere();
@@ -159,7 +166,8 @@ public class Sandbox {
 			drawSphere.draw(sphereSize, 100, 100);
 		}GL11.glEndList();
 		
-		int sphereTexture;
+		int sphereTexture = TextureManager.EARTH;
+		/*
 		switch(randy.nextInt(4)){
 		case 0:
 			sphereTexture = TextureManager.EARTH;
@@ -176,6 +184,7 @@ public class Sandbox {
 		default:
 			sphereTexture = TextureManager.EARTH;
 		}
+		*/
 		
 		Model sphereModel = new Model(sphereShape, sphereCallList, sphereTexture);
 		
@@ -183,14 +192,17 @@ public class Sandbox {
 		Quaternion sphereRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		
 		//float sphereMass = randy.nextFloat() * 10000000.0f;
-		float sphereMass = 59736000000000000000000.0f;
+		float sphereMass = 597360000000000000000.0f;
 		
-		javax.vecmath.Vector3f fallInertia = new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f);
-		sphereShape.calculateLocalInertia(sphereMass, fallInertia);
+		//javax.vecmath.Vector3f fallInertia = new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f);
+		//sphereShape.calculateLocalInertia(sphereMass, fallInertia);
 		
-		DynamicEntity sphere = new DynamicEntity(sphereLocation, sphereRotation, sphereModel, sphereMass, 0.01f);
-		sphere.type = "Sphere";
-		Entities.entities.add(sphere);
+		//DynamicEntity sphere = new DynamicEntity(sphereLocation, sphereRotation, sphereModel, sphereMass, 0.01f);
+		//sphere.type = "Sphere";
+		
+		Planet p = new Planet(sphereLocation, sphereRotation, sphereSize, sphereMass, 0.01f, TextureManager.EARTH);
+		
+		Entities.entities.add(p);
 	}
 	
 	public static void helloWorld(){

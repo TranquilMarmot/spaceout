@@ -15,6 +15,9 @@ import util.manager.MouseManager;
  * @see Entity
  */
 public class Camera extends Entity {
+	private static final float INIT_ZOOM = 1.4f;
+	private static final float INIT_XOFFSET = 0.0f;
+	private static final float INIT_YOFFSET = -0.35F;
 	/** the entity that the camera is following */
 	public Entity following;
 
@@ -34,7 +37,7 @@ public class Camera extends Entity {
 	/** maximum zoom level */
 	private float maxZoom = 3000.0f;
 	/** minimum zoom level */
-	private float minZoom = 1.5f;
+	private float minZoom = 1.25f;
 
 	/**
 	 * If this is false, the camera rotates with whatever it's following. If
@@ -65,6 +68,14 @@ public class Camera extends Entity {
 		rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		this.type = "camera";
 		lastUpdate = Debug.getTime();
+	}
+	
+	public static void createCamera(){
+		//initialize the camera
+		Entities.camera = new Camera(0.0f, 0.0f, 0.0f);
+		Entities.camera.zoom = INIT_ZOOM;
+		Entities.camera.yOffset = INIT_YOFFSET;
+		Entities.camera.xOffset = INIT_XOFFSET;
 	}
 
 	@Override
@@ -120,19 +131,14 @@ public class Camera extends Entity {
 
 	private void zoom() {
 		// change how fast the zoom is based on the zoom distance
-		float zoomSensitivity = 1;
-		if (zoom < 40.0f)
-			zoomSensitivity = 75.0f;
-		else if (zoom > 40.0f && zoom < 150.0f)
-			zoomSensitivity = 50.0f;
-		else if (zoom > 150.0f && zoom < 1000.0f)
-			zoomSensitivity = 25.0f;
-		else if (zoom > 1000.0f)
-			zoomSensitivity = 10.0f;
+		float zoomSensitivity = 10;
 
 		// handle zooming
-		if (!Debug.consoleOn)
-			zoom -= MouseManager.wheel / zoomSensitivity;
+		if (!Debug.consoleOn){
+			if(MouseManager.wheel != 0){
+				zoom -= (zoom * zoomSensitivity / MouseManager.wheel);
+			}
+		}
 		if (zoom < minZoom)
 			zoom = minZoom;
 		else if (zoom > maxZoom)

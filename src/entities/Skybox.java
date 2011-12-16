@@ -7,6 +7,7 @@ import graphics.render.Render3D;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.Sphere;
+import org.lwjgl.util.vector.Quaternion;
 
 import util.helper.QuaternionHelper;
 import util.manager.TextureManager;
@@ -33,14 +34,14 @@ public class Skybox extends Entity {
 	 * @param yaw Initial yaw
 	 * @param roll Initial roll
 	 */
-	public Skybox(Entity following, float pitch, float yaw,
-			float roll) {
+	public Skybox(Entity following) {
 		super();
 		this.type = "skybox";
 
 		this.following = following;
 		
-		rotation = QuaternionHelper.getQuaternionFromAngles(pitch, yaw, roll);	
+		//rotation = QuaternionHelper.getQuaternionFromAngles(pitch, yaw, roll);
+		rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 
 		sphere = new Sphere();
 		sphere.setNormals(GLU.GLU_SMOOTH);
@@ -48,7 +49,7 @@ public class Skybox extends Entity {
 		
 		//rotationBuffer = BufferUtils.createFloatBuffer(16);
 		
-		model = ModelLoader.loadObjFile(MODEL_PATH + "skybox.obj", Render3D.drawDistance * 0.5f, TextureManager.STARS);
+		model = ModelLoader.loadObjFile(MODEL_PATH + "skybox.obj", Render3D.drawDistance * 0.8f, TextureManager.STARS);
 	}
 
 	@Override
