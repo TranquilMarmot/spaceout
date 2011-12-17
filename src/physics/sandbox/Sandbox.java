@@ -66,7 +66,7 @@ public class Sandbox {
 		player.type = "dynamicPlayer";
 		Entities.player = player;
 		
-		addRandomSphere();
+		//addRandomSphere();
 		
 		Camera.createCamera();
 		Entities.camera.following = player;
@@ -75,7 +75,7 @@ public class Sandbox {
 		
 		/* BEGIN SKYBOX  */
 		Skybox skybox = new Skybox(Entities.camera);
-		Entities.entities.add(skybox);
+		Entities.skybox = skybox;
 		/* END SKYBOX */
 		
 		/* BEGIN DEBRIS */

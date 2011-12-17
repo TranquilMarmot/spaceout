@@ -1,7 +1,7 @@
 <Entities>
 	<Player>
-		<location>-1070.111f,1980.284f,1550000.0f</location>
-		<rotation>0.0f,0.0f,0.0f, 1.0f</rotation>
+		<location>-1070.111f,1980.284f,-1550000.0f</location>
+		<rotation>0.002583359f,-0.0559893f,0.9984302f,0.00012266426f</rotation>
 		<mass>50.0f</mass>
 		<restitution>0.01f</restitution>
 		<model>SHIP1</model>
@@ -9,7 +9,7 @@
 	
 	<Sun>
 		<location>0.0f,0.0f,0.0f</location>
-		<size>139200.0f</size>
+		<size>1392.0f</size>
 		<color>1.0f,1.0f,0.3f</color>
 		<lightAmbient>1.0f,1.0f,1.0f</lightAmbient>
 		<lightDiffuse>1.0f,1.0f,1.0f</lightDiffuse>
@@ -18,7 +18,7 @@
 
 	<Planet>
 		<name>Earth</name>
-		<location>0.0f,0.0f,1495980.0f</location>
+		<location>0.0f,0.0f,-1495980.0f</location>
 		<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
 		<restitution>0.0f</restitution>
 		<mass>59736.0f</mass>

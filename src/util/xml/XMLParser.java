@@ -107,13 +107,16 @@ public class XMLParser {
 		String type = ele.getNodeName().toLowerCase();
 
 		if (type.equals("player")) {
+			
 			Vector3f location = getLocation(ele);
 			Quaternion rotation = getRotation(ele);
 			float mass = getFloat(ele, "mass");
 			float restitution = getFloat(ele, "restitution");
+  			Player player = new Player(location, rotation, ModelManager.SHIP1, mass, restitution);
+  			player.type = "dynamicPlayer";
 
-			Entities.player = new Player(location, rotation,
-					ModelManager.SHIP1, mass, restitution);
+			Entities.player = player;
+					
 
 		} else if (type.equals("debris")) {
 			int numStars = getInt(ele, "numStars");

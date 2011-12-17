@@ -61,9 +61,14 @@ public class DynamicEntity extends Entity {
 
 		javax.vecmath.Vector3f loca = new javax.vecmath.Vector3f(location.x,
 				location.y, location.z);
+		
+		CollisionShape shape = model.getCollisionShape();
+		
+		javax.vecmath.Vector3f fallInertia = new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f);
+		shape.calculateLocalInertia(mass, fallInertia);
 
 		RigidBodyConstructionInfo rigidBodyCI = new RigidBodyConstructionInfo(
-				mass, defaultState, model.getCollisionShape(), loca);
+				mass, defaultState, shape, loca);
 		rigidBodyCI.restitution = restitution;
 		rigidBody = new RigidBody(rigidBodyCI);
 

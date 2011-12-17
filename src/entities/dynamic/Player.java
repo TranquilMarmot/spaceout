@@ -41,10 +41,10 @@ public class Player extends DynamicEntity {
 	public float stopSpeed = 40.0f;
 
 	/** how fast the player can roll */
-	public float rollSpeed = 2500.0f;
+	public float rollSpeed = 0.025f;
 
 	/** how fast the player can turn */
-	public float turnSpeed = 5.0f;
+	public float turnSpeed = 0.005f;
 
 	public Player(Vector3f location, Quaternion rotation, int model,
 			float mass, float restitution) {
@@ -226,11 +226,41 @@ public class Player extends DynamicEntity {
 			}
 		}
 	}
+	
+	private void rotationLogic(){
+		// TODO very impotant!!! make this framerate independent
+		javax.vecmath.Vector3f angularVelocity = new javax.vecmath.Vector3f();
+		rigidBody.getAngularVelocity(angularVelocity);
+		
+		float xRot = MouseManager.dy * turnSpeed;
+		float yRot = MouseManager.dx * turnSpeed;
+		
+		float zRot = 0.0f;
+		// check if we need to apply torque on the Z axis
+		boolean rollRight = KeyboardManager.rollRight;
+		boolean rollLeft = KeyboardManager.rollLeft;
+
+		// handle applying torque on the Z axis
+		if (rollRight || rollLeft) {
+			if (rollRight)
+				zRot = -rollSpeed;
+			else
+				zRot = rollSpeed;
+		}
+		
+		Vector3f torque = new Vector3f(xRot, yRot, zRot);
+		
+		torque = QuaternionHelper.rotateVectorByQuaternion(torque, rotation);
+		
+		angularVelocity.add(new javax.vecmath.Vector3f(torque.x, torque.y, torque.z));
+		
+		rigidBody.setAngularVelocity(angularVelocity);
+	}
 
 	/**
 	 * Rotate based on mouse movement and input keys
 	 */
-	private void rotationLogic() {
+	private void rotationLogicOld() {
 		if (!Entities.camera.vanityMode) {
 			// apply any torque along the X axis
 			Vector3f xTorque = new Vector3f(-MouseManager.dy * turnSpeed, 0.0f,
@@ -238,7 +268,7 @@ public class Player extends DynamicEntity {
 			xTorque = QuaternionHelper.rotateVectorByQuaternion(xTorque,
 					rotation);
 			rigidBody.applyTorqueImpulse(new javax.vecmath.Vector3f(xTorque.x,
-					xTorque.y, xTorque.z));
+					xTorque.y, xTorque.z));;
 
 			// apply any torque along the Y axis
 			Vector3f yTorque = new Vector3f(0.0f, MouseManager.dx * turnSpeed,
@@ -256,9 +286,9 @@ public class Player extends DynamicEntity {
 			if (rollRight || rollLeft) {
 				Vector3f zTorque;
 				if (rollRight)
-					zTorque = new Vector3f(0.0f, 0.0f, -rollSpeed);
-				else
 					zTorque = new Vector3f(0.0f, 0.0f, rollSpeed);
+				else
+					zTorque = new Vector3f(0.0f, 0.0f, -rollSpeed);
 				zTorque = QuaternionHelper.rotateVectorByQuaternion(zTorque,
 						rotation);
 				rigidBody.applyTorqueImpulse(new javax.vecmath.Vector3f(
