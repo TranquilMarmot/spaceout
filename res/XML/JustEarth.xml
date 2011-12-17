@@ -1,7 +1,7 @@
 <Entities>
 	<Player>
 		<location>-1070.111f,1980.284f,1550000.0f</location>
-		<rotation>0.9999161f,0.0016954464f,0.0013435638f,-0.01277306f</rotation>
+		<rotation>0.0f,0.0f,0.0f, 1.0f</rotation>
 		<mass>50.0f</mass>
 		<restitution>0.01f</restitution>
 		<model>SHIP1</model>
