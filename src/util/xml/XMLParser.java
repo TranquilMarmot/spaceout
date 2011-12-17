@@ -84,8 +84,10 @@ public class XMLParser {
 					getEntity(ele);
 				}
 			}
-			Entities.camera.following = Entities.player;
-			Entities.camera.freeMode = false;
+			if(Entities.player != null){
+				Entities.camera.following = Entities.player;
+				Entities.camera.freeMode = false;
+			}
 		} else {
 			Debug.console
 					.print("Error in XMLParser! Either there was nothing in the given file ("

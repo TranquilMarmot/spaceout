@@ -21,7 +21,7 @@
 		<location>0.0f,0.0f,1495980.0f</location>
 		<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
 		<restitution>0.0f</restitution>
-		<mass>5973600000000000000000.0f</mass>
+		<mass>59736.0f</mass>
 		<size>6371.0f</size>
 	</Planet>
 	

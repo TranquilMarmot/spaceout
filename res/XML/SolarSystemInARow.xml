@@ -27,6 +27,7 @@
 		<location>0.0f,0.0f,598392000.0f</location>
 		<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
 		<mass>3302200000000000000000.0f</mass>
+		<restitution>0.0f</restitution>
 		<size>24397.0</size>
 	</Planet>
 	
@@ -35,6 +36,7 @@
 		<location>0.0f,0.0f,1047186000.0f</location>
 		<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
 		<mass>243400000000000000000000.0f</mass>
+		<restitution>0.0f</restitution>
 		<size>60518.0f</size>
 	</Planet>
 	
@@ -43,6 +45,7 @@
 		<location>0.0f,0.0f,1495980000.0f</location>
 		<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
 		<mass>59736000000000000000000.0f</mass>
+		<restitution>0.0f</restitution>
 		<size>63710.0f</size>
 	</Planet>
 	
@@ -51,6 +54,7 @@
 		<location>0.0f,0.0f,2243970000.0f</location>
 		<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
 		<mass>6418500000000000000000.0f</mass>
+		<restitution>0.0f</restitution>
 		<size>33962.0f</size>
 	</Planet>
 </Entities>
