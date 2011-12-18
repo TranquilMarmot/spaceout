@@ -62,7 +62,7 @@ public class Sandbox {
 		Quaternion playerRotation = new Quaternion(0.002583359f, -0.0559893f, 0.9984302f, 0.00012266426f);
 		float playerMass = 50.0f;
 		float playerRestitution = 0.01f;
-		Player player = new Player(playerLocation, playerRotation, ModelManager.SHIP1, playerMass, playerRestitution);
+		Player player = new Player(playerLocation, playerRotation, ModelManager.WING_X, playerMass, playerRestitution);
 		player.type = "dynamicPlayer";
 		Entities.player = player;
 		
@@ -81,7 +81,7 @@ public class Sandbox {
 		/* BEGIN DEBRIS */
 		Debris debris = new Debris(Entities.camera, 500, 50000.0f, 420420L);
 		debris.update();
-		Entities.entities.add(debris);
+		Entities.staticEntities.add(debris);
 		/* END DEBRIS */
 	}
 	
@@ -147,7 +147,7 @@ public class Sandbox {
 		DynamicEntity ground = new DynamicEntity(groundLocation, groundRotation, groundModel, 0.0f, 0.0f);
 		ground.type = "Ground";
 		ground.location = location;
-		Entities.entities.add(ground);
+		Entities.dynamicEntities.add(ground);
 		/* END GROUND */
 	}
 	
@@ -202,7 +202,7 @@ public class Sandbox {
 		
 		Planet p = new Planet(sphereLocation, sphereRotation, sphereSize, sphereMass, 0.01f, TextureManager.EARTH);
 		
-		Entities.entities.add(p);
+		Entities.dynamicEntities.add(p);
 	}
 	
 	public static void helloWorld(){

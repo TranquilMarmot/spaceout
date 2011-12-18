@@ -37,8 +37,7 @@ public class Render3D {
 		// add or remove any entities
 		Entities.checkBuffers();
 		
-		// update the player and the camera (it's important that the player is updated first)
-		Entities.player.update();
+		// update the camera
 		Entities.camera.update();
 		
 		// update the skybox
@@ -63,8 +62,11 @@ public class Render3D {
 		// draw any lights
 		drawLights();
 		
+		//draw all dynamic entities
+		drawDynamicEntities();
+		
 		// draw all entities
-		drawEntities();
+		drawStaticEntities();
 		
 		// draw the player
 		drawPlayer();
@@ -87,8 +89,38 @@ public class Render3D {
 	/**
 	 * Draws all entities
 	 */
-	private static void drawEntities(){
-		Iterator<Entity> entityIterator = Entities.entities.iterator();
+	private static void drawDynamicEntities(){
+		Iterator<DynamicEntity> entityIterator = Entities.dynamicEntities.iterator();
+		while (entityIterator.hasNext()) {
+			Entity ent = entityIterator.next();
+			
+			// figure out where to translate to
+			float transX = Entities.camera.location.x - ent.location.x;
+			float transY = Entities.camera.location.y - ent.location.y;
+			float transZ = Entities.camera.location.z - ent.location.z;
+
+			GL11.glPushMatrix();{
+				GL11.glTranslatef(transX, transY, transZ);
+				
+				if(Physics.drawDebug && (ent.getClass().equals(DynamicEntity.class) || ent.getClass().equals(LaserBullet.class))){
+					((DynamicEntity) ent).drawPhysicsDebug();
+				}
+				
+				Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+				Quaternion.negate(ent.rotation, reverse);
+				QuaternionHelper.toFloatBuffer(reverse, cameraRotBuffer);
+				GL11.glMultMatrix(cameraRotBuffer);
+				
+				ent.draw();
+			}GL11.glPopMatrix();
+		}
+	}
+	
+	/**
+	 * Draws all entities
+	 */
+	private static void drawStaticEntities(){
+		Iterator<Entity> entityIterator = Entities.staticEntities.iterator();
 		while (entityIterator.hasNext()) {
 			Entity ent = entityIterator.next();
 
@@ -167,6 +199,7 @@ public class Render3D {
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glLightModeli(GL11.GL_LIGHT_MODEL_LOCAL_VIEWER, GL11.GL_TRUE);
 		GL11.glLightModeli(GL11.GL_LIGHT_MODEL_TWO_SIDE, GL11.GL_TRUE);
+		GL11.glShadeModel(GL11.GL_SMOOTH);
 	}
 
 	/**

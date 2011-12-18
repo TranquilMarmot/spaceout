@@ -17,6 +17,8 @@ import com.bulletphysics.linearmath.Transform;
 
 import entities.Entities;
 import entities.Entity;
+import entities.Light;
+import entities.dynamic.DynamicEntity;
 
 /**
  * Commands that the {@link Console} carries out. See console_commands.txt.
@@ -62,16 +64,18 @@ public class ConsoleCommands {
 				}
 
 				// list entities
-				else if (command.equals("listentities")) {
-					console.print("Listing entities...");
-					for (entities.Entity ent : Entities.entities)
-						console.print(ent.type);
+				else if (command.equals("list")) {
+					listCommand(toker);
 				}
 
 				// print number of entities
 				else if (command.equals("numentities")) {
-					console.print("Number of entities: "
-							+ Entities.entities.size());
+					console.print("Number of static entities: "
+							+ Entities.staticEntities.size());
+					console.print("Number of dynamic entities: "
+							+ Entities.dynamicEntities.size());
+					console.print("Number of lights: "
+							+ Entities.lights.size());
 				}
 
 				// 99 bottles of beer on the wall
@@ -111,6 +115,26 @@ public class ConsoleCommands {
 				console.print("Incorrect number format "
 						+ e.getLocalizedMessage().toLowerCase());
 			}
+		}
+	}
+	
+	private static void listCommand(StringTokenizer toker){
+		String which = toker.nextToken();
+		
+		if(which.equals("dynamic")){
+			console.print("Listing dynamic entities...");
+			for (DynamicEntity ent : Entities.dynamicEntities)
+				console.print(ent.type);
+		} else if(which.equals("static")){
+			console.print("Listing static entities...");
+			for(Entity ent : Entities.staticEntities)
+				console.print(ent.type);
+		} else if(which.equals("lights") || which.equals("light")){
+			console.print("Listing lights...");
+			for(Light l : Entities.lights)
+				console.print(l.type + "; using light " + l.light);
+		} else{
+			console.print("List command not recognized! (" + which + ")");
 		}
 	}
 
@@ -153,7 +177,7 @@ public class ConsoleCommands {
 	private static void warpCommand(StringTokenizer toker) {
 		boolean hasWarped = false;
 		String warp = toker.nextToken();
-		for (Entity ent : Entities.entities) {
+		for (Entity ent : Entities.dynamicEntities){
 			//FIXME does not work
 			if (ent.type.toLowerCase().equals(warp.toLowerCase())) {
 				console.print("Warping Player to " + ent.type + " ("
@@ -259,12 +283,23 @@ public class ConsoleCommands {
 				Entities.camera.following = Entities.player;
 				changed = true;
 			} else {
-				for (Entity ent : Entities.entities) {
+				for (DynamicEntity ent : Entities.dynamicEntities) {
 					if (ent.type.toLowerCase().equals(toFollow.toLowerCase())) {
 						console.print("Camera now following " + toFollow);
 						Entities.camera.following = ent;
 						changed = true;
 						break;
+					}
+				}
+				
+				if(!changed){
+					for (Entity ent : Entities.staticEntities) {
+						if (ent.type.toLowerCase().equals(toFollow.toLowerCase())) {
+							console.print("Camera now following " + toFollow);
+							Entities.camera.following = ent;
+							changed = true;
+							break;
+						}
 					}
 				}
 			}

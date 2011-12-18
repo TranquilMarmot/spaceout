@@ -16,9 +16,9 @@ import util.manager.MouseManager;
  */
 public class Camera extends Entity {
 	/** initial values for when the camera is created */
-	private static final float INIT_ZOOM = 1.4f;
+	private static final float INIT_ZOOM = 12.0f;
 	private static final float INIT_XOFFSET = 0.0f;
-	private static final float INIT_YOFFSET = -0.35F;
+	private static final float INIT_YOFFSET = -3.0F;
 
 	/** the entity that the camera is following */
 	public Entity following;
@@ -27,7 +27,7 @@ public class Camera extends Entity {
 	protected long lastUpdate;
 
 	/** how fast the camera moves in free mode */
-	public float speed = 5.0f;
+	public float speed = 0.05f;
 
 	/** zoom level */
 	public float zoom;
@@ -39,7 +39,7 @@ public class Camera extends Entity {
 	/** maximum zoom level */
 	private float maxZoom = 3000.0f;
 	/** minimum zoom level */
-	private float minZoom = 1.25f;
+	private float minZoom = 10.0f;
 
 	/**
 	 * If this is false, the camera rotates with whatever it's following. If
@@ -76,7 +76,6 @@ public class Camera extends Entity {
 		Entities.camera.xOffset = INIT_XOFFSET;
 	}
 
-	@Override
 	/**
 	 * Update the camera. Ths handles following other things, mode switches etc.
 	 */
@@ -136,6 +135,7 @@ public class Camera extends Entity {
 				freeMode = true;
 			} else if (freeMode && !vanityMode) {
 				freeMode = false;
+				rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 			}
 			modeKeyDown = true;
 		}
@@ -242,5 +242,4 @@ public class Camera extends Entity {
 	public void cleanup() {
 		// camera is clean, man
 	}
-
 }

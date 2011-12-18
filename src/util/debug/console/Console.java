@@ -187,6 +187,8 @@ public class Console {
 			else
 				// TODO give the player a name
 				text.add("<Player> " + input);
+			
+			scroll = 0;
 		}
 		// clear the input string (this is important!)
 		input = "";

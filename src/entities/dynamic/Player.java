@@ -27,6 +27,10 @@ public class Player extends DynamicEntity {
 	public float yAccel = 100.0f;
 	/** how fast the player acclerates along the X axis */
 	public float zAccel = 100.0f;
+	
+	public float maxX = 50.0f;
+	public float maxY = 50.0f;
+	public float maxZ = 50.0f;
 
 	/** how fast the player's bullet go */
 	public float bulletSpeed = 250.0f;
@@ -35,16 +39,16 @@ public class Player extends DynamicEntity {
 	private boolean button0Down = false;
 
 	/** how fast the player stabilizes when the stabilize key is pressed */
-	public float stabilizationSpeed = 40.0f;
+	public float stabilizationSpeed = 0.3f;
 
 	/** how fast the player stops when the stop key is pressed */
-	public float stopSpeed = 40.0f;
+	public float stopSpeed = 1.0f;
 
 	/** how fast the player can roll */
-	public float rollSpeed = 0.025f;
+	public float rollSpeed = 1.0f;
 
 	/** how fast the player can turn */
-	public float turnSpeed = 0.005f;
+	public float turnSpeed = 0.0025f;
 
 	public Player(Vector3f location, Quaternion rotation, int model,
 			float mass, float restitution) {
@@ -55,8 +59,10 @@ public class Player extends DynamicEntity {
 	}
 
 	@Override
-	public void update() {
-		super.update();
+	/**
+	 * This is called for every dynamic entity at the end of each tick of the physics world
+	 */
+	public void update(float timeStep) {
 		// only update if we're not paused, a menu isn't up and the camera's not
 		// in free mode
 		if (!Runner.paused && !GUI.menuUp && !Entities.camera.freeMode) {
@@ -65,12 +71,16 @@ public class Player extends DynamicEntity {
 				rigidBody.activate();
 
 			// perform acceleration
-			zLogic();
-			xLogic();
-			yLogic();
+			zLogic(timeStep);
+			xLogic(timeStep);
+			yLogic(timeStep);
+			
+			// cap the players' speed
+			checkSpeed();
 
 			// perform rotation
-			rotationLogic();
+			if(!Entities.camera.vanityMode)
+				rotationLogic(timeStep);
 
 			// handle bullet shooting
 			if (MouseManager.button0 && !button0Down && !Debug.consoleOn) {
@@ -82,25 +92,25 @@ public class Player extends DynamicEntity {
 
 			// handle stabilization
 			if (KeyboardManager.stabilize)
-				stabilize();
+				stabilize(timeStep);
 
 			// handle stopping
 			if (KeyboardManager.stop)
-				stop();
+				stop(timeStep);
 		}
 	}
 
 	/**
 	 * Gracefully stops the player
 	 */
-	private void stop() {
+	private void stop(float timeStep) {
 		javax.vecmath.Vector3f linearVelocity = new javax.vecmath.Vector3f(
 				0.0f, 0.0f, 0.0f);
 		rigidBody.getLinearVelocity(linearVelocity);
 
-		float stopX = linearVelocity.x - (linearVelocity.x / stopSpeed);
-		float stopY = linearVelocity.y - (linearVelocity.y / stopSpeed);
-		float stopZ = linearVelocity.z - (linearVelocity.z / stopSpeed);
+		float stopX = linearVelocity.x - ((linearVelocity.x / stopSpeed) * timeStep);
+		float stopY = linearVelocity.y - ((linearVelocity.y / stopSpeed) * timeStep);
+		float stopZ = linearVelocity.z - ((linearVelocity.z / stopSpeed) * timeStep);
 
 		rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(stopX, stopY,
 				stopZ));
@@ -109,17 +119,17 @@ public class Player extends DynamicEntity {
 	/**
 	 * Gracefullt stabilizes the player's angular velocity
 	 */
-	private void stabilize() {
+	private void stabilize(float timeStep) {
 		javax.vecmath.Vector3f angularVelocity = new javax.vecmath.Vector3f(
 				0.0f, 0.0f, 0.0f);
 		rigidBody.getAngularVelocity(angularVelocity);
 		// TODO make this framerate independent
 		float stableZ = angularVelocity.z
-				- (angularVelocity.z / stabilizationSpeed);
+				- ((angularVelocity.z / stabilizationSpeed) * timeStep);
 		float stableX = angularVelocity.x
-				- (angularVelocity.x / stabilizationSpeed);
+				- ((angularVelocity.x / stabilizationSpeed) * timeStep);
 		float stableY = angularVelocity.y
-				- (angularVelocity.y / stabilizationSpeed);
+				- ((angularVelocity.y / stabilizationSpeed) * timeStep);
 
 		rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(stableX,
 				stableY, stableZ));
@@ -147,7 +157,7 @@ public class Player extends DynamicEntity {
 		LaserBullet bullet = new LaserBullet(bulletLocation, bulletRotation,
 				bulletModel, bulletMass, bulletRestitution);
 		bullet.type = "bullet";
-		Entities.addBuffer.add(bullet);
+		Entities.dynamicAddBuffer.add(bullet);
 
 		// give the bullet some speed
 		javax.vecmath.Vector3f currentVelocity = new javax.vecmath.Vector3f();
@@ -161,20 +171,20 @@ public class Player extends DynamicEntity {
 	/**
 	 * Accelerate/decelerate along the Z axis
 	 */
-	private void zLogic() {
+	private void zLogic(float timeStep) {
 		boolean forward = KeyboardManager.forward;
 		boolean backward = KeyboardManager.backward;
 
 		if (forward || backward) {
 			if (forward) {
 				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(0.0f, 0.0f, zAccel), rotation);
+						new Vector3f(0.0f, 0.0f, zAccel * timeStep), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
 			if (backward) {
 				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(0.0f, 0.0f, -zAccel), rotation);
+						new Vector3f(0.0f, 0.0f, -zAccel * timeStep), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
@@ -184,20 +194,20 @@ public class Player extends DynamicEntity {
 	/**
 	 * Accelerate/decelerate along the X axis
 	 */
-	private void xLogic() {
+	private void xLogic(float timeStep) {
 		boolean left = KeyboardManager.left;
 		boolean right = KeyboardManager.right;
 
 		if (left || right) {
 			if (left) {
 				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(xAccel, 0.0f, 0.0f), rotation);
+						new Vector3f(xAccel * timeStep, 0.0f, 0.0f), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
 			if (right) {
 				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(-xAccel, 0.0f, 0.0f), rotation);
+						new Vector3f(-xAccel * timeStep, 0.0f, 0.0f), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
@@ -207,27 +217,52 @@ public class Player extends DynamicEntity {
 	/**
 	 * Accelerate/decelerate along the Y axis
 	 */
-	private void yLogic() {
+	private void yLogic(float timeStep) {
 		boolean ascend = KeyboardManager.ascend;
 		boolean descend = KeyboardManager.descend;
 
 		if (ascend || descend) {
 			if (ascend) {
 				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(0.0f, -yAccel, 0.0f), rotation);
+						new Vector3f(0.0f, -yAccel * timeStep, 0.0f), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
 			if (descend) {
 				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(0.0f, yAccel, 0.0f), rotation);
+						new Vector3f(0.0f, yAccel * timeStep, 0.0f), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
 		}
 	}
 	
-	private void rotationLogic(){
+	private void checkSpeed(){
+		javax.vecmath.Vector3f speed = new javax.vecmath.Vector3f();
+		rigidBody.getLinearVelocity(speed);
+		
+		javax.vecmath.Vector3f result = new javax.vecmath.Vector3f(speed.x, speed.y, speed.z);
+		
+		if(speed.x > maxX)
+			result.x = maxX;
+		else if(speed.x < -maxX)
+			result.x = -maxX;
+		
+		if(speed.y > maxY)
+			result.y = maxY;
+		else if(speed.y < -maxY)
+			result.y = -maxY;
+		
+		if(speed.z > maxZ)
+			result.z = maxZ;
+		else if(speed.z < -maxZ)
+			result.z = -maxZ;
+		
+		if((result.x != speed.x) || (result.y != speed.y) || (result.z != speed.z))
+			rigidBody.setLinearVelocity(result);
+	}
+	
+	private void rotationLogic(float timeStep){
 		// TODO very impotant!!! make this framerate independent
 		javax.vecmath.Vector3f angularVelocity = new javax.vecmath.Vector3f();
 		rigidBody.getAngularVelocity(angularVelocity);
@@ -243,9 +278,9 @@ public class Player extends DynamicEntity {
 		// handle applying torque on the Z axis
 		if (rollRight || rollLeft) {
 			if (rollRight)
-				zRot = -rollSpeed;
+				zRot = -rollSpeed * timeStep;
 			else
-				zRot = rollSpeed;
+				zRot = rollSpeed * timeStep;
 		}
 		
 		Vector3f torque = new Vector3f(xRot, yRot, zRot);
@@ -255,45 +290,5 @@ public class Player extends DynamicEntity {
 		angularVelocity.add(new javax.vecmath.Vector3f(torque.x, torque.y, torque.z));
 		
 		rigidBody.setAngularVelocity(angularVelocity);
-	}
-
-	/**
-	 * Rotate based on mouse movement and input keys
-	 */
-	private void rotationLogicOld() {
-		if (!Entities.camera.vanityMode) {
-			// apply any torque along the X axis
-			Vector3f xTorque = new Vector3f(-MouseManager.dy * turnSpeed, 0.0f,
-					0.0f);
-			xTorque = QuaternionHelper.rotateVectorByQuaternion(xTorque,
-					rotation);
-			rigidBody.applyTorqueImpulse(new javax.vecmath.Vector3f(xTorque.x,
-					xTorque.y, xTorque.z));;
-
-			// apply any torque along the Y axis
-			Vector3f yTorque = new Vector3f(0.0f, MouseManager.dx * turnSpeed,
-					0.0f);
-			yTorque = QuaternionHelper.rotateVectorByQuaternion(yTorque,
-					rotation);
-			rigidBody.applyTorqueImpulse(new javax.vecmath.Vector3f(yTorque.x,
-					yTorque.y, yTorque.z));
-
-			// check if we need to apply torque on the Z axis
-			boolean rollRight = KeyboardManager.rollRight;
-			boolean rollLeft = KeyboardManager.rollLeft;
-
-			// handle applying torque on the Z axis
-			if (rollRight || rollLeft) {
-				Vector3f zTorque;
-				if (rollRight)
-					zTorque = new Vector3f(0.0f, 0.0f, rollSpeed);
-				else
-					zTorque = new Vector3f(0.0f, 0.0f, -rollSpeed);
-				zTorque = QuaternionHelper.rotateVectorByQuaternion(zTorque,
-						rotation);
-				rigidBody.applyTorqueImpulse(new javax.vecmath.Vector3f(
-						zTorque.x, zTorque.y, zTorque.z));
-			}
-		}
 	}
 }

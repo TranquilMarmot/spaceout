@@ -24,6 +24,8 @@ public class TextureManager {
 	private static Texture mars;
 	private static Texture ship1;
 	private static Texture laserbullet;
+	private static Texture spirit;
+	private static Texture saucer;
 	
 	private static final String BACKGROUND_IMAGE_PATH = "res/images/gui/Menu/Background/";
 	
@@ -41,6 +43,8 @@ public class TextureManager {
 	public static final int LASERBULLET = 8;
 	public static final int BACKGROUND1 = 9;
 	public static final int BACKGROUND2 = 10;
+	public static final int SPIRIT = 11;
+	public static final int SAUCER = 12;
 
 	/**
 	 * Returns the requested texture and initializes it if need be
@@ -93,6 +97,14 @@ public class TextureManager {
 			if(background2 == null)
 				initTexture(BACKGROUND2);
 			return background2;
+		case SPIRIT:
+			if(spirit == null)
+				initTexture(SPIRIT);
+			return spirit;
+		case SAUCER:
+			if(saucer == null)
+				initTexture(SAUCER);
+			return saucer;
 		default:
 			return null;
 		}
@@ -155,6 +167,14 @@ public class TextureManager {
 			case BACKGROUND2:
 				if(background2 == null)
 					background2 = TextureLoader.getTexture("JPG", new FileInputStream(BACKGROUND_IMAGE_PATH + "apod2.jpg"), GL11.GL_NEAREST);
+				break;
+			case SPIRIT:
+				if(spirit == null)
+					spirit = TextureLoader.getTexture("PNG", new FileInputStream(TEXTURE_PATH + "spirit.png"), GL11.GL_NEAREST);
+				break;
+			case SAUCER:
+				if(saucer == null)
+					saucer = TextureLoader.getTexture("PNG", new FileInputStream(TEXTURE_PATH + "saucer.png"), GL11.GL_NEAREST);
 				break;
 			default:
 				System.out.println("Error creating texture! Parameter "

@@ -1,9 +1,9 @@
-# Blender MTL File: ''
+# Blender MTL File: 'fighter-2-spirit-latest.blend'
 # Material Count: 1
-newmtl Material_ship1_ship1.
-Ns 90.196078
+newmtl Material
+Ns 96.078431
 Ka 0.000000 0.000000 0.000000
-Kd 0.409600 0.409600 0.409600
+Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000

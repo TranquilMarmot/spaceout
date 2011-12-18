@@ -20,6 +20,7 @@ import entities.Entities;
 import entities.Skybox;
 import entities.celestial.Planet;
 import entities.celestial.Sun;
+import entities.dynamic.DynamicEntity;
 import entities.dynamic.Player;
 import entities.particles.Debris;
 
@@ -81,7 +82,7 @@ public class XMLParser {
 					Element ele = (Element) nodes.item(i);
 
 					// get the entity
-					getEntity(ele);
+					makeEntity(ele);
 				}
 			}
 			if(Entities.player != null){
@@ -103,98 +104,130 @@ public class XMLParser {
 	 *            The element to create the entity from
 	 * @return An entity representing the element
 	 */
-	private static void getEntity(Element ele) {
+	private static void makeEntity(Element ele) {
 		String type = ele.getNodeName().toLowerCase();
 
 		if (type.equals("player")) {
-			
-			Vector3f location = getLocation(ele);
-			Quaternion rotation = getRotation(ele);
-			float mass = getFloat(ele, "mass");
-			float restitution = getFloat(ele, "restitution");
-  			Player player = new Player(location, rotation, ModelManager.SHIP1, mass, restitution);
-  			player.type = "dynamicPlayer";
-
-			Entities.player = player;
-					
-
+			makePlayer(ele);
 		} else if (type.equals("debris")) {
-			int numStars = getInt(ele, "numStars");
-			float range = getFloat(ele, "range");
-			long seed = 1337420L;
-			Entities.entities.add(new Debris(Entities.camera, numStars, range,
-					seed));
+			makeDebris(ele);
 		} else if (type.equals("sun")) {
-			Vector3f location = getLocation(ele);
-			float size = getFloat(ele, "size");
-
-			float[] color = getColor(ele, "color");
-			float[] lightAmbient = getColor(ele, "lightAmbient");
-			float[] lightDiffuse = getColor(ele, "lightDiffuse");
-
-			int light = getInt(ele, "light");
-			int glLight = GL11.GL_LIGHT0;
-			switch (light) {
-			case (0):
-				glLight = GL11.GL_LIGHT0;
-				break;
-			case (1):
-				glLight = GL11.GL_LIGHT1;
-				break;
-			case (2):
-				glLight = GL11.GL_LIGHT2;
-				break;
-			case (3):
-				glLight = GL11.GL_LIGHT3;
-				break;
-			case (4):
-				glLight = GL11.GL_LIGHT4;
-				break;
-			case (5):
-				glLight = GL11.GL_LIGHT5;
-				break;
-			case (6):
-				glLight = GL11.GL_LIGHT6;
-				break;
-			case (7):
-				glLight = GL11.GL_LIGHT7;
-				break;
-			default:
-				System.out
-						.println("Error getting glLight for Sun! Using GL_LIGHT0");
-			}
-
-			Entities.lights.add(new Sun(location, size, glLight, color,
-					lightAmbient, lightDiffuse));
+			makeSun(ele);
 		} else if (type.equals("planet")) {
-			int texture = 0;
-			String name = getString(ele, "name");
-			if (name.equals("Earth"))
-				texture = TextureManager.EARTH;
-			else if (name.equals("Mercury"))
-				texture = TextureManager.MERCURY;
-			else if (name.equals("Venus"))
-				texture = TextureManager.VENUS;
-			else if (name.equals("Mars"))
-				texture = TextureManager.MARS;
-			else
-				System.out
-						.println("Error! Didn't find texture while creating Planet "
-								+ name + " in XMLParser!");
-
-			Vector3f location = getLocation(ele);
-			Quaternion rotation = getRotation(ele);
-			float mass = getFloat(ele, "mass");
-			float size = getFloat(ele, "size");
-			float restitution = getFloat(ele, "restitution");
-
-			Planet p = new Planet(location, rotation, size, mass, restitution,
-					texture);
-
-			Entities.entities.add(p);
+			makePlanet(ele);
+		} else if(type.equals("saucer")){
+			makeSaucer(ele);
 		}
 	}
+	
+	private static void makeSaucer(Element ele){
+		Vector3f location = getLocation(ele);
+		Quaternion rotation = getRotation(ele);
+		float mass = getFloat(ele, "mass");
+		float restitution = getFloat(ele, "restitution");
+		
+		DynamicEntity saucer = new DynamicEntity(location, rotation, ModelManager.SAUCER, mass, restitution);
+		saucer.type = "sacuer";
+		Entities.dynamicEntities.add(saucer);
+	}
+	
+	private static void makePlayer(Element ele){
+		Vector3f location = getLocation(ele);
+		Quaternion rotation = getRotation(ele);
+		float mass = getFloat(ele, "mass");
+		float restitution = getFloat(ele, "restitution");
+			Player player = new Player(location, rotation, ModelManager.WING_X, mass, restitution);
+			player.type = "dynamicPlayer";
 
+		Entities.player = player;
+	}
+	
+	private static void makeDebris(Element ele){
+		int numStars = getInt(ele, "numStars");
+		float range = getFloat(ele, "range");
+		long seed = 1337420L;
+		Entities.staticEntities.add(new Debris(Entities.camera, numStars, range,
+				seed));
+	}
+	
+	private static void makeSun(Element ele){
+		Vector3f location = getLocation(ele);
+		float size = getFloat(ele, "size");
+
+		float[] color = getColor(ele, "color");
+		float[] lightAmbient = getColor(ele, "lightAmbient");
+		float[] lightDiffuse = getColor(ele, "lightDiffuse");
+
+		int light = getInt(ele, "light");
+		int glLight = GL11.GL_LIGHT0;
+		switch (light) {
+		case (0):
+			glLight = GL11.GL_LIGHT0;
+			break;
+		case (1):
+			glLight = GL11.GL_LIGHT1;
+			break;
+		case (2):
+			glLight = GL11.GL_LIGHT2;
+			break;
+		case (3):
+			glLight = GL11.GL_LIGHT3;
+			break;
+		case (4):
+			glLight = GL11.GL_LIGHT4;
+			break;
+		case (5):
+			glLight = GL11.GL_LIGHT5;
+			break;
+		case (6):
+			glLight = GL11.GL_LIGHT6;
+			break;
+		case (7):
+			glLight = GL11.GL_LIGHT7;
+			break;
+		default:
+			System.out
+					.println("Error getting glLight for Sun! Using GL_LIGHT0");
+		}
+
+		Entities.lights.add(new Sun(location, size, glLight, color,
+				lightAmbient, lightDiffuse));
+	}
+	
+	private static void makePlanet(Element ele){
+		int texture = 0;
+		String name = getString(ele, "name");
+		if (name.equals("Earth"))
+			texture = TextureManager.EARTH;
+		else if (name.equals("Mercury"))
+			texture = TextureManager.MERCURY;
+		else if (name.equals("Venus"))
+			texture = TextureManager.VENUS;
+		else if (name.equals("Mars"))
+			texture = TextureManager.MARS;
+		else
+			System.out
+					.println("Error! Didn't find texture while creating Planet "
+							+ name + " in XMLParser!");
+
+		Vector3f location = getLocation(ele);
+		Quaternion rotation = getRotation(ele);
+		float mass = getFloat(ele, "mass");
+		float size = getFloat(ele, "size");
+		float restitution = getFloat(ele, "restitution");
+
+		Planet p = new Planet(location, rotation, size, mass, restitution,
+				texture);
+		p.type = name;
+
+		Entities.dynamicEntities.add(p);
+	}
+
+	/**
+	 * Gets a vector3f representing a location
+	 * @param ele The element to get the location from
+	 * @return A vector representing he location
+	 */
 	private static Vector3f getLocation(Element ele) {
 		String loc = getString(ele, "location");
 		StringTokenizer toker = new StringTokenizer(loc, ",");
@@ -204,6 +237,11 @@ public class XMLParser {
 		return new Vector3f(x, y, z);
 	}
 
+	/**
+	 * Gets a quaternion representing a rotation
+	 * @param ele The element to get the rotation from
+	 * @return A quaternion representing the rotation
+	 */
 	private static Quaternion getRotation(Element ele) {
 		String rot = getString(ele, "rotation");
 		StringTokenizer toker = new StringTokenizer(rot, ",");
@@ -215,7 +253,7 @@ public class XMLParser {
 	}
 
 	/**
-	 * Returns a float arraty of 3 values given a string formatted like
+	 * Returns a float array of 3 values given a string formatted like
 	 * "1.0f,1.0f,1.0f" or similar three numbers
 	 * 
 	 * @param ele

@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import entities.dynamic.DynamicEntity;
 import entities.dynamic.Player;
 
 /**
@@ -22,25 +23,41 @@ public class Entities {
 	public static Skybox skybox;
 
 	/** all the current entities */
-	public static ArrayList<Entity> entities = new ArrayList<Entity>();
-
+	public static ArrayList<Entity> staticEntities = new ArrayList<Entity>();
+	/** all the dynamic entities */
+	public static ArrayList<DynamicEntity> dynamicEntities = new ArrayList<DynamicEntity>();
 	/** all the current lights */
 	public static ArrayList<Light> lights = new ArrayList<Light>();
-
+	
 	/** entities to add on next frame (to avoid ConcurrentModificationException) */
-	public static ArrayList<Entity> addBuffer = new ArrayList<Entity>();
-
+	public static ArrayList<Entity> staticAddBuffer = new ArrayList<Entity>();
+	/** entities to add on next frame (to avoid ConcurrentModificationException) */
+	public static ArrayList<DynamicEntity> dynamicAddBuffer = new ArrayList<DynamicEntity>();
+	/** entities to add on next frame (to avoid ConcurrentModificationException) */
+	public static ArrayList<Light> lightAddBuffer = new ArrayList<Light>();
+	
+	
 	/**
 	 * entities to remove on next frame (to avoid
 	 * ConcurrentModificationException)
 	 */
-	public static ArrayList<Entity> removeBuffer = new ArrayList<Entity>();
+	public static ArrayList<Entity> staticRemoveBuffer = new ArrayList<Entity>();
+	/**
+	 * entities to remove on next frame (to avoid
+	 * ConcurrentModificationException)
+	 */
+	public static ArrayList<DynamicEntity> dynamicRemoveBuffer = new ArrayList<DynamicEntity>();
+	/**
+	 * entities to remove on next frame (to avoid
+	 * ConcurrentModificationException)
+	 */
+	public static ArrayList<Light> lightRemoveBuffer = new ArrayList<Light>();
 
 	/**
 	 * @return Whether or not there are any entities at the moment
 	 */
 	public static boolean entitiesExist() {
-		return entities.size() > 0;
+		return staticEntities.size() > 0 || dynamicEntities.size() > 0;
 	}
 
 	/**
@@ -71,21 +88,61 @@ public class Entities {
 	 */
 	public static void checkBuffers() {
 		// add any Entities in the addBuffer
-		if (!addBuffer.isEmpty()) {
-			Iterator<Entity> addIterator = addBuffer.iterator();
+		if (!staticAddBuffer.isEmpty()) {
+			Iterator<Entity> addIterator = staticAddBuffer.iterator();
 			while (addIterator.hasNext()) {
 				Entity ent = addIterator.next();
-				entities.add(ent);
+				staticEntities.add(ent);
 				addIterator.remove();
 			}
 		}
 
 		// remove any entities from the removeBuffer
-		if (!removeBuffer.isEmpty()) {
-			Iterator<Entity> removeIterator = removeBuffer.iterator();
+		if (!staticRemoveBuffer.isEmpty()) {
+			Iterator<Entity> removeIterator = staticRemoveBuffer.iterator();
 			while (removeIterator.hasNext()) {
 				Entity ent = removeIterator.next();
-				entities.remove(ent);
+				staticEntities.remove(ent);
+				removeIterator.remove();
+			}
+		}
+		
+		// add any Entities in the addBuffer
+		if (!dynamicAddBuffer.isEmpty()) {
+			Iterator<DynamicEntity> addIterator = dynamicAddBuffer.iterator();
+			while (addIterator.hasNext()) {
+				DynamicEntity ent = addIterator.next();
+				dynamicEntities.add(ent);
+				addIterator.remove();
+			}
+		}
+
+		// remove any entities from the removeBuffer
+		if (!dynamicRemoveBuffer.isEmpty()) {
+			Iterator<DynamicEntity> removeIterator = dynamicRemoveBuffer.iterator();
+			while (removeIterator.hasNext()) {
+				DynamicEntity ent = removeIterator.next();
+				dynamicEntities.remove(ent);
+				removeIterator.remove();
+			}
+		}
+		
+		// add any Entities in the addBuffer
+		if (!lightAddBuffer.isEmpty()) {
+			Iterator<Light> addIterator = lightAddBuffer.iterator();
+			while (addIterator.hasNext()) {
+				Light ent = addIterator.next();
+				lights.add(ent);
+				addIterator.remove();
+			}
+		}
+
+		// remove any entities from the removeBuffer
+		if (!lightRemoveBuffer.isEmpty()) {
+			Iterator<Light> removeIterator = lightRemoveBuffer.iterator();
+			while (removeIterator.hasNext()) {
+				Light ent = removeIterator.next();
+				lights.remove(ent);
 				removeIterator.remove();
 			}
 		}
@@ -95,14 +152,24 @@ public class Entities {
 	 * Delete all of the entities
 	 */
 	public static void cleanup() {
-		for (Entity ent : entities) {
+		for (Entity ent : staticEntities) {
 			ent.cleanup();
 		}
+		
+		for(DynamicEntity ent : dynamicEntities){
+			ent.cleanup();
+		}
+		
 		player = null;
 		camera = null;
-		entities.clear();
+		staticEntities.clear();
+		dynamicEntities.clear();
 		lights.clear();
-		addBuffer.clear();
-		removeBuffer.clear();
+		dynamicAddBuffer.clear();
+		dynamicRemoveBuffer.clear();
+		staticAddBuffer.clear();
+		staticRemoveBuffer.clear();
+		lightAddBuffer.clear();
+		lightRemoveBuffer.clear();
 	}
 }

@@ -18,7 +18,7 @@ public abstract class Light extends Entity {
 	protected FloatBuffer lightPosBuffer, colorBuffer;
 
 	/** the light to use */
-	protected int light;
+	public int light;
 
 	/**
 	 * Create a new light
