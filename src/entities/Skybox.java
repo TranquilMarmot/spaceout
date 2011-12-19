@@ -42,7 +42,7 @@ public class Skybox extends Entity {
 
 		rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 
-		model = ModelLoader.loadObjFile(MODEL_PATH + "skybox.obj", skyboxSize,
+		model = ModelLoader.loadObjFile(MODEL_PATH + "skybox.obj", 100000.0f,
 				TextureManager.STARS);
 	}
 

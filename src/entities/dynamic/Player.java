@@ -22,15 +22,13 @@ import com.bulletphysics.collision.dispatch.CollisionObject;
  */
 public class Player extends DynamicEntity {
 	/** how fast the player acclerates along the X axis */
-	public float xAccel = 100.0f;
+	public float xAccel = 1000.0f;
 	/** how fast the player acclerates along the X axis */
-	public float yAccel = 100.0f;
+	public float yAccel = 1000.0f;
 	/** how fast the player acclerates along the X axis */
-	public float zAccel = 100.0f;
+	public float zAccel = 1000.0f;
 	
-	public float maxX = 50.0f;
-	public float maxY = 50.0f;
-	public float maxZ = 50.0f;
+	public float maxSpeed = 200.0f;
 
 	/** how fast the player's bullet go */
 	public float bulletSpeed = 250.0f;
@@ -39,13 +37,13 @@ public class Player extends DynamicEntity {
 	private boolean button0Down = false;
 
 	/** how fast the player stabilizes when the stabilize key is pressed */
-	public float stabilizationSpeed = 0.3f;
+	public float stabilizationSpeed = 0.5f;
 
 	/** how fast the player stops when the stop key is pressed */
 	public float stopSpeed = 1.0f;
 
 	/** how fast the player can roll */
-	public float rollSpeed = 1.0f;
+	public float rollSpeed = 0.5f;
 
 	/** how fast the player can turn */
 	public float turnSpeed = 0.0025f;
@@ -70,10 +68,15 @@ public class Player extends DynamicEntity {
 			if (!rigidBody.isActive())
 				rigidBody.activate();
 
+			javax.vecmath.Vector3f speed = new javax.vecmath.Vector3f();
+			rigidBody.getLinearVelocity(speed);
+			
+			if(speed.x + speed.y + speed.z < maxSpeed){
 			// perform acceleration
 			zLogic(timeStep);
 			xLogic(timeStep);
 			yLogic(timeStep);
+			}
 			
 			// cap the players' speed
 			checkSpeed();
@@ -243,6 +246,7 @@ public class Player extends DynamicEntity {
 		
 		javax.vecmath.Vector3f result = new javax.vecmath.Vector3f(speed.x, speed.y, speed.z);
 		
+		/*
 		if(speed.x > maxX)
 			result.x = maxX;
 		else if(speed.x < -maxX)
@@ -257,6 +261,10 @@ public class Player extends DynamicEntity {
 			result.z = maxZ;
 		else if(speed.z < -maxZ)
 			result.z = -maxZ;
+			*/
+		
+		
+			
 		
 		if((result.x != speed.x) || (result.y != speed.y) || (result.z != speed.z))
 			rigidBody.setLinearVelocity(result);
