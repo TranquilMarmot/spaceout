@@ -127,7 +127,7 @@ public class XMLParser {
 		float restitution = getFloat(ele, "restitution");
 		
 		DynamicEntity saucer = new DynamicEntity(location, rotation, ModelManager.SAUCER, mass, restitution);
-		saucer.type = "sacuer";
+		saucer.type = "saucer";
 		Entities.dynamicEntities.add(saucer);
 	}
 	
