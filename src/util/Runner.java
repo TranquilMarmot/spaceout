@@ -1,8 +1,8 @@
 package util;
 
+import graphics.gui.GUI;
+import graphics.gui.menu.MainMenu;
 import graphics.render.Graphics;
-import gui.GUI;
-import gui.menu.MainMenu;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;

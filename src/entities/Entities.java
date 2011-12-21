@@ -7,6 +7,9 @@ import org.lwjgl.util.vector.Vector3f;
 
 import entities.dynamic.DynamicEntity;
 import entities.dynamic.Player;
+import entities.light.Light;
+import entities.passive.Camera;
+import entities.passive.Skybox;
 
 /**
  * Handles all the current entities

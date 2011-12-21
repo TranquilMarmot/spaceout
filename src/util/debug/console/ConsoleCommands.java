@@ -17,8 +17,8 @@ import com.bulletphysics.linearmath.Transform;
 
 import entities.Entities;
 import entities.Entity;
-import entities.Light;
 import entities.dynamic.DynamicEntity;
+import entities.light.Light;
 
 /**
  * Commands that the {@link Console} carries out. See console_commands.txt.

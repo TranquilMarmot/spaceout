@@ -1,6 +1,6 @@
 package graphics.render;
 
-import gui.GUI;
+import graphics.gui.GUI;
 
 import org.lwjgl.opengl.GL11;
 

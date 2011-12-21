@@ -24,7 +24,7 @@ public class Graphics {
 
 		// can only render 3D stuff if there are entities and a camera
 		if(Entities.entitiesExist() && Entities.camera != null)
-			Render3D.renderAndUpdate3DScene();
+			Render3D.render3DScene();
 		Render2D.updateAndRender2DScene();
 		
 		// handle any GL errors that might occur

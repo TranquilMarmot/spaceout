@@ -13,9 +13,8 @@ import util.helper.DisplayHelper;
 import util.helper.QuaternionHelper;
 import entities.Entities;
 import entities.Entity;
-import entities.Light;
 import entities.dynamic.DynamicEntity;
-import entities.dynamic.LaserBullet;
+import entities.light.Light;
 
 /**
  * Handles all 3D rendering. For the moment, also updates Entities.entities.
@@ -33,7 +32,7 @@ public class Render3D {
 	/**
 	 * Updates and draws everything in Entities.entities
 	 */
-	protected static void renderAndUpdate3DScene() {
+	protected static void render3DScene() {
 		// add or remove any entities
 		Entities.checkBuffers();
 		
@@ -65,8 +64,8 @@ public class Render3D {
 		//draw all dynamic entities
 		drawDynamicEntities();
 		
-		// draw all entities
-		drawStaticEntities();
+		// draw all static entities
+		drawAndUpdateStaticEntities();
 		
 		// draw the player
 		drawPlayer();
@@ -92,7 +91,7 @@ public class Render3D {
 	private static void drawDynamicEntities(){
 		Iterator<DynamicEntity> entityIterator = Entities.dynamicEntities.iterator();
 		while (entityIterator.hasNext()) {
-			Entity ent = entityIterator.next();
+			DynamicEntity ent = entityIterator.next();
 			
 			// figure out where to translate to
 			float transX = Entities.camera.location.x - ent.location.x;
@@ -102,8 +101,8 @@ public class Render3D {
 			GL11.glPushMatrix();{
 				GL11.glTranslatef(transX, transY, transZ);
 				
-				if(Physics.drawDebug && (ent.getClass().equals(DynamicEntity.class) || ent.getClass().equals(LaserBullet.class))){
-					((DynamicEntity) ent).drawPhysicsDebug();
+				if(Physics.drawDebug){
+					ent.drawPhysicsDebug();
 				}
 				
 				Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
@@ -119,13 +118,12 @@ public class Render3D {
 	/**
 	 * Draws all entities
 	 */
-	private static void drawStaticEntities(){
+	private static void drawAndUpdateStaticEntities(){
 		Iterator<Entity> entityIterator = Entities.staticEntities.iterator();
 		while (entityIterator.hasNext()) {
 			Entity ent = entityIterator.next();
 
-			// update the entity. This grabs it's most recent position and
-			// rotation.
+			// update the entity
 			ent.update();
 			
 			// figure out where to translate to
@@ -135,10 +133,6 @@ public class Render3D {
 
 			GL11.glPushMatrix();{
 				GL11.glTranslatef(transX, transY, transZ);
-				
-				if(Physics.drawDebug && (ent.getClass().equals(DynamicEntity.class) || ent.getClass().equals(LaserBullet.class))){
-					((DynamicEntity) ent).drawPhysicsDebug();
-				}
 				
 				Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 				Quaternion.negate(ent.rotation, reverse);
@@ -151,7 +145,8 @@ public class Render3D {
 	}
 	
 	/**
-	 * Draws all lights
+	 * Draws all lights. Note that lights are set up earlier in the rendering loop,
+	 * and as such don't need to be set up here.
 	 */
 	private static void drawLights(){
 		Iterator<Light> entityIterator = Entities.lights.iterator();

@@ -15,14 +15,14 @@ import org.w3c.dom.NodeList;
 import util.debug.Debug;
 import util.manager.ModelManager;
 import util.manager.TextureManager;
-import entities.Camera;
 import entities.Entities;
-import entities.Skybox;
-import entities.celestial.Planet;
-import entities.celestial.Sun;
 import entities.dynamic.DynamicEntity;
+import entities.dynamic.Planet;
 import entities.dynamic.Player;
-import entities.particles.Debris;
+import entities.light.Sun;
+import entities.passive.Camera;
+import entities.passive.Skybox;
+import entities.passive.particles.Debris;
 
 /**
  * Loads entities from an XML file and puts them into the ArrayList

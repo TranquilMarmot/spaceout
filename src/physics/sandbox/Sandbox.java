@@ -22,14 +22,14 @@ import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
 
-import entities.Camera;
 import entities.Entities;
-import entities.Skybox;
-import entities.celestial.Planet;
-import entities.celestial.Sun;
 import entities.dynamic.DynamicEntity;
+import entities.dynamic.Planet;
 import entities.dynamic.Player;
-import entities.particles.Debris;
+import entities.light.Sun;
+import entities.passive.Camera;
+import entities.passive.Skybox;
+import entities.passive.particles.Debris;
 import graphics.model.Model;
 
 public class Sandbox {

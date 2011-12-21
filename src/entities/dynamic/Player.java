@@ -1,7 +1,7 @@
 package entities.dynamic;
 
 import entities.Entities;
-import gui.GUI;
+import graphics.gui.GUI;
 
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;

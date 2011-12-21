@@ -155,7 +155,7 @@ public class DisplayHelper {
 	public static void doFullscreenLogic(){
 		//check for fullscreen key press
 		if (KeyboardManager.fullscreen && !fullscreenDown) {
-			DisplayHelper.fullscreen = !DisplayHelper.fullscreen;
+			fullscreen = !fullscreen;
 			fullscreenDown = true;
 		}
 

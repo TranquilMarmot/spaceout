@@ -1,10 +1,13 @@
 /*
  * Colliison branch TODO
+ * TODO Make maxSpeed work (in player, but also for all ships)
+ * TODO fully implement the ship class (i.e. make different classes for each model)
  * TODO Give things thrusters
  * TODO Figure out how to draw far away stuff
  * 
  * 
  * GUI branch TODO
+ * TODO Destroy the Java AWT window when going into fullscreen, then create it again on leaving fullscreen
  * TODO Make the arrow keys/WASD control which item is selected and have enter load that item
  * TODO Make draggable boxes
  * TODO Maybe make everything drawn by call lists instead of point-by-point-per-frame. Would it really be worth the performance increase? Probably not.
