@@ -28,7 +28,7 @@ public class PhysicsDebugDrawer extends IDebugDraw {
 		GL11.glPushMatrix();{
 			GL11.glBegin(GL11.GL_LINES); {
 				GL11.glVertex3f(0.0f, 0.0f, 0.0f);
-				GL11.glVertex3f((to.x - from.x) * 30, (to.y - from.y) * 30, (to.z - from.z) * 30);
+				GL11.glVertex3f((to.x - from.x) * 10, (to.y - from.y) * 10, (to.z - from.z) * 10);
 			}
 			GL11.glEnd();
 		}

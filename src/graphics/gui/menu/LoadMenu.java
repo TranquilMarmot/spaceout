@@ -1,5 +1,6 @@
 package graphics.gui.menu;
 
+import entities.Entities;
 import graphics.gui.GUI;
 import graphics.gui.GUIObject;
 import graphics.gui.button.MenuButton;
@@ -80,6 +81,7 @@ public class LoadMenu extends GUIObject {
 					/* FIXME this if statement is only temporary!!! */
 					if (selectedFile.equals("PhysicsSandbox.xml")) {
 						Sandbox.createSandboxWorld();
+						Entities.staticEntities.add(new Sandbox());
 					} else {
 						// load entities from XML
 						XMLParser.loadEntitiesFromXmlFile(path

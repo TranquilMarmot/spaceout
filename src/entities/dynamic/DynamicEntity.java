@@ -1,8 +1,5 @@
 package entities.dynamic;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
 import javax.vecmath.Quat4f;
 
 import org.lwjgl.opengl.GL11;
@@ -12,16 +9,12 @@ import org.lwjgl.util.vector.Vector3f;
 import physics.Physics;
 import util.manager.ModelManager;
 
-import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.shapes.CollisionShape;
-import com.bulletphysics.dynamics.DynamicsWorld;
-import com.bulletphysics.dynamics.InternalTickCallback;
 import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
 
-import entities.Entities;
 import entities.Entity;
 import graphics.model.Model;
 
@@ -43,12 +36,6 @@ public class DynamicEntity extends Entity {
 
 	/**
 	 * Overloaded constructor
-	 * 
-	 * @param location
-	 * @param rotation
-	 * @param model
-	 * @param mass
-	 * @param restitution
 	 */
 	public DynamicEntity(Vector3f location, Quaternion rotation, int model,
 			float mass, float restitution) {
@@ -56,39 +43,51 @@ public class DynamicEntity extends Entity {
 				restitution);
 	}
 
+	/**
+	 * Creates the entity and adds it to the dynamics world (but NOT to Entities.dynamicEntities)
+	 * @param location Initial location of the entity
+	 * @param rotation Initial rotation of the entity (<i>Be careful!</i> If the quaternion isn't right, i.e. not normalized, funny things will happen)
+	 * @param model The {@link Model} for the entity
+	 * @param mass The mass for the entity
+	 * @param restitution The restitution (bounciness) of the entity
+	 */
 	public DynamicEntity(Vector3f location, Quaternion rotation, Model model,
 			float mass, float restitution) {
+		// see Entity for location and rotation
 		this.location = location;
 		this.rotation = rotation;
 		this.model = model;
 
-		/* BEGIN RIGID BODY CREATION */
+		// the transform to use for putting the entity into the world
 		Transform transform = new Transform();
 		transform.setRotation(new Quat4f(rotation.x, rotation.y, rotation.z,
 				rotation.w));
 		transform.origin.set(location.x, location.y, location.z);
 		DefaultMotionState defaultState = new DefaultMotionState(transform);
 
+		// location to use for the entity (need a javax.vecmath Vector3f instead of the given org.lwjgl.util.vector Vector3f
 		javax.vecmath.Vector3f loca = new javax.vecmath.Vector3f(location.x,
 				location.y, location.z);
 
+		// the collision shape is made when the model is made
 		CollisionShape shape = model.getCollisionShape();
 
+		// no initial fall inertia (it isn't vital to set this)
 		javax.vecmath.Vector3f fallInertia = new javax.vecmath.Vector3f(0.0f,
 				0.0f, 0.0f);
 		shape.calculateLocalInertia(mass, fallInertia);
 
+		// create the rigid body based on all the stuff we've grabbed
 		RigidBodyConstructionInfo rigidBodyCI = new RigidBodyConstructionInfo(
 				mass, defaultState, shape, loca);
 		rigidBodyCI.restitution = restitution;
 		rigidBody = new RigidBody(rigidBodyCI);
 
+		// set the pointer so the entity can be updated (see DynamicEntityCallback)
 		rigidBody.setUserPointer(this);
 
-		Physics.dynamicsWorld.setInternalTickCallback(
-				new DynamicEntityCallback(), null);
+		// finally, add it to the world
 		Physics.dynamicsWorld.addRigidBody(rigidBody);
-		/* END RIGID BODY CREATION */
 	}
 
 	/**
@@ -142,54 +141,4 @@ public class DynamicEntity extends Entity {
 	public void cleanup() {
 		removeFlag = true;
 	}
-}
-
-class DynamicEntityCallback extends InternalTickCallback {
-	@Override
-	public void internalTick(DynamicsWorld world, float timeStep) {
-		Iterator<CollisionObject> it = world.getCollisionObjectArray()
-				.iterator();
-		while (it.hasNext()) {
-			CollisionObject c = null;
-			try {
-				c = it.next();
-			} catch (NoSuchElementException e) {
-				it = world.getCollisionObjectArray().iterator();
-			}
-
-			if (c != null) {
-				processEntity(c, timeStep);
-			}
-		}
-	}
-	
-	/**
-	 * Updates an entity's location and then performs any necessary logic
-	 * @param c Collision object for the entity being updated
-	 * @param timeStep Amount of time passed since last tick
-	 */
-	private void processEntity(CollisionObject c, float timeStep){
-		DynamicEntity ent = (DynamicEntity) c.getUserPointer();
-
-		if (ent.removeFlag) {
-			Physics.dynamicsWorld.removeCollisionObject(c);
-			Entities.dynamicRemoveBuffer.add(ent);
-		} else {
-			// get the rigid body's world transform
-			Transform trans = new Transform();
-			ent.rigidBody.getMotionState().getWorldTransform(trans);
-
-			// set this entity's location
-			javax.vecmath.Vector3f origin = trans.origin;
-			ent.location.set(origin.x, origin.y, origin.z);
-
-			// set this entity's rotation
-			Quat4f rot = new Quat4f();
-			trans.getRotation(rot);
-			ent.rotation.set(rot.x, rot.y, rot.z, rot.w);
-
-			ent.update(timeStep);
-		}
-	}
-
 }

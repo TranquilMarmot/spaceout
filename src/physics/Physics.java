@@ -13,6 +13,7 @@ import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.bulletphysics.linearmath.Clock;
 
+
 /**
  * This class handles the dynamics world and everything related
  * 
@@ -67,6 +68,8 @@ public class Physics {
 
 		// see the PhysicsDebugDrawer class
 		dynamicsWorld.setDebugDrawer(new PhysicsDebugDrawer());
+		
+		Physics.dynamicsWorld.setInternalTickCallback(new DynamicEntityCallback(), null);
 	}
 
 	/**

@@ -1,6 +1,7 @@
 /*
  * Colliison branch TODO
  * TODO Make maxSpeed work (in player, but also for all ships)
+ * TODO Add a thing to the Physics Debug that also draws an arrow representing the current speed (first point is entity origin, second is origin+linear velocity)
  * TODO fully implement the ship class (i.e. make different classes for each model)
  * TODO Give things thrusters
  * TODO Figure out how to draw far away stuff

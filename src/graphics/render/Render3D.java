@@ -170,12 +170,17 @@ public class Render3D {
 	 * Draws the player
 	 */
 	private static void drawPlayer(){
+		//System.out.println(Entities.player.rotation.x + ", " + Entities.player.rotation.y + ", "  + Entities.player.rotation.z + ", " + Entities.player.rotation.w);
 		float transX = Entities.camera.location.x - Entities.player.location.x;
 		float transY = Entities.camera.location.y - Entities.player.location.y;
 		float transZ = Entities.camera.location.z - Entities.player.location.z;
 
 		GL11.glPushMatrix();{
 			GL11.glTranslatef(transX, transY, transZ);
+			
+			if(Physics.drawDebug){
+				Entities.player.drawPhysicsDebug();
+			}
 			
 			Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 			Quaternion.negate(Entities.player.rotation, reverse);
