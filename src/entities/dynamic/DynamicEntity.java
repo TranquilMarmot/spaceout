@@ -95,7 +95,7 @@ public class DynamicEntity extends Entity {
 	 * amount of time passed since the previous tick
 	 * 
 	 * @param timeStep
-	 *            Amount of time passed since last tick (automatically passed
+	 *            Amount of time passed since last tick (automatically passed by bullet)
 	 */
 	public void update(float timeStep) {
 	}

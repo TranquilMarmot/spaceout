@@ -84,6 +84,9 @@ public class Runner {
 		 */
 		MainMenu mainMenu = new MainMenu();
 		GUI.addBuffer.add(mainMenu);
+		
+		Debug.printSysInfo();
+		System.out.println("-------------------------------");
 	}
 
 	/**

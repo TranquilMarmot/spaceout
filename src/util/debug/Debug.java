@@ -213,5 +213,35 @@ public class Debug {
 
 		return delta;
 	}
-
+	
+	public static void printSysInfo(){
+		// print out which version of Spaceout this is
+		System.out.println("Spaceout version " + Runner.VERSION);
+		
+		// print out LWJGL version, followed by whether the system is 32 or 64 bit
+		System.out.print("LWJGL version " + Sys.getVersion());
+		if(Sys.is64Bit())
+			System.out.println(" (64 bit)");
+		else
+			System.out.println(" (32 bit)");
+		
+		// print out which version of OpenGL is being used
+		String glVersion = GL11.glGetString(GL11.GL_VERSION);
+		
+		String glDriver = null;
+		int i = glVersion.indexOf(' ');
+		if (i != -1) {
+			glDriver = glVersion.substring(i + 1);
+			glVersion = glVersion.substring(0, i);
+		}
+		
+		System.out.print("OpenGL version " + glVersion);
+		if(glDriver != null)
+			System.out.println("(" + glDriver + ")");
+		
+		// print out info about the graphics card
+		String glVendor = GL11.glGetString(GL11.GL_VENDOR);
+		String glRenderer = GL11.glGetString(GL11.GL_RENDERER);
+		System.out.println(glRenderer + " (" + glVendor + ")");
+	}
 }
