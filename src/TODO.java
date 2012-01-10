@@ -1,4 +1,7 @@
 /*
+ * 
+ * TODO IMPORTANT Right now all resources are created by being passed a 'new FileInputStream', so there's never a chance to close the stream once the data is loaded. Check to make sure either the code being used closes the stream or refactor some code
+ * 
  * Colliison branch TODO
  * TODO Make maxSpeed work (in player, but also for all ships)
  * TODO Add a thing to the Physics Debug that also draws an arrow representing the current speed (first point is entity origin, second is origin+linear velocity)

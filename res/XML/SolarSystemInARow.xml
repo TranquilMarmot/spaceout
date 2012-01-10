@@ -1,6 +1,6 @@
 <Entities>
 	<Player>
-		<location>-1070.111f,1980.284f,1550000.0f</location>
+		<location>0.0f,0.0f,598360000.0f</location>
 		<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
 		<mass>50.0f</mass>
 		<restitution>0.01f</restitution>

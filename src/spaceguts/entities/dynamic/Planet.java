@@ -20,12 +20,12 @@ import spaceguts.graphics.model.Model;
  *
  */
 public class Planet extends DynamicEntity{
-	final static short collisionGroup = CollisionTypes.PLANET;
-	final static short collidesWith = (short)(CollisionTypes.SHIP | CollisionTypes.WALL | CollisionTypes.PLANET);
+	final static short COL_GROUP = CollisionTypes.PLANET;
+	final static short COL_WITH = (short)(CollisionTypes.SHIP | CollisionTypes.WALL | CollisionTypes.PLANET);
 	
 	public Planet(Vector3f location, Quaternion rotation, float size,
 			float mass, float restitution, int texture) {
-		super(location, rotation, makeModel(size, texture), mass, restitution, collisionGroup, collidesWith);
+		super(location, rotation, makeModel(size, texture), mass, restitution, COL_GROUP, COL_WITH);
 		rigidBody.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 		rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(0.0f, 0.015f, 0.0f));
 		

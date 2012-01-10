@@ -14,12 +14,12 @@ import com.bulletphysics.collision.shapes.CollisionShape;
 import spaceguts.util.manager.TextureManager;
 
 public class Box extends DynamicEntity{
-	final static short collisionGroup = CollisionTypes.WALL;
-	final static short collidesWith = (short)(CollisionTypes.SHIP | CollisionTypes.PLANET);
+	final static short COL_GROUP = CollisionTypes.WALL;
+	final static short COL_WITH = (short)(CollisionTypes.SHIP | CollisionTypes.PLANET);
 
 	public Box(Vector3f location, Quaternion rotation, Vector3f size, float mass,
 			float restitution) {
-		super(location, rotation, makeModel(size), mass, restitution, collisionGroup, collidesWith);
+		super(location, rotation, makeModel(size), mass, restitution, COL_GROUP, COL_WITH);
 		this.type = "Ground";
 	}
 	

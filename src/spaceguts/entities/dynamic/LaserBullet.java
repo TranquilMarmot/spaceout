@@ -3,6 +3,8 @@ package spaceguts.entities.dynamic;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import spaceguts.physics.CollisionTypes;
+
 /**
  * Bullet that just keeps going straight
  * 
@@ -10,6 +12,9 @@ import org.lwjgl.util.vector.Vector3f;
  * 
  */
 public class LaserBullet extends DynamicEntity {
+	final static short COL_GROUP = CollisionTypes.BULLET;
+	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET);
+	
 	/** how long the bullet stays alive for */
 	public float life = 10.0f;
 

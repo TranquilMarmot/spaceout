@@ -23,8 +23,8 @@ import com.bulletphysics.collision.dispatch.CollisionObject;
  * @author TranquilMarmot
  */
 public class Player extends DynamicEntity {
-	final static short collisionGroup = CollisionTypes.SHIP;
-	final static short collidesWith = (short)(CollisionTypes.WALL | CollisionTypes.PLANET);
+	final static short COL_GROUP = CollisionTypes.SHIP;
+	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET);
 	
 	/** how fast the player acclerates along the X axis */
 	public float xAccel = 1000.0f;
@@ -55,7 +55,7 @@ public class Player extends DynamicEntity {
 
 	public Player(Vector3f location, Quaternion rotation, int model,
 			float mass, float restitution) {
-		super(location, rotation, model, mass, restitution, collisionGroup, collidesWith);
+		super(location, rotation, model, mass, restitution, COL_GROUP, COL_WITH);
 		// make sure the rigid body doesn't deactivate
 		rigidBody.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 		this.type = "player";
