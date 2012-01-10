@@ -31,6 +31,7 @@
  * TODO Have all the data managers (ModelManager, TextureManager) keep track of how many objects are using the data. If none are for an extended period of time, delete them! (Be careful with this one!)
  * TODO It might also be a good idea to replace everything that's references as an int (in ModelHandler and TextureHandler) and replace them with enumerations, but it's really no big deal
  * TODO Create an AnimatedModel class that has a call list for every frame (probably in a good old ArrayList) Give it addFrame(int callList) and int curFrame.
+ * TODO Look into having ships stored as a zip file containing an obj, a png, and an xml file (is it too slow? easier if its uncompressed?)
 
  * TODO create a Ship class that the player uses. Create a Gun class that the Ship uses to fire bullets.
  * 
