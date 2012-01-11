@@ -13,7 +13,7 @@ import spaceguts.util.helper.QuaternionHelper;
 import spaceguts.util.manager.KeyboardManager;
 import spaceguts.util.manager.ModelManager;
 import spaceguts.util.manager.MouseManager;
-import spaceout.Health;
+import spaceout.interfaces.Health;
 import spaceout.ship.Ship;
 
 import com.bulletphysics.collision.dispatch.CollisionObject;
