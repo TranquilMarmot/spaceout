@@ -5,11 +5,8 @@ import java.util.Iterator;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import spaceguts.entities.dynamic.DynamicEntity;
-import spaceguts.entities.dynamic.Player;
-import spaceguts.entities.light.Light;
-import spaceguts.entities.passive.Camera;
-import spaceguts.entities.passive.Skybox;
+import spaceout.entities.dynamic.Player;
+import spaceout.entities.passive.Skybox;
 
 /**
  * Handles all the current entities

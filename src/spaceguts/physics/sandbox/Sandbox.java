@@ -9,15 +9,17 @@ import org.lwjgl.util.vector.Vector3f;
 
 import spaceguts.util.manager.ModelManager;
 import spaceguts.util.manager.TextureManager;
+import spaceguts.entities.Camera;
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
-import spaceguts.entities.dynamic.Box;
-import spaceguts.entities.dynamic.Planet;
-import spaceguts.entities.dynamic.Player;
-import spaceguts.entities.light.Sun;
-import spaceguts.entities.passive.Camera;
-import spaceguts.entities.passive.Skybox;
-import spaceguts.entities.passive.particles.Debris;
+import spaceguts.graphics.model.Model;
+import spaceout.entities.dynamic.Box;
+import spaceout.entities.dynamic.Planet;
+import spaceout.entities.dynamic.Player;
+import spaceout.entities.passive.Skybox;
+import spaceout.entities.passive.Sun;
+import spaceout.entities.passive.particles.Debris;
+import spaceout.ship.Ship;
 
 /**
  * Sandbox class for physics testing and fun
@@ -62,7 +64,24 @@ public class Sandbox extends Entity{
 		Quaternion playerRotation = new Quaternion(-0.0058384943f, 0.9989326f, -0.045716275f, -0.0030980944f);
 		float playerMass = 50.0f;
 		float playerRestitution = 0.01f;
-		Player player = new Player(playerLocation, playerRotation, ModelManager.WING_X, playerMass, playerRestitution);
+		
+		/* TEMP SHIP INFO TODO make this load from XML */
+		String shipName = "WingX";
+		Model shipModel = ModelManager.getModel(ModelManager.WING_X);
+		int shipHealth = 100;
+		float shipMass = 50.0f;
+		float shipRestitution = 0.01f;
+		Vector3f shipAcceleration = new Vector3f(1000.0f, 1000.0f, 1000.0f);
+		float shipTopSpeed = 200.0f;
+		float shipStabilizationSpeed = 0.5f;
+		float shipStopSpeed = 1.0f;
+		float shipRollSpeed = 0.5f;
+		float shipXTurnSpeed = 0.0025f;
+		float shipYTurnSpeed = 0.0025f;
+		
+		Ship ship = new Ship(shipName, shipModel, shipHealth, shipMass, shipRestitution, shipAcceleration, shipTopSpeed, shipStabilizationSpeed, shipStopSpeed, shipRollSpeed, shipXTurnSpeed, shipYTurnSpeed);
+		
+		Player player = new Player(playerLocation, playerRotation, ship, playerMass, playerRestitution);
 		player.type = "dynamicPlayer";
 		Entities.player = player;
 		

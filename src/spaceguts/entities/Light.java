@@ -1,4 +1,4 @@
-package spaceguts.entities.light;
+package spaceguts.entities;
 
 import java.nio.FloatBuffer;
 
@@ -6,8 +6,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector3f;
 
-import spaceguts.entities.Entities;
-import spaceguts.entities.Entity;
 
 /**
  * Any object that gives off light needs to extend this. This adds a light int,

@@ -1,10 +1,8 @@
-package spaceguts.entities.passive;
+package spaceguts.entities;
 
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-import spaceguts.entities.Entities;
-import spaceguts.entities.Entity;
 
 import spaceguts.util.Runner;
 import spaceguts.util.debug.Debug;

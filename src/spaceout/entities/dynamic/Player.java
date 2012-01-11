@@ -1,19 +1,20 @@
-package spaceguts.entities.dynamic;
-
-import spaceguts.entities.Entities;
-import spaceguts.graphics.gui.GUI;
+package spaceout.entities.dynamic;
 
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import spaceguts.entities.DynamicEntity;
+import spaceguts.entities.Entities;
+import spaceguts.graphics.gui.GUI;
 import spaceguts.physics.CollisionTypes;
-
 import spaceguts.util.Runner;
 import spaceguts.util.debug.Debug;
 import spaceguts.util.helper.QuaternionHelper;
 import spaceguts.util.manager.KeyboardManager;
 import spaceguts.util.manager.ModelManager;
 import spaceguts.util.manager.MouseManager;
+import spaceout.Health;
+import spaceout.ship.Ship;
 
 import com.bulletphysics.collision.dispatch.CollisionObject;
 
@@ -22,43 +23,22 @@ import com.bulletphysics.collision.dispatch.CollisionObject;
  * 
  * @author TranquilMarmot
  */
-public class Player extends DynamicEntity {
+public class Player extends DynamicEntity implements Health {
 	final static short COL_GROUP = CollisionTypes.SHIP;
 	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET);
 	
-	/** how fast the player acclerates along the X axis */
-	public float xAccel = 1000.0f;
-	/** how fast the player acclerates along the X axis */
-	public float yAccel = 1000.0f;
-	/** how fast the player acclerates along the X axis */
-	public float zAccel = 1000.0f;
-	
-	public float maxSpeed = 200.0f;
-
-	/** how fast the player's bullet go */
-	public float bulletSpeed = 2500.0f;
+	private Ship ship;
 
 	/** to keep the button from being held down */
 	private boolean button0Down = false;
 
-	/** how fast the player stabilizes when the stabilize key is pressed */
-	public float stabilizationSpeed = 0.5f;
-
-	/** how fast the player stops when the stop key is pressed */
-	public float stopSpeed = 1.0f;
-
-	/** how fast the player can roll */
-	public float rollSpeed = 0.5f;
-
-	/** how fast the player can turn */
-	public float turnSpeed = 0.0025f;
-
-	public Player(Vector3f location, Quaternion rotation, int model,
+	public Player(Vector3f location, Quaternion rotation, Ship ship,
 			float mass, float restitution) {
-		super(location, rotation, model, mass, restitution, COL_GROUP, COL_WITH);
+		super(location, rotation, ship.getModel(), mass, restitution, COL_GROUP, COL_WITH);
 		// make sure the rigid body doesn't deactivate
 		rigidBody.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
-		this.type = "player";
+		this.ship = ship;
+		this.type = "Player";
 	}
 
 	@Override
@@ -76,7 +56,7 @@ public class Player extends DynamicEntity {
 			javax.vecmath.Vector3f speed = new javax.vecmath.Vector3f();
 			rigidBody.getLinearVelocity(speed);
 			
-			if(speed.x + speed.y + speed.z < maxSpeed){
+			if(speed.x + speed.y + speed.z < ship.getTopSpeed()){
 			// perform acceleration
 			zLogic(timeStep);
 			xLogic(timeStep);
@@ -116,9 +96,9 @@ public class Player extends DynamicEntity {
 				0.0f, 0.0f, 0.0f);
 		rigidBody.getLinearVelocity(linearVelocity);
 
-		float stopX = linearVelocity.x - ((linearVelocity.x / stopSpeed) * timeStep);
-		float stopY = linearVelocity.y - ((linearVelocity.y / stopSpeed) * timeStep);
-		float stopZ = linearVelocity.z - ((linearVelocity.z / stopSpeed) * timeStep);
+		float stopX = linearVelocity.x - ((linearVelocity.x / ship.getStopSpeed()) * timeStep);
+		float stopY = linearVelocity.y - ((linearVelocity.y / ship.getStopSpeed()) * timeStep);
+		float stopZ = linearVelocity.z - ((linearVelocity.z / ship.getStopSpeed()) * timeStep);
 
 		rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(stopX, stopY,
 				stopZ));
@@ -133,11 +113,11 @@ public class Player extends DynamicEntity {
 		rigidBody.getAngularVelocity(angularVelocity);
 		// TODO make this framerate independent
 		float stableZ = angularVelocity.z
-				- ((angularVelocity.z / stabilizationSpeed) * timeStep);
+				- ((angularVelocity.z / ship.getStabilizationSpeed()) * timeStep);
 		float stableX = angularVelocity.x
-				- ((angularVelocity.x / stabilizationSpeed) * timeStep);
+				- ((angularVelocity.x / ship.getStabilizationSpeed()) * timeStep);
 		float stableY = angularVelocity.y
-				- ((angularVelocity.y / stabilizationSpeed) * timeStep);
+				- ((angularVelocity.y / ship.getStabilizationSpeed()) * timeStep);
 
 		rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(stableX,
 				stableY, stableZ));
@@ -161,9 +141,11 @@ public class Player extends DynamicEntity {
 		int bulletModel = ModelManager.LASERBULLET;
 		float bulletMass = 0.25f;
 		float bulletRestitution = 1.0f;
+		int bulletDamage = 10;
+		float bulletSpeed = 2500.0f;
 
 		LaserBullet bullet = new LaserBullet(bulletLocation, bulletRotation,
-				bulletModel, bulletMass, bulletRestitution);
+				bulletModel, bulletMass, bulletRestitution, bulletDamage);
 		Entities.dynamicAddBuffer.add(bullet);
 
 		// give the bullet some speed
@@ -185,13 +167,13 @@ public class Player extends DynamicEntity {
 		if (forward || backward) {
 			if (forward) {
 				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(0.0f, 0.0f, zAccel * timeStep), rotation);
+						new Vector3f(0.0f, 0.0f, ship.getAccelerationSpeed().z * timeStep), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
 			if (backward) {
 				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(0.0f, 0.0f, -zAccel * timeStep), rotation);
+						new Vector3f(0.0f, 0.0f, -ship.getAccelerationSpeed().z * timeStep), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
@@ -208,13 +190,13 @@ public class Player extends DynamicEntity {
 		if (left || right) {
 			if (left) {
 				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(xAccel * timeStep, 0.0f, 0.0f), rotation);
+						new Vector3f(ship.getAccelerationSpeed().x * timeStep, 0.0f, 0.0f), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
 			if (right) {
 				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(-xAccel * timeStep, 0.0f, 0.0f), rotation);
+						new Vector3f(-ship.getAccelerationSpeed().x * timeStep, 0.0f, 0.0f), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
@@ -231,47 +213,32 @@ public class Player extends DynamicEntity {
 		if (ascend || descend) {
 			if (ascend) {
 				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(0.0f, -yAccel * timeStep, 0.0f), rotation);
+						new Vector3f(0.0f, -ship.getAccelerationSpeed().y * timeStep, 0.0f), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
 			if (descend) {
 				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(0.0f, yAccel * timeStep, 0.0f), rotation);
+						new Vector3f(0.0f, ship.getAccelerationSpeed().y * timeStep, 0.0f), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
 		}
 	}
 	
+	/**
+	 * Keep the speed in range of this ship's top speed
+	 */
 	private void checkSpeed(){
-		javax.vecmath.Vector3f speed = new javax.vecmath.Vector3f();
-		rigidBody.getLinearVelocity(speed);
-		
-		javax.vecmath.Vector3f result = new javax.vecmath.Vector3f(speed.x, speed.y, speed.z);
-		
-		/*
-		if(speed.x > maxX)
-			result.x = maxX;
-		else if(speed.x < -maxX)
-			result.x = -maxX;
-		
-		if(speed.y > maxY)
-			result.y = maxY;
-		else if(speed.y < -maxY)
-			result.y = -maxY;
-		
-		if(speed.z > maxZ)
-			result.z = maxZ;
-		else if(speed.z < -maxZ)
-			result.z = -maxZ;
-			*/
-		
-		
-			
-		
-		if((result.x != speed.x) || (result.y != speed.y) || (result.z != speed.z))
-			rigidBody.setLinearVelocity(result);
+	    javax.vecmath.Vector3f velocity = new javax.vecmath.Vector3f();
+		rigidBody.getLinearVelocity(velocity);
+		float speed = velocity.length();
+		if(speed > ship.getTopSpeed()){
+			velocity.x *= ship.getTopSpeed() / speed;
+			velocity.y *= ship.getTopSpeed() / speed;
+			velocity.z *= ship.getTopSpeed() / speed;
+			rigidBody.setLinearVelocity(velocity);
+		}
 	}
 	
 	private void rotationLogic(float timeStep){
@@ -279,8 +246,8 @@ public class Player extends DynamicEntity {
 		javax.vecmath.Vector3f angularVelocity = new javax.vecmath.Vector3f();
 		rigidBody.getAngularVelocity(angularVelocity);
 		
-		float xRot = MouseManager.dy * turnSpeed;
-		float yRot = MouseManager.dx * turnSpeed;
+		float xRot = MouseManager.dy * ship.getXTurnSpeed();
+		float yRot = MouseManager.dx * ship.getYTurnSpeed();
 		
 		float zRot = 0.0f;
 		// check if we need to apply torque on the Z axis
@@ -290,9 +257,9 @@ public class Player extends DynamicEntity {
 		// handle applying torque on the Z axis
 		if (rollRight || rollLeft) {
 			if (rollRight)
-				zRot = -rollSpeed * timeStep;
+				zRot = -ship.getRollSpeed() * timeStep;
 			else
-				zRot = rollSpeed * timeStep;
+				zRot = ship.getRollSpeed() * timeStep;
 		}
 		
 		Vector3f torque = new Vector3f(xRot, yRot, zRot);
@@ -302,5 +269,23 @@ public class Player extends DynamicEntity {
 		angularVelocity.add(new javax.vecmath.Vector3f(torque.x, torque.y, torque.z));
 		
 		rigidBody.setAngularVelocity(angularVelocity);
+	}
+
+	@Override
+	public int getCurrentHealth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void hurt(int amount) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void heal(int amount) {
+		// TODO Auto-generated method stub
+		
 	}
 }

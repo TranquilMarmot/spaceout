@@ -15,10 +15,10 @@ import spaceguts.util.helper.QuaternionHelper;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
 
+import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
-import spaceguts.entities.dynamic.DynamicEntity;
-import spaceguts.entities.light.Light;
+import spaceguts.entities.Light;
 
 /**
  * Commands that the {@link Console} carries out. See console_commands.txt.
@@ -212,9 +212,12 @@ public class ConsoleCommands {
 	 *            StringTokenizer containing the command
 	 */
 	private static void speedCommand(StringTokenizer toker) {
-		String speedCommand = toker.nextToken().toLowerCase();
-		Float speedChange = Float.parseFloat(toker.nextToken());
+		console.print("Speed commands temporarily unavailable");
 		
+		//String speedCommand = toker.nextToken().toLowerCase();
+		//Float speedChange = Float.parseFloat(toker.nextToken());
+		
+		/*
 		if(speedCommand.equals("x")){
 			console.print("Changing player X acceleration from " + Entities.player.xAccel + " to " + speedChange);
 			Entities.player.xAccel = speedChange;
@@ -238,6 +241,7 @@ public class ConsoleCommands {
 		else {
 			console.print("Not a valid speed command!");
 		}
+		*/
 	}
 
 	/**

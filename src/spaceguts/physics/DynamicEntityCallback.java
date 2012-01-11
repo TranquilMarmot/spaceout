@@ -4,8 +4,11 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import javax.vecmath.Quat4f;
-import javax.vecmath.Vector3f;
 
+import spaceguts.entities.DynamicEntity;
+import spaceguts.entities.Entities;
+import spaceout.Health;
+import spaceout.entities.dynamic.Bullet;
 
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.narrowphase.ManifoldPoint;
@@ -13,9 +16,6 @@ import com.bulletphysics.collision.narrowphase.PersistentManifold;
 import com.bulletphysics.dynamics.DynamicsWorld;
 import com.bulletphysics.dynamics.InternalTickCallback;
 import com.bulletphysics.linearmath.Transform;
-
-import spaceguts.entities.Entities;
-import spaceguts.entities.dynamic.DynamicEntity;
 
 class DynamicEntityCallback extends InternalTickCallback {
 	@Override
@@ -79,16 +79,26 @@ class DynamicEntityCallback extends InternalTickCallback {
 			for(int j = 0; j < contactManifold.getNumContacts(); j++){
 				ManifoldPoint point = contactManifold.getContactPoint(j);
 				if(point.getDistance() < 0.0f){
-					Vector3f ptA = new Vector3f(), ptB = new Vector3f(), normalOnB;
-					point.getPositionWorldOnA(ptA);
-					point.getPositionWorldOnB(ptB);
-					normalOnB = point.normalWorldOnB;
+					//Vector3f ptA = new Vector3f(), ptB = new Vector3f(), normalOnB;
+					//point.getPositionWorldOnA(ptA);
+					//point.getPositionWorldOnB(ptB);
+					//normalOnB = point.normalWorldOnB;
 					
 					DynamicEntity entA = (DynamicEntity) objA.getUserPointer();
 					DynamicEntity entB = (DynamicEntity) objB.getUserPointer();
+					
+					if(entA instanceof Bullet && entB instanceof Health){
+						((Health) entB).hurt(((Bullet) entA).getDamage());
+					} else if(entB instanceof Bullet && entA instanceof Health){
+						((Health) entA).hurt(((Bullet) entB).getDamage());
+					}
+					
+					
+					/*
 					System.out.println("Contact point " + j + ":\nA: " + entA.type + " " + ptA.x + " " + ptA.y + " " + ptA.z);
 					System.out.println("B: " + entB.type + " " + ptB.x + " " + ptB.y + " " + ptB.z);
 					System.out.println("Normal on B: " + normalOnB.x + " " + normalOnB.y + " " + normalOnB.z);
+					*/
 				}
 			}
 		}

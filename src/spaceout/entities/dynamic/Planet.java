@@ -1,4 +1,4 @@
-package spaceguts.entities.dynamic;
+package spaceout.entities.dynamic;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
@@ -12,16 +12,21 @@ import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.collision.shapes.SphereShape;
 
+import spaceguts.entities.DynamicEntity;
 import spaceguts.graphics.model.Model;
+import spaceout.Health;
 
 /**
  * Pretty much just a dynamic entity that's represented by a sphere
  * @author TranquilMarmot
  *
  */
-public class Planet extends DynamicEntity{
+public class Planet extends DynamicEntity implements Health{
 	final static short COL_GROUP = CollisionTypes.PLANET;
 	final static short COL_WITH = (short)(CollisionTypes.SHIP | CollisionTypes.WALL | CollisionTypes.PLANET);
+	
+	//FIXME planets shouldnt really have health this is for shits and giggles
+	int health = 100;
 	
 	public Planet(Vector3f location, Quaternion rotation, float size,
 			float mass, float restitution, int texture) {
@@ -56,5 +61,24 @@ public class Planet extends DynamicEntity{
 			GL11.glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 			super.draw();
 			GL11.glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+	}
+
+	@Override
+	public int getCurrentHealth() {
+		// TODO Auto-generated method stub
+		return health;
+	}
+
+	@Override
+	public void hurt(int amount) {
+		health -= amount;
+		if(health <= 0)
+			removeFlag = true;
+		
+	}
+
+	@Override
+	public void heal(int amount) {
+		health += amount;
 	}
 }

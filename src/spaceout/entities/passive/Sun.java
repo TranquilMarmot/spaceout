@@ -1,10 +1,11 @@
-package spaceguts.entities.light;
+package spaceout.entities.passive;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.Sphere;
 import org.lwjgl.util.vector.Vector3f;
 
+import spaceguts.entities.Light;
 import spaceguts.util.manager.TextureManager;
 
 /**

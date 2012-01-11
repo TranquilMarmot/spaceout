@@ -14,23 +14,23 @@ import spaceguts.graphics.model.Model;
  * 
  * So whenever a ship is needed, it gets loaded in from its XML file
  */
-public abstract class Ship{
+public class Ship{
 	/** The model to use for drawing the ship */
-	public Model model;
+	private Model model;
 	/** The name of the ship */
-	public String name;
+	private String name;
 	/** How much health the ship has */
-	public int health;
+	private int health;
 	/** Info to use for physics simulation*/
-	public float mass, restitution;
+	private float mass, restitution;
 	/** How fast the ship accelerates along each axis */
-	public Vector3f accelerationSpeed;
+	private Vector3f accelerationSpeed;
 	/** How fast the ship can go */
-	public float topSpeed;
+	private float topSpeed;
 	/** How fast the ship can staiblize/stop */
-	public float stabilizationSpeed, stopSpeed;
+	private float stabilizationSpeed, stopSpeed;
 	/** How fast the ship can turn */ //TODO these should be controlled by the ship's thrusters
-	public float rollSpeed, xTurnSpeed, yTurnSpeed;
+	private float rollSpeed, xTurnSpeed, yTurnSpeed;
 	
 	public Ship(String name, Model model, int health, float mass, float restitution, Vector3f accelerationSpeed, float topSpeed, float stabilizationSpeed, float stopSpeed, float rollSpeed, float xTurnSpeed, float yTurnSpeed){
 		this.name = name;
@@ -46,4 +46,17 @@ public abstract class Ship{
 		this.xTurnSpeed = xTurnSpeed;
 		this.yTurnSpeed = yTurnSpeed;
 	}
+	
+	public Model getModel(){ return model; }
+	public String getName(){ return name; }
+	public int getHealth(){ return health; }
+	public float getMass(){ return mass; }
+	public float getRestitution(){ return restitution; }
+	public Vector3f getAccelerationSpeed(){ return accelerationSpeed; }
+	public float getTopSpeed(){ return topSpeed; }
+	public float getStabilizationSpeed(){ return stabilizationSpeed; }
+	public float getStopSpeed(){ return stopSpeed; }
+	public float getRollSpeed(){ return rollSpeed; }
+	public float getXTurnSpeed(){ return xTurnSpeed; }
+	public float getYTurnSpeed(){ return yTurnSpeed; }
 }

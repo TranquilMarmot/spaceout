@@ -11,10 +11,10 @@ import org.lwjgl.util.vector.Quaternion;
 import spaceguts.physics.Physics;
 import spaceguts.util.helper.DisplayHelper;
 import spaceguts.util.helper.QuaternionHelper;
+import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
-import spaceguts.entities.dynamic.DynamicEntity;
-import spaceguts.entities.light.Light;
+import spaceguts.entities.Light;
 
 /**
  * Handles all 3D rendering. For the moment, also updates Entities.entities.

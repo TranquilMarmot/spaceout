@@ -1,4 +1,4 @@
-package spaceguts.entities.dynamic;
+package spaceguts.entities;
 
 import javax.vecmath.Quat4f;
 
@@ -16,7 +16,6 @@ import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
 
-import spaceguts.entities.Entity;
 import spaceguts.graphics.model.Model;
 
 /**

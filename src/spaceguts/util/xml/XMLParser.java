@@ -15,14 +15,16 @@ import org.w3c.dom.NodeList;
 import spaceguts.util.debug.Debug;
 import spaceguts.util.manager.ModelManager;
 import spaceguts.util.manager.TextureManager;
+import spaceguts.entities.Camera;
+import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
-import spaceguts.entities.dynamic.DynamicEntity;
-import spaceguts.entities.dynamic.Planet;
-import spaceguts.entities.dynamic.Player;
-import spaceguts.entities.light.Sun;
-import spaceguts.entities.passive.Camera;
-import spaceguts.entities.passive.Skybox;
-import spaceguts.entities.passive.particles.Debris;
+import spaceguts.graphics.model.Model;
+import spaceout.entities.dynamic.Planet;
+import spaceout.entities.dynamic.Player;
+import spaceout.entities.passive.Skybox;
+import spaceout.entities.passive.Sun;
+import spaceout.entities.passive.particles.Debris;
+import spaceout.ship.Ship;
 
 /**
  * Loads entities from an XML file and puts them into the ArrayList
@@ -137,7 +139,25 @@ public class XMLParser {
 		Quaternion rotation = getRotation(ele);
 		float mass = getFloat(ele, "mass");
 		float restitution = getFloat(ele, "restitution");
-		Player player = new Player(location, rotation, ModelManager.WING_X,
+		
+		/* TEMP SHIP INFO TODO make this load from XML */
+		String shipName = "WingX";
+		Model shipModel = ModelManager.getModel(ModelManager.WING_X);
+		int shipHealth = 100;
+		float shipMass = 50.0f;
+		float shipRestitution = 0.01f;
+		Vector3f shipAcceleration = new Vector3f(1000.0f, 1000.0f, 1000.0f);
+		float shipTopSpeed = 200.0f;
+		float shipStabilizationSpeed = 0.5f;
+		float shipStopSpeed = 1.0f;
+		float shipRollSpeed = 0.5f;
+		float shipXTurnSpeed = 0.0025f;
+		float shipYTurnSpeed = 0.0025f;
+		
+		Ship ship = new Ship(shipName, shipModel, shipHealth, shipMass, shipRestitution, shipAcceleration, shipTopSpeed, shipStabilizationSpeed, shipStopSpeed, shipRollSpeed, shipXTurnSpeed, shipYTurnSpeed);
+		
+		
+		Player player = new Player(location, rotation, ship,
 				mass, restitution);
 		player.type = "dynamicPlayer";
 

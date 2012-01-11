@@ -1,4 +1,4 @@
-package spaceguts.entities.passive;
+package spaceout.entities.passive;
 
 import spaceguts.entities.Entity;
 import spaceguts.graphics.model.Model;

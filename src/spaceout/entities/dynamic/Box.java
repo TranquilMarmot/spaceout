@@ -1,5 +1,6 @@
-package spaceguts.entities.dynamic;
+package spaceout.entities.dynamic;
 
+import spaceguts.entities.DynamicEntity;
 import spaceguts.graphics.model.Model;
 
 import org.lwjgl.opengl.GL11;

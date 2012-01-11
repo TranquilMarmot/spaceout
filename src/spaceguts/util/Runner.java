@@ -23,14 +23,14 @@ import spaceguts.util.manager.MouseManager;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.58";
+	public static final String VERSION = "0.0.60";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
 	/** keeps the pause button from repeatedly pausing and unpausing */
 	private boolean pauseDown = false;
 
-	/** if either of this is true, it means it's time to shut down ASAP */
+	/** if this is true, it means it's time to shut down ASAP */
 	public static boolean done = false;
 
 	/** the keyboard and mouse handlers that need to be updated every frame */

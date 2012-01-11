@@ -1,4 +1,4 @@
-package spaceguts.entities.passive.particles;
+package spaceout.entities.passive.particles;
 
 import java.nio.FloatBuffer;
 import java.util.Random;
