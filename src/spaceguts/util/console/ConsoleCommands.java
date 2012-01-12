@@ -5,6 +5,7 @@ import java.util.StringTokenizer;
 
 import javax.vecmath.Quat4f;
 
+import org.lwjgl.util.Timer;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -55,7 +56,7 @@ public class ConsoleCommands {
 
 				// clear console
 				else if (command.equals("clear")) {
-					console.text.clear();
+					console.clear();
 				}
 
 				// player speed
@@ -80,11 +81,20 @@ public class ConsoleCommands {
 
 				// 99 bottles of beer on the wall
 				else if (command.equals("beer")) {
-					for (int i = 99; i > 0; i--) {
-						console.print(i + " bottles of beer on the wall, " + i
-								+ " bottles of beer");
-						console.print("Take one down, pass it around, "
-								+ (i - 1) + " bottles of beer on the wall");
+					int i = 99;
+					//Timer beerTimer = new Timer();
+					while (i > 0) {
+						//if (beerTimer.getTime() > 0.1f) {
+							console.print(i + " bottles of beer on the wall, " + i
+									+ " bottles of beer");
+							console.print("Take one down, pass it around, "
+									+ (i - 1) + " bottles of beer on the wall");
+							i--;
+							//beerTimer.reset();
+						//}
+						//Timer.tick();
+						//System.out.println(beerTimer.getTime());
+						//System.out.println(i);
 					}
 				}
 

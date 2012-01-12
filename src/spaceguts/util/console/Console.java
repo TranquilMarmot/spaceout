@@ -26,6 +26,13 @@ public class Console {
 	public static boolean consoleOn = false;
 	public static boolean commandOn = false;
 	
+	// Width of the console in characters
+	private int consoleWidth = 35;
+	
+	// This is currently pointless, but it may come in handy in the future.
+	// Disabling this will completely disable the console window visibilty. (warning: does not disable keyboard bindings)
+	private static boolean consoleEnabled = true;
+	
 	// the maximum alpha for console text
 	public static float consoleTextMaxAlpha = 1.0f;
 	// the minimum alpha for console text
@@ -35,14 +42,14 @@ public class Console {
 	// the time in seconds before the text begins to fade
 	public static int consoleTextFadeDelay = 5;
 	
-	// the current alpha for console text
+	// the current alpha for console text (should always be consoleTextMaxAlpha)
 	public static float consoleTextAlpha = consoleTextMaxAlpha;
-	// the current fade time for console
+	// the current fade time for console (should always be 0)
 	public static float consoleTextFadeDelayCurrent = 0;
 	
 	// if blink is true, there's an underscore at the end of the input string,
 	// else there's not
-	private boolean blink = true;
+	private static boolean blink = true;
 	// counter for blink
 	private static int blinkCount = 0;
 	// how often to blink (this is changed to match the current FPS)
@@ -71,7 +78,7 @@ public class Console {
 	public static String input = "";
 
 	// all the text that the console contains and will print out
-	public ArrayList<String> text = new ArrayList<String>();
+	private ArrayList<String> text = new ArrayList<String>();
 	
 	/**
 	 * Updates and draws the console
@@ -105,13 +112,12 @@ public class Console {
 			input = "/";
 			Console.commandOn = false; 
 		}
-		
-		
-		boolean chatOn = true;
-		
+				
 		// draw the input text
 		//if (Debug.consoleOn) {
-		if (chatOn) {
+		
+		// If the console is enabled.
+		if (consoleEnabled) {
 			
 			// If you hit any of the keys to bring up the console window:
 			// draw a semi-transparent box behind the console text, and blink the '_'.			
@@ -123,8 +129,8 @@ public class Console {
 				GL11.glBegin(GL11.GL_QUADS);{
 					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight);
 					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight - 225.0f);
-					GL11.glVertex2f(600, DisplayHelper.windowHeight - 225.0f);
-					GL11.glVertex2f(600, DisplayHelper.windowHeight);
+					GL11.glVertex2f((consoleWidth*9)+10, DisplayHelper.windowHeight - 225.0f);
+					GL11.glVertex2f((consoleWidth*9)+10, DisplayHelper.windowHeight);
 				}GL11.glEnd();
 			
 				// Draw the blinking cursor
@@ -151,9 +157,7 @@ public class Console {
 			
 			// Fade the text if the console is closed!
 			if (Console.consoleOn) {
-				// Set the alpha to the max alpha value
-				consoleTextAlpha = consoleTextMaxAlpha;
-				consoleTextFadeDelayCurrent = 0;
+				this.wake();
 			} else if (consoleTextAlpha > consoleTextMinAlpha && consoleTextFadeDelayCurrent >= consoleTextFadeDelay*60){
 				// Subtract the proper amount from the current console text alpha value
 				consoleTextAlpha -= consoleTextFadeValue;
@@ -198,13 +202,41 @@ public class Console {
 	}
 
 	/**
-	 * Adds a string to the console
+	 * Adds a string to the console, wraps if necessary. Also, the console will brighten if dim.
 	 * 
 	 * @param s
 	 *            The string to print to the console
 	 */
 	public void print(String s) {
-		text.add(s);
+		// Make the console text bright
+		this.wake();
+		
+		// Make the string an array of words
+		String words[] = s.split(" ");
+		
+		// The current number of characters, and the iterator
+		int currentWidth = 0, i = 0;
+
+		// If the next word is too big, just split it.
+		if (words[0].length() > consoleWidth) {
+			currentWidth = consoleWidth;
+			System.out.println("TOO BIG!");
+		} else {
+			// Otherwise, for each word:
+			for (;i < words.length && (currentWidth+words[i].length()) < consoleWidth;i++)
+				currentWidth += words[i].length() + 1;
+				// Add the width of that word and a space 
+				// unless the combined number of characters excedes the width of the console.
+		}
+		
+		// Add the words to the screen.
+		text.add(s.substring(0, currentWidth-1));
+		
+		// Recurse and print the remaining stuff.
+		if (s.length() > consoleWidth) {
+			print(s.substring(currentWidth));
+		}
+
 	}
 
 	/**
@@ -237,7 +269,7 @@ public class Console {
 			// otherwise just add it to the text
 			else
 				// TODO give the player a name
-				text.add("<Player> " + input);
+				print("<Player> " + input);
 			
 			scroll = 0;
 		}
@@ -250,5 +282,20 @@ public class Console {
 		}
 	}
 	
+	/**
+	 * Makes the text bright until the fade delay is reached again.
+	 */
+	public void wake() {
+		// Set the alpha to the max alpha value
+		consoleTextAlpha = consoleTextMaxAlpha;
+		// Reset the current fade delay timer
+		consoleTextFadeDelayCurrent = 0;
+	}
+	/**
+	 * Clears the text
+	 */
+	public void clear() {
+		text.clear();
+	}
 
 }

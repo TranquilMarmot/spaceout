@@ -53,13 +53,10 @@
  * NICK Tasks: Console, XML, Lua(?), By Category, Importance
  * TODO Console
  * -TODO Make text wrap around after certain number of mono-spaced characters. (It's nice that they're mono-spaced.)
- * -TODO Make console text draw always, but fade to dark after a few seconds.
  * -TODO Make up/down keys control chat history
- * -TODO Make text draw in front of transparent console background. (currently draws behind)
  * -TODO Save chat/console history to text file
  * -TODO Chat color parsing
  * -TODO Make ctrl+v work with the console
- * -TODO If you're looking at an earlier line in the console, then submit something, it should jump back to the bottom
  * -TODO Add help for all the commands
  * -TODO Add tabs to the console (one for chat, one for commands, one for combat, etc.)
  * TODO XML
