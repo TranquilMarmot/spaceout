@@ -11,7 +11,7 @@ import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
 import spaceguts.util.Runner;
-import spaceguts.util.debug.console.Console;
+import spaceguts.util.console.Console;
 import spaceguts.util.helper.DisplayHelper;
 import spaceguts.util.helper.QuaternionHelper;
 import spaceguts.util.manager.TextureManager;

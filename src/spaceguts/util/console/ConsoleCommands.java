@@ -1,4 +1,4 @@
-package spaceguts.util.debug.console;
+package spaceguts.util.console;
 
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
