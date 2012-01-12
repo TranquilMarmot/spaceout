@@ -7,8 +7,8 @@ import javax.vecmath.Quat4f;
 
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
-import spaceout.Health;
-import spaceout.entities.dynamic.Bullet;
+import spaceout.interfaces.Bullet;
+import spaceout.interfaces.Health;
 
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.narrowphase.ManifoldPoint;

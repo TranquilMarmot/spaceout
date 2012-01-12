@@ -1,4 +1,4 @@
-package spaceout;
+package spaceout.interfaces;
 
 public interface Health {
 	public int getCurrentHealth();

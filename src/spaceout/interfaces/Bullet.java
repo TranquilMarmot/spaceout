@@ -1,4 +1,4 @@
-package spaceout.entities.dynamic;
+package spaceout.interfaces;
 
 public interface Bullet {
 	public int getDamage();
