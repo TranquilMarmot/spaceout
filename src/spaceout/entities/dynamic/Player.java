@@ -9,7 +9,6 @@ import spaceguts.graphics.gui.GUI;
 import spaceguts.physics.CollisionTypes;
 import spaceguts.util.Runner;
 import spaceguts.util.console.Console;
-import spaceguts.util.debug.Debug;
 import spaceguts.util.helper.QuaternionHelper;
 import spaceguts.util.manager.KeyboardManager;
 import spaceguts.util.manager.ModelManager;
@@ -57,12 +56,13 @@ public class Player extends DynamicEntity implements Health {
 			javax.vecmath.Vector3f speed = new javax.vecmath.Vector3f();
 			rigidBody.getLinearVelocity(speed);
 			
-			if(speed.x + speed.y + speed.z < ship.getTopSpeed()){
+			//FIXME this if statement necessary?
+
 			// perform acceleration
 			zLogic(timeStep);
 			xLogic(timeStep);
 			yLogic(timeStep);
-			}
+			
 			
 			// cap the players' speed
 			checkSpeed();
@@ -147,7 +147,7 @@ public class Player extends DynamicEntity implements Health {
 
 		LaserBullet bullet = new LaserBullet(bulletLocation, bulletRotation,
 				bulletModel, bulletMass, bulletRestitution, bulletDamage);
-		Entities.dynamicAddBuffer.add(bullet);
+		Entities.addDynamicEntity(bullet);
 
 		// give the bullet some speed
 		javax.vecmath.Vector3f currentVelocity = new javax.vecmath.Vector3f();

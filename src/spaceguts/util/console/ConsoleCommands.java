@@ -5,21 +5,18 @@ import java.util.StringTokenizer;
 
 import javax.vecmath.Quat4f;
 
-import org.lwjgl.util.Timer;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
-
-import spaceguts.util.Runner;
-import spaceguts.util.debug.Debug;
-import spaceguts.util.helper.QuaternionHelper;
-
-import com.bulletphysics.linearmath.DefaultMotionState;
-import com.bulletphysics.linearmath.Transform;
 
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
 import spaceguts.entities.Light;
+import spaceguts.util.Runner;
+import spaceguts.util.helper.QuaternionHelper;
+
+import com.bulletphysics.linearmath.DefaultMotionState;
+import com.bulletphysics.linearmath.Transform;
 
 /**
  * Commands that the {@link Console} carries out. See console_commands.txt.
@@ -72,7 +69,7 @@ public class ConsoleCommands {
 				// print number of entities
 				else if (command.equals("numentities")) {
 					console.print("Number of static entities: "
-							+ Entities.staticEntities.size());
+							+ Entities.passiveEntities.size());
 					console.print("Number of dynamic entities: "
 							+ Entities.dynamicEntities.size());
 					console.print("Number of lights: "
@@ -133,11 +130,11 @@ public class ConsoleCommands {
 		
 		if(which.equals("dynamic")){
 			console.print("Listing dynamic entities...");
-			for (DynamicEntity ent : Entities.dynamicEntities)
+			for (DynamicEntity ent : Entities.dynamicEntities.values())
 				console.print(ent.type);
 		} else if(which.equals("static")){
 			console.print("Listing static entities...");
-			for(Entity ent : Entities.staticEntities)
+			for(Entity ent : Entities.passiveEntities)
 				console.print(ent.type);
 		} else if(which.equals("lights") || which.equals("light")){
 			console.print("Listing lights...");
@@ -187,7 +184,7 @@ public class ConsoleCommands {
 	private static void warpCommand(StringTokenizer toker) {
 		boolean hasWarped = false;
 		String warp = toker.nextToken();
-		for (Entity ent : Entities.dynamicEntities){
+		for (Entity ent : Entities.dynamicEntities.values()){
 			//FIXME does not work
 			if (ent.type.toLowerCase().equals(warp.toLowerCase())) {
 				console.print("Warping Player to " + ent.type + " ("
@@ -297,7 +294,7 @@ public class ConsoleCommands {
 				Entities.camera.following = Entities.player;
 				changed = true;
 			} else {
-				for (DynamicEntity ent : Entities.dynamicEntities) {
+				for (DynamicEntity ent : Entities.dynamicEntities.values()) {
 					if (ent.type.toLowerCase().equals(toFollow.toLowerCase())) {
 						console.print("Camera now following " + toFollow);
 						Entities.camera.following = ent;
@@ -307,7 +304,7 @@ public class ConsoleCommands {
 				}
 				
 				if(!changed){
-					for (Entity ent : Entities.staticEntities) {
+					for (Entity ent : Entities.passiveEntities) {
 						if (ent.type.toLowerCase().equals(toFollow.toLowerCase())) {
 							console.print("Camera now following " + toFollow);
 							Entities.camera.following = ent;

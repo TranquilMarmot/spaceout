@@ -12,14 +12,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import spaceguts.util.console.Console;
-import spaceguts.util.debug.Debug;
-import spaceguts.util.manager.ModelManager;
-import spaceguts.util.manager.TextureManager;
 import spaceguts.entities.Camera;
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
 import spaceguts.graphics.model.Model;
+import spaceguts.util.console.Console;
+import spaceguts.util.manager.ModelManager;
+import spaceguts.util.manager.TextureManager;
 import spaceout.entities.dynamic.Planet;
 import spaceout.entities.dynamic.Player;
 import spaceout.entities.passive.Skybox;
@@ -132,7 +131,7 @@ public class XMLParser {
 		DynamicEntity saucer = new DynamicEntity(location, rotation,
 				ModelManager.SAUCER, mass, restitution);
 		saucer.type = "saucer";
-		Entities.dynamicEntities.add(saucer);
+		Entities.addDynamicEntity(saucer);
 	}
 
 	private static void makePlayer(Element ele) {
@@ -169,7 +168,7 @@ public class XMLParser {
 		int numStars = getInt(ele, "numStars");
 		float range = getFloat(ele, "range");
 		long seed = 1337420L;
-		Entities.staticEntities.add(new Debris(Entities.camera, numStars,
+		Entities.passiveEntities.add(new Debris(Entities.camera, numStars,
 				range, seed));
 	}
 
@@ -243,7 +242,7 @@ public class XMLParser {
 				texture);
 		p.type = name;
 
-		Entities.dynamicEntities.add(p);
+		Entities.addDynamicEntity(p);
 	}
 
 	/**

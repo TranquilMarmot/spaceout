@@ -1,7 +1,8 @@
 package spaceguts.graphics.gui;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
+
+import spaceguts.util.debug.Debug;
 
 /**
  * Handles all the GUI objects
@@ -14,43 +15,35 @@ public class GUI {
 	public static boolean menuUp = false;
 	
 	/** all the GUI objects to draw */
-	public static ArrayList<GUIObject> guiObjects = new ArrayList<GUIObject>();
+	public static ConcurrentHashMap<Integer, GUIObject> guiObjects = new ConcurrentHashMap<Integer, GUIObject>();
 	
-	/** GUI objects to add on the next update */
-	public static ArrayList<GUIObject> addBuffer = new ArrayList<GUIObject>();
-	
-	/** GUI objects to remove on the next update*/
-	public static ArrayList<GUIObject> removeBuffer = new ArrayList<GUIObject>();
-
 	/**
-	 * Updates and renders all GUI objects
+	 * Updates the GUI
 	 */
-	public static void updateAndRenderGUI() {
-		// remove any entities from the removeBuffer
-		if (!removeBuffer.isEmpty()) {
-			Iterator<GUIObject> removeIterator = removeBuffer.iterator();
-			while (removeIterator.hasNext()) {
-				GUIObject ent = removeIterator.next();
-				guiObjects.remove(ent);
-				removeIterator.remove();
-			}
-		}
+	public static void update(){
+		Debug.update();
 		
-		// add any Entities in the addBuffer
-		if (!addBuffer.isEmpty()) {
-			Iterator<GUIObject> addIterator = addBuffer.iterator();
-			while (addIterator.hasNext()) {
-				GUIObject ent = addIterator.next();
-				guiObjects.add(ent);
-				addIterator.remove();
-			}
-		}
-		
-		// update and render
-		for (GUIObject obj : guiObjects) {
+		for(GUIObject obj : guiObjects.values()){
 			obj.update();
-			if (obj.isVisible)
-				obj.draw();
+		}
+	}
+	
+	/**
+	 * Draws the GUI
+	 */
+	public static void draw(){
+		Debug.draw();
+		
+		for(GUIObject obj : guiObjects.values()){
+			obj.draw();
+		}
+	}
+	
+	public static void addGUIObject(GUIObject obj){
+		GUIObject test = guiObjects.put(obj.hashCode(), obj);
+		
+		while(test != null){
+			test = guiObjects.put(test.hashCode() + 5, test);
 		}
 	}
 }

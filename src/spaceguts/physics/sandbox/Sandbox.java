@@ -7,12 +7,12 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-import spaceguts.util.manager.ModelManager;
-import spaceguts.util.manager.TextureManager;
 import spaceguts.entities.Camera;
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
 import spaceguts.graphics.model.Model;
+import spaceguts.util.manager.ModelManager;
+import spaceguts.util.manager.TextureManager;
 import spaceout.entities.dynamic.Box;
 import spaceout.entities.dynamic.Planet;
 import spaceout.entities.dynamic.Player;
@@ -46,7 +46,7 @@ public class Sandbox extends Entity{
 		float box0Mass = 0.0f;
 		float box0Restitution = 0.0f;
 		Box box0 = new Box(box0Location, box0Rotation, box0Size, box0Mass, box0Restitution);
-		Entities.dynamicEntities.add(box0);
+		Entities.addDynamicEntity(box0);
 		/* END BOX */
 		
 		/* BEGIN BOX */
@@ -56,7 +56,7 @@ public class Sandbox extends Entity{
 		float box1Mass = 0.0f;
 		float box1Restitution = 0.0f;
 		Box box1 = new Box(box1Location, box1Rotation, box1Size, box1Mass, box1Restitution);
-		Entities.dynamicEntities.add(box1);
+		Entities.addDynamicEntity(box1);
 		/* END BOX */
 		
 		/* BEGIN PLAYER */
@@ -98,7 +98,7 @@ public class Sandbox extends Entity{
 		/* BEGIN DEBRIS */
 		Debris debris = new Debris(Entities.camera, 500, 50000.0f, 420133742L);
 		debris.update();
-		Entities.staticEntities.add(debris);
+		Entities.passiveEntities.add(debris);
 		/* END DEBRIS */
 	}
 	
@@ -136,7 +136,7 @@ public class Sandbox extends Entity{
 		
 		Planet p = new Planet(sphereLocation, sphereRotation, sphereSize, sphereMass, 0.0f, sphereTexture);
 		
-		Entities.dynamicEntities.add(p);
+		Entities.addDynamicEntity(p);
 	}
 
 	@Override

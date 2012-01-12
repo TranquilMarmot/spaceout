@@ -81,14 +81,14 @@ public class LoadMenu extends GUIObject {
 					/* FIXME this if statement is only temporary!!! */
 					if (selectedFile.equals("PhysicsSandbox.xml")) {
 						Sandbox.createSandboxWorld();
-						Entities.staticEntities.add(new Sandbox());
+						Entities.passiveEntities.add(new Sandbox());
 					} else {
 						// load entities from XML
 						XMLParser.loadEntitiesFromXmlFile(path
 								+ selectedFile);
 					}
 					// create the pause menu
-					GUI.addBuffer.add(new PauseMenu());
+					GUI.addGUIObject(new PauseMenu());
 
 					// raise the file loaded flag
 					fileLoaded = true;
@@ -122,14 +122,16 @@ public class LoadMenu extends GUIObject {
 
 		if (backToMainMenu) {
 			// remove the load menu
-			GUI.removeBuffer.add(this);
+			GUI.guiObjects.remove(this.hashCode(), this);
+			
 			// add the main menu
-			GUI.addBuffer.add(new MainMenu());
+			GUI.addGUIObject(new MainMenu());
 		}
 
 		if (fileLoaded) {
 			// remove the load menu
-			GUI.removeBuffer.add(this);
+			GUI.guiObjects.remove(this.hashCode(), this);
+			
 			// let the GUI know that there's no menu up
 			GUI.menuUp = false;
 		}

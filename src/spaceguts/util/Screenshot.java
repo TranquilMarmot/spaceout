@@ -14,7 +14,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import spaceguts.util.console.Console;
-import spaceguts.util.debug.Debug;
 
 /**
  * Takes a screenshot of the current OpenGL context. A majority of the code for

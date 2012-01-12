@@ -27,12 +27,11 @@ import spaceguts.util.manager.TextureManager;
 public class MainMenu extends GUIObject {
 	/** button image path */
 	private static final String BUTTON_IMAGE_PATH = "res/images/gui/Menu/Button/";
+	/** XML path */
+	private static final String XML_PATH = "res/XML/";
 
 	private static final int spaceoutYOffset = -200;
 	private static final int spaceoutScale = 2;
-
-	/** XML path */
-	private static final String XML_PATH = "res/XML/";
 
 	/** whether or not we're done with the main menu */
 	public static boolean done;
@@ -68,7 +67,7 @@ public class MainMenu extends GUIObject {
 			public void actionPerformed(ActionEvent e) {
 				// create the load menu
 				 LoadMenu lmenu = new LoadMenu(0, 0, XML_PATH);
-				 GUI.addBuffer.add(lmenu);
+				 GUI.addGUIObject(lmenu);
 
 				// let the GUI know that a menu is up
 				 GUI.menuUp = true;
@@ -113,7 +112,7 @@ public class MainMenu extends GUIObject {
 
 		// remove the main menu if we're done with it
 		if (done) {
-			GUI.removeBuffer.add(this);
+			GUI.guiObjects.remove(this.hashCode(), this);
 		}
 	}
 
