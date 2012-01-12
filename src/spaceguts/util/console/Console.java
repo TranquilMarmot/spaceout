@@ -27,7 +27,7 @@ public class Console {
 	public static boolean commandOn = false;
 	
 	// Width of the console in characters
-	private int consoleWidth = 35;
+	private int consoleWidth = 65;
 	
 	// This is currently pointless, but it may come in handy in the future.
 	// Disabling this will completely disable the console window visibilty. (warning: does not disable keyboard bindings)
@@ -215,15 +215,14 @@ public class Console {
 		String words[] = s.split(" ");
 		
 		// The current number of characters, and the iterator
-		int currentWidth = 0, i = 0;
+		int currentWidth = 0;
 
 		// If the next word is too big, just split it.
 		if (words[0].length() > consoleWidth) {
 			currentWidth = consoleWidth;
-			System.out.println("TOO BIG!");
 		} else {
 			// Otherwise, for each word:
-			for (;i < words.length && (currentWidth+words[i].length()) < consoleWidth;i++)
+			for (int i = 0;i < words.length && (currentWidth+words[i].length()) < consoleWidth;i++)
 				currentWidth += words[i].length() + 1;
 				// Add the width of that word and a space 
 				// unless the combined number of characters excedes the width of the console.
@@ -233,10 +232,8 @@ public class Console {
 		text.add(s.substring(0, currentWidth-1));
 		
 		// Recurse and print the remaining stuff.
-		if (s.length() > consoleWidth) {
+		if (s.length() > consoleWidth)
 			print(s.substring(currentWidth));
-		}
-
 	}
 
 	/**

@@ -52,7 +52,6 @@
  * 
  * NICK Tasks: Console, XML, Lua(?), By Category, Importance
  * TODO Console
- * -TODO Make text wrap around after certain number of mono-spaced characters. (It's nice that they're mono-spaced.)
  * -TODO Make up/down keys control chat history
  * -TODO Save chat/console history to text file
  * -TODO Chat color parsing
