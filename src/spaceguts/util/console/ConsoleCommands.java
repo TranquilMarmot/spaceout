@@ -28,7 +28,7 @@ import spaceguts.entities.Light;
  * 
  */
 public class ConsoleCommands {
-	private static Console console = Debug.console;
+	private static Console console = Console.console;
 
 	/**
 	 * Issues a command

@@ -14,9 +14,32 @@ import spaceguts.util.manager.TextureManager;
 /**
  * Console for printing text and interacting with the game. Note that there should only be one console at any time.
  * @author TranquilMarmot
+ * @author arthurdent
  *
  */
 public class Console {
+	
+	/** the console */
+	public static Console console = new Console();
+	
+	// whether or not the console is up
+	public static boolean consoleOn = false;
+	public static boolean commandOn = false;
+	
+	// the maximum alpha for console text
+	public static float consoleTextMaxAlpha = 1.0f;
+	// the minimum alpha for console text
+	public static float consoleTextMinAlpha = 0.3f;
+	// the alpha difference for each update
+	public static float consoleTextFadeValue = 0.005f;
+	// the time in seconds before the text begins to fade
+	public static int consoleTextFadeDelay = 5;
+	
+	// the current alpha for console text
+	public static float consoleTextAlpha = consoleTextMaxAlpha;
+	// the current fade time for console
+	public static float consoleTextFadeDelayCurrent = 0;
+	
 	// if blink is true, there's an underscore at the end of the input string,
 	// else there's not
 	private boolean blink = true;
@@ -24,6 +47,8 @@ public class Console {
 	private static int blinkCount = 0;
 	// how often to blink (this is changed to match the current FPS)
 	private static int blinkInterval = 30;
+	
+	
 	
 	/** font for printing stuff to the screen */
 	public static UnicodeFont font = null;
@@ -76,42 +101,68 @@ public class Console {
 		updateBlink();
 
 		// check for command
-		if (Debug.commandOn) {
+		if (Console.commandOn) {
 			input = "/";
-			Debug.commandOn = false; 
+			Console.commandOn = false; 
 		}
 		
+		
+		boolean chatOn = true;
+		
 		// draw the input text
-		if (Debug.consoleOn) {
+		//if (Debug.consoleOn) {
+		if (chatOn) {
 			
-			// draw a semi-transparent box behind the console text
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
-			TextureManager.getTexture(TextureManager.WHITE).bind();
-			GL11.glColor4f(0.03f, 0.03f, 0.03f, 1.0f);
-			GL11.glBegin(GL11.GL_QUADS);{
-				GL11.glVertex2f(0.0f, DisplayHelper.windowHeight);
-				GL11.glVertex2f(0.0f, DisplayHelper.windowHeight - 225.0f);
-				GL11.glVertex2f(600, DisplayHelper.windowHeight - 225.0f);
-				GL11.glVertex2f(600, DisplayHelper.windowHeight);
-			}GL11.glEnd();
+			// If you hit any of the keys to bring up the console window:
+			// draw a semi-transparent box behind the console text, and blink the '_'.			
+			if (Console.consoleOn) {
+	
+				// Draw the box
+				TextureManager.getTexture(TextureManager.WHITE).bind();
+				GL11.glColor4f(0.15f, 0.15f, 0.15f, 0.35f);
+				GL11.glBegin(GL11.GL_QUADS);{
+					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight);
+					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight - 225.0f);
+					GL11.glVertex2f(600, DisplayHelper.windowHeight - 225.0f);
+					GL11.glVertex2f(600, DisplayHelper.windowHeight);
+				}GL11.glEnd();
 			
-			// print out however many strings, going backwards (we want the latest
-			// strings to be printed first)
+				// Draw the blinking cursor
+				String toPrint = "> " + input;
+				if (blink) 
+					toPrint += "_";
+				Debug.font.drawString(x, y, toPrint, new Color(38, 255, 0));
+				
+			}
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			for (int i = text.size() - 1 - scroll; i > stringsToPrint - scroll; i--) {
-				// break if we go out of the array
-				if (i < 0)
-					break;
+			
+			
+			// print out however many strings, going backwards 
+			// (we want the latest strings to be printed first)
+			for (int i = text.size() - 1 - scroll; i > stringsToPrint - scroll && i >= 0; i--) {				
+				
 				// which line we're at in the console itself
 				int line = text.size() - (i + scroll);
+				
 				// draw the string, going up on the y axis by how tall each line is
-				Debug.font.drawString(x, y - (advanceY * line), text.get(i), new Color(38, 255, 0));
+				Debug.font.drawString(x, y - (advanceY * line), text.get(i), new Color(0.15f, 1.0f, 0.0f, consoleTextAlpha));
+				
 			}
 			
-			String toPrint = "> " + input;
-			if (blink) 
-				toPrint += "_";
-			Debug.font.drawString(x, y, toPrint, new Color(38, 255, 0));
+			// Fade the text if the console is closed!
+			if (Console.consoleOn) {
+				// Set the alpha to the max alpha value
+				consoleTextAlpha = consoleTextMaxAlpha;
+				consoleTextFadeDelayCurrent = 0;
+			} else if (consoleTextAlpha > consoleTextMinAlpha && consoleTextFadeDelayCurrent >= consoleTextFadeDelay*60){
+				// Subtract the proper amount from the current console text alpha value
+				consoleTextAlpha -= consoleTextFadeValue;
+			} else {
+				// if statement to avoid overflow exception
+				if (consoleTextFadeDelayCurrent < consoleTextFadeDelay*60) {
+					consoleTextFadeDelayCurrent++;
+				}
+			}
 		}
 		
 	}
@@ -195,7 +246,7 @@ public class Console {
 		
 		if(autoClose){
 			autoClose = false;
-			Debug.consoleOn = false;
+			Console.consoleOn = false;
 		}
 	}
 	

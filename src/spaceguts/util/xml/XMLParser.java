@@ -12,6 +12,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import spaceguts.util.console.Console;
 import spaceguts.util.debug.Debug;
 import spaceguts.util.manager.ModelManager;
 import spaceguts.util.manager.TextureManager;
@@ -92,7 +93,7 @@ public class XMLParser {
 				Entities.camera.freeMode = false;
 			}
 		} else {
-			Debug.console
+			Console.console
 					.print("Error in XMLParser! Either there was nothing in the given file ("
 							+ file
 							+ ") or the parser simply just didn't want to work");

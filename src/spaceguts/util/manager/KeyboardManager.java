@@ -2,6 +2,7 @@ package spaceguts.util.manager;
 
 import org.lwjgl.input.Keyboard;
 
+import spaceguts.util.console.Console;
 import spaceguts.util.debug.Debug;
 
 /**
@@ -99,7 +100,7 @@ public class KeyboardManager {
 							physicsDebug = true;
 					}/* END ALWAYS CHECKED KEYS */
 
-					if (!Debug.consoleOn) {
+					if (!Console.consoleOn) {
 						/* BEGIN CONTROL KEYS */
 						if (eventKey == forwardKey)
 							forward = true;
@@ -130,7 +131,7 @@ public class KeyboardManager {
 						if (!Character.isIdentifierIgnorable(c)
 								&& !c.equals('`') && !c.equals('\n')
 								&& !c.equals('\r')) {
-							Debug.console.putCharacter(c);
+							Console.console.putCharacter(c);
 						}
 						/* END CONSOLE INPUT */
 					}

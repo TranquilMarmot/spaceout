@@ -5,6 +5,7 @@ import org.lwjgl.input.Keyboard;
 import spaceguts.util.Screenshot;
 import spaceguts.util.helper.DisplayHelper;
 import spaceguts.util.manager.KeyboardManager;
+import spaceguts.util.console.Console;
 
 /**
  * Manages all the keys that {@link Debug} uses
@@ -46,8 +47,8 @@ public class DebugKeyManager {
 
 		// console button
 		if (KeyboardManager.console && !consoleDown) {
-			Debug.consoleOn = !Debug.consoleOn;
-			Debug.console.autoClose = false;
+			Console.consoleOn = !Console.consoleOn;
+			Console.console.autoClose = false;
 			consoleDown = true;
 		}	
 		if (!KeyboardManager.console) {
@@ -56,10 +57,10 @@ public class DebugKeyManager {
 		
 		// command button
 		if (KeyboardManager.command && !commandDown) {
-			if (Debug.consoleOn == false) {
-				Debug.consoleOn = true;
-				Debug.commandOn = true;
-				Debug.console.autoClose = true;
+			if (Console.consoleOn == false) {
+				Console.consoleOn = true;
+				Console.commandOn = true;
+				Console.console.autoClose = true;
 			}
 			commandDown = true;
 		}
@@ -69,9 +70,9 @@ public class DebugKeyManager {
 
 		// chat button
 		if (KeyboardManager.chat && !chatDown) {
-			if (Debug.consoleOn == false) {
-				Debug.consoleOn = true;
-				Debug.console.autoClose = true;
+			if (Console.consoleOn == false) {
+				Console.consoleOn = true;
+				Console.console.autoClose = true;
 			}
 			chatDown = true;
 		}
@@ -82,7 +83,7 @@ public class DebugKeyManager {
 		//TODO make all these go through KeyboardHandler instead
 		// handle the enter key being pressed to submit a line
 		if (Keyboard.isKeyDown(Keyboard.KEY_RETURN) && !returnDown) {
-			Debug.console.submit();
+			Console.console.submit();
 			
 			returnDown = true;
 		}
@@ -93,13 +94,13 @@ public class DebugKeyManager {
 		// handle backspace
 		if (Keyboard.isKeyDown(Keyboard.KEY_BACK)) {
 			if(!backDown){
-				Debug.console.backspace();
+				Console.console.backspace();
 				backDown = true;
 			} else{
 				if(backspaceRepeatCounter < backspaceRepeatWait)
 					backspaceRepeatCounter++;
 				else if(backspaceRepeatCounter == backspaceRepeatWait)
-					Debug.console.backspace();
+					Console.console.backspace();
 			}
 		}
 		if (!Keyboard.isKeyDown(Keyboard.KEY_BACK)){
@@ -109,7 +110,7 @@ public class DebugKeyManager {
 
 		// handle scrolling up and down in the console
 		if (Keyboard.isKeyDown(Keyboard.KEY_NEXT) && !scrollUpDown) {
-			Debug.console.scrollUp(1);
+			Console.console.scrollUp(1);
 			scrollUpDown = true;
 		}
 		if (!Keyboard.isKeyDown(Keyboard.KEY_NEXT))
@@ -117,7 +118,7 @@ public class DebugKeyManager {
 
 		// handle scrolling up and down in the console
 		if (Keyboard.isKeyDown(Keyboard.KEY_PRIOR) && !scrollDownDown) {
-			Debug.console.scrollDown(1);
+			Console.console.scrollDown(1);
 			scrollDownDown = true;
 		}
 		if (!Keyboard.isKeyDown(Keyboard.KEY_PRIOR))

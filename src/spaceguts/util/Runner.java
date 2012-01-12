@@ -8,6 +8,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
 import spaceguts.physics.Physics;
+import spaceguts.util.console.Console;
 import spaceguts.util.debug.Debug;
 import spaceguts.util.helper.DisplayHelper;
 import spaceguts.util.manager.KeyboardManager;
@@ -113,7 +114,7 @@ public class Runner {
 		}
 
 		// release the mouse if the game's paused or the console is on or the menu is up
-		if (!paused && !Debug.consoleOn && !GUI.menuUp)
+		if (!paused && !Console.consoleOn && !GUI.menuUp)
 			Mouse.setGrabbed(true);
 		else
 			Mouse.setGrabbed(false);

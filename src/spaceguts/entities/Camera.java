@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 
 import spaceguts.util.Runner;
+import spaceguts.util.console.Console;
 import spaceguts.util.debug.Debug;
 import spaceguts.util.helper.QuaternionHelper;
 import spaceguts.util.manager.KeyboardManager;
@@ -153,7 +154,7 @@ public class Camera extends Entity {
 
 		// only zoom when the console isn't on (otherwise the mouse wheel
 		// controls console scrolling)
-		if (!Debug.consoleOn) {
+		if (!Console.consoleOn) {
 			if (MouseManager.wheel != 0) {
 				zoom -= (zoom * zoomSensitivity / MouseManager.wheel);
 			}

@@ -41,14 +41,13 @@ public class Debug {
 	public static boolean displayDebug = true;
 
 	// whether or not the console is up
-	public static boolean consoleOn = false;
-	public static boolean commandOn = false;
+	//public static boolean consoleOn = false;
+	//public static boolean commandOn = false;
 
 	// call list to draw a rectangle behind the debug info
 	private static int rectangleCallList = 0;
 
-	/** the console */
-	public static Console console = new Console();
+
 
 	// font for printing stuff to the screen
 	public static UnicodeFont font = null;
@@ -61,7 +60,7 @@ public class Debug {
 		// update keys
 		DebugKeyManager.updateKeys();
 
-		Debug.console.updateAndDraw();
+		Console.console.updateAndDraw();
 
 		if (displayDebug) {
 			drawDebugInfo();

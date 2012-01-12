@@ -4,6 +4,7 @@ import javax.vecmath.Vector3f;
 
 import org.lwjgl.opengl.GL11;
 
+import spaceguts.util.console.Console;
 import spaceguts.util.debug.Debug;
 
 import com.bulletphysics.linearmath.IDebugDraw;
@@ -46,7 +47,7 @@ public class PhysicsDebugDrawer extends IDebugDraw {
 
 	@Override
 	public void reportErrorWarning(String warningString) {
-		Debug.console.print(warningString);
+		Console.console.print(warningString);
 		System.out.println(warningString);
 	}
 

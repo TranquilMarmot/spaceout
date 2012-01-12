@@ -13,6 +13,7 @@ import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+import spaceguts.util.console.Console;
 import spaceguts.util.debug.Debug;
 
 /**
@@ -89,7 +90,7 @@ public class Screenshot {
 		try {
 			file.createNewFile();
 			ImageIO.write(image, fileFormat, file);
-			Debug.console
+			Console.console
 					.print("Saved screenshot to " + file.getAbsolutePath());
 		} catch (IOException e) {
 			System.out.println("Error writing screenshot to "

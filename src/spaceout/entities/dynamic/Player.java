@@ -8,6 +8,7 @@ import spaceguts.entities.Entities;
 import spaceguts.graphics.gui.GUI;
 import spaceguts.physics.CollisionTypes;
 import spaceguts.util.Runner;
+import spaceguts.util.console.Console;
 import spaceguts.util.debug.Debug;
 import spaceguts.util.helper.QuaternionHelper;
 import spaceguts.util.manager.KeyboardManager;
@@ -71,7 +72,7 @@ public class Player extends DynamicEntity implements Health {
 				rotationLogic(timeStep);
 
 			// handle bullet shooting
-			if (MouseManager.button0 && !button0Down && !Debug.consoleOn) {
+			if (MouseManager.button0 && !button0Down && !Console.consoleOn) {
 				button0Down = true;
 				shootBullet();
 			}
