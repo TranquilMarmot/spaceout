@@ -84,8 +84,7 @@ public class Console {
 	 * Updates and draws the console
 	 */
 	public void updateAndDraw() {
-		// scroll with the mouse wheel
-		scroll += MouseManager.wheel / 100;
+
 		// how tall each line is
 		int advanceY = Debug.font.getAscent();
 		// where to draw the console (x stays at 10)
@@ -97,12 +96,6 @@ public class Console {
 		// weird. if stringsToPrint == -1, then it doesn't print out any lines)
 		if (stringsToPrint < 0)
 			stringsToPrint = -1;
-
-		// keep scroll from getting too big or too small
-		if (scroll < 0)
-			scroll = 0;
-		if (scroll > text.size() - numLines && text.size() > numLines)
-			scroll = text.size() - numLines; 
 
 		// do blinking effect
 		updateBlink();
@@ -122,7 +115,15 @@ public class Console {
 			// If you hit any of the keys to bring up the console window:
 			// draw a semi-transparent box behind the console text, and blink the '_'.			
 			if (Console.consoleOn) {
-	
+				// scroll with the mouse wheel
+				scroll += MouseManager.wheel / 100;
+				
+				// keep scroll from getting too big or too small
+				if (scroll < 0)
+					scroll = 0;
+				if (scroll > text.size() - numLines && text.size() > numLines)
+					scroll = text.size() - numLines; 
+				
 				// Draw the box
 				TextureManager.getTexture(TextureManager.WHITE).bind();
 				GL11.glColor4f(0.15f, 0.15f, 0.15f, 0.35f);
