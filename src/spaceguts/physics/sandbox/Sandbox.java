@@ -36,7 +36,7 @@ public class Sandbox extends Entity{
 		float[] sunAmbient = { 1.0f, 1.0f, 1.0f };
 		float[] sunDiffuse = { 1.0f, 1.0f, 1.0f };
 		Sun sun = new Sun(sunLocation, sunSize, sunLight, sunColor, sunAmbient, sunDiffuse);
-		Entities.lights.add(sun);
+		Entities.addLight(sun);
 		/* END SUN */
 		
 		/* BEGIN BOX */
@@ -98,7 +98,7 @@ public class Sandbox extends Entity{
 		/* BEGIN DEBRIS */
 		Debris debris = new Debris(Entities.camera, 500, 50000.0f, 420133742L);
 		debris.update();
-		Entities.passiveEntities.add(debris);
+		Entities.addPassiveEntity(debris);
 		/* END DEBRIS */
 	}
 	

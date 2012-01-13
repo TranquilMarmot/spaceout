@@ -81,7 +81,7 @@ public class LoadMenu extends GUIObject {
 					/* FIXME this if statement is only temporary!!! */
 					if (selectedFile.equals("PhysicsSandbox.xml")) {
 						Sandbox.createSandboxWorld();
-						Entities.passiveEntities.add(new Sandbox());
+						Entities.addPassiveEntity(new Sandbox());
 					} else {
 						// load entities from XML
 						XMLParser.loadEntitiesFromXmlFile(path

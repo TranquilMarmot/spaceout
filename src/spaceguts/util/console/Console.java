@@ -39,11 +39,11 @@ public class Console {
 	// the maximum alpha for console text
 	public static float consoleTextMaxAlpha = 1.0f;
 	// the minimum alpha for console text
-	public static float consoleTextMinAlpha = 0.3f;
+	public static float consoleTextMinAlpha = 0.0f;
 	// the alpha difference for each update
-	public static float consoleTextFadeValue = 0.005f;
+	public static float consoleTextFadeValue = 0.011f;
 	// the time in seconds before the text begins to fade
-	public static int consoleTextFadeDelay = 5;
+	public static int consoleTextFadeDelay = 1;
 
 	// the current alpha for console text (should always be consoleTextMaxAlpha)
 	public static float consoleTextAlpha = consoleTextMaxAlpha;

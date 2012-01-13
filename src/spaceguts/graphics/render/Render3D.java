@@ -46,7 +46,7 @@ public class Render3D {
 		Entities.skybox.draw();
 		
 		// set up lights before we render our scene
-		for (Light l : Entities.lights) {
+		for (Light l : Entities.lights.values()) {
 			l.setUpLight();
 		}
 
@@ -111,7 +111,7 @@ public class Render3D {
 	 * Draws all entities
 	 */
 	private static void drawPassiveEntities(){
-		Iterator<Entity> entityIterator = Entities.passiveEntities.iterator();
+		Iterator<Entity> entityIterator = Entities.passiveEntities.values().iterator();
 		while (entityIterator.hasNext()) {
 			Entity ent = entityIterator.next();
 			
@@ -138,7 +138,7 @@ public class Render3D {
 	 * and as such don't need to be set up here.
 	 */
 	private static void drawLights(){
-		Iterator<Light> entityIterator = Entities.lights.iterator();
+		Iterator<Light> entityIterator = Entities.lights.values().iterator();
 		while (entityIterator.hasNext()) {
 			Light ent = entityIterator.next();
 			

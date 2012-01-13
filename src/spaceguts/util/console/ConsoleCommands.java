@@ -134,11 +134,11 @@ public class ConsoleCommands {
 				console.print(ent.type);
 		} else if(which.equals("static")){
 			console.print("Listing static entities...");
-			for(Entity ent : Entities.passiveEntities)
+			for(Entity ent : Entities.passiveEntities.values())
 				console.print(ent.type);
 		} else if(which.equals("lights") || which.equals("light")){
 			console.print("Listing lights...");
-			for(Light l : Entities.lights)
+			for(Light l : Entities.lights.values())
 				console.print(l.type + "; using light " + l.light);
 		} else{
 			console.print("List command not recognized! (" + which + ")");
@@ -304,7 +304,7 @@ public class ConsoleCommands {
 				}
 				
 				if(!changed){
-					for (Entity ent : Entities.passiveEntities) {
+					for (Entity ent : Entities.passiveEntities.values()) {
 						if (ent.type.toLowerCase().equals(toFollow.toLowerCase())) {
 							console.print("Camera now following " + toFollow);
 							Entities.camera.following = ent;

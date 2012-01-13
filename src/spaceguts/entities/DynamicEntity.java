@@ -10,6 +10,7 @@ import spaceguts.physics.CollisionTypes;
 import spaceguts.physics.Physics;
 import spaceguts.util.manager.ModelManager;
 
+import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
@@ -103,6 +104,11 @@ public class DynamicEntity extends Entity {
 			Physics.dynamicsWorld.addRigidBody(rigidBody, collisionGroup, collidesWith);
 		else
 			Physics.dynamicsWorld.addRigidBody(rigidBody);
+		
+		for(CollisionObject col : Physics.dynamicsWorld.getCollisionObjectArray()){
+			DynamicEntity ent = (DynamicEntity) col.getUserPointer();
+			System.out.println(ent.type + " " + ent.hashCode());
+		}
 	}
 
 	/**

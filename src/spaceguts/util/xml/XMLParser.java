@@ -168,7 +168,7 @@ public class XMLParser {
 		int numStars = getInt(ele, "numStars");
 		float range = getFloat(ele, "range");
 		long seed = 1337420L;
-		Entities.passiveEntities.add(new Debris(Entities.camera, numStars,
+		Entities.addPassiveEntity(new Debris(Entities.camera, numStars,
 				range, seed));
 	}
 
@@ -212,7 +212,7 @@ public class XMLParser {
 					.println("Error getting glLight for Sun! Using GL_LIGHT0");
 		}
 
-		Entities.lights.add(new Sun(location, size, glLight, color,
+		Entities.addLight(new Sun(location, size, glLight, color,
 				lightAmbient, lightDiffuse));
 	}
 
