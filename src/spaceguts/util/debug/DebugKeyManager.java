@@ -2,8 +2,8 @@ package spaceguts.util.debug;
 
 import org.lwjgl.input.Keyboard;
 
+import spaceguts.graphics.DisplayHelper;
 import spaceguts.util.Screenshot;
-import spaceguts.util.helper.DisplayHelper;
 import spaceguts.util.manager.KeyboardManager;
 import spaceguts.util.console.Console;
 

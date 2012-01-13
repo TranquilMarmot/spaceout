@@ -9,7 +9,7 @@ import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 import spaceguts.util.Noise;
-import spaceguts.util.helper.QuaternionHelper;
+import spaceguts.util.QuaternionHelper;
 import spaceguts.util.manager.TextureManager;
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;

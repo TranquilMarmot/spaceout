@@ -6,18 +6,16 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import spaceguts.graphics.model.Model;
 import spaceguts.physics.CollisionTypes;
 import spaceguts.physics.Physics;
 import spaceguts.util.manager.ModelManager;
 
-import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
-
-import spaceguts.graphics.model.Model;
 
 /**
  * And entity that also keeps track of it's own rigid body and model
@@ -104,11 +102,6 @@ public class DynamicEntity extends Entity {
 			Physics.dynamicsWorld.addRigidBody(rigidBody, collisionGroup, collidesWith);
 		else
 			Physics.dynamicsWorld.addRigidBody(rigidBody);
-		
-		for(CollisionObject col : Physics.dynamicsWorld.getCollisionObjectArray()){
-			DynamicEntity ent = (DynamicEntity) col.getUserPointer();
-			System.out.println(ent.type + " " + ent.hashCode());
-		}
 	}
 
 	/**

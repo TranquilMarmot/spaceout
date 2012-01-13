@@ -10,12 +10,12 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
+import spaceguts.util.QuaternionHelper;
 import spaceguts.util.Runner;
 import spaceguts.util.console.Console;
-import spaceguts.util.helper.DisplayHelper;
-import spaceguts.util.helper.QuaternionHelper;
 import spaceguts.util.manager.TextureManager;
 import spaceguts.entities.Entities;
+import spaceguts.graphics.DisplayHelper;
 
 /**
  * Handles drawing all the debug info. This class also contains the console

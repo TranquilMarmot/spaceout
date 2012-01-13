@@ -2,9 +2,9 @@ package spaceguts.graphics.render;
 
 import org.lwjgl.opengl.GL11;
 
+import spaceguts.graphics.DisplayHelper;
 import spaceguts.graphics.Graphics;
 import spaceguts.graphics.gui.GUI;
-import spaceguts.util.helper.DisplayHelper;
 
 /**
  * Handles all 2D rendering

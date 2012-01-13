@@ -9,12 +9,12 @@ import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Quaternion;
 
 import spaceguts.physics.Physics;
-import spaceguts.util.helper.DisplayHelper;
-import spaceguts.util.helper.QuaternionHelper;
+import spaceguts.util.QuaternionHelper;
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
 import spaceguts.entities.Light;
+import spaceguts.graphics.DisplayHelper;
 import spaceguts.graphics.Graphics;
 
 /**

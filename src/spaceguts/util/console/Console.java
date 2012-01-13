@@ -6,8 +6,8 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.UnicodeFont;
 
+import spaceguts.graphics.DisplayHelper;
 import spaceguts.util.debug.Debug;
-import spaceguts.util.helper.DisplayHelper;
 import spaceguts.util.manager.MouseManager;
 import spaceguts.util.manager.TextureManager;
 

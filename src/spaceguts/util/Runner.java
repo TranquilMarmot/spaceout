@@ -1,6 +1,7 @@
 package spaceguts.util;
 
 import spaceguts.entities.Entities;
+import spaceguts.graphics.DisplayHelper;
 import spaceguts.graphics.Graphics;
 import spaceguts.graphics.gui.GUI;
 import spaceguts.graphics.gui.menu.MainMenu;
@@ -11,7 +12,6 @@ import org.lwjgl.opengl.Display;
 import spaceguts.physics.Physics;
 import spaceguts.util.console.Console;
 import spaceguts.util.debug.Debug;
-import spaceguts.util.helper.DisplayHelper;
 import spaceguts.util.manager.KeyboardManager;
 import spaceguts.util.manager.MouseManager;
 
@@ -112,6 +112,9 @@ public class Runner {
 		Entities.updateEntities();
 	}
 
+	/**
+	 * Checks whether or not the game's paused boolean needs to be flipped
+	 */
 	private void pauseLogic() {
 		// if pauseDown is true, it means that the pause button is being
 		// held,

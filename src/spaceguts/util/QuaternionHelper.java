@@ -1,4 +1,4 @@
-package spaceguts.util.helper;
+package spaceguts.util;
 
 import java.nio.FloatBuffer;
 

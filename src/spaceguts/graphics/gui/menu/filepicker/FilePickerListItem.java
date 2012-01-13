@@ -10,8 +10,8 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
 import spaceguts.util.debug.Debug;
-import spaceguts.util.helper.DisplayHelper;
 
+import spaceguts.graphics.DisplayHelper;
 import spaceguts.graphics.gui.button.RectangleButton;
 
 public class FilePickerListItem extends RectangleButton{

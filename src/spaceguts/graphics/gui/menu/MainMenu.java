@@ -1,5 +1,6 @@
 package spaceguts.graphics.gui.menu;
 
+import spaceguts.graphics.DisplayHelper;
 import spaceguts.graphics.gui.GUI;
 import spaceguts.graphics.gui.GUIObject;
 import spaceguts.graphics.gui.button.MenuButton;
@@ -15,7 +16,6 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 import spaceguts.util.Runner;
 import spaceguts.util.debug.Debug;
-import spaceguts.util.helper.DisplayHelper;
 import spaceguts.util.manager.TextureManager;
 
 /**

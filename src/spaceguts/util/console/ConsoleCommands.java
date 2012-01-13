@@ -12,8 +12,8 @@ import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
 import spaceguts.entities.Light;
+import spaceguts.util.QuaternionHelper;
 import spaceguts.util.Runner;
-import spaceguts.util.helper.QuaternionHelper;
 
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;

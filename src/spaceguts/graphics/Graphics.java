@@ -7,7 +7,6 @@ import spaceguts.entities.Entities;
 import spaceguts.graphics.render.Render2D;
 import spaceguts.graphics.render.Render3D;
 
-import spaceguts.util.helper.DisplayHelper;
 
 /**
  * Handles all the calls for OpenGL. This includes initializing OpenGL and calling {@link Render2D} and {@link Render3D}.
