@@ -4,10 +4,10 @@ import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 
+import spaceguts.util.QuaternionHelper;
 import spaceguts.util.Runner;
 import spaceguts.util.console.Console;
 import spaceguts.util.debug.Debug;
-import spaceguts.util.helper.QuaternionHelper;
 import spaceguts.util.manager.KeyboardManager;
 import spaceguts.util.manager.MouseManager;
 

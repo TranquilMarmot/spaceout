@@ -1,4 +1,4 @@
-package spaceguts.util.helper;
+package spaceguts.graphics;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -42,7 +42,9 @@ public class DisplayHelper {
 	private static String windowTitle = "Spaceout Pre-alpha " + Runner.VERSION;
 
 	/** target fps (might not be reached on slower machines) */
-	public static int targetFPS = 60;
+	public static int targetFPS = 100000;
+	
+	public static boolean vsync = false;
 
 	/** this is just to handle the resizeable window */
 	private final static AtomicReference<Dimension> newCanvasSize = new AtomicReference<Dimension>();
@@ -109,7 +111,7 @@ public class DisplayHelper {
 		try {
 			// set the display to use the canvas
 			Display.setParent(canvas);
-			//Display.setVSyncEnabled(true);
+			Display.setVSyncEnabled(vsync);
 
 			// pretty self explanatory, boilerplate awt frame creation
 			frame.setPreferredSize(new Dimension(windowWidth, windowHeight));

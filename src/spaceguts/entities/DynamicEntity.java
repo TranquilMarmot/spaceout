@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import spaceguts.graphics.model.Model;
 import spaceguts.physics.CollisionTypes;
 import spaceguts.physics.Physics;
 import spaceguts.util.manager.ModelManager;
@@ -15,8 +16,6 @@ import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
-
-import spaceguts.graphics.model.Model;
 
 /**
  * And entity that also keeps track of it's own rigid body and model

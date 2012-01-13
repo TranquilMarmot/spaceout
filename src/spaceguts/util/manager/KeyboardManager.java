@@ -3,7 +3,6 @@ package spaceguts.util.manager;
 import org.lwjgl.input.Keyboard;
 
 import spaceguts.util.console.Console;
-import spaceguts.util.debug.Debug;
 
 /**
  * Handles any key presses. Only one should exist, and it needs to be updated every frame.

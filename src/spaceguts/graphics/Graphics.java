@@ -1,11 +1,12 @@
-package spaceguts.graphics.render;
+package spaceguts.graphics;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 import spaceguts.entities.Entities;
+import spaceguts.graphics.render.Render2D;
+import spaceguts.graphics.render.Render3D;
 
-import spaceguts.util.helper.DisplayHelper;
 
 /**
  * Handles all the calls for OpenGL. This includes initializing OpenGL and calling {@link Render2D} and {@link Render3D}.
@@ -16,22 +17,23 @@ import spaceguts.util.helper.DisplayHelper;
  */
 public class Graphics {
 	/**
-	 * Updates all entities and renders them. This should probably be called every frame.
+	 * Renders the entire scene. This includes 2D and 3D rendering.
 	 */
-	public static void renderAndUpdateEntities(){
+	public static void renderScene(){
 		// Clear the color and depth buffers
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-
+		
 		// can only render 3D stuff if there are entities and a camera
 		if(Entities.entitiesExist() && Entities.camera != null)
 			Render3D.render3DScene();
-		Render2D.updateAndRender2DScene();
+		
+		Render2D.draw2DScene();
 		
 		// handle any GL errors that might occur
 		int error = GL11.glGetError();
 		
 		if(error != GL11.GL_NO_ERROR)
-			System.out.println("Error rendering! Error number: " + error + " string: " + GLU.gluGetString(error));
+			System.out.println("Error rendering! Error number: " + error + "/String: " + GLU.gluGetString(error));
 	}
 	
 	/**

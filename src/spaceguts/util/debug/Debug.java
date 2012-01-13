@@ -10,12 +10,12 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
+import spaceguts.util.QuaternionHelper;
 import spaceguts.util.Runner;
 import spaceguts.util.console.Console;
-import spaceguts.util.helper.DisplayHelper;
-import spaceguts.util.helper.QuaternionHelper;
 import spaceguts.util.manager.TextureManager;
 import spaceguts.entities.Entities;
+import spaceguts.graphics.DisplayHelper;
 
 /**
  * Handles drawing all the debug info. This class also contains the console
@@ -41,31 +41,32 @@ public class Debug {
 	public static boolean displayDebug = true;
 
 	// whether or not the console is up
-	//public static boolean consoleOn = false;
-	//public static boolean commandOn = false;
+	// public static boolean consoleOn = false;
+	// public static boolean commandOn = false;
 
 	// call list to draw a rectangle behind the debug info
 	private static int rectangleCallList = 0;
 
-
-
 	// font for printing stuff to the screen
 	public static UnicodeFont font = null;
 
-	public static void updateAndDraw() {
+	public static void update() {
 		// everything in this class is static so that it can be accessed
 		// whenever, so everything has to be initialized
 		checkForInit();
 
 		// update keys
 		DebugKeyManager.updateKeys();
+		
+		Console.console.update();
+	}
 
-		Console.console.updateAndDraw();
-
+	public static void draw() {
+		Console.console.draw();
 		if (displayDebug) {
 			drawDebugInfo();
 		}
-
+		
 		// draw 'PAUSED' in the middle of the screen if the game is paused
 		if (Runner.paused && Entities.entitiesExist())
 			Debug.font.drawString((DisplayHelper.windowWidth / 2) - 25,
@@ -83,50 +84,54 @@ public class Debug {
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 			// formats the coordinates
-			if(Entities.camera != null){
-			Formatter coords = new Formatter();
-			if (!Entities.camera.freeMode) {
-				coords.format("x: %,09.3f%n" + "y: %,09.3f%n" + "z: %,09.3f%n",
-						Entities.player.location.x, Entities.player.location.y,
-						Entities.player.location.z);
-			} else {
-				coords.format("x: %,09.3f%n" + "y: %,09.3f%n" + "z: %,09.3f%n",
-						Entities.camera.location.x, Entities.camera.location.y,
-						Entities.camera.location.z);
-			}
-			
+			if (Entities.camera != null) {
+				Formatter coords = new Formatter();
+				if (!Entities.camera.freeMode) {
+					coords.format("x: %,09.3f%n" + "y: %,09.3f%n"
+							+ "z: %,09.3f%n", Entities.player.location.x,
+							Entities.player.location.y,
+							Entities.player.location.z);
+				} else {
+					coords.format("x: %,09.3f%n" + "y: %,09.3f%n"
+							+ "z: %,09.3f%n", Entities.camera.location.x,
+							Entities.camera.location.y,
+							Entities.camera.location.z);
+				}
 
-			// draw coordinates
-			font.drawString(3, 3, coords.toString(), Color.cyan);
-			
+				// draw coordinates
+				font.drawString(3, 3, coords.toString(), Color.cyan);
 
-			Vector3f angles;
-			if(!Entities.camera.freeMode)
-				angles = QuaternionHelper.getEulerAnglesFromQuaternion(Entities.player.rotation);
-			else 
-				angles = QuaternionHelper.getEulerAnglesFromQuaternion(Entities.camera.rotation);
-			
-			font.drawString(3, 59, "roll: " + angles.x
-					+ "\npitch: " + angles.y + "\nyaw: "
-					+ angles.z, new Color(0, 123, 255));
+				Vector3f angles;
+				if (!Entities.camera.freeMode)
+					angles = QuaternionHelper
+							.getEulerAnglesFromQuaternion(Entities.player.rotation);
+				else
+					angles = QuaternionHelper
+							.getEulerAnglesFromQuaternion(Entities.camera.rotation);
 
-			Formatter zoom = new Formatter();
-			zoom.format("zoom: %,04.2f", Entities.camera.zoom);
+				font.drawString(3, 59, "roll: " + angles.x + "\npitch: "
+						+ angles.y + "\nyaw: " + angles.z, new Color(0, 123,
+						255));
 
-			// draw camera info
-			String cameraInfo = zoom.toString();
-			if (Entities.camera.vanityMode)
-				cameraInfo += "\n(vanity)";
-			else if (Entities.camera.freeMode)
-				cameraInfo += "\n(free)";
-			font.drawString(3, 114, cameraInfo, Color.blue);
-			
-			javax.vecmath.Vector3f linear = new javax.vecmath.Vector3f();
-			Entities.player.rigidBody.getLinearVelocity(linear);
-			float xSpeed = (linear.x * 100.0f) / 1000.0f;
-			float ySpeed = (linear.y * 100.0f) / 1000.0f;
-			float zSpeed = (linear.z * 100.0f) / 1000.0f;
-			font.drawString(DisplayHelper.windowWidth - 125, DisplayHelper.windowHeight - 75, xSpeed + "\n" + ySpeed + "\n" + zSpeed);
+				Formatter zoom = new Formatter();
+				zoom.format("zoom: %,04.2f", Entities.camera.zoom);
+
+				// draw camera info
+				String cameraInfo = zoom.toString();
+				if (Entities.camera.vanityMode)
+					cameraInfo += "\n(vanity)";
+				else if (Entities.camera.freeMode)
+					cameraInfo += "\n(free)";
+				font.drawString(3, 114, cameraInfo, Color.blue);
+
+				javax.vecmath.Vector3f linear = new javax.vecmath.Vector3f();
+				Entities.player.rigidBody.getLinearVelocity(linear);
+				float xSpeed = (linear.x * 100.0f) / 1000.0f;
+				float ySpeed = (linear.y * 100.0f) / 1000.0f;
+				float zSpeed = (linear.z * 100.0f) / 1000.0f;
+				font.drawString(DisplayHelper.windowWidth - 125,
+						DisplayHelper.windowHeight - 75, xSpeed + "\n" + ySpeed
+								+ "\n" + zSpeed);
 			}
 		}
 
@@ -212,33 +217,34 @@ public class Debug {
 
 		return delta;
 	}
-	
-	public static void printSysInfo(){
+
+	public static void printSysInfo() {
 		// print out which version of Spaceout this is
 		System.out.println("Spaceout version " + Runner.VERSION);
-		
-		// print out LWJGL version, followed by whether the system is 32 or 64 bit
+
+		// print out LWJGL version, followed by whether the system is 32 or 64
+		// bit
 		System.out.print("LWJGL version " + Sys.getVersion());
-		if(Sys.is64Bit())
+		if (Sys.is64Bit())
 			System.out.println(" (64 bit)");
 		else
 			System.out.println(" (32 bit)");
-		
+
 		// print out which version of OpenGL is being used
 		String glVersion = GL11.glGetString(GL11.GL_VERSION);
-		
+
 		String glDriver = null;
 		int i = glVersion.indexOf(' ');
 		if (i != -1) {
 			glDriver = glVersion.substring(i + 1);
 			glVersion = glVersion.substring(0, i);
 		}
-		
+
 		System.out.print("OpenGL version " + glVersion);
-		if(glDriver != null)
+		if (glDriver != null)
 			System.out.print("(" + glDriver + ")");
 		System.out.println();
-		
+
 		// print out info about the graphics card
 		String glVendor = GL11.glGetString(GL11.GL_VENDOR);
 		String glRenderer = GL11.glGetString(GL11.GL_RENDERER);

@@ -1,8 +1,10 @@
 package spaceguts.util;
 
+import spaceguts.entities.Entities;
+import spaceguts.graphics.DisplayHelper;
+import spaceguts.graphics.Graphics;
 import spaceguts.graphics.gui.GUI;
 import spaceguts.graphics.gui.menu.MainMenu;
-import spaceguts.graphics.render.Graphics;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -10,7 +12,6 @@ import org.lwjgl.opengl.Display;
 import spaceguts.physics.Physics;
 import spaceguts.util.console.Console;
 import spaceguts.util.debug.Debug;
-import spaceguts.util.helper.DisplayHelper;
 import spaceguts.util.manager.KeyboardManager;
 import spaceguts.util.manager.MouseManager;
 
@@ -56,10 +57,10 @@ public class Runner {
 			while (!done && !DisplayHelper.closeRequested) {
 				// check for window resizes
 				DisplayHelper.resizeWindow();
-				// update misc stuff (keyboard, mouse, etc.)
+				// update everything
 				update();
 				// render the scene
-				Graphics.renderAndUpdateEntities();
+				Graphics.renderScene();
 				// update the display (this swaps the buffers)
 				Display.update();
 				Display.sync(DisplayHelper.targetFPS);
@@ -84,8 +85,8 @@ public class Runner {
 		 * MainMenu.java
 		 */
 		MainMenu mainMenu = new MainMenu();
-		GUI.addBuffer.add(mainMenu);
-		
+		GUI.addGUIObject(mainMenu);
+
 		// print out system info
 		Debug.printSysInfo();
 		System.out.println("-------------------------------");
@@ -95,12 +96,26 @@ public class Runner {
 	 * Updates everything
 	 */
 	private void update() {
-		// System.out.println("delta: " + Debug.getDelta());
 		// update the mouse and keyboard handlers
 		mouse.update();
 		keyboard.update();
 
-		/* BEGIN PAUSE LOGIC */
+		pauseLogic();
+
+		DisplayHelper.doFullscreenLogic();
+		
+		GUI.update();
+
+		if (!paused && Physics.dynamicsWorld != null)
+			Physics.update();
+		
+		Entities.updateEntities();
+	}
+
+	/**
+	 * Checks whether or not the game's paused boolean needs to be flipped
+	 */
+	private void pauseLogic() {
 		// if pauseDown is true, it means that the pause button is being
 		// held,
 		// so it avoids repeatedly flipping paused when the key is held
@@ -113,17 +128,12 @@ public class Runner {
 			pauseDown = false;
 		}
 
-		// release the mouse if the game's paused or the console is on or the menu is up
+		// release the mouse if the game's paused or the console is on or the
+		// menu is up
 		if (!paused && !Console.consoleOn && !GUI.menuUp)
 			Mouse.setGrabbed(true);
 		else
 			Mouse.setGrabbed(false);
-		/* END PAUSE LOGIC */
-
-		DisplayHelper.doFullscreenLogic();
-		
-		if(!paused && Physics.dynamicsWorld != null)
-			Physics.update();
 	}
 
 	/**

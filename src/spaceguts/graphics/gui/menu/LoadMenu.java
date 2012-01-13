@@ -1,6 +1,7 @@
 package spaceguts.graphics.gui.menu;
 
 import spaceguts.entities.Entities;
+import spaceguts.graphics.DisplayHelper;
 import spaceguts.graphics.gui.GUI;
 import spaceguts.graphics.gui.GUIObject;
 import spaceguts.graphics.gui.button.MenuButton;
@@ -15,7 +16,6 @@ import org.newdawn.slick.opengl.Texture;
 import spaceguts.physics.Physics;
 import spaceguts.physics.sandbox.Sandbox;
 import spaceguts.util.debug.Debug;
-import spaceguts.util.helper.DisplayHelper;
 import spaceguts.util.manager.TextureManager;
 import spaceguts.util.xml.XMLParser;
 
@@ -81,14 +81,14 @@ public class LoadMenu extends GUIObject {
 					/* FIXME this if statement is only temporary!!! */
 					if (selectedFile.equals("PhysicsSandbox.xml")) {
 						Sandbox.createSandboxWorld();
-						Entities.staticEntities.add(new Sandbox());
+						Entities.addPassiveEntity(new Sandbox());
 					} else {
 						// load entities from XML
 						XMLParser.loadEntitiesFromXmlFile(path
 								+ selectedFile);
 					}
 					// create the pause menu
-					GUI.addBuffer.add(new PauseMenu());
+					GUI.addGUIObject(new PauseMenu());
 
 					// raise the file loaded flag
 					fileLoaded = true;
@@ -122,14 +122,16 @@ public class LoadMenu extends GUIObject {
 
 		if (backToMainMenu) {
 			// remove the load menu
-			GUI.removeBuffer.add(this);
+			GUI.guiObjects.remove(this.hashCode(), this);
+			
 			// add the main menu
-			GUI.addBuffer.add(new MainMenu());
+			GUI.addGUIObject(new MainMenu());
 		}
 
 		if (fileLoaded) {
 			// remove the load menu
-			GUI.removeBuffer.add(this);
+			GUI.guiObjects.remove(this.hashCode(), this);
+			
 			// let the GUI know that there's no menu up
 			GUI.menuUp = false;
 		}

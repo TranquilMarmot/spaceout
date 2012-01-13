@@ -7,8 +7,8 @@ import javax.vecmath.Quat4f;
 
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
-import spaceout.Health;
-import spaceout.entities.dynamic.Bullet;
+import spaceout.interfaces.Bullet;
+import spaceout.interfaces.Health;
 
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.narrowphase.ManifoldPoint;
@@ -51,7 +51,7 @@ class DynamicEntityCallback extends InternalTickCallback {
 
 		if (ent.removeFlag) {
 			Physics.dynamicsWorld.removeCollisionObject(c);
-			Entities.dynamicRemoveBuffer.add(ent);
+			Entities.dynamicEntities.remove(ent.hashCode(), ent);
 		} else {
 			// get the rigid body's world transform
 			Transform trans = new Transform();
