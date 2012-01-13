@@ -39,11 +39,11 @@ public class Console {
 	// the maximum alpha for console text
 	public static float consoleTextMaxAlpha = 1.0f;
 	// the minimum alpha for console text
-	public static float consoleTextMinAlpha = 0.0f;
+	public static float consoleTextMinAlpha = 0.3f;
 	// the alpha difference for each update
-	public static float consoleTextFadeValue = 0.011f;
+	public static float consoleTextFadeValue = 0.003f;
 	// the time in seconds before the text begins to fade
-	public static int consoleTextFadeDelay = 1;
+	public static int consoleTextFadeDelay = 5;
 
 	// the current alpha for console text (should always be consoleTextMaxAlpha)
 	public static float consoleTextAlpha = consoleTextMaxAlpha;
@@ -81,27 +81,30 @@ public class Console {
 	// all the text that the console contains and will print out
 	private ArrayList<String> text = new ArrayList<String>();
 	public void update() {
-		// scroll with the mouse wheel
-		scroll += MouseManager.wheel / 100;
-
-		// keep scroll from getting too big or too small
-		if (scroll < 0)
-			scroll = 0;
-		if (scroll > text.size() - numLines && text.size() > numLines)
-			scroll = text.size() - numLines;
-
-		// do blinking effect
-		updateBlink();
-
+		
 		// check for command
 		if (Console.commandOn) {
 			input = "/";
 			Console.commandOn = false;
 		}
 		
-		// Fade the text if the console is closed!
+		// Logic for scrolling, cursor blinking, and console fading.
 		if (Console.consoleOn) {
+			// Brighten the console
 			this.wake();
+
+			// scroll with the mouse wheel
+			scroll += MouseManager.wheel / 100;
+	
+			// keep scroll from getting too big or too small
+			if (scroll < 0)
+				scroll = 0;
+			if (scroll > text.size() - numLines && text.size() > numLines)
+				scroll = text.size() - numLines;
+			
+			// do blinking effect
+			updateBlink();
+			
 		} else if (consoleTextAlpha > consoleTextMinAlpha
 				&& consoleTextFadeDelayCurrent >= consoleTextFadeDelay * 60) {
 			// Subtract the proper amount from the current console text
