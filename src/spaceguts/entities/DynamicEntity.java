@@ -6,10 +6,10 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-import spaceguts.graphics.model.Model;
 import spaceguts.physics.CollisionTypes;
 import spaceguts.physics.Physics;
-import spaceguts.util.manager.ModelManager;
+import spaceguts.util.model.Model;
+import spaceguts.util.resources.Models;
 
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.dynamics.RigidBody;
@@ -36,20 +36,21 @@ public class DynamicEntity extends Entity {
 	/**
 	 * Overloaded constructor
 	 */
-	public DynamicEntity(Vector3f location, Quaternion rotation, int model,
+	public DynamicEntity(Vector3f location, Quaternion rotation, Model model,
 			float mass, float restitution) {
-		this(location, rotation, ModelManager.getModel(model), mass,
+		this(location, rotation, model, mass,
 				restitution, CollisionTypes.NOTHING, CollisionTypes.NOTHING);
 	}
 	
-	public DynamicEntity(Vector3f location, Quaternion rotation, Model model,
-			float mass, float restitution) {
-		this(location, rotation, model, mass, restitution, CollisionTypes.NOTHING, CollisionTypes.NOTHING);
+	public DynamicEntity(Vector3f location, Quaternion rotation, Models model,
+			float mass, float restitution){
+		this(location, rotation, model.getModel(), mass,
+				restitution, CollisionTypes.NOTHING, CollisionTypes.NOTHING);
 	}
 	
-	public DynamicEntity(Vector3f location, Quaternion rotation, int model,
+	public DynamicEntity(Vector3f location, Quaternion rotation, Models model,
 			float mass, float restitution, short collisionGroup, short collidesWith){
-		this(location, rotation, ModelManager.getModel(model), mass,
+		this(location, rotation, model.getModel(), mass,
 				restitution, collisionGroup, collidesWith);
 	}
 
@@ -68,7 +69,7 @@ public class DynamicEntity extends Entity {
 		this.location = location;
 		this.rotation = rotation;
 		this.model = model;
-
+		
 		// the transform to use for putting the entity into the world
 		Transform transform = new Transform();
 		transform.setRotation(new Quat4f(rotation.x, rotation.y, rotation.z,
@@ -129,9 +130,13 @@ public class DynamicEntity extends Entity {
 	 * Simple as possible drawing call. This assumes that it's called when the entity's location and rotation have already been applied to the modelview matrix.
 	 */
 	public void draw() {
-		model.getTexture().bind();
-		GL11.glColor3f(1.0f, 1.0f, 1.0f);
-		GL11.glCallList(model.getCallList());
+		try{
+			model.getTexture().bind();
+			GL11.glColor3f(1.0f, 1.0f, 1.0f);
+			GL11.glCallList(model.getCallList());
+		} catch(NullPointerException e){
+			
+		}
 	}
 
 	/**

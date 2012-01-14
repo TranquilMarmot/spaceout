@@ -1,8 +1,9 @@
-package spaceguts.graphics.model;
+package spaceguts.util.model;
 
 import org.newdawn.slick.opengl.Texture;
 
-import spaceguts.util.manager.TextureManager;
+import spaceguts.util.resources.ResourceLoader;
+import spaceguts.util.resources.Textures;
 
 import com.bulletphysics.collision.shapes.CollisionShape;
 
@@ -20,7 +21,7 @@ public class Model {
 	private int callList;
 
 	/** The texture to use when drawing this model (from the TextureManager) */
-	private int texture;
+	private Textures texture;
 
 	/**
 	 * Model initializer
@@ -31,9 +32,9 @@ public class Model {
 	 *            The call list to call to draw the model
 	 * @param texture
 	 *            Which texture to use for this model (from
-	 *            {@link TextureManager}
+	 *            {@link ResourceLoader}
 	 */
-	public Model(CollisionShape shape, int callList, int texture) {
+	public Model(CollisionShape shape, int callList, Textures texture) {
 		this.shape = shape;
 		this.callList = callList;
 		this.texture = texture;
@@ -47,7 +48,7 @@ public class Model {
 	}
 
 	public Texture getTexture() {
-		return TextureManager.getTexture(texture);
+		return texture.getTexture();
 	}
 
 	/**

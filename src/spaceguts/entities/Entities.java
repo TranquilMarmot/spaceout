@@ -28,20 +28,6 @@ public class Entities {
 	/** all the current lights */
 	public static ConcurrentHashMap<Integer, Light> lights = new ConcurrentHashMap<Integer, Light>();
 	
-	public static void updateEntities(){
-		for(Entity ent : passiveEntities.values())
-			ent.update();
-		
-		for(Light l : lights.values())
-			l.update();
-		
-		if(camera != null)
-			camera.update();
-		
-		if(skybox != null)
-			skybox.update();	
-	}
-	
 	public static void addDynamicEntity(DynamicEntity ent){
 		DynamicEntity test = dynamicEntities.put(ent.hashCode(), ent);
 		/*

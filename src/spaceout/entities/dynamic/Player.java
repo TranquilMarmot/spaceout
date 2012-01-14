@@ -11,8 +11,8 @@ import spaceguts.util.QuaternionHelper;
 import spaceguts.util.Runner;
 import spaceguts.util.console.Console;
 import spaceguts.util.manager.KeyboardManager;
-import spaceguts.util.manager.ModelManager;
 import spaceguts.util.manager.MouseManager;
+import spaceguts.util.resources.Models;
 import spaceout.interfaces.Health;
 import spaceout.ship.Ship;
 
@@ -39,6 +39,8 @@ public class Player extends DynamicEntity implements Health {
 		rigidBody.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 		this.ship = ship;
 		this.type = "Player";
+		
+		System.out.println("wut");
 	}
 
 	@Override
@@ -139,13 +141,13 @@ public class Player extends DynamicEntity implements Health {
 				bulletMoveAmount, bulletRotation);
 		Vector3f.add(bulletLocation, bulletMoveAmount, bulletLocation);
 
-		int bulletModel = ModelManager.LASERBULLET;
+		Models bulletModel = Models.LASERBULLET;
 		float bulletMass = 0.25f;
 		float bulletRestitution = 1.0f;
 		int bulletDamage = 10;
 		float bulletSpeed = 2500.0f;
 
-		LaserBullet bullet = new LaserBullet(bulletLocation, bulletRotation,
+		LaserBullet bullet = new LaserBullet(this, bulletLocation, bulletRotation,
 				bulletModel, bulletMass, bulletRestitution, bulletDamage);
 		Entities.addDynamicEntity(bullet);
 

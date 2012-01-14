@@ -88,9 +88,9 @@ class DynamicEntityCallback extends InternalTickCallback {
 					DynamicEntity entB = (DynamicEntity) objB.getUserPointer();
 					
 					if(entA instanceof Bullet && entB instanceof Health){
-						((Health) entB).hurt(((Bullet) entA).getDamage());
+						bulletHealthCollision((Bullet) entA, (Health) entB);
 					} else if(entB instanceof Bullet && entA instanceof Health){
-						((Health) entA).hurt(((Bullet) entB).getDamage());
+						bulletHealthCollision((Bullet) entB, (Health) entA);
 					}
 					
 					
@@ -102,5 +102,10 @@ class DynamicEntityCallback extends InternalTickCallback {
 				}
 			}
 		}
+	}
+	
+	private static void bulletHealthCollision(Bullet bullet, Health health){
+		if(bullet.getOwner() != health)
+			health.hurt(bullet.getDamage());
 	}
 }

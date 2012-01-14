@@ -6,10 +6,10 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.UnicodeFont;
 
-import spaceguts.graphics.DisplayHelper;
+import spaceguts.util.DisplayHelper;
 import spaceguts.util.debug.Debug;
 import spaceguts.util.manager.MouseManager;
-import spaceguts.util.manager.TextureManager;
+import spaceguts.util.resources.Textures;
 
 /**
  * Console for printing text and interacting with the game. Note that there
@@ -136,7 +136,7 @@ public class Console {
 		if (consoleEnabled) {
 			if (Console.consoleOn) {
 				// Draw the box
-				TextureManager.getTexture(TextureManager.WHITE).bind();
+				Textures.WHITE.getTexture().bind();
 				GL11.glColor4f(0.15f, 0.15f, 0.15f, 0.35f);
 				GL11.glBegin(GL11.GL_QUADS);
 				{

@@ -10,12 +10,11 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
+import spaceguts.entities.Entities;
+import spaceguts.util.DisplayHelper;
 import spaceguts.util.QuaternionHelper;
 import spaceguts.util.Runner;
 import spaceguts.util.console.Console;
-import spaceguts.util.manager.TextureManager;
-import spaceguts.entities.Entities;
-import spaceguts.graphics.DisplayHelper;
 
 /**
  * Handles drawing all the debug info. This class also contains the console
@@ -51,14 +50,12 @@ public class Debug {
 	public static UnicodeFont font = null;
 
 	public static void update() {
-		// everything in this class is static so that it can be accessed
-		// whenever, so everything has to be initialized
-		checkForInit();
-
 		// update keys
 		DebugKeyManager.updateKeys();
 		
 		Console.console.update();
+		
+		updateFPS();
 	}
 
 	public static void draw() {
@@ -155,7 +152,7 @@ public class Debug {
 	 * Initialize's Debug's objects as needed
 	 */
 	@SuppressWarnings("unchecked")
-	public static void checkForInit() {
+	public static void init() {
 		// initialize the font if this is the first draw
 		if (font == null) {
 			try {
@@ -182,7 +179,6 @@ public class Debug {
 
 			GL11.glNewList(rectangleCallList, GL11.GL_COMPILE);
 			{
-				TextureManager.getTexture(TextureManager.WHITE).bind();
 				GL11.glColor3f(0.07f, 0.07f, 0.07f);
 				GL11.glBegin(GL11.GL_QUADS);
 				{

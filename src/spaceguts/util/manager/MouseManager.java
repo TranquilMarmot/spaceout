@@ -2,7 +2,7 @@ package spaceguts.util.manager;
 
 import org.lwjgl.input.Mouse;
 
-import spaceguts.graphics.DisplayHelper;
+import spaceguts.util.DisplayHelper;
 
 /**
  * Manages everything to do with the mouse

@@ -10,9 +10,8 @@ import org.lwjgl.util.vector.Vector3f;
 import spaceguts.entities.Camera;
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
-import spaceguts.graphics.model.Model;
-import spaceguts.util.manager.ModelManager;
-import spaceguts.util.manager.TextureManager;
+import spaceguts.util.resources.Models;
+import spaceguts.util.resources.Textures;
 import spaceout.entities.dynamic.Box;
 import spaceout.entities.dynamic.Planet;
 import spaceout.entities.dynamic.Player;
@@ -27,7 +26,7 @@ import spaceout.ship.Ship;
  *
  */
 public class Sandbox extends Entity{
-	public static void createSandboxWorld(){
+	public void createSandboxWorld() {
 		/* BEGIN SUN */
 		Vector3f sunLocation = new Vector3f(1500.0f, 1500.0f, -2.0f);
 		float sunSize = 150.0f;
@@ -67,7 +66,7 @@ public class Sandbox extends Entity{
 		
 		/* TEMP SHIP INFO TODO make this load from XML */
 		String shipName = "WingX";
-		Model shipModel = ModelManager.getModel(ModelManager.WING_X);
+		Models shipModel = Models.WING_X;
 		int shipHealth = 100;
 		float shipMass = 50.0f;
 		float shipRestitution = 0.01f;
@@ -95,6 +94,7 @@ public class Sandbox extends Entity{
 		Entities.skybox = skybox;
 		/* END SKYBOX */
 		
+		
 		/* BEGIN DEBRIS */
 		Debris debris = new Debris(Entities.camera, 500, 50000.0f, 420133742L);
 		debris.update();
@@ -106,23 +106,23 @@ public class Sandbox extends Entity{
 		Random randy = new Random();
 		float sphereSize = randy.nextInt(200) / 10.0f;
 		
-		int sphereTexture = randy.nextInt(4);
+		Textures sphereTexture;
 		
 		switch(randy.nextInt(4)){
 		case 0:
-			sphereTexture = TextureManager.EARTH;
+			sphereTexture = Textures.EARTH;
 			break;
 		case 1:
-			sphereTexture = TextureManager.MERCURY;
+			sphereTexture = Textures.MERCURY;
 			break;
 		case 2:
-			sphereTexture = TextureManager.VENUS;
+			sphereTexture = Textures.VENUS;
 			break;
 		case 3:
-			sphereTexture = TextureManager.MARS;
+			sphereTexture = Textures.MARS;
 			break;
 		default:
-			sphereTexture = TextureManager.EARTH;
+			sphereTexture = Textures.EARTH;
 		}
 		
 		float sphereX = 0.0f + (randy.nextFloat() * 100.0f);

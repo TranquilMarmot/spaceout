@@ -1,19 +1,22 @@
 package spaceguts.util;
 
-import spaceguts.entities.Entities;
-import spaceguts.graphics.DisplayHelper;
-import spaceguts.graphics.Graphics;
-import spaceguts.graphics.gui.GUI;
-import spaceguts.graphics.gui.menu.MainMenu;
-
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
+import spaceguts.entities.Entities;
+import spaceguts.entities.Entity;
+import spaceguts.entities.Light;
+import spaceguts.graphics.Graphics;
+import spaceguts.graphics.gui.GUI;
+import spaceguts.graphics.gui.menu.MainMenu;
 import spaceguts.physics.Physics;
 import spaceguts.util.console.Console;
 import spaceguts.util.debug.Debug;
 import spaceguts.util.manager.KeyboardManager;
 import spaceguts.util.manager.MouseManager;
+import spaceguts.util.resources.Models;
+import spaceguts.util.resources.ResourceLoader;
+import spaceguts.util.resources.Textures;
 
 // Rule number 1: Tell everyone about Spaceout (ask them for ideas! We need ideas!).
 // Rule number 2: Comment everything motherfucker.
@@ -25,7 +28,7 @@ import spaceguts.util.manager.MouseManager;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.60";
+	public static final String VERSION = "0.0.65";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
@@ -54,13 +57,11 @@ public class Runner {
 		try {
 			// keep going until the done flag is up or a window close is
 			// requested
-			while (!done && !DisplayHelper.closeRequested) {
-				// check for window resizes
-				DisplayHelper.resizeWindow();
+			while (!done) {
 				// update everything
 				update();
 				// render the scene
-				Graphics.renderScene();
+				Graphics.render();
 				// update the display (this swaps the buffers)
 				Display.update();
 				Display.sync(DisplayHelper.targetFPS);
@@ -68,7 +69,7 @@ public class Runner {
 			shutdown();
 		} catch (Exception e) {
 			// if an exception is caught, destroy the display and the frame
-			shutdown();
+			//shutdown();
 			e.printStackTrace();
 		}
 	}
@@ -78,16 +79,37 @@ public class Runner {
 	 */
 	private void init() {
 		DisplayHelper.createWindow();
-		Graphics.initGL();
-
-		/*
-		 * NOTE: Most of the initializing is done on the main menu, see
-		 * MainMenu.java
-		 */
+		Graphics.initGL();		
+		Debug.init();
+		
 		MainMenu mainMenu = new MainMenu();
 		GUI.addGUIObject(mainMenu);
-
-		// print out system info
+		
+		//initialize resources
+		ResourceLoader.addJob(Textures.MENU_BACKGROUND1);
+		ResourceLoader.addJob(Textures.MENU_BACKGROUND2);
+		ResourceLoader.addJob(Textures.STARS);
+		ResourceLoader.addJob(Textures.WHITE);
+		ResourceLoader.addJob(Textures.CHECKERS);
+		ResourceLoader.addJob(Textures.SHIP1);
+		ResourceLoader.addJob(Textures.VENUS);
+		ResourceLoader.addJob(Textures.MARS);
+		ResourceLoader.addJob(Textures.MERCURY);
+		ResourceLoader.addJob(Textures.EARTH);
+		ResourceLoader.addJob(Textures.LASERBULLET);
+		ResourceLoader.addJob(Models.LASERBULLET);
+		ResourceLoader.addJob(Models.WING_X);
+		ResourceLoader.addJob(Textures.MENU_PICKER_ACTIVE);
+		ResourceLoader.addJob(Textures.MENU_PICKER_MOUSEOVER);
+		ResourceLoader.addJob(Textures.MENU_PICKER_SELECTED);
+		ResourceLoader.addJob(Textures.MENU_PICKER_PRESSED);
+		ResourceLoader.addJob(Textures.MENU_BUTTON_ACTIVE);
+		ResourceLoader.addJob(Textures.MENU_BUTTON_INACTIVE);
+		ResourceLoader.addJob(Textures.MENU_BUTTON_MOUSEOVER);
+		ResourceLoader.addJob(Textures.MENU_BUTTON_PRESSED);
+		ResourceLoader.addJob(Textures.MENU_SPACEOUT_TEXT);
+		ResourceLoader.processJobs();
+		
 		Debug.printSysInfo();
 		System.out.println("-------------------------------");
 	}
@@ -100,16 +122,38 @@ public class Runner {
 		mouse.update();
 		keyboard.update();
 
+		// do pause logic
 		pauseLogic();
-
-		DisplayHelper.doFullscreenLogic();
 		
+		// check for window resizes
+		DisplayHelper.resizeWindow();
+		
+		// update the GUI
 		GUI.update();
-
-		if (!paused && Physics.dynamicsWorld != null)
+		
+		// update the physics engine
+		if (!Runner.paused && Physics.dynamicsWorld != null)
 			Physics.update();
 		
-		Entities.updateEntities();
+		// update passive entities
+		for (Entity ent : Entities.passiveEntities.values())
+			ent.update();
+
+		// update lights
+		for (Light l : Entities.lights.values())
+			l.update();
+
+		// update camera
+		if (Entities.camera != null)
+			Entities.camera.update();
+
+		// update skybox
+		if (Entities.skybox != null)
+			Entities.skybox.update();
+		
+		// check for any resources that need to be loaded
+		if(ResourceLoader.jobsExist())
+			ResourceLoader.processJobs();
 	}
 
 	/**

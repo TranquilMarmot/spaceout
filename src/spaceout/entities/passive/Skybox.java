@@ -1,14 +1,10 @@
 package spaceout.entities.passive;
 
-import spaceguts.entities.Entity;
-import spaceguts.graphics.model.Model;
-import spaceguts.graphics.model.ModelLoader;
-import spaceguts.graphics.render.Render3D;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 
-import spaceguts.util.manager.TextureManager;
+import spaceguts.entities.Entity;
+import spaceguts.util.resources.Models;
 
 /**
  * Skybox to make it seem like there's stars everywhere. Follows an Entity
@@ -18,13 +14,8 @@ import spaceguts.util.manager.TextureManager;
  * 
  */
 public class Skybox extends Entity {
-	// where to look for the skybox model
-	private static final String MODEL_PATH = "res/models/";
-
-	public float skyboxSize = Render3D.drawDistance * 0.8f;
-
 	// the model to use for the skybox
-	private Model model;
+	private Models model = Models.SKYBOX;
 
 	// the skybox's center will always be on the entity that it is following
 	public Entity following;
@@ -42,9 +33,6 @@ public class Skybox extends Entity {
 		this.following = following;
 
 		rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-
-		model = ModelLoader.loadObjFile(MODEL_PATH + "skybox.obj", 100000.0f,
-				TextureManager.STARS);
 	}
 
 	@Override
@@ -60,8 +48,8 @@ public class Skybox extends Entity {
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		model.getTexture().bind();
-		GL11.glCallList(model.getCallList());
+		model.getModel().getTexture().bind();
+		GL11.glCallList(model.getModel().getCallList());
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_LIGHTING);
 	}

@@ -1,4 +1,4 @@
-package spaceguts.graphics.model;
+package spaceguts.util.model;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -8,21 +8,23 @@ import java.util.StringTokenizer;
 import javax.vecmath.Point2f;
 import javax.vecmath.Vector3f;
 
+import spaceguts.util.resources.Textures;
+
 /**
  * Handles loading models from external files.
  * @author TranquilMarmot
  *
  */
 public class ModelLoader {
-	public static Model loadObjFile(String file, int texture){
+	public static Model loadObjFile(String file, Textures texture){
 		return loadObjFile(file, new Vector3f(0.0f, 0.0f, 0.0f), 1.0f, 1.0f, 1.0f, texture);
 	}
 	
-	public static Model loadObjFile(String file, float scale, int texture){
+	public static Model loadObjFile(String file, float scale, Textures texture){
 		return loadObjFile(file, new Vector3f(0.0f, 0.0f, 0.0f), scale, scale, scale, texture);
 	}
 	
-	public static Model loadObjFile(String file, float xScale, float yScale, float zScale, int texture){
+	public static Model loadObjFile(String file, float xScale, float yScale, float zScale, Textures texture){
 		return loadObjFile(file, new Vector3f(0.0f, 0.0f, 0.0f), xScale, yScale, zScale, texture);
 	}
 	
@@ -33,7 +35,7 @@ public class ModelLoader {
 	 * @param scale The scale to create the model at
 	 * @return A model representing the given file
 	 */
-	public static Model loadObjFile(String file, Vector3f offset, float xScale, float yScale, float zScale, int texture) {
+	public static Model loadObjFile(String file, Vector3f offset, float xScale, float yScale, float zScale, Textures texture) {
 		Model m = null;
 
 		try {

@@ -2,7 +2,7 @@ package spaceout.ship;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import spaceguts.graphics.model.Model;
+import spaceguts.util.resources.Models;
 
 /*
  * TODO
@@ -21,7 +21,7 @@ import spaceguts.graphics.model.Model;
  */
 public class Ship{
 	/** The model to use for drawing the ship */
-	private Model model;
+	private Models model;
 	/** The name of the ship */
 	private String name;
 	/** How much health the ship has */
@@ -52,7 +52,7 @@ public class Ship{
 	 * @param xTurnSpeed How fast the ship turns about its x axis
 	 * @param yTurnSpeed How fast the ship turns about its y axis
 	 */
-	public Ship(String name, Model model, int health, float mass, float restitution, Vector3f accelerationSpeed, float topSpeed, float stabilizationSpeed, float stopSpeed, float rollSpeed, float xTurnSpeed, float yTurnSpeed){
+	public Ship(String name, Models model, int health, float mass, float restitution, Vector3f accelerationSpeed, float topSpeed, float stabilizationSpeed, float stopSpeed, float rollSpeed, float xTurnSpeed, float yTurnSpeed){
 		this.name = name;
 		this.model = model;
 		this.health = health;
@@ -67,7 +67,7 @@ public class Ship{
 		this.yTurnSpeed = yTurnSpeed;
 	}
 	
-	public Model getModel(){ return model; }
+	public Models getModel(){ return model; }
 	public String getName(){ return name; }
 	public int getHealth(){ return health; }
 	public float getMass(){ return mass; }

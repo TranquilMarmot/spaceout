@@ -1,22 +1,17 @@
 package spaceguts.graphics.gui.menu;
 
-import spaceguts.graphics.DisplayHelper;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import org.lwjgl.opengl.GL11;
+
 import spaceguts.graphics.gui.GUI;
 import spaceguts.graphics.gui.GUIObject;
 import spaceguts.graphics.gui.button.MenuButton;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.FileInputStream;
-import java.io.IOException;
-
-import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
-
+import spaceguts.util.DisplayHelper;
 import spaceguts.util.Runner;
 import spaceguts.util.debug.Debug;
-import spaceguts.util.manager.TextureManager;
+import spaceguts.util.resources.Textures;
 
 /**
  * Main menu to show when the game first runs
@@ -25,8 +20,6 @@ import spaceguts.util.manager.TextureManager;
  * 
  */
 public class MainMenu extends GUIObject {
-	/** button image path */
-	private static final String BUTTON_IMAGE_PATH = "res/images/gui/Menu/Button/";
 	/** XML path */
 	private static final String XML_PATH = "res/XML/";
 
@@ -42,8 +35,8 @@ public class MainMenu extends GUIObject {
 	/** button to quit */
 	private MenuButton quitButton;
 
-	private Texture background;
-	private Texture spaceout;
+	private Textures background = Textures.MENU_BACKGROUND1;
+	private Textures spaceout = Textures.MENU_SPACEOUT_TEXT;
 
 	/**
 	 * Main menu constructor. Creates a startButton that loads from an XML file.
@@ -51,16 +44,10 @@ public class MainMenu extends GUIObject {
 	public MainMenu() {
 		super(0, 0);
 
-		// initialize the background images
-		initImages();
-
-		// grab the background
-		background = TextureManager.getTexture(TextureManager.BACKGROUND1);
-
 		done = false;
 
 		// create the button to go to the load menu
-		loadMenuButton = new MenuButton(BUTTON_IMAGE_PATH, "Load", 238,
+		loadMenuButton = new MenuButton("Load", 238,
 				55, 0, -40);
 		loadMenuButton.addActionListener(new ActionListener() {
 			@Override
@@ -78,7 +65,7 @@ public class MainMenu extends GUIObject {
 		});
 
 		// create the main menu quit button
-		quitButton = new MenuButton(BUTTON_IMAGE_PATH, "Exit", 238, 55, 0, 50);
+		quitButton = new MenuButton("Exit", 238, 55, 0, 50);
 		quitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -91,17 +78,6 @@ public class MainMenu extends GUIObject {
 		GUI.menuUp = true;
 		
 		Runner.paused = false;
-	}
-
-	private void initImages() {
-		TextureManager.initTexture(TextureManager.BACKGROUND1);
-		TextureManager.initTexture(TextureManager.BACKGROUND2);
-		try {
-			spaceout = TextureLoader.getTexture("PNG", new FileInputStream(
-					"res/images/gui/Menu/spaceout.png"), GL11.GL_NEAREST);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -119,7 +95,7 @@ public class MainMenu extends GUIObject {
 	@Override
 	public void draw() {
 		// draw the background
-		background.bind();
+		background.getTexture().bind();
 		GL11.glBegin(GL11.GL_QUADS);
 		{
 
@@ -133,53 +109,53 @@ public class MainMenu extends GUIObject {
 			GL11.glTexCoord2f(0, 0);
 			GL11.glVertex2i(0, 0);
 
-			GL11.glTexCoord2f(background.getWidth(), 0);
+			GL11.glTexCoord2f(background.getTexture().getWidth(), 0);
 			GL11.glVertex2i(DisplayHelper.windowWidth, 0);
 
-			GL11.glTexCoord2f(background.getWidth(), background.getHeight());
+			GL11.glTexCoord2f(background.getTexture().getWidth(), background.getTexture().getHeight());
 			GL11.glVertex2i(DisplayHelper.windowWidth,
 					DisplayHelper.windowHeight);
 
-			GL11.glTexCoord2f(0, background.getHeight());
+			GL11.glTexCoord2f(0, background.getTexture().getHeight());
 			GL11.glVertex2i(0, DisplayHelper.windowHeight);
 		}
 		GL11.glEnd();
 
 		// draw 'spaceout'
-		spaceout.bind();
+		spaceout.getTexture().bind();
 
 		int x1 = (DisplayHelper.windowWidth / 2)
-				- (spaceout.getImageWidth() * spaceoutScale);
+				- (spaceout.getTexture().getImageWidth() * spaceoutScale);
 		int y1 = (DisplayHelper.windowHeight / 2)
-				- (spaceout.getImageHeight() * spaceoutScale) + spaceoutYOffset;
+				- (spaceout.getTexture().getImageHeight() * spaceoutScale) + spaceoutYOffset;
 
 		int x2 = (DisplayHelper.windowWidth / 2)
-				+ (spaceout.getImageWidth() * spaceoutScale);
+				+ (spaceout.getTexture().getImageWidth() * spaceoutScale);
 		int y2 = (DisplayHelper.windowHeight / 2)
-				- (spaceout.getImageHeight() * spaceoutScale) + spaceoutYOffset;
+				- (spaceout.getTexture().getImageHeight() * spaceoutScale) + spaceoutYOffset;
 
 		int x3 = (DisplayHelper.windowWidth / 2)
-				+ (spaceout.getImageWidth() * spaceoutScale);
+				+ (spaceout.getTexture().getImageWidth() * spaceoutScale);
 		int y3 = (DisplayHelper.windowHeight / 2)
-				+ (spaceout.getImageHeight() * spaceoutScale) + spaceoutYOffset;
+				+ (spaceout.getTexture().getImageHeight() * spaceoutScale) + spaceoutYOffset;
 
 		int x4 = (DisplayHelper.windowWidth / 2)
-				- (spaceout.getImageWidth() * spaceoutScale);
+				- (spaceout.getTexture().getImageWidth() * spaceoutScale);
 		int y4 = (DisplayHelper.windowHeight / 2)
-				+ (spaceout.getImageHeight() * spaceoutScale) + spaceoutYOffset;
+				+ (spaceout.getTexture().getImageHeight() * spaceoutScale) + spaceoutYOffset;
 
 		GL11.glBegin(GL11.GL_QUADS);
 		{
 			GL11.glTexCoord2f(0, 0);
 			GL11.glVertex2i(x1, y1);
 
-			GL11.glTexCoord2f(spaceout.getWidth(), 0);
+			GL11.glTexCoord2f(spaceout.getTexture().getWidth(), 0);
 			GL11.glVertex2i(x2, y2);
 
-			GL11.glTexCoord2f(spaceout.getWidth(), spaceout.getHeight());
+			GL11.glTexCoord2f(spaceout.getTexture().getWidth(), spaceout.getTexture().getHeight());
 			GL11.glVertex2i(x3, y3);
 
-			GL11.glTexCoord2f(0, spaceout.getHeight());
+			GL11.glTexCoord2f(0, spaceout.getTexture().getHeight());
 			GL11.glVertex2i(x4, y4);
 		}
 		GL11.glEnd();

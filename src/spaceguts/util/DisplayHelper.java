@@ -1,4 +1,4 @@
-package spaceguts.graphics;
+package spaceguts.util;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -16,7 +16,6 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
-import spaceguts.util.Runner;
 import spaceguts.util.manager.KeyboardManager;
 
 /**
@@ -42,7 +41,7 @@ public class DisplayHelper {
 	private static String windowTitle = "Spaceout Pre-alpha " + Runner.VERSION;
 
 	/** target fps (might not be reached on slower machines) */
-	public static int targetFPS = 100000;
+	public static int targetFPS = 60;
 	
 	public static boolean vsync = false;
 
@@ -51,9 +50,6 @@ public class DisplayHelper {
 
 	/** the frame everything is in so that the window is resizeable */
 	public static Frame frame;
-	
-	/** whether or not the display has requested a close (instantly shuts down game)*/
-	public static boolean closeRequested = false;
 	
 	/**
 	 * used to preserve the size of the window when switching between fullscreen
@@ -101,7 +97,7 @@ public class DisplayHelper {
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				closeRequested = true;
+				Runner.done = true;
 			}
 		});
 
@@ -149,12 +145,14 @@ public class DisplayHelper {
 			// reset the viewport
 			GL11.glViewport(0, 0, windowWidth, windowHeight);
 		}
+		
+		doFullscreenLogic();
 	}
 	
 	/**
 	 * Checks to see if the fullscreen key has been pressed and, if it has, acts accordingly
 	 */
-	public static void doFullscreenLogic(){
+	private static void doFullscreenLogic(){
 		//check for fullscreen key press
 		if (KeyboardManager.fullscreen && !fullscreenDown) {
 			fullscreen = !fullscreen;
