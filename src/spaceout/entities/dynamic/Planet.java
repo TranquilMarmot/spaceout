@@ -15,7 +15,7 @@ import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.collision.shapes.SphereShape;
 
 import spaceguts.entities.DynamicEntity;
-import spaceout.interfaces.Health;
+import spaceguts.interfaces.Health;
 
 /**
  * Pretty much just a dynamic entity that's represented by a sphere

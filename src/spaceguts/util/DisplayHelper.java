@@ -16,7 +16,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
-import spaceguts.util.manager.KeyboardManager;
+import spaceguts.util.input.KeyBindings;
 
 /**
  * This class handles creating and displaying a resizeable window to render to
@@ -154,12 +154,12 @@ public class DisplayHelper {
 	 */
 	private static void doFullscreenLogic(){
 		//check for fullscreen key press
-		if (KeyboardManager.fullscreen && !fullscreenDown) {
+		if (KeyBindings.SYS_FULLSCREEN.isPressed() && !fullscreenDown) {
 			fullscreen = !fullscreen;
 			fullscreenDown = true;
 		}
 
-		if (!KeyboardManager.fullscreen) {
+		if (!KeyBindings.SYS_FULLSCREEN.isPressed()) {
 			fullscreenDown = false;
 		}
 		

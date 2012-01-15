@@ -1,7 +1,6 @@
 package spaceguts.util;
 
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.Display;
 
 import spaceguts.entities.Entities;
@@ -13,8 +12,9 @@ import spaceguts.graphics.gui.menu.MainMenu;
 import spaceguts.physics.Physics;
 import spaceguts.util.console.Console;
 import spaceguts.util.debug.Debug;
-import spaceguts.util.manager.KeyboardManager;
-import spaceguts.util.manager.MouseManager;
+import spaceguts.util.input.KeyBindings;
+import spaceguts.util.input.KeyboardManager;
+import spaceguts.util.input.MouseManager;
 import spaceguts.util.resources.Models;
 import spaceguts.util.resources.ResourceLoader;
 import spaceguts.util.resources.Textures;
@@ -164,12 +164,12 @@ public class Runner {
 		// if pauseDown is true, it means that the pause button is being
 		// held,
 		// so it avoids repeatedly flipping paused when the key is held
-		if (KeyboardManager.pause && !pauseDown) {
+		if (KeyBindings.SYS_PAUSE.isPressed() && !pauseDown) {
 			paused = !paused;
 			pauseDown = true;
 		}
 
-		if (!KeyboardManager.pause) {
+		if (!KeyBindings.SYS_PAUSE.isPressed()) {
 			pauseDown = false;
 		}
 

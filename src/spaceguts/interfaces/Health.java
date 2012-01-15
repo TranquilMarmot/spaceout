@@ -1,4 +1,4 @@
-package spaceout.interfaces;
+package spaceguts.interfaces;
 
 /**
  * Interface for anything that can get hurt to implement.

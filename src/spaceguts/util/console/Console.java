@@ -8,7 +8,7 @@ import org.newdawn.slick.UnicodeFont;
 
 import spaceguts.util.DisplayHelper;
 import spaceguts.util.debug.Debug;
-import spaceguts.util.manager.MouseManager;
+import spaceguts.util.input.MouseManager;
 import spaceguts.util.resources.Textures;
 
 /**

@@ -4,8 +4,8 @@ import org.lwjgl.input.Keyboard;
 
 import spaceguts.util.DisplayHelper;
 import spaceguts.util.Screenshot;
-import spaceguts.util.manager.KeyboardManager;
 import spaceguts.util.console.Console;
+import spaceguts.util.input.KeyBindings;
 
 /**
  * Manages all the keys that {@link Debug} uses
@@ -37,26 +37,26 @@ public class DebugKeyManager {
 	 */
 	protected static void updateKeys() {
 		// debug button
-		if (KeyboardManager.debug && !debugDown) {
+		if (KeyBindings.SYS_DEBUG.isPressed() && !debugDown) {
 			Debug.displayDebug = !Debug.displayDebug;
 			debugDown = true;
 		}
-		if (!KeyboardManager.debug) {
+		if (!KeyBindings.SYS_DEBUG.isPressed()) {
 			debugDown = false;
 		}
 
 		// console button
-		if (KeyboardManager.console && !consoleDown) {
+		if (KeyBindings.SYS_CONSOLE.isPressed() && !consoleDown) {
 			Console.consoleOn = !Console.consoleOn;
 			Console.console.autoClose = false;
 			consoleDown = true;
 		}	
-		if (!KeyboardManager.console) {
+		if (!KeyBindings.SYS_CONSOLE.isPressed()) {
 			consoleDown = false;
 		}
 		
 		// command button
-		if (KeyboardManager.command && !commandDown) {
+		if (KeyBindings.SYS_COMMAND.isPressed() && !commandDown) {
 			if (Console.consoleOn == false) {
 				Console.consoleOn = true;
 				Console.commandOn = true;
@@ -64,19 +64,19 @@ public class DebugKeyManager {
 			}
 			commandDown = true;
 		}
-		if (!KeyboardManager.command) {
+		if (!KeyBindings.SYS_COMMAND.isPressed()) {
 			commandDown = false;
 		}
 
 		// chat button
-		if (KeyboardManager.chat && !chatDown) {
+		if (KeyBindings.SYS_CHAT.isPressed() && !chatDown) {
 			if (Console.consoleOn == false) {
 				Console.consoleOn = true;
 				Console.console.autoClose = true;
 			}
 			chatDown = true;
 		}
-		if (!KeyboardManager.chat) {
+		if (!KeyBindings.SYS_CHAT.isPressed()) {
 			chatDown= false;
 		}
 
@@ -125,12 +125,12 @@ public class DebugKeyManager {
 			scrollDownDown = false;
 		
 		// screenshot button
-		if (KeyboardManager.screenshot && !screenShotDown) {
+		if (KeyBindings.SYS_SCREENSHOT.isPressed() && !screenShotDown) {
 			Screenshot.takeScreenshot(DisplayHelper.windowWidth,
 					DisplayHelper.windowHeight);
 			screenShotDown = true;
 		}
-		if (!KeyboardManager.screenshot)
+		if (!KeyBindings.SYS_SCREENSHOT.isPressed())
 			screenShotDown = false;
 	}
 }

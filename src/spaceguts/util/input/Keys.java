@@ -1,6 +1,11 @@
-package spaceguts.util.manager;
+package spaceguts.util.input;
 
 
+/**
+ * All the possible keys on the keyboard
+ * @author TranquilMarmot
+ *
+ */
 public enum Keys {
 	ESCAPE,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,SYSRQ,SCROLL,PAUSE,
 	GRAVE,ONE,TWO,THREE,FOUR,FIVE,SIX,SEVEN,EIGHT,NINE,ZERO,MINUS,EQUALS,BACK,
@@ -13,21 +18,33 @@ public enum Keys {
 	NUMLOCK,DIVIDE,MULTIPLY,SUBTRACT,ADD,DECIMAL,
 	NUMPAD1,NUMPAD2,NUMPAD3,NUMPAD4,NUMPAD5,NUMPAD6,NUMPAD7,NUMPAD8,NUMPAD9,NUMPAD0;
 	
-	
+	/** whether or not the key is being pressed right now */
 	private boolean isPressed;
 	
+	/**
+	 * Constructor
+	 */
 	private Keys(){
 		isPressed = false;
 	}
 	
+	/**
+	 * Notify the key that it's been pressed
+	 */
 	public void press(){
 		this.isPressed = true;
 	}
 	
+	/**
+	 * Notify the key that it's been released
+	 */
 	public void release(){
 		this.isPressed = false;
 	}
 	
+	/**
+	 * @return Whether or not the key is being pressed
+	 */
 	public boolean isPressed(){
 		return isPressed;
 	}

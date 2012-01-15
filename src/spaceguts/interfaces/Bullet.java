@@ -1,4 +1,4 @@
-package spaceout.interfaces;
+package spaceguts.interfaces;
 
 import spaceguts.entities.Entity;
 
