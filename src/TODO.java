@@ -1,6 +1,11 @@
 /*
  *	TODO, I've a feeling we're not in Kansas any more!
  *
+ * Temp
+ * 			TODO Write XML keyboard options loading
+ * 			TODO Probably should write an enum that handles all graphics options
+ * 			TODO Do at least one homework assignment
+ *
  * Bugs
  * 			TODO After the first time, the fullscreen key has to be pressed twice to have an effect
  * 			TODO Destroy the Java AWT window when going into fullscreen, then create it again on leaving fullscreen

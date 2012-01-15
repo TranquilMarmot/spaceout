@@ -1,6 +1,6 @@
 package spaceguts.graphics.gui;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
 
 import spaceguts.util.debug.Debug;
 
@@ -15,7 +15,7 @@ public class GUI {
 	public static boolean menuUp = false;
 	
 	/** all the GUI objects to draw */
-	public static ConcurrentHashMap<Integer, GUIObject> guiObjects = new ConcurrentHashMap<Integer, GUIObject>();
+	public static HashMap<Integer, GUIObject> guiObjects = new HashMap<Integer, GUIObject>();
 	
 	/**
 	 * Updates the GUI

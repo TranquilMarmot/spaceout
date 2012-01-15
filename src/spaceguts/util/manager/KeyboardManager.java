@@ -5,9 +5,11 @@ import org.lwjgl.input.Keyboard;
 import spaceguts.util.console.Console;
 
 /**
- * Handles any key presses. Only one should exist, and it needs to be updated every frame.
+ * Handles any key presses. Only one should exist, and it needs to be updated
+ * every frame.
+ * 
  * @author TranquilMarmot
- *
+ * 
  */
 public class KeyboardManager {
 	// These allow for controls to easily be changed (just change the key for
@@ -28,10 +30,10 @@ public class KeyboardManager {
 	private static int stabilizeKey = Keyboard.KEY_LCONTROL;
 	private static int stopKey = Keyboard.KEY_F;
 
-	//private static int previousConsoleCommandKey = Keyboard.KEY_UP;
-	//private static int nextConsoleCommandKey = Keyboard.KEY_DOWN;
+	// private static int previousConsoleCommandKey = Keyboard.KEY_UP;
+	// private static int nextConsoleCommandKey = Keyboard.KEY_DOWN;
 	// TODO finish making this work
-	//private static int consoleSubmitKey = Keyboard.KEY_RETURN;
+	// private static int consoleSubmitKey = Keyboard.KEY_RETURN;
 
 	/* Keys that are always checked */
 	private static int consoleKey = Keyboard.KEY_GRAVE;
@@ -69,14 +71,36 @@ public class KeyboardManager {
 	public static boolean screenshot;
 	public static boolean physicsDebug;
 
+	public void update() {
+		while (Keyboard.next()) {
+			int eventKey = Keyboard.getEventKey();
+
+			Keys key = Keys.valueOf(Keyboard.getKeyName(eventKey));
+
+			if (!Console.consoleOn) {
+				if (Keyboard.getEventKeyState())
+					key.press();
+				else
+					key.release();
+			} else {
+				Character c = Keyboard.getEventCharacter();
+				if (!Character.isIdentifierIgnorable(c) && !c.equals('`')
+						&& !c.equals('\n') && !c.equals('\r')) {
+					Console.console.putCharacter(c);
+				}
+			}
+		}
+	}
+
 	/**
 	 * This MUST be called every frame! It updates all the booleans in this
 	 * class
 	 */
-	public void update() {
+	public void updateOld() {
 		// loop through all the event keys for this frame
 		while (Keyboard.next()) {
 			int eventKey = Keyboard.getEventKey();
+			System.out.println(Keyboard.getKeyName(eventKey));
 
 			if (Keyboard.getEventKeyState()) {
 				/* BEGIN KEY DOWN EVENTS */{
@@ -95,7 +119,7 @@ public class KeyboardManager {
 							command = true;
 						else if (eventKey == chatKey)
 							chat = true;
-						else if(eventKey == physicsDebugKey)
+						else if (eventKey == physicsDebugKey)
 							physicsDebug = true;
 					}/* END ALWAYS CHECKED KEYS */
 
@@ -119,9 +143,9 @@ public class KeyboardManager {
 							rollRight = true;
 						else if (eventKey == cameraModeKey)
 							cameraMode = true;
-						else if(eventKey == stabilizeKey)
+						else if (eventKey == stabilizeKey)
 							stabilize = true;
-						else if(eventKey == stopKey)
+						else if (eventKey == stopKey)
 							stop = true;
 						/* END CONTROL KEYS */
 					} else {
@@ -152,7 +176,7 @@ public class KeyboardManager {
 							command = false;
 						else if (eventKey == chatKey)
 							chat = false;
-						else if(eventKey == physicsDebugKey)
+						else if (eventKey == physicsDebugKey)
 							physicsDebug = false;
 					}/* END ALWAYS CHECKED KEYS */
 
@@ -175,9 +199,9 @@ public class KeyboardManager {
 							rollRight = false;
 						else if (eventKey == cameraModeKey)
 							cameraMode = false;
-						else if(eventKey == stabilizeKey)
+						else if (eventKey == stabilizeKey)
 							stabilize = false;
-						else if(eventKey == stopKey)
+						else if (eventKey == stopKey)
 							stop = false;
 					}/* END CONTROL KEYS */
 

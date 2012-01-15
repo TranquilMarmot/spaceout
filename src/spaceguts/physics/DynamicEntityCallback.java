@@ -51,7 +51,7 @@ class DynamicEntityCallback extends InternalTickCallback {
 
 		if (ent.removeFlag) {
 			Physics.dynamicsWorld.removeCollisionObject(c);
-			Entities.dynamicEntities.remove(ent.hashCode(), ent);
+			Entities.dynamicEntities.remove(ent.hashCode());
 		} else {
 			// get the rigid body's world transform
 			Transform trans = new Transform();

@@ -88,7 +88,7 @@ public class MainMenu extends GUIObject {
 
 		// remove the main menu if we're done with it
 		if (done) {
-			GUI.guiObjects.remove(this.hashCode(), this);
+			GUI.guiObjects.remove(this.hashCode());
 		}
 	}
 

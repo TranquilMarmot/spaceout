@@ -39,8 +39,6 @@ public class Player extends DynamicEntity implements Health {
 		rigidBody.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 		this.ship = ship;
 		this.type = "Player";
-		
-		System.out.println("wut");
 	}
 
 	@Override

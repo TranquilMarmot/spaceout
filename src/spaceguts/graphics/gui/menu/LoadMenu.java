@@ -119,7 +119,7 @@ public class LoadMenu extends GUIObject {
 
 		if (backToMainMenu) {
 			// remove the load menu
-			GUI.guiObjects.remove(this.hashCode(), this);
+			GUI.guiObjects.remove(this.hashCode());
 			
 			// add the main menu
 			GUI.addGUIObject(new MainMenu());
@@ -127,7 +127,7 @@ public class LoadMenu extends GUIObject {
 
 		if (fileLoaded) {
 			// remove the load menu
-			GUI.guiObjects.remove(this.hashCode(), this);
+			GUI.guiObjects.remove(this.hashCode());
 			
 			// let the GUI know that there's no menu up
 			GUI.menuUp = false;
