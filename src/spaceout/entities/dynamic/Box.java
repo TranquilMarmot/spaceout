@@ -1,18 +1,16 @@
 package spaceout.entities.dynamic;
 
-import spaceguts.entities.DynamicEntity;
-import spaceguts.graphics.model.Model;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import spaceguts.entities.DynamicEntity;
 import spaceguts.physics.CollisionTypes;
+import spaceguts.util.model.Model;
+import spaceguts.util.resources.Textures;
 
 import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.CollisionShape;
-
-import spaceguts.util.manager.TextureManager;
 
 public class Box extends DynamicEntity{
 	final static short COL_GROUP = CollisionTypes.WALL;
@@ -72,7 +70,7 @@ public class Box extends DynamicEntity{
 		}
 		GL11.glEndList();
 		
-		int groundTexture = TextureManager.CHECKERS;
+		Textures groundTexture = Textures.CHECKERS;
 		
 		return new Model(groundShape, groundCallList, groundTexture);
 	}

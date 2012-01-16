@@ -1,6 +1,6 @@
 package spaceguts.entities;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -22,25 +22,11 @@ public class Entities {
 	public static Skybox skybox;
 
 	/** all the current passive entities */
-	public static ConcurrentHashMap<Integer, Entity> passiveEntities = new ConcurrentHashMap<Integer, Entity>();
+	public static HashMap<Integer, Entity> passiveEntities = new HashMap<Integer, Entity>();
 	/** all the dynamic entities */
-	public static ConcurrentHashMap<Integer, DynamicEntity> dynamicEntities = new ConcurrentHashMap<Integer, DynamicEntity>();
+	public static HashMap<Integer, DynamicEntity> dynamicEntities = new HashMap<Integer, DynamicEntity>();
 	/** all the current lights */
-	public static ConcurrentHashMap<Integer, Light> lights = new ConcurrentHashMap<Integer, Light>();
-	
-	public static void updateEntities(){
-		for(Entity ent : passiveEntities.values())
-			ent.update();
-		
-		for(Light l : lights.values())
-			l.update();
-		
-		if(camera != null)
-			camera.update();
-		
-		if(skybox != null)
-			skybox.update();	
-	}
+	public static HashMap<Integer, Light> lights = new HashMap<Integer, Light>();
 	
 	public static void addDynamicEntity(DynamicEntity ent){
 		DynamicEntity test = dynamicEntities.put(ent.hashCode(), ent);

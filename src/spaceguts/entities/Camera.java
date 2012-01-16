@@ -3,13 +3,12 @@ package spaceguts.entities;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-
 import spaceguts.util.QuaternionHelper;
 import spaceguts.util.Runner;
 import spaceguts.util.console.Console;
 import spaceguts.util.debug.Debug;
-import spaceguts.util.manager.KeyboardManager;
-import spaceguts.util.manager.MouseManager;
+import spaceguts.util.input.KeyBindings;
+import spaceguts.util.input.MouseManager;
 
 /**
  * A camera that tells how the scene is being looked at
@@ -127,7 +126,7 @@ public class Camera extends Entity {
 	 */
 	private void checkForModeSwitch() {
 		// check for mode key
-		if (KeyboardManager.cameraMode && !modeKeyDown) {
+		if (KeyBindings.SYS_CAMERA_MODE.isPressed() && !modeKeyDown) {
 			// three states: normal (vanity and free false), vanity (vanity true
 			// free false), free (vanity false free true)
 			if (!vanityMode && !freeMode) {
@@ -141,7 +140,7 @@ public class Camera extends Entity {
 			}
 			modeKeyDown = true;
 		}
-		if (!KeyboardManager.cameraMode)
+		if (!KeyBindings.SYS_CAMERA_MODE.isPressed())
 			modeKeyDown = false;
 	}
 
@@ -175,10 +174,10 @@ public class Camera extends Entity {
 	 */
 	private void freeMode(float delta) {
 		// only move if we're not paused
-		if (!Runner.paused) {
+		if (!Runner.paused && !Console.consoleOn) {
 			// check for forward and backward movement
-			boolean forward = KeyboardManager.forward;
-			boolean backward = KeyboardManager.backward;
+			boolean forward = KeyBindings.CONTROL_FORWARD.isPressed();
+			boolean backward = KeyBindings.CONTROL_BACKWARD.isPressed();
 
 			// control forward and backward movement
 			if (forward || backward) {
@@ -191,8 +190,8 @@ public class Camera extends Entity {
 			}
 
 			// check for left and right movement
-			boolean left = KeyboardManager.left;
-			boolean right = KeyboardManager.right;
+			boolean left = KeyBindings.CONTROL_LEFT.isPressed();
+			boolean right = KeyBindings.CONTROL_RIGHT.isPressed();
 
 			// control strafing left and right
 			if (left || right) {
@@ -205,8 +204,8 @@ public class Camera extends Entity {
 			}
 
 			// handle going up/down
-			boolean up = KeyboardManager.ascend;
-			boolean down = KeyboardManager.descend;
+			boolean up = KeyBindings.CONTROL_ASCEND.isPressed();
+			boolean down = KeyBindings.CONTROL_DESCEND.isPressed();
 			if (up || down) {
 				if (up)
 					this.location = QuaternionHelper.moveY(this.rotation, this.location, -speed * delta);
@@ -215,8 +214,8 @@ public class Camera extends Entity {
 			}
 
 			// roll left/right
-			boolean rollRight = KeyboardManager.rollRight;
-			boolean rollLeft = KeyboardManager.rollLeft;
+			boolean rollRight = KeyBindings.CONTROL_ROLL_RIGHT.isPressed();
+			boolean rollLeft = KeyBindings.CONTROL_ROLL_LEFT.isPressed();
 			if (rollRight)
 				this.rotation = QuaternionHelper.rotateZ(this.rotation, -delta);
 			if (rollLeft)

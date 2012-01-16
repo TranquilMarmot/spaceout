@@ -6,14 +6,14 @@ import org.lwjgl.util.vector.Vector3f;
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
 import spaceguts.graphics.gui.GUI;
+import spaceguts.interfaces.Health;
 import spaceguts.physics.CollisionTypes;
 import spaceguts.util.QuaternionHelper;
 import spaceguts.util.Runner;
 import spaceguts.util.console.Console;
-import spaceguts.util.manager.KeyboardManager;
-import spaceguts.util.manager.ModelManager;
-import spaceguts.util.manager.MouseManager;
-import spaceout.interfaces.Health;
+import spaceguts.util.input.KeyBindings;
+import spaceguts.util.input.MouseManager;
+import spaceguts.util.resources.Models;
 import spaceout.ship.Ship;
 
 import com.bulletphysics.collision.dispatch.CollisionObject;
@@ -80,11 +80,11 @@ public class Player extends DynamicEntity implements Health {
 				button0Down = false;
 
 			// handle stabilization
-			if (KeyboardManager.stabilize)
+			if (KeyBindings.CONTROL_STABILIZE.isPressed())
 				stabilize(timeStep);
 
 			// handle stopping
-			if (KeyboardManager.stop)
+			if (KeyBindings.CONTROL_STOP.isPressed())
 				stop(timeStep);
 		}
 	}
@@ -139,13 +139,13 @@ public class Player extends DynamicEntity implements Health {
 				bulletMoveAmount, bulletRotation);
 		Vector3f.add(bulletLocation, bulletMoveAmount, bulletLocation);
 
-		int bulletModel = ModelManager.LASERBULLET;
+		Models bulletModel = Models.LASERBULLET;
 		float bulletMass = 0.25f;
 		float bulletRestitution = 1.0f;
 		int bulletDamage = 10;
 		float bulletSpeed = 2500.0f;
 
-		LaserBullet bullet = new LaserBullet(bulletLocation, bulletRotation,
+		LaserBullet bullet = new LaserBullet(this, bulletLocation, bulletRotation,
 				bulletModel, bulletMass, bulletRestitution, bulletDamage);
 		Entities.addDynamicEntity(bullet);
 
@@ -162,8 +162,8 @@ public class Player extends DynamicEntity implements Health {
 	 * Accelerate/decelerate along the Z axis
 	 */
 	private void zLogic(float timeStep) {
-		boolean forward = KeyboardManager.forward;
-		boolean backward = KeyboardManager.backward;
+		boolean forward = KeyBindings.CONTROL_FORWARD.isPressed();
+		boolean backward = KeyBindings.CONTROL_BACKWARD.isPressed();
 
 		if (forward || backward) {
 			if (forward) {
@@ -185,8 +185,8 @@ public class Player extends DynamicEntity implements Health {
 	 * Accelerate/decelerate along the X axis
 	 */
 	private void xLogic(float timeStep) {
-		boolean left = KeyboardManager.left;
-		boolean right = KeyboardManager.right;
+		boolean left = KeyBindings.CONTROL_LEFT.isPressed();
+		boolean right = KeyBindings.CONTROL_RIGHT.isPressed();
 
 		if (left || right) {
 			if (left) {
@@ -208,8 +208,8 @@ public class Player extends DynamicEntity implements Health {
 	 * Accelerate/decelerate along the Y axis
 	 */
 	private void yLogic(float timeStep) {
-		boolean ascend = KeyboardManager.ascend;
-		boolean descend = KeyboardManager.descend;
+		boolean ascend = KeyBindings.CONTROL_ASCEND.isPressed();
+		boolean descend = KeyBindings.CONTROL_DESCEND.isPressed();
 
 		if (ascend || descend) {
 			if (ascend) {
@@ -252,8 +252,8 @@ public class Player extends DynamicEntity implements Health {
 		
 		float zRot = 0.0f;
 		// check if we need to apply torque on the Z axis
-		boolean rollRight = KeyboardManager.rollRight;
-		boolean rollLeft = KeyboardManager.rollLeft;
+		boolean rollRight = KeyBindings.CONTROL_ROLL_RIGHT.isPressed();
+		boolean rollLeft = KeyBindings.CONTROL_ROLL_LEFT.isPressed();
 
 		// handle applying torque on the Z axis
 		if (rollRight || rollLeft) {

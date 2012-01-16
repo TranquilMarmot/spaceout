@@ -1,16 +1,13 @@
 package spaceguts.graphics.gui.button;
 
 import java.awt.event.ActionEvent;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
 
-import spaceguts.graphics.DisplayHelper;
+import spaceguts.util.DisplayHelper;
 import spaceguts.util.debug.Debug;
+import spaceguts.util.resources.Textures;
 
 /**
  * A button that stays in the same place regardless of window size! It does this by being offset from the center.
@@ -37,14 +34,8 @@ import spaceguts.util.debug.Debug;
  *
  */
 public class MenuButton extends RectangleButton {
-	/** where the images for this button are */
-	private String imagePath;
-	
-	/** image this button uses */
-	protected Texture activeImage, mouseOverImage, pressedImage, inactiveImage;
-
 	/** the buttons current image */
-	protected Texture currentImage;
+	protected Textures currentImage = Textures.MENU_BUTTON_ACTIVE;
 	
 	/** the button's offset from the center of the screen (to keep it in the same spot regardless of window size) */
 	protected int xOffset, yOffset;
@@ -61,33 +52,11 @@ public class MenuButton extends RectangleButton {
 	 * @param height
 	 * @param width
 	 */
-	public MenuButton(String imagePath, String text, int height, int width, int xOffsetFromCenter, int yOffsetFromCenter) {
+	public MenuButton(String text, int height, int width, int xOffsetFromCenter, int yOffsetFromCenter) {
 		super(0, 0, width, height);
-		this.imagePath = imagePath;
 		this.xOffset = xOffsetFromCenter;
 		this.yOffset = yOffsetFromCenter;
 		this.text = text;
-		initImages();
-	}
-
-	/**
-	 * Initialize the images for this button; <code>activeImage</code>, <code>mouseOverImage</code>, <code>pressedImage</code> and <code>inactiveImage</code>
-	 */
-	protected void initImages(){
-		try {
-			activeImage = TextureLoader.getTexture("PNG", new FileInputStream(
-					imagePath + "active.png"), GL11.GL_NEAREST);
-			mouseOverImage = TextureLoader.getTexture("PNG",
-					new FileInputStream(imagePath + "mouseover.png"),
-					GL11.GL_NEAREST);
-			pressedImage = TextureLoader.getTexture("PNG", new FileInputStream(
-					imagePath + "pressed.png"), GL11.GL_NEAREST);
-			inactiveImage = TextureLoader.getTexture("PNG", new FileInputStream(imagePath + "inactive.png"), GL11.GL_NEAREST);
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		currentImage = activeImage;
 	}
 
 	@Override
@@ -103,7 +72,7 @@ public class MenuButton extends RectangleButton {
 	 * Change the current image to the mouseover image
 	 */
 	public void mouseOverEvent() {
-		currentImage = mouseOverImage;
+		currentImage = Textures.MENU_BUTTON_MOUSEOVER;
 	}
 
 	@Override
@@ -111,7 +80,7 @@ public class MenuButton extends RectangleButton {
 	 * Change the current image to the pressed image
 	 */
 	public void pressedEvent() {
-		currentImage = pressedImage;
+		currentImage = Textures.MENU_BUTTON_PRESSED;
 	}
 
 	@Override
@@ -119,7 +88,7 @@ public class MenuButton extends RectangleButton {
 	 * Change the current image to the active image
 	 */
 	public void activeEvent() {
-		currentImage = activeImage;
+		currentImage = Textures.MENU_BUTTON_ACTIVE;
 	}
 
 	@Override
@@ -127,7 +96,7 @@ public class MenuButton extends RectangleButton {
 	 * Change the current image to the inactive image
 	 */
 	public void inactiveEvent() {
-		currentImage = inactiveImage;
+		currentImage = Textures.MENU_BUTTON_INACTIVE;
 	}
 	
 	@Override
@@ -151,7 +120,7 @@ public class MenuButton extends RectangleButton {
 	public void draw() {
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		if (this.isVisible) {
-			currentImage.bind();
+			currentImage.getTexture().bind();
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GL11.glBegin(GL11.GL_QUADS);
 			{	
@@ -163,13 +132,13 @@ public class MenuButton extends RectangleButton {
 				GL11.glTexCoord2f(0, 0);
 				GL11.glVertex2i(x, y);
 
-				GL11.glTexCoord2f(currentImage.getWidth(), 0);
+				GL11.glTexCoord2f(currentImage.getTexture().getWidth(), 0);
 				GL11.glVertex2i(x + width, y);
 
-				GL11.glTexCoord2f(currentImage.getWidth(), currentImage.getHeight());
+				GL11.glTexCoord2f(currentImage.getTexture().getWidth(), currentImage.getTexture().getHeight());
 				GL11.glVertex2i(x + width, y + height);
 
-				GL11.glTexCoord2f(0, currentImage.getHeight());
+				GL11.glTexCoord2f(0, currentImage.getTexture().getHeight());
 				GL11.glVertex2i(x, y + height);
 			}
 			GL11.glEnd();

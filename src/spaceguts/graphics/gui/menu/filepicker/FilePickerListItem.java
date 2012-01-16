@@ -1,29 +1,19 @@
 package spaceguts.graphics.gui.menu.filepicker;
 
 import java.awt.event.ActionEvent;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
-import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
 
-import spaceguts.util.debug.Debug;
-
-import spaceguts.graphics.DisplayHelper;
 import spaceguts.graphics.gui.button.RectangleButton;
+import spaceguts.util.DisplayHelper;
+import spaceguts.util.debug.Debug;
+import spaceguts.util.resources.Textures;
 
-public class FilePickerListItem extends RectangleButton{
-	/** where the images for this button are */
-	private static final String IMAGE_PATH = "res/images/gui/FilePicker/";
-	
+public class FilePickerListItem extends RectangleButton{	
 	public boolean selected = false;
 	
-	/** image this button uses */
-	protected static Texture activeImage, mouseOverImage, selectedImage, pressedImage;
-	
-	protected Texture currentImage;
+	private Textures currentImage = Textures.MENU_PICKER_ACTIVE;
 	
 	private String file;
 	private String printString;
@@ -36,29 +26,11 @@ public class FilePickerListItem extends RectangleButton{
 		this.yOffset = yOffsetFromCenter;
 		this.file = file;
 		printString = file.substring(0, file.indexOf("."));
-		
-		initImages();
-	}
-	
-	private void initImages(){
-		try{
-			if(activeImage == null)
-				activeImage = TextureLoader.getTexture("PNG", new FileInputStream(IMAGE_PATH + "active.png"));
-			if(mouseOverImage == null)
-				mouseOverImage = TextureLoader.getTexture("PNG", new FileInputStream(IMAGE_PATH + "mouseover.png"));
-			if(selectedImage == null)
-				selectedImage = TextureLoader.getTexture("PNG", new FileInputStream(IMAGE_PATH +"selected.png"));
-			if(pressedImage == null)
-				pressedImage = TextureLoader.getTexture("PNG", new FileInputStream(IMAGE_PATH + "pressed.png"));
-		} catch (IOException e){
-			e.printStackTrace();
-		}
-		currentImage = activeImage;
 	}
 
 	@Override
 	public void activeEvent() {
-		currentImage = activeImage;
+		currentImage = Textures.MENU_PICKER_ACTIVE;
 	}
 
 	@Override
@@ -72,13 +44,13 @@ public class FilePickerListItem extends RectangleButton{
 
 	@Override
 	public void mouseOverEvent() {
-		currentImage = mouseOverImage;
+		currentImage = Textures.MENU_PICKER_MOUSEOVER;
 		
 	}
 
 	@Override
 	public void pressedEvent() {
-		currentImage = pressedImage;
+		currentImage = Textures.MENU_PICKER_PRESSED;
 	}
 	
 	public String getFile(){
@@ -90,7 +62,7 @@ public class FilePickerListItem extends RectangleButton{
 		super.update();
 		
 		if(this.selected)
-			currentImage = selectedImage;
+			currentImage = Textures.MENU_PICKER_SELECTED;
 		
 		// keep the button in the middle of the screen
 		this.x = (DisplayHelper.windowWidth / 2) - (this.width / 2) + xOffset;
@@ -103,7 +75,7 @@ public class FilePickerListItem extends RectangleButton{
 	public void draw() {
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		if (this.isVisible) {
-			currentImage.bind();
+			currentImage.getTexture().bind();
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GL11.glBegin(GL11.GL_QUADS);
 			{	
@@ -115,13 +87,13 @@ public class FilePickerListItem extends RectangleButton{
 				GL11.glTexCoord2f(0, 0);
 				GL11.glVertex2i(x, y);
 
-				GL11.glTexCoord2f(currentImage.getWidth(), 0);
+				GL11.glTexCoord2f(currentImage.getTexture().getWidth(), 0);
 				GL11.glVertex2i(x + width, y);
 
-				GL11.glTexCoord2f(currentImage.getWidth(), currentImage.getHeight());
+				GL11.glTexCoord2f(currentImage.getTexture().getWidth(), currentImage.getTexture().getHeight());
 				GL11.glVertex2i(x + width, y + height);
 
-				GL11.glTexCoord2f(0, currentImage.getHeight());
+				GL11.glTexCoord2f(0, currentImage.getTexture().getHeight());
 				GL11.glVertex2i(x, y + height);
 			}
 			GL11.glEnd();

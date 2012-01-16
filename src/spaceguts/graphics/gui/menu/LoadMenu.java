@@ -1,22 +1,21 @@
 package spaceguts.graphics.gui.menu;
 
-import spaceguts.entities.Entities;
-import spaceguts.graphics.DisplayHelper;
-import spaceguts.graphics.gui.GUI;
-import spaceguts.graphics.gui.GUIObject;
-import spaceguts.graphics.gui.button.MenuButton;
-import spaceguts.graphics.gui.menu.filepicker.FilePicker;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 
+import spaceguts.entities.Entities;
+import spaceguts.graphics.gui.GUI;
+import spaceguts.graphics.gui.GUIObject;
+import spaceguts.graphics.gui.button.MenuButton;
+import spaceguts.graphics.gui.menu.filepicker.FilePicker;
 import spaceguts.physics.Physics;
 import spaceguts.physics.sandbox.Sandbox;
+import spaceguts.util.DisplayHelper;
 import spaceguts.util.debug.Debug;
-import spaceguts.util.manager.TextureManager;
+import spaceguts.util.resources.Textures;
 import spaceguts.util.xml.XMLParser;
 
 /**
@@ -26,9 +25,6 @@ import spaceguts.util.xml.XMLParser;
  * 
  */
 public class LoadMenu extends GUIObject {
-	/** image path */
-	private static final String BUTTON_IMAGE_PATH = "res/images/gui/Menu/Button/";
-
 	private Texture background;
 
 	/** The FilePicker to choose the file */
@@ -69,7 +65,7 @@ public class LoadMenu extends GUIObject {
 		picker = new FilePicker(-50, -20, path);
 
 		// create load button
-		loadButton = new MenuButton(BUTTON_IMAGE_PATH, "Load", 119, 28, 115,
+		loadButton = new MenuButton("Load", 119, 28, 115,
 				-17);
 		loadButton.addActionListener(new ActionListener() {
 			@Override
@@ -80,8 +76,9 @@ public class LoadMenu extends GUIObject {
 					String selectedFile = picker.getSelected().getFile();
 					/* FIXME this if statement is only temporary!!! */
 					if (selectedFile.equals("PhysicsSandbox.xml")) {
-						Sandbox.createSandboxWorld();
-						Entities.addPassiveEntity(new Sandbox());
+						Sandbox sandy = new Sandbox();
+						sandy.createSandboxWorld();
+						Entities.addPassiveEntity(sandy);
 					} else {
 						// load entities from XML
 						XMLParser.loadEntitiesFromXmlFile(path
@@ -101,7 +98,7 @@ public class LoadMenu extends GUIObject {
 		});
 
 		// create the back to main menu button
-		backButton = new MenuButton(BUTTON_IMAGE_PATH, "Back", 119, 28, 115, 17);
+		backButton = new MenuButton("Back", 119, 28, 115, 17);
 		backButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -111,7 +108,7 @@ public class LoadMenu extends GUIObject {
 		});
 
 		// grab the image (NOTE: this is initialized in MainMenu's constructor)
-		background = TextureManager.getTexture(TextureManager.BACKGROUND2);
+		background = Textures.MENU_BACKGROUND2.getTexture();
 	}
 
 	@Override
@@ -122,7 +119,7 @@ public class LoadMenu extends GUIObject {
 
 		if (backToMainMenu) {
 			// remove the load menu
-			GUI.guiObjects.remove(this.hashCode(), this);
+			GUI.guiObjects.remove(this.hashCode());
 			
 			// add the main menu
 			GUI.addGUIObject(new MainMenu());
@@ -130,7 +127,7 @@ public class LoadMenu extends GUIObject {
 
 		if (fileLoaded) {
 			// remove the load menu
-			GUI.guiObjects.remove(this.hashCode(), this);
+			GUI.guiObjects.remove(this.hashCode());
 			
 			// let the GUI know that there's no menu up
 			GUI.menuUp = false;

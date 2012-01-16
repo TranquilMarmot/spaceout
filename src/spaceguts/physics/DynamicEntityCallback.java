@@ -7,8 +7,8 @@ import javax.vecmath.Quat4f;
 
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
-import spaceout.interfaces.Bullet;
-import spaceout.interfaces.Health;
+import spaceguts.interfaces.Bullet;
+import spaceguts.interfaces.Health;
 
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.narrowphase.ManifoldPoint;
@@ -51,7 +51,7 @@ class DynamicEntityCallback extends InternalTickCallback {
 
 		if (ent.removeFlag) {
 			Physics.dynamicsWorld.removeCollisionObject(c);
-			Entities.dynamicEntities.remove(ent.hashCode(), ent);
+			Entities.dynamicEntities.remove(ent.hashCode());
 		} else {
 			// get the rigid body's world transform
 			Transform trans = new Transform();
@@ -88,9 +88,9 @@ class DynamicEntityCallback extends InternalTickCallback {
 					DynamicEntity entB = (DynamicEntity) objB.getUserPointer();
 					
 					if(entA instanceof Bullet && entB instanceof Health){
-						((Health) entB).hurt(((Bullet) entA).getDamage());
+						bulletHealthCollision((Bullet) entA, (Health) entB);
 					} else if(entB instanceof Bullet && entA instanceof Health){
-						((Health) entA).hurt(((Bullet) entB).getDamage());
+						bulletHealthCollision((Bullet) entB, (Health) entA);
 					}
 					
 					
@@ -102,5 +102,10 @@ class DynamicEntityCallback extends InternalTickCallback {
 				}
 			}
 		}
+	}
+	
+	private static void bulletHealthCollision(Bullet bullet, Health health){
+		if(bullet.getOwner() != health)
+			health.hurt(bullet.getDamage());
 	}
 }

@@ -9,11 +9,9 @@ import spaceguts.util.Runner;
  *
  */
 public class PauseMenuButton extends MenuButton {
-	private static final String IMAGE_PATH = "res/images/gui/Menu/Button/"; 
-
 	public PauseMenuButton(String text, int height, int width,
 			int xOffsetFromCenter, int yOffsetFromCenter) {
-		super(IMAGE_PATH, text, height, width,
+		super(text, height, width,
 				xOffsetFromCenter, yOffsetFromCenter);
 	}
 	

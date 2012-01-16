@@ -4,7 +4,7 @@ package spaceguts.physics;
 import javax.vecmath.Vector3f;
 
 import spaceguts.physics.debug.PhysicsDebugDrawer;
-import spaceguts.util.manager.KeyboardManager;
+import spaceguts.util.input.KeyBindings;
 
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
@@ -81,11 +81,11 @@ public class Physics {
 				SUBSTEPS);
 
 		// handle the physics debug key
-		if (KeyboardManager.physicsDebug && !debugDown) {
+		if (KeyBindings.SYS_DEBUG_PHYSICS.isPressed() && !debugDown) {
 			drawDebug = !drawDebug;
 			debugDown = true;
 		}
-		if (!KeyboardManager.physicsDebug) {
+		if (!KeyBindings.SYS_DEBUG_PHYSICS.isPressed()) {
 			debugDown = false;
 		}
 	}

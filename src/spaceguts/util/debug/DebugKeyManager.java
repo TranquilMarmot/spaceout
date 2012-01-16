@@ -1,11 +1,9 @@
 package spaceguts.util.debug;
 
-import org.lwjgl.input.Keyboard;
-
-import spaceguts.graphics.DisplayHelper;
+import spaceguts.util.DisplayHelper;
 import spaceguts.util.Screenshot;
-import spaceguts.util.manager.KeyboardManager;
 import spaceguts.util.console.Console;
+import spaceguts.util.input.KeyBindings;
 
 /**
  * Manages all the keys that {@link Debug} uses
@@ -37,26 +35,26 @@ public class DebugKeyManager {
 	 */
 	protected static void updateKeys() {
 		// debug button
-		if (KeyboardManager.debug && !debugDown) {
+		if (KeyBindings.SYS_DEBUG.isPressed() && !debugDown) {
 			Debug.displayDebug = !Debug.displayDebug;
 			debugDown = true;
 		}
-		if (!KeyboardManager.debug) {
+		if (!KeyBindings.SYS_DEBUG.isPressed()) {
 			debugDown = false;
 		}
 
 		// console button
-		if (KeyboardManager.console && !consoleDown) {
+		if (KeyBindings.SYS_CONSOLE.isPressed() && !consoleDown) {
 			Console.consoleOn = !Console.consoleOn;
 			Console.console.autoClose = false;
 			consoleDown = true;
 		}	
-		if (!KeyboardManager.console) {
+		if (!KeyBindings.SYS_CONSOLE.isPressed()) {
 			consoleDown = false;
 		}
 		
 		// command button
-		if (KeyboardManager.command && !commandDown) {
+		if (KeyBindings.SYS_COMMAND.isPressed() && !commandDown) {
 			if (Console.consoleOn == false) {
 				Console.consoleOn = true;
 				Console.commandOn = true;
@@ -64,35 +62,35 @@ public class DebugKeyManager {
 			}
 			commandDown = true;
 		}
-		if (!KeyboardManager.command) {
+		if (!KeyBindings.SYS_COMMAND.isPressed()) {
 			commandDown = false;
 		}
 
 		// chat button
-		if (KeyboardManager.chat && !chatDown) {
+		if (KeyBindings.SYS_CHAT.isPressed() && !chatDown) {
 			if (Console.consoleOn == false) {
 				Console.consoleOn = true;
 				Console.console.autoClose = true;
 			}
 			chatDown = true;
 		}
-		if (!KeyboardManager.chat) {
+		if (!KeyBindings.SYS_CHAT.isPressed()) {
 			chatDown= false;
 		}
 
 		//TODO make all these go through KeyboardHandler instead
 		// handle the enter key being pressed to submit a line
-		if (Keyboard.isKeyDown(Keyboard.KEY_RETURN) && !returnDown) {
+		if (KeyBindings.SYS_CONSOLE_SUBMIT.isPressed() && !returnDown) {
 			Console.console.submit();
 			
 			returnDown = true;
 		}
-		if (!Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
+		if (!KeyBindings.SYS_CONSOLE_SUBMIT.isPressed()) {
 			returnDown = false;
 		}
 
 		// handle backspace
-		if (Keyboard.isKeyDown(Keyboard.KEY_BACK)) {
+		if (KeyBindings.SYS_CONSOLE_BACKSPACE.isPressed()) {
 			if(!backDown){
 				Console.console.backspace();
 				backDown = true;
@@ -103,34 +101,34 @@ public class DebugKeyManager {
 					Console.console.backspace();
 			}
 		}
-		if (!Keyboard.isKeyDown(Keyboard.KEY_BACK)){
+		if (!KeyBindings.SYS_CONSOLE_BACKSPACE.isPressed()){
 			backDown = false;
 			backspaceRepeatCounter = 0;
 		}
 
 		// handle scrolling up and down in the console
-		if (Keyboard.isKeyDown(Keyboard.KEY_NEXT) && !scrollUpDown) {
+		if (KeyBindings.SYS_CONSOLE_SCROLL_UP.isPressed() && !scrollUpDown) {
 			Console.console.scrollUp(1);
 			scrollUpDown = true;
 		}
-		if (!Keyboard.isKeyDown(Keyboard.KEY_NEXT))
+		if (!KeyBindings.SYS_CONSOLE_SCROLL_UP.isPressed())
 			scrollUpDown = false;
 
 		// handle scrolling up and down in the console
-		if (Keyboard.isKeyDown(Keyboard.KEY_PRIOR) && !scrollDownDown) {
+		if (KeyBindings.SYS_CONSOLE_SCROLL_DOWN.isPressed() && !scrollDownDown) {
 			Console.console.scrollDown(1);
 			scrollDownDown = true;
 		}
-		if (!Keyboard.isKeyDown(Keyboard.KEY_PRIOR))
+		if (!KeyBindings.SYS_CONSOLE_SCROLL_DOWN.isPressed())
 			scrollDownDown = false;
 		
 		// screenshot button
-		if (KeyboardManager.screenshot && !screenShotDown) {
+		if (KeyBindings.SYS_SCREENSHOT.isPressed() && !screenShotDown) {
 			Screenshot.takeScreenshot(DisplayHelper.windowWidth,
 					DisplayHelper.windowHeight);
 			screenShotDown = true;
 		}
-		if (!KeyboardManager.screenshot)
+		if (!KeyBindings.SYS_SCREENSHOT.isPressed())
 			screenShotDown = false;
 	}
 }

@@ -1,4 +1,6 @@
-package spaceout.interfaces;
+package spaceguts.interfaces;
+
+import spaceguts.entities.Entity;
 
 /**
  * Interface for a bullet (anything that does damage)
@@ -10,4 +12,10 @@ public interface Bullet {
 	 * @return Amount of damage to do
 	 */
 	public int getDamage();
+	
+	/**
+	 * Who owns this bullet? (Who can't it hurt?)
+	 * @return Whoever fired the bullet
+	 */
+	public Entity getOwner();
 }

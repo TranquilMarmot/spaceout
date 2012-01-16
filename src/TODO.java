@@ -1,11 +1,12 @@
 /*
  *	TODO, I've a feeling we're not in Kansas any more!
  *
+ * Temp
+ * 			TODO Do at least one homework assignment today
  * Bugs
- * 			TODO IMPORTANT Right now all resources are created by being passed a 'new FileInputStream', so there's never a chance to close the stream once the data is loaded. Check to make sure either the code being used closes the stream or refactor some code
  * 			TODO After the first time, the fullscreen key has to be pressed twice to have an effect
  * 			TODO Destroy the Java AWT window when going into fullscreen, then create it again on leaving fullscreen
- * Bullet
+ * JBullet
  * 			TODO Add a thing to the Physics Debug that also draws an arrow representing the current speed (first point is entity origin, second is origin+linear velocity)
  * 			TODO Give things thrusters
  * Rendering
@@ -28,9 +29,6 @@
  * 			TODO Create an AnimatedModel class that has a call list for every frame (probably in a good old ArrayList) Give it addFrame(int callList) and int curFrame.
  * System
  * 		General
- * 			TODO Threads, threads and more threads! Make this more multi-processor friendly!
- * 			TODO Have all the data managers (ModelManager, TextureManager) keep track of how many objects are using the data. If none are for an extended period of time, delete them to free up space! (Be careful with this one! Might not even be necessary)
- * 			TODO In DebugKeyManager there are keys that don't go through the KeyboardManager
  * 			TODO Look into having ships stored as a zip file containing an obj, a png, and an xml file (is it too slow? easier if its uncompressed?)
  * 			TODO Add a "/save" command that will (in the future) save the game and return to the main menu
  * 		Console
@@ -43,8 +41,8 @@
  * 		XML
  * 			TODO Figure out how to write to XML files
  * 			TODO Store all options in XML files
- * 			TODO Re-do Key Configuration so it loads from XML on startup
- * 			TODO Difficult: Re-do Console Commands so they load from XML
+ * 			TODO Have key configuration load from XML on startup
+ * 			TODO Impossible: Re-do Console Commands so they load from XML (how are you going to store their code? Precompiled java classes?)
  * Misc
  * 			TODO Whenever explosions get implemented, make sure to have the camera shakes if it's near one!
  */

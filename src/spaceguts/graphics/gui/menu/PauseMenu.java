@@ -59,7 +59,7 @@ public class PauseMenu extends GUIObject{
 		if(backToMainMenu){
 			Entities.cleanup();
 			Physics.cleanup();
-			GUI.guiObjects.remove(this.hashCode(), this);
+			GUI.guiObjects.remove(this.hashCode());
 			GUI.addGUIObject(new MainMenu());
 		}
 		

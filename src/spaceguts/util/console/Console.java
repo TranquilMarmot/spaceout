@@ -1,15 +1,17 @@
 package spaceguts.util.console;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.UnicodeFont;
 
-import spaceguts.graphics.DisplayHelper;
+import spaceguts.util.DisplayHelper;
 import spaceguts.util.debug.Debug;
-import spaceguts.util.manager.MouseManager;
-import spaceguts.util.manager.TextureManager;
+import spaceguts.util.input.MouseManager;
+import spaceguts.util.resources.Textures;
 
 /**
  * Console for printing text and interacting with the game. Note that there
@@ -20,67 +22,76 @@ import spaceguts.util.manager.TextureManager;
  * 
  */
 public class Console {
-
 	/** the console */
 	public static Console console = new Console();
 
-	// whether or not the console is up
+	/** whether or not the console is up */
 	public static boolean consoleOn = false;
+	/** whether or not the console is up because the command key was pressed (closes the console on submission) */
 	public static boolean commandOn = false;
 
-	// Width of the console in characters
+	/** Width of the console in characters */
 	private int consoleWidth = 65;
 
-	// This is currently pointless, but it may come in handy in the future.
-	// Disabling this will completely disable the console window visibilty.
-	// (warning: does not disable keyboard bindings)
+	/**
+	 * This is currently pointless, but it may come in handy in the future.
+	 * Disabling this will completely disable the console window visibilty.
+	 * (warning: does not disable keyboard bindings)
+	 */
 	private static boolean consoleEnabled = true;
 
-	// the maximum alpha for console text
+	/** the maximum alpha for console text */
 	public static float consoleTextMaxAlpha = 1.0f;
-	// the minimum alpha for console text
+	/** the minimum alpha for console text */
 	public static float consoleTextMinAlpha = 0.0f;
-	// the alpha difference for each update
+	/** the alpha difference for each update */
 	public static float consoleTextFadeValue = 0.011f;
-	// the time in seconds before the text begins to fade
+	/** the time in seconds before the text begins to fade */
 	public static int consoleTextFadeDelay = 1;
 
-	// the current alpha for console text (should always be consoleTextMaxAlpha)
+	/** the current alpha for console text (should always be consoleTextMaxAlpha) */
 	public static float consoleTextAlpha = consoleTextMaxAlpha;
-	// the current fade time for console (should always be 0)
+	/** the current fade time for console (should always be 0) */
 	public static float consoleTextFadeDelayCurrent = 0;
 
-	// if blink is true, there's an underscore at the end of the input string,
-	// else there's not
+	/** 
+	 * if blink is true, there's an underscore at the end of the input string,
+	 * else there's not
+	 */
 	private static boolean blink = true;
-	// counter for blink
+	/** counter for blink */
 	private static int blinkCount = 0;
-	// how often to blink (this is changed to match the current FPS)
+	/** how often to blink (this is changed to match the current FPS) */
 	private static int blinkInterval = 30;
 
 	/** font for printing stuff to the screen */
 	public static UnicodeFont font = null;
 
-	// location to draw the console at
+	/** location to draw the console at */
 	private int x = 10;
 	private int y = 0;
 
-	// whether or not to close the console when line is submitted
+	/** whether or not to close the console when line is submitted */
 	public boolean autoClose = false;
 
-	// number of lines to print
+	/** number of lines to print */
 	private int numLines = 14;
 
-	// if scroll is 0, we're at the most recent line, 1 is one line up, 2 is two
-	// lines up, etc
+	/** 
+	 * if scroll is 0, we're at the most recent line, 1 is one line up, 2 is two
+	 * lines up, etc
+	 */
 	private int scroll = 0;
 
-	// the text being typed into the console
+	/** the text being typed into the console */
 	public static String input = "";
 
-	// all the text that the console contains and will print out
+	/** all the text that the console contains and will print out */
 	private ArrayList<String> text = new ArrayList<String>();
-	
+
+	/**
+	 * Update the console
+	 */
 	public void update() {
 		// scroll with the mouse wheel
 		scroll += MouseManager.wheel / 100;
@@ -99,7 +110,7 @@ public class Console {
 			input = "/";
 			Console.commandOn = false;
 		}
-		
+
 		// Fade the text if the console is closed!
 		if (Console.consoleOn) {
 			this.wake();
@@ -117,14 +128,14 @@ public class Console {
 	}
 
 	/**
-	 * Updates and draws the console
+	 * Draws the console
 	 */
 	public void draw() {
 		// how tall each line is
 		int advanceY = Debug.font.getAscent();
 		// where to draw the console (x stays at 10)
 		y = DisplayHelper.windowHeight - advanceY - 10;
-		
+
 		// figure out how many lines to print out
 		int stringsToPrint = text.size() - (numLines + 1);
 		// avoid any possibility of out of bounds (the for loop is kind of
@@ -136,7 +147,7 @@ public class Console {
 		if (consoleEnabled) {
 			if (Console.consoleOn) {
 				// Draw the box
-				TextureManager.getTexture(TextureManager.WHITE).bind();
+				Textures.WHITE.getTexture().bind();
 				GL11.glColor4f(0.15f, 0.15f, 0.15f, 0.35f);
 				GL11.glBegin(GL11.GL_QUADS);
 				{
@@ -172,26 +183,6 @@ public class Console {
 						new Color(0.15f, 1.0f, 0.0f, consoleTextAlpha));
 
 			}
-		}
-
-	}
-
-	/**
-	 * This gets called every time that the console is drawn to make the
-	 * underscore at the end of the input blink
-	 */
-	private void updateBlink() {
-		// blink twice every second
-		blinkInterval = Debug.currentFPS / 2;
-
-		if (blink) {
-			blinkCount++;
-			if (blinkCount >= blinkInterval)
-				blink = false;
-		} else {
-			blinkCount--;
-			if (blinkCount <= 0)
-				blink = true;
 		}
 
 	}
@@ -252,10 +243,18 @@ public class Console {
 			input = input.substring(0, input.length() - 1);
 	}
 
+	/**
+	 * Scroll up
+	 * @param amount Number of lines to scroll up
+	 */
 	public void scrollUp(int amount) {
 		scroll -= amount;
 	}
 
+	/**
+	 * Scroll down
+	 * @param amount Number of lines to scroll down
+	 */
 	public void scrollDown(int amount) {
 		scroll += amount;
 	}
@@ -270,7 +269,7 @@ public class Console {
 			input.trim();
 			// do a command if the input starts with a /
 			if (input.charAt(0) == '/')
-				ConsoleCommands.issueCommand(input);
+				issueCommand(input);
 			// otherwise just add it to the text
 			else
 				// TODO give the player a name
@@ -286,6 +285,41 @@ public class Console {
 			Console.consoleOn = false;
 		}
 	}
+	
+	/**
+	 * Issues the given command. See {@link ConsoleCommands}.
+	 * @param comm Command to issue
+	 */
+	public void issueCommand(String comm) {
+		// make sure the command isn't empty
+		if (comm.length() > 1) {
+			// split the command at the spaces
+			StringTokenizer toker = new StringTokenizer(comm, " ");
+
+			// grab the actual command and lop off the / at the beginning
+			String command = toker.nextToken();
+			command = command.substring(1, command.length());
+			
+			// if the command string is followed immediately by the string "help", call the help function for that command. Else, issue the command.
+			if(comm.length() > 7 && comm.substring(command.length() + 2, command.length() + 6).equals("help")){
+				ConsoleCommands.help.issue(new StringTokenizer(command));
+			} else{
+				try {
+					// this one line issues a command! Neat!
+					ConsoleCommands.valueOf(command).issue(toker);
+				} catch (NumberFormatException e) {
+					console.print("Incorrect number format "
+							+ e.getLocalizedMessage().toLowerCase());
+				} catch(IllegalArgumentException e){
+					console.print("Command not found! (" + command + ")");
+				}
+				catch (NoSuchElementException e) {
+					console.print("Not enough vairbales for command '" + command
+							+ "'!");
+				}
+			}
+		}
+	}
 
 	/**
 	 * Makes the text bright until the fade delay is reached again.
@@ -296,6 +330,26 @@ public class Console {
 		// Reset the current fade delay timer
 		consoleTextFadeDelayCurrent = 0;
 	}
+	
+	/**
+	 * This gets called every time that the console is drawn to make the
+	 * underscore at the end of the input blink
+	 */
+	private void updateBlink() {
+		// blink twice every second
+		blinkInterval = Debug.currentFPS / 2;
+
+		if (blink) {
+			blinkCount++;
+			if (blinkCount >= blinkInterval)
+				blink = false;
+		} else {
+			blinkCount--;
+			if (blinkCount <= 0)
+				blink = true;
+		}
+
+	}
 
 	/**
 	 * Clears the text
@@ -303,5 +357,4 @@ public class Console {
 	public void clear() {
 		text.clear();
 	}
-
 }

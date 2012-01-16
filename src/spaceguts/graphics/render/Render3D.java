@@ -9,12 +9,12 @@ import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Quaternion;
 
 import spaceguts.physics.Physics;
+import spaceguts.util.DisplayHelper;
 import spaceguts.util.QuaternionHelper;
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
 import spaceguts.entities.Light;
-import spaceguts.graphics.DisplayHelper;
 import spaceguts.graphics.Graphics;
 
 /**
@@ -43,7 +43,8 @@ public class Render3D {
 		transformToCamera();
 		
 		// draw the skybox first
-		Entities.skybox.draw();
+		if(Entities.skybox != null)
+			Entities.skybox.draw();
 		
 		// set up lights before we render our scene
 		for (Light l : Entities.lights.values()) {
