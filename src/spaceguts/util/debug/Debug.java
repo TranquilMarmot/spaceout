@@ -4,6 +4,7 @@ import java.util.Formatter;
 
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.SlickException;
@@ -240,6 +241,9 @@ public class Debug {
 		if (glDriver != null)
 			System.out.print("(" + glDriver + ")");
 		System.out.println();
+		
+		String glslVersion = GL11.glGetString(GL20.GL_SHADING_LANGUAGE_VERSION);
+		System.out.println("GLSL version " + glslVersion);
 
 		// print out info about the graphics card
 		String glVendor = GL11.glGetString(GL11.GL_VENDOR);
