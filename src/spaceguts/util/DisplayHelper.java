@@ -1,4 +1,4 @@
-package spaceguts.util.helper;
+package spaceguts.util;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -16,8 +16,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
-import spaceguts.util.Runner;
-import spaceguts.util.manager.KeyboardManager;
+import spaceguts.util.input.KeyBindings;
 
 /**
  * This class handles creating and displaying a resizeable window to render to
@@ -43,15 +42,14 @@ public class DisplayHelper {
 
 	/** target fps (might not be reached on slower machines) */
 	public static int targetFPS = 60;
+	
+	public static boolean vsync = false;
 
 	/** this is just to handle the resizeable window */
 	private final static AtomicReference<Dimension> newCanvasSize = new AtomicReference<Dimension>();
 
 	/** the frame everything is in so that the window is resizeable */
 	public static Frame frame;
-	
-	/** whether or not the display has requested a close (instantly shuts down game)*/
-	public static boolean closeRequested = false;
 	
 	/**
 	 * used to preserve the size of the window when switching between fullscreen
@@ -99,7 +97,7 @@ public class DisplayHelper {
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				closeRequested = true;
+				Runner.done = true;
 			}
 		});
 
@@ -109,7 +107,7 @@ public class DisplayHelper {
 		try {
 			// set the display to use the canvas
 			Display.setParent(canvas);
-			//Display.setVSyncEnabled(true);
+			Display.setVSyncEnabled(vsync);
 
 			// pretty self explanatory, boilerplate awt frame creation
 			frame.setPreferredSize(new Dimension(windowWidth, windowHeight));
@@ -147,19 +145,21 @@ public class DisplayHelper {
 			// reset the viewport
 			GL11.glViewport(0, 0, windowWidth, windowHeight);
 		}
+		
+		doFullscreenLogic();
 	}
 	
 	/**
 	 * Checks to see if the fullscreen key has been pressed and, if it has, acts accordingly
 	 */
-	public static void doFullscreenLogic(){
+	private static void doFullscreenLogic(){
 		//check for fullscreen key press
-		if (KeyboardManager.fullscreen && !fullscreenDown) {
+		if (KeyBindings.SYS_FULLSCREEN.isPressed() && !fullscreenDown) {
 			fullscreen = !fullscreen;
 			fullscreenDown = true;
 		}
 
-		if (!KeyboardManager.fullscreen) {
+		if (!KeyBindings.SYS_FULLSCREEN.isPressed()) {
 			fullscreenDown = false;
 		}
 		

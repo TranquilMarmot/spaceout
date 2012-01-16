@@ -7,12 +7,11 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-import spaceguts.util.manager.ModelManager;
-import spaceguts.util.manager.TextureManager;
 import spaceguts.entities.Camera;
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
-import spaceguts.graphics.model.Model;
+import spaceguts.util.resources.Models;
+import spaceguts.util.resources.Textures;
 import spaceout.entities.dynamic.Box;
 import spaceout.entities.dynamic.Planet;
 import spaceout.entities.dynamic.Player;
@@ -27,7 +26,7 @@ import spaceout.ship.Ship;
  *
  */
 public class Sandbox extends Entity{
-	public static void createSandboxWorld(){
+	public void createSandboxWorld() {
 		/* BEGIN SUN */
 		Vector3f sunLocation = new Vector3f(1500.0f, 1500.0f, -2.0f);
 		float sunSize = 150.0f;
@@ -36,7 +35,7 @@ public class Sandbox extends Entity{
 		float[] sunAmbient = { 1.0f, 1.0f, 1.0f };
 		float[] sunDiffuse = { 1.0f, 1.0f, 1.0f };
 		Sun sun = new Sun(sunLocation, sunSize, sunLight, sunColor, sunAmbient, sunDiffuse);
-		Entities.lights.add(sun);
+		Entities.addLight(sun);
 		/* END SUN */
 		
 		/* BEGIN BOX */
@@ -46,7 +45,7 @@ public class Sandbox extends Entity{
 		float box0Mass = 0.0f;
 		float box0Restitution = 0.0f;
 		Box box0 = new Box(box0Location, box0Rotation, box0Size, box0Mass, box0Restitution);
-		Entities.dynamicEntities.add(box0);
+		Entities.addDynamicEntity(box0);
 		/* END BOX */
 		
 		/* BEGIN BOX */
@@ -56,7 +55,7 @@ public class Sandbox extends Entity{
 		float box1Mass = 0.0f;
 		float box1Restitution = 0.0f;
 		Box box1 = new Box(box1Location, box1Rotation, box1Size, box1Mass, box1Restitution);
-		Entities.dynamicEntities.add(box1);
+		Entities.addDynamicEntity(box1);
 		/* END BOX */
 		
 		/* BEGIN PLAYER */
@@ -67,7 +66,7 @@ public class Sandbox extends Entity{
 		
 		/* TEMP SHIP INFO TODO make this load from XML */
 		String shipName = "WingX";
-		Model shipModel = ModelManager.getModel(ModelManager.WING_X);
+		Models shipModel = Models.WING_X;
 		int shipHealth = 100;
 		float shipMass = 50.0f;
 		float shipRestitution = 0.01f;
@@ -95,10 +94,11 @@ public class Sandbox extends Entity{
 		Entities.skybox = skybox;
 		/* END SKYBOX */
 		
+		
 		/* BEGIN DEBRIS */
 		Debris debris = new Debris(Entities.camera, 500, 50000.0f, 420133742L);
 		debris.update();
-		Entities.staticEntities.add(debris);
+		Entities.addPassiveEntity(debris);
 		/* END DEBRIS */
 	}
 	
@@ -106,23 +106,23 @@ public class Sandbox extends Entity{
 		Random randy = new Random();
 		float sphereSize = randy.nextInt(200) / 10.0f;
 		
-		int sphereTexture = randy.nextInt(4);
+		Textures sphereTexture;
 		
 		switch(randy.nextInt(4)){
 		case 0:
-			sphereTexture = TextureManager.EARTH;
+			sphereTexture = Textures.EARTH;
 			break;
 		case 1:
-			sphereTexture = TextureManager.MERCURY;
+			sphereTexture = Textures.MERCURY;
 			break;
 		case 2:
-			sphereTexture = TextureManager.VENUS;
+			sphereTexture = Textures.VENUS;
 			break;
 		case 3:
-			sphereTexture = TextureManager.MARS;
+			sphereTexture = Textures.MARS;
 			break;
 		default:
-			sphereTexture = TextureManager.EARTH;
+			sphereTexture = Textures.EARTH;
 		}
 		
 		float sphereX = 0.0f + (randy.nextFloat() * 100.0f);
@@ -136,7 +136,7 @@ public class Sandbox extends Entity{
 		
 		Planet p = new Planet(sphereLocation, sphereRotation, sphereSize, sphereMass, 0.0f, sphereTexture);
 		
-		Entities.dynamicEntities.add(p);
+		Entities.addDynamicEntity(p);
 	}
 
 	@Override

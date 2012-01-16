@@ -1,11 +1,10 @@
 package spaceguts.graphics.render;
 
-import spaceguts.graphics.gui.GUI;
-
 import org.lwjgl.opengl.GL11;
 
-import spaceguts.util.debug.Debug;
-import spaceguts.util.helper.DisplayHelper;
+import spaceguts.graphics.Graphics;
+import spaceguts.graphics.gui.GUI;
+import spaceguts.util.DisplayHelper;
 
 /**
  * Handles all 2D rendering
@@ -13,22 +12,17 @@ import spaceguts.util.helper.DisplayHelper;
  * @see Graphics 
  *
  */
-public class Render2D {
+public class Render2D {	
 	/**
-	 * Updates any 2D things and renders them
+	 * Draws the 2D scene
 	 */
-	protected static void updateAndRender2DScene(){
+	public static void draw2DScene(){
 		setUp2DRender();
-
-		// draw debug info
-		Debug.updateAndDraw();
-		
-		// draw the gui
-		GUI.updateAndRenderGUI();
+		GUI.draw();
 	}
 	
 	/**
-	 * Sets up OpenGL matrices for 2D drawing
+	 * Sets up OpenGL for 2D drawing
 	 */
 	private static void setUp2DRender(){
 		// reset the projection matrix

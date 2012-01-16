@@ -6,7 +6,7 @@ import org.lwjgl.util.glu.Sphere;
 import org.lwjgl.util.vector.Vector3f;
 
 import spaceguts.entities.Light;
-import spaceguts.util.manager.TextureManager;
+import spaceguts.util.resources.Textures;
 
 /**
  * A sun that gives off light.
@@ -45,7 +45,6 @@ public class Sun extends Light {
 		this.type = "sun";
 		this.color = color;
 		this.light = light;
-
 		initList();
 	}
 
@@ -69,7 +68,7 @@ public class Sun extends Light {
 	public void draw() {
 		// disable lighting to draw the sun, oh the irony
 		GL11.glDisable(GL11.GL_LIGHTING);
-		TextureManager.getTexture(TextureManager.WHITE).bind();
+		Textures.WHITE.texture().bind();
 		GL11.glColor3f(color[0], color[1], color[2]);
 		GL11.glCallList(list);
 		GL11.glEnable(GL11.GL_LIGHTING);

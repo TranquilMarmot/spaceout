@@ -9,12 +9,13 @@ import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Quaternion;
 
 import spaceguts.physics.Physics;
-import spaceguts.util.helper.DisplayHelper;
-import spaceguts.util.helper.QuaternionHelper;
+import spaceguts.util.DisplayHelper;
+import spaceguts.util.QuaternionHelper;
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
 import spaceguts.entities.Light;
+import spaceguts.graphics.Graphics;
 
 /**
  * Handles all 3D rendering. For the moment, also updates Entities.entities.
@@ -32,16 +33,7 @@ public class Render3D {
 	/**
 	 * Updates and draws everything in Entities.entities
 	 */
-	protected static void render3DScene() {
-		// add or remove any entities
-		Entities.checkBuffers();
-		
-		// update the camera
-		Entities.camera.update();
-		
-		// update the skybox
-		Entities.skybox.update();
-
+	public static void render3DScene() {
 		// prepare to do 3D rendering
 		setUp3DRender();
 
@@ -51,10 +43,11 @@ public class Render3D {
 		transformToCamera();
 		
 		// draw the skybox first
-		Entities.skybox.draw();
+		if(Entities.skybox != null)
+			Entities.skybox.draw();
 		
 		// set up lights before we render our scene
-		for (Light l : Entities.lights) {
+		for (Light l : Entities.lights.values()) {
 			l.setUpLight();
 		}
 
@@ -65,7 +58,7 @@ public class Render3D {
 		drawDynamicEntities();
 		
 		// draw all static entities
-		drawAndUpdateStaticEntities();
+		drawPassiveEntities();
 		
 		// draw the player
 		drawPlayer();
@@ -89,7 +82,7 @@ public class Render3D {
 	 * Draws all entities
 	 */
 	private static void drawDynamicEntities(){
-		Iterator<DynamicEntity> entityIterator = Entities.dynamicEntities.iterator();
+		Iterator<DynamicEntity> entityIterator = Entities.dynamicEntities.values().iterator();
 		while (entityIterator.hasNext()) {
 			DynamicEntity ent = entityIterator.next();
 			
@@ -118,13 +111,10 @@ public class Render3D {
 	/**
 	 * Draws all entities
 	 */
-	private static void drawAndUpdateStaticEntities(){
-		Iterator<Entity> entityIterator = Entities.staticEntities.iterator();
+	private static void drawPassiveEntities(){
+		Iterator<Entity> entityIterator = Entities.passiveEntities.values().iterator();
 		while (entityIterator.hasNext()) {
 			Entity ent = entityIterator.next();
-
-			// update the entity
-			ent.update();
 			
 			// figure out where to translate to
 			float transX = Entities.camera.location.x - ent.location.x;
@@ -149,7 +139,7 @@ public class Render3D {
 	 * and as such don't need to be set up here.
 	 */
 	private static void drawLights(){
-		Iterator<Light> entityIterator = Entities.lights.iterator();
+		Iterator<Light> entityIterator = Entities.lights.values().iterator();
 		while (entityIterator.hasNext()) {
 			Light ent = entityIterator.next();
 			

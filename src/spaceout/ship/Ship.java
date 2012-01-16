@@ -2,7 +2,7 @@ package spaceout.ship;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import spaceguts.graphics.model.Model;
+import spaceguts.util.resources.Models;
 
 /*
  * TODO
@@ -14,9 +14,14 @@ import spaceguts.graphics.model.Model;
  * 
  * So whenever a ship is needed, it gets loaded in from its XML file
  */
+/**
+ * A class describing the different variables for a ship.
+ * @author TranquilMarmot
+ *
+ */
 public class Ship{
 	/** The model to use for drawing the ship */
-	private Model model;
+	private Models model;
 	/** The name of the ship */
 	private String name;
 	/** How much health the ship has */
@@ -32,7 +37,22 @@ public class Ship{
 	/** How fast the ship can turn */ //TODO these should be controlled by the ship's thrusters
 	private float rollSpeed, xTurnSpeed, yTurnSpeed;
 	
-	public Ship(String name, Model model, int health, float mass, float restitution, Vector3f accelerationSpeed, float topSpeed, float stabilizationSpeed, float stopSpeed, float rollSpeed, float xTurnSpeed, float yTurnSpeed){
+	/**
+	 * Create a ship object
+	 * @param name The name of the ship
+	 * @param model The model to use when drawing the ship
+	 * @param health How much health the ship has
+	 * @param mass How much the ship weighs
+	 * @param restitution How bouncy the ship is
+	 * @param accelerationSpeed How fast the ship can accelerate along each axis
+	 * @param topSpeed Maximum speed for the ship
+	 * @param stabilizationSpeed How fast the ship stabilizes
+	 * @param stopSpeed How fast the ship stops
+	 * @param rollSpeed How fast the ship rolls
+	 * @param xTurnSpeed How fast the ship turns about its x axis
+	 * @param yTurnSpeed How fast the ship turns about its y axis
+	 */
+	public Ship(String name, Models model, int health, float mass, float restitution, Vector3f accelerationSpeed, float topSpeed, float stabilizationSpeed, float stopSpeed, float rollSpeed, float xTurnSpeed, float yTurnSpeed){
 		this.name = name;
 		this.model = model;
 		this.health = health;
@@ -47,7 +67,7 @@ public class Ship{
 		this.yTurnSpeed = yTurnSpeed;
 	}
 	
-	public Model getModel(){ return model; }
+	public Models getModel(){ return model; }
 	public String getName(){ return name; }
 	public int getHealth(){ return health; }
 	public float getMass(){ return mass; }

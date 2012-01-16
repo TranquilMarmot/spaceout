@@ -1,18 +1,23 @@
 package spaceguts.util;
 
-import spaceguts.graphics.gui.GUI;
-import spaceguts.graphics.gui.menu.MainMenu;
-import spaceguts.graphics.render.Graphics;
-
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
+import spaceguts.entities.Entities;
+import spaceguts.entities.Entity;
+import spaceguts.entities.Light;
+import spaceguts.graphics.Graphics;
+import spaceguts.graphics.gui.GUI;
+import spaceguts.graphics.gui.menu.MainMenu;
 import spaceguts.physics.Physics;
 import spaceguts.util.console.Console;
 import spaceguts.util.debug.Debug;
-import spaceguts.util.helper.DisplayHelper;
-import spaceguts.util.manager.KeyboardManager;
-import spaceguts.util.manager.MouseManager;
+import spaceguts.util.input.KeyBindings;
+import spaceguts.util.input.KeyboardManager;
+import spaceguts.util.input.MouseManager;
+import spaceguts.util.resources.Models;
+import spaceguts.util.resources.ResourceLoader;
+import spaceguts.util.resources.Textures;
 
 // Rule number 1: Tell everyone about Spaceout (ask them for ideas! We need ideas!).
 // Rule number 2: Comment everything motherfucker.
@@ -24,7 +29,7 @@ import spaceguts.util.manager.MouseManager;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.60";
+	public static final String VERSION = "0.0.67";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
@@ -53,13 +58,11 @@ public class Runner {
 		try {
 			// keep going until the done flag is up or a window close is
 			// requested
-			while (!done && !DisplayHelper.closeRequested) {
-				// check for window resizes
-				DisplayHelper.resizeWindow();
-				// update misc stuff (keyboard, mouse, etc.)
+			while (!done) {
+				// update everything
 				update();
 				// render the scene
-				Graphics.renderAndUpdateEntities();
+				Graphics.render();
 				// update the display (this swaps the buffers)
 				Display.update();
 				Display.sync(DisplayHelper.targetFPS);
@@ -67,7 +70,7 @@ public class Runner {
 			shutdown();
 		} catch (Exception e) {
 			// if an exception is caught, destroy the display and the frame
-			shutdown();
+			//shutdown();
 			e.printStackTrace();
 		}
 	}
@@ -77,16 +80,37 @@ public class Runner {
 	 */
 	private void init() {
 		DisplayHelper.createWindow();
-		Graphics.initGL();
-
-		/*
-		 * NOTE: Most of the initializing is done on the main menu, see
-		 * MainMenu.java
-		 */
-		MainMenu mainMenu = new MainMenu();
-		GUI.addBuffer.add(mainMenu);
+		Graphics.initGL();		
+		Debug.init();
 		
-		// print out system info
+		MainMenu mainMenu = new MainMenu();
+		GUI.addGUIObject(mainMenu);
+		
+		//initialize resources
+		ResourceLoader.addJob(Textures.MENU_BACKGROUND1);
+		ResourceLoader.addJob(Textures.MENU_BACKGROUND2);
+		ResourceLoader.addJob(Textures.STARS);
+		ResourceLoader.addJob(Textures.WHITE);
+		ResourceLoader.addJob(Textures.CHECKERS);
+		ResourceLoader.addJob(Textures.SHIP1);
+		ResourceLoader.addJob(Textures.VENUS);
+		ResourceLoader.addJob(Textures.MARS);
+		ResourceLoader.addJob(Textures.MERCURY);
+		ResourceLoader.addJob(Textures.EARTH);
+		ResourceLoader.addJob(Textures.LASERBULLET);
+		ResourceLoader.addJob(Models.LASERBULLET);
+		ResourceLoader.addJob(Models.WING_X);
+		ResourceLoader.addJob(Textures.MENU_PICKER_ACTIVE);
+		ResourceLoader.addJob(Textures.MENU_PICKER_MOUSEOVER);
+		ResourceLoader.addJob(Textures.MENU_PICKER_SELECTED);
+		ResourceLoader.addJob(Textures.MENU_PICKER_PRESSED);
+		ResourceLoader.addJob(Textures.MENU_BUTTON_ACTIVE);
+		ResourceLoader.addJob(Textures.MENU_BUTTON_INACTIVE);
+		ResourceLoader.addJob(Textures.MENU_BUTTON_MOUSEOVER);
+		ResourceLoader.addJob(Textures.MENU_BUTTON_PRESSED);
+		ResourceLoader.addJob(Textures.MENU_SPACEOUT_TEXT);
+		ResourceLoader.processJobs();
+		
 		Debug.printSysInfo();
 		System.out.println("-------------------------------");
 	}
@@ -95,35 +119,66 @@ public class Runner {
 	 * Updates everything
 	 */
 	private void update() {
-		// System.out.println("delta: " + Debug.getDelta());
 		// update the mouse and keyboard handlers
 		mouse.update();
 		keyboard.update();
 
-		/* BEGIN PAUSE LOGIC */
+		// do pause logic
+		pauseLogic();
+		
+		// check for window resizes
+		DisplayHelper.resizeWindow();
+		
+		// update the GUI
+		GUI.update();
+		
+		// update the physics engine
+		if (!Runner.paused && Physics.dynamicsWorld != null)
+			Physics.update();
+		
+		// update passive entities
+		for (Entity ent : Entities.passiveEntities.values())
+			ent.update();
+
+		// update lights
+		for (Light l : Entities.lights.values())
+			l.update();
+
+		// update camera
+		if (Entities.camera != null)
+			Entities.camera.update();
+
+		// update skybox
+		if (Entities.skybox != null)
+			Entities.skybox.update();
+		
+		// check for any resources that need to be loaded
+		if(ResourceLoader.jobsExist())
+			ResourceLoader.processJobs();
+	}
+
+	/**
+	 * Checks whether or not the game's paused boolean needs to be flipped
+	 */
+	private void pauseLogic() {
 		// if pauseDown is true, it means that the pause button is being
 		// held,
 		// so it avoids repeatedly flipping paused when the key is held
-		if (KeyboardManager.pause && !pauseDown) {
+		if (KeyBindings.SYS_PAUSE.isPressed() && !pauseDown) {
 			paused = !paused;
 			pauseDown = true;
 		}
 
-		if (!KeyboardManager.pause) {
+		if (!KeyBindings.SYS_PAUSE.isPressed()) {
 			pauseDown = false;
 		}
 
-		// release the mouse if the game's paused or the console is on or the menu is up
+		// release the mouse if the game's paused or the console is on or the
+		// menu is up
 		if (!paused && !Console.consoleOn && !GUI.menuUp)
 			Mouse.setGrabbed(true);
 		else
 			Mouse.setGrabbed(false);
-		/* END PAUSE LOGIC */
-
-		DisplayHelper.doFullscreenLogic();
-		
-		if(!paused && Physics.dynamicsWorld != null)
-			Physics.update();
 	}
 
 	/**

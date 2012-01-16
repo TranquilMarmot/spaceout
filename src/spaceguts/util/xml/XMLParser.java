@@ -12,14 +12,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import spaceguts.util.console.Console;
-import spaceguts.util.debug.Debug;
-import spaceguts.util.manager.ModelManager;
-import spaceguts.util.manager.TextureManager;
 import spaceguts.entities.Camera;
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
-import spaceguts.graphics.model.Model;
+import spaceguts.util.console.Console;
+import spaceguts.util.resources.Models;
+import spaceguts.util.resources.Textures;
 import spaceout.entities.dynamic.Planet;
 import spaceout.entities.dynamic.Player;
 import spaceout.entities.passive.Skybox;
@@ -109,6 +107,7 @@ public class XMLParser {
 	 */
 	private static void makeEntity(Element ele) {
 		String type = ele.getNodeName().toLowerCase();
+		System.out.println("Making " + type);
 
 		if (type.equals("player")) {
 			makePlayer(ele);
@@ -130,9 +129,10 @@ public class XMLParser {
 		float restitution = getFloat(ele, "restitution");
 
 		DynamicEntity saucer = new DynamicEntity(location, rotation,
-				ModelManager.SAUCER, mass, restitution);
-		saucer.type = "saucer";
-		Entities.dynamicEntities.add(saucer);
+				Models.SAUCER, mass, restitution);
+		saucer.type = "Saucer";
+		
+		Entities.addDynamicEntity(saucer);
 	}
 
 	private static void makePlayer(Element ele) {
@@ -143,7 +143,7 @@ public class XMLParser {
 		
 		/* TEMP SHIP INFO TODO make this load from XML */
 		String shipName = "WingX";
-		Model shipModel = ModelManager.getModel(ModelManager.WING_X);
+		Models shipModel = Models.WING_X;
 		int shipHealth = 100;
 		float shipMass = 50.0f;
 		float shipRestitution = 0.01f;
@@ -157,7 +157,6 @@ public class XMLParser {
 		
 		Ship ship = new Ship(shipName, shipModel, shipHealth, shipMass, shipRestitution, shipAcceleration, shipTopSpeed, shipStabilizationSpeed, shipStopSpeed, shipRollSpeed, shipXTurnSpeed, shipYTurnSpeed);
 		
-		
 		Player player = new Player(location, rotation, ship,
 				mass, restitution);
 		player.type = "dynamicPlayer";
@@ -169,8 +168,10 @@ public class XMLParser {
 		int numStars = getInt(ele, "numStars");
 		float range = getFloat(ele, "range");
 		long seed = 1337420L;
-		Entities.staticEntities.add(new Debris(Entities.camera, numStars,
-				range, seed));
+		Debris debris = new Debris(Entities.camera, numStars,
+				range, seed);
+		
+		Entities.addPassiveEntity(debris);
 	}
 
 	private static void makeSun(Element ele) {
@@ -213,21 +214,23 @@ public class XMLParser {
 					.println("Error getting glLight for Sun! Using GL_LIGHT0");
 		}
 
-		Entities.lights.add(new Sun(location, size, glLight, color,
-				lightAmbient, lightDiffuse));
+		Sun sun = new Sun(location, size, glLight, color,
+				lightAmbient, lightDiffuse);
+		
+		Entities.addLight(sun);
 	}
 
 	private static void makePlanet(Element ele) {
-		int texture = 0;
+		Textures texture = Textures.CHECKERS;
 		String name = getString(ele, "name");
 		if (name.equals("Earth"))
-			texture = TextureManager.EARTH;
+			texture = Textures.EARTH;
 		else if (name.equals("Mercury"))
-			texture = TextureManager.MERCURY;
+			texture = Textures.MERCURY;
 		else if (name.equals("Venus"))
-			texture = TextureManager.VENUS;
+			texture = Textures.VENUS;
 		else if (name.equals("Mars"))
-			texture = TextureManager.MARS;
+			texture = Textures.MARS;
 		else
 			System.out
 					.println("Error! Didn't find texture while creating Planet "
@@ -242,8 +245,8 @@ public class XMLParser {
 		Planet p = new Planet(location, rotation, size, mass, restitution,
 				texture);
 		p.type = name;
-
-		Entities.dynamicEntities.add(p);
+		
+		Entities.addDynamicEntity(p);
 	}
 
 	/**

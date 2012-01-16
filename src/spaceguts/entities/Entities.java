@@ -1,7 +1,6 @@
 package spaceguts.entities;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -22,42 +21,60 @@ public class Entities {
 	/** the skybox */
 	public static Skybox skybox;
 
-	/** all the current entities */
-	public static ArrayList<Entity> staticEntities = new ArrayList<Entity>();
+	/** all the current passive entities */
+	public static HashMap<Integer, Entity> passiveEntities = new HashMap<Integer, Entity>();
 	/** all the dynamic entities */
-	public static ArrayList<DynamicEntity> dynamicEntities = new ArrayList<DynamicEntity>();
+	public static HashMap<Integer, DynamicEntity> dynamicEntities = new HashMap<Integer, DynamicEntity>();
 	/** all the current lights */
-	public static ArrayList<Light> lights = new ArrayList<Light>();
+	public static HashMap<Integer, Light> lights = new HashMap<Integer, Light>();
 	
-	/** entities to add on next frame (to avoid ConcurrentModificationException) */
-	public static ArrayList<Entity> staticAddBuffer = new ArrayList<Entity>();
-	/** entities to add on next frame (to avoid ConcurrentModificationException) */
-	public static ArrayList<DynamicEntity> dynamicAddBuffer = new ArrayList<DynamicEntity>();
-	/** entities to add on next frame (to avoid ConcurrentModificationException) */
-	public static ArrayList<Light> lightAddBuffer = new ArrayList<Light>();
+	public static void addDynamicEntity(DynamicEntity ent){
+		DynamicEntity test = dynamicEntities.put(ent.hashCode(), ent);
+		/*
+		 *  Check for any collisions
+		 *  If two objects use the same hash code, the hash table overwrites the value at the
+		 *  given key then returns the overwritten value
+		 *  TODO this loop might go for a looong time if it keeps running into collisions, 
+		 *  so it might be a good idea to change how this works 
+		 */
+		while(test != null){
+			test = dynamicEntities.put(test.hashCode() + 5, test);
+		}
+	}
 	
+	public static void addPassiveEntity(Entity ent){
+		Entity test = passiveEntities.put(ent.hashCode(), ent);
+		/*
+		 *  Check for any collisions
+		 *  If two objects use the same hash code, the hash table overwrites the value at the
+		 *  given key then returns the overwritten value
+		 *  TODO this loop might go for a looong time if it keeps running into collisions, 
+		 *  so it might be a good idea to change how this works 
+		 */
+		while(test != null){
+			test = passiveEntities.put(test.hashCode() + 5, test);
+		}
+	}
 	
-	/**
-	 * entities to remove on next frame (to avoid
-	 * ConcurrentModificationException)
-	 */
-	public static ArrayList<Entity> staticRemoveBuffer = new ArrayList<Entity>();
-	/**
-	 * entities to remove on next frame (to avoid
-	 * ConcurrentModificationException)
-	 */
-	public static ArrayList<DynamicEntity> dynamicRemoveBuffer = new ArrayList<DynamicEntity>();
-	/**
-	 * entities to remove on next frame (to avoid
-	 * ConcurrentModificationException)
-	 */
-	public static ArrayList<Light> lightRemoveBuffer = new ArrayList<Light>();
+	public static void addLight(Light light){
+		Light test = lights.put(light.hashCode(), light);
+		/*
+		 *  Check for any collisions
+		 *  If two objects use the same hash code, the hash table overwrites the value at the
+		 *  given key then returns the overwritten value
+		 *  TODO this loop might go for a looong time if it keeps running into collisions, 
+		 *  so it might be a good idea to change how this works 
+		 */
+		while(test != null){
+			test = lights.put(test.hashCode() + 5, test);
+		}
+	}
 
 	/**
 	 * @return Whether or not there are any entities at the moment
 	 */
 	public static boolean entitiesExist() {
-		return staticEntities.size() > 0 || dynamicEntities.size() > 0;
+		return !passiveEntities.isEmpty() || !dynamicEntities.isEmpty();
 	}
 
 	/**
@@ -84,92 +101,20 @@ public class Entities {
 	}
 
 	/**
-	 * Checks to see whether or not any entities need to be added or removed
-	 */
-	public static void checkBuffers() {
-		// add any Entities in the addBuffer
-		if (!staticAddBuffer.isEmpty()) {
-			Iterator<Entity> addIterator = staticAddBuffer.iterator();
-			while (addIterator.hasNext()) {
-				Entity ent = addIterator.next();
-				staticEntities.add(ent);
-				addIterator.remove();
-			}
-		}
-
-		// remove any entities from the removeBuffer
-		if (!staticRemoveBuffer.isEmpty()) {
-			Iterator<Entity> removeIterator = staticRemoveBuffer.iterator();
-			while (removeIterator.hasNext()) {
-				Entity ent = removeIterator.next();
-				staticEntities.remove(ent);
-				removeIterator.remove();
-			}
-		}
-		
-		// add any Entities in the addBuffer
-		if (!dynamicAddBuffer.isEmpty()) {
-			Iterator<DynamicEntity> addIterator = dynamicAddBuffer.iterator();
-			while (addIterator.hasNext()) {
-				DynamicEntity ent = addIterator.next();
-				dynamicEntities.add(ent);
-				addIterator.remove();
-			}
-		}
-
-		// remove any entities from the removeBuffer
-		if (!dynamicRemoveBuffer.isEmpty()) {
-			Iterator<DynamicEntity> removeIterator = dynamicRemoveBuffer.iterator();
-			while (removeIterator.hasNext()) {
-				DynamicEntity ent = removeIterator.next();
-				dynamicEntities.remove(ent);
-				removeIterator.remove();
-			}
-		}
-		
-		// add any Entities in the addBuffer
-		if (!lightAddBuffer.isEmpty()) {
-			Iterator<Light> addIterator = lightAddBuffer.iterator();
-			while (addIterator.hasNext()) {
-				Light ent = addIterator.next();
-				lights.add(ent);
-				addIterator.remove();
-			}
-		}
-
-		// remove any entities from the removeBuffer
-		if (!lightRemoveBuffer.isEmpty()) {
-			Iterator<Light> removeIterator = lightRemoveBuffer.iterator();
-			while (removeIterator.hasNext()) {
-				Light ent = removeIterator.next();
-				lights.remove(ent);
-				removeIterator.remove();
-			}
-		}
-	}
-
-	/**
 	 * Delete all of the entities
 	 */
 	public static void cleanup() {
-		for (Entity ent : staticEntities) {
+		for(Entity ent : passiveEntities.values()){
 			ent.cleanup();
 		}
 		
-		for(DynamicEntity ent : dynamicEntities){
+		for(DynamicEntity ent : dynamicEntities.values()){
 			ent.cleanup();
 		}
-		
 		player = null;
 		camera = null;
-		staticEntities.clear();
+		passiveEntities.clear();
 		dynamicEntities.clear();
 		lights.clear();
-		dynamicAddBuffer.clear();
-		dynamicRemoveBuffer.clear();
-		staticAddBuffer.clear();
-		staticRemoveBuffer.clear();
-		lightAddBuffer.clear();
-		lightRemoveBuffer.clear();
 	}
 }

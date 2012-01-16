@@ -1,4 +1,4 @@
-package spaceguts.graphics.model;
+package spaceguts.util.model;
 
 import java.util.ArrayList;
 
@@ -6,6 +6,8 @@ import javax.vecmath.Point2f;
 import javax.vecmath.Vector3f;
 
 import org.lwjgl.opengl.GL11;
+
+import spaceguts.util.resources.Textures;
 
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.collision.shapes.ConvexHullShape;
@@ -214,7 +216,7 @@ public class ModelBuilder {
 	 * and their respective indices have been added.
 	 * @return A model built using the current indices
 	 */
-	public Model makeModel(int texture) {
+	public Model makeModel(Textures texture) {
 		//System.out.println(maxX * 1.0f + " " + minX * 1.0f + " " + maxY * 1.0f + " " + minY * 1.0f + " " + maxZ * 1.0f + " " + minZ * 1.0f);
 		return new Model(buildCollisionShape(), buildCallList(), texture);
 	}

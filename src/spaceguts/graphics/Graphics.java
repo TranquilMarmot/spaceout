@@ -1,43 +1,46 @@
-package spaceguts.graphics.render;
+package spaceguts.graphics;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 import spaceguts.entities.Entities;
-
-import spaceguts.util.helper.DisplayHelper;
+import spaceguts.graphics.render.Render2D;
+import spaceguts.graphics.render.Render3D;
+import spaceguts.util.DisplayHelper;
 
 /**
- * Handles all the calls for OpenGL. This includes initializing OpenGL and calling {@link Render2D} and {@link Render3D}.
+ * Handles all the calls for OpenGL. This includes initializing OpenGL and
+ * calling {@link Render2D} and {@link Render3D}.
+ * 
  * @author TranquilMarmot
  * @see Render2D
  * @see Render3D
- *
+ * 
  */
 public class Graphics {
-	/**
-	 * Updates all entities and renders them. This should probably be called every frame.
-	 */
-	public static void renderAndUpdateEntities(){
+
+	public static void render() {
 		// Clear the color and depth buffers
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
 		// can only render 3D stuff if there are entities and a camera
-		if(Entities.entitiesExist() && Entities.camera != null)
+		if (Entities.entitiesExist() && Entities.camera != null)
 			Render3D.render3DScene();
-		Render2D.updateAndRender2DScene();
-		
+
+		Render2D.draw2DScene();
+
 		// handle any GL errors that might occur
 		int error = GL11.glGetError();
-		
-		if(error != GL11.GL_NO_ERROR)
-			System.out.println("Error rendering! Error number: " + error + " string: " + GLU.gluGetString(error));
+
+		if (error != GL11.GL_NO_ERROR)
+			System.out.println("Error rendering! Error number: " + error
+					+ "/String: " + GLU.gluGetString(error));
 	}
-	
+
 	/**
 	 * Initializes OpenGL
 	 */
-	public static void initGL(){
+	public static void initGL() {
 		// Enable 2D textures
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 
@@ -46,7 +49,7 @@ public class Graphics {
 
 		// Clear to a black background
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
-		
+
 		// Setup the depth buffer
 		GL11.glClearDepth(1.0f);
 		// Enable depth testing
@@ -67,11 +70,12 @@ public class Graphics {
 
 		// Calculate The Aspect Ratio Of The Window
 		GLU.gluPerspective(45.0f, (float) DisplayHelper.windowWidth
-				/ (float) DisplayHelper.windowHeight, 0.1f, Render3D.drawDistance);
+				/ (float) DisplayHelper.windowHeight, 0.1f,
+				Render3D.drawDistance);
 
 		// Select the Modelview matrix
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		
+
 		// Select 2D textures
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
