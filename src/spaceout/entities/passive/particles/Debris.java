@@ -220,7 +220,7 @@ public class Debris extends Entity {
 		// put the camera's rotation quaternion into the rotation buffer
 		QuaternionHelper.toFloatBuffer(revQuat, billboardBuffer);
 		// bind a white texture and color
-		Textures.WHITE.getTexture().bind();
+		Textures.WHITE.texture().bind();
 		GL11.glColor3f(0.9f, 0.9f, 0.9f);
 
 		// loop through all the particles to draw them

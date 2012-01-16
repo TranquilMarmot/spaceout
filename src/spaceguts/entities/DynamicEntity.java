@@ -150,7 +150,7 @@ public class DynamicEntity extends Entity {
 	 * Simple as possible drawing call. This assumes that it's called when the entity's location and rotation have already been applied to the modelview matrix.
 	 */
 	public void draw() {
-		model.getTexture().bind();
+		model.getTexture().texture().bind();
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		GL11.glCallList(model.getCallList());
 	}

@@ -95,7 +95,7 @@ public class MainMenu extends GUIObject {
 	@Override
 	public void draw() {
 		// draw the background
-		background.getTexture().bind();
+		background.texture().bind();
 		GL11.glBegin(GL11.GL_QUADS);
 		{
 
@@ -109,53 +109,53 @@ public class MainMenu extends GUIObject {
 			GL11.glTexCoord2f(0, 0);
 			GL11.glVertex2i(0, 0);
 
-			GL11.glTexCoord2f(background.getTexture().getWidth(), 0);
+			GL11.glTexCoord2f(background.texture().getWidth(), 0);
 			GL11.glVertex2i(DisplayHelper.windowWidth, 0);
 
-			GL11.glTexCoord2f(background.getTexture().getWidth(), background.getTexture().getHeight());
+			GL11.glTexCoord2f(background.texture().getWidth(), background.texture().getHeight());
 			GL11.glVertex2i(DisplayHelper.windowWidth,
 					DisplayHelper.windowHeight);
 
-			GL11.glTexCoord2f(0, background.getTexture().getHeight());
+			GL11.glTexCoord2f(0, background.texture().getHeight());
 			GL11.glVertex2i(0, DisplayHelper.windowHeight);
 		}
 		GL11.glEnd();
 
 		// draw 'spaceout'
-		spaceout.getTexture().bind();
+		spaceout.texture().bind();
 
 		int x1 = (DisplayHelper.windowWidth / 2)
-				- (spaceout.getTexture().getImageWidth() * spaceoutScale);
+				- (spaceout.texture().getImageWidth() * spaceoutScale);
 		int y1 = (DisplayHelper.windowHeight / 2)
-				- (spaceout.getTexture().getImageHeight() * spaceoutScale) + spaceoutYOffset;
+				- (spaceout.texture().getImageHeight() * spaceoutScale) + spaceoutYOffset;
 
 		int x2 = (DisplayHelper.windowWidth / 2)
-				+ (spaceout.getTexture().getImageWidth() * spaceoutScale);
+				+ (spaceout.texture().getImageWidth() * spaceoutScale);
 		int y2 = (DisplayHelper.windowHeight / 2)
-				- (spaceout.getTexture().getImageHeight() * spaceoutScale) + spaceoutYOffset;
+				- (spaceout.texture().getImageHeight() * spaceoutScale) + spaceoutYOffset;
 
 		int x3 = (DisplayHelper.windowWidth / 2)
-				+ (spaceout.getTexture().getImageWidth() * spaceoutScale);
+				+ (spaceout.texture().getImageWidth() * spaceoutScale);
 		int y3 = (DisplayHelper.windowHeight / 2)
-				+ (spaceout.getTexture().getImageHeight() * spaceoutScale) + spaceoutYOffset;
+				+ (spaceout.texture().getImageHeight() * spaceoutScale) + spaceoutYOffset;
 
 		int x4 = (DisplayHelper.windowWidth / 2)
-				- (spaceout.getTexture().getImageWidth() * spaceoutScale);
+				- (spaceout.texture().getImageWidth() * spaceoutScale);
 		int y4 = (DisplayHelper.windowHeight / 2)
-				+ (spaceout.getTexture().getImageHeight() * spaceoutScale) + spaceoutYOffset;
+				+ (spaceout.texture().getImageHeight() * spaceoutScale) + spaceoutYOffset;
 
 		GL11.glBegin(GL11.GL_QUADS);
 		{
 			GL11.glTexCoord2f(0, 0);
 			GL11.glVertex2i(x1, y1);
 
-			GL11.glTexCoord2f(spaceout.getTexture().getWidth(), 0);
+			GL11.glTexCoord2f(spaceout.texture().getWidth(), 0);
 			GL11.glVertex2i(x2, y2);
 
-			GL11.glTexCoord2f(spaceout.getTexture().getWidth(), spaceout.getTexture().getHeight());
+			GL11.glTexCoord2f(spaceout.texture().getWidth(), spaceout.texture().getHeight());
 			GL11.glVertex2i(x3, y3);
 
-			GL11.glTexCoord2f(0, spaceout.getTexture().getHeight());
+			GL11.glTexCoord2f(0, spaceout.texture().getHeight());
 			GL11.glVertex2i(x4, y4);
 		}
 		GL11.glEnd();

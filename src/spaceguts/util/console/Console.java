@@ -150,7 +150,7 @@ public class Console {
 		if (consoleEnabled) {
 			if (Console.consoleOn) {
 				// Draw the box
-				Textures.WHITE.getTexture().bind();
+				Textures.WHITE.texture().bind();
 				GL11.glColor4f(0.15f, 0.15f, 0.15f, 0.35f);
 				GL11.glBegin(GL11.GL_QUADS);
 				{

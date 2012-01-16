@@ -1,7 +1,5 @@
 package spaceguts.util.model;
 
-import org.newdawn.slick.opengl.Texture;
-
 import spaceguts.util.resources.ResourceLoader;
 import spaceguts.util.resources.Textures;
 
@@ -19,8 +17,7 @@ public class Model {
 
 	/** The call list to use to draw this model */
 	private int callList;
-
-	/** The texture to use when drawing this model (from the TextureManager) */
+	
 	private Textures texture;
 
 	/**
@@ -39,16 +36,16 @@ public class Model {
 		this.callList = callList;
 		this.texture = texture;
 	}
+	
+	public Textures getTexture(){
+		return texture;
+	}
 
 	/**
 	 * @return The model's CollisionShape
 	 */
 	public CollisionShape getCollisionShape() {
 		return shape;
-	}
-
-	public Texture getTexture() {
-		return texture.getTexture();
 	}
 
 	/**

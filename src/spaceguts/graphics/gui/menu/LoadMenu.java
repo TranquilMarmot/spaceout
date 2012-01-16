@@ -108,7 +108,7 @@ public class LoadMenu extends GUIObject {
 		});
 
 		// grab the image (NOTE: this is initialized in MainMenu's constructor)
-		background = Textures.MENU_BACKGROUND2.getTexture();
+		background = Textures.MENU_BACKGROUND2.texture();
 	}
 
 	@Override

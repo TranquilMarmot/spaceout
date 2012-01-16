@@ -1,8 +1,10 @@
 package spaceguts.util.input;
 
 /**
- * 
+ * Bindings for all the special input keys for the game. They will all be initialized to their default values,
+ * but they can easily be changed using the setKey() method.
  * @author TranquilMarmot
+ * @see Keys
  *
  */
 public enum KeyBindings {

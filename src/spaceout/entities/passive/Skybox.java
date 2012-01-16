@@ -48,7 +48,7 @@ public class Skybox extends Entity {
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
-		model.getModel().getTexture().bind();
+		model.getModel().getTexture().texture().bind();
 		GL11.glCallList(model.getModel().getCallList());
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_LIGHTING);

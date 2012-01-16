@@ -120,7 +120,7 @@ public class MenuButton extends RectangleButton {
 	public void draw() {
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 		if (this.isVisible) {
-			currentImage.getTexture().bind();
+			currentImage.texture().bind();
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GL11.glBegin(GL11.GL_QUADS);
 			{	
@@ -132,13 +132,13 @@ public class MenuButton extends RectangleButton {
 				GL11.glTexCoord2f(0, 0);
 				GL11.glVertex2i(x, y);
 
-				GL11.glTexCoord2f(currentImage.getTexture().getWidth(), 0);
+				GL11.glTexCoord2f(currentImage.texture().getWidth(), 0);
 				GL11.glVertex2i(x + width, y);
 
-				GL11.glTexCoord2f(currentImage.getTexture().getWidth(), currentImage.getTexture().getHeight());
+				GL11.glTexCoord2f(currentImage.texture().getWidth(), currentImage.texture().getHeight());
 				GL11.glVertex2i(x + width, y + height);
 
-				GL11.glTexCoord2f(0, currentImage.getTexture().getHeight());
+				GL11.glTexCoord2f(0, currentImage.texture().getHeight());
 				GL11.glVertex2i(x, y + height);
 			}
 			GL11.glEnd();

@@ -10,35 +10,35 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 public enum Textures {	
 	// Environment
-	STARS("PNG", Paths.TEXTURE_PATH.getPath() + "skybox.png", true, GL11.GL_NEAREST),
-	WHITE("BMP", Paths.TEXTURE_PATH.getPath() + "white.bmp", true, GL11.GL_NEAREST),
-	CHECKERS("BMP", Paths.TEXTURE_PATH.getPath() + "checkers.bmp", true, GL11.GL_NEAREST),
+	STARS("PNG", Paths.TEXTURE_PATH.path() + "skybox.png", true, GL11.GL_NEAREST),
+	WHITE("BMP", Paths.TEXTURE_PATH.path() + "white.bmp", true, GL11.GL_NEAREST),
+	CHECKERS("BMP", Paths.TEXTURE_PATH.path() + "checkers.bmp", true, GL11.GL_NEAREST),
 	
 	// Model textures
-	SHIP1("PNG", Paths.TEXTURE_PATH.getPath() + "ship1.png", false, GL11.GL_NEAREST),
-	LASERBULLET("PNG", Paths.TEXTURE_PATH.getPath() + "laserbullet.png", false, GL11.GL_NEAREST),
-	SAUCER("PNG", Paths.TEXTURE_PATH.getPath() + "saucer.png", false, GL11.GL_NEAREST),
+	SHIP1("PNG", Paths.TEXTURE_PATH.path() + "ship1.png", false, GL11.GL_NEAREST),
+	LASERBULLET("PNG", Paths.TEXTURE_PATH.path() + "laserbullet.png", false, GL11.GL_NEAREST),
+	SAUCER("PNG", Paths.TEXTURE_PATH.path() + "saucer.png", false, GL11.GL_NEAREST),
 	
 	// Planets
-	EARTH ("JPG", Paths.TEXTURE_PATH.getPath() + "earthbig.jpg", true, GL11.GL_NEAREST),
-	MERCURY("JPG", Paths.TEXTURE_PATH.getPath() + "mercury.jpg", true, GL11.GL_NEAREST),
-	VENUS("JPG", Paths.TEXTURE_PATH.getPath() + "venus.jpg", true, GL11.GL_NEAREST),
-	MARS("JPG", Paths.TEXTURE_PATH.getPath() + "mars.jpg", true, GL11.GL_NEAREST),
+	EARTH ("JPG", Paths.TEXTURE_PATH.path() + "earthbig.jpg", true, GL11.GL_NEAREST),
+	MERCURY("JPG", Paths.TEXTURE_PATH.path() + "mercury.jpg", true, GL11.GL_NEAREST),
+	VENUS("JPG", Paths.TEXTURE_PATH.path() + "venus.jpg", true, GL11.GL_NEAREST),
+	MARS("JPG", Paths.TEXTURE_PATH.path() + "mars.jpg", true, GL11.GL_NEAREST),
 	
 	// GUI
-	MENU_BACKGROUND1("JPG", Paths.BACKGROUND_IMAGE_PATH.getPath() + "apod1.jpg", false, GL11.GL_NEAREST),
-	MENU_BACKGROUND2("JPG", Paths.BACKGROUND_IMAGE_PATH.getPath() + "apod2.jpg", false, GL11.GL_NEAREST),
-	MENU_SPACEOUT_TEXT("PNG", Paths.MENU_IMAGE_PATH.getPath() + "spaceout.png", false, GL11.GL_NEAREST),
+	MENU_BACKGROUND1("JPG", Paths.BACKGROUND_IMAGE_PATH.path() + "apod1.jpg", false, GL11.GL_NEAREST),
+	MENU_BACKGROUND2("JPG", Paths.BACKGROUND_IMAGE_PATH.path() + "apod2.jpg", false, GL11.GL_NEAREST),
+	MENU_SPACEOUT_TEXT("PNG", Paths.MENU_IMAGE_PATH.path() + "spaceout.png", false, GL11.GL_NEAREST),
 	
-	MENU_PICKER_ACTIVE("PNG", Paths.FILEPICKER_IMAGE_PATH.getPath() + "active.png", false, GL11.GL_NEAREST),
-	MENU_PICKER_MOUSEOVER("PNG", Paths.FILEPICKER_IMAGE_PATH.getPath() + "mouseover.png", false, GL11.GL_NEAREST),
-	MENU_PICKER_SELECTED("PNG", Paths.FILEPICKER_IMAGE_PATH.getPath() + "selected.png", false, GL11.GL_NEAREST),
-	MENU_PICKER_PRESSED("PNG", Paths.FILEPICKER_IMAGE_PATH.getPath() + "active.png", false, GL11.GL_NEAREST),
+	MENU_PICKER_ACTIVE("PNG", Paths.FILEPICKER_IMAGE_PATH.path() + "active.png", false, GL11.GL_NEAREST),
+	MENU_PICKER_MOUSEOVER("PNG", Paths.FILEPICKER_IMAGE_PATH.path() + "mouseover.png", false, GL11.GL_NEAREST),
+	MENU_PICKER_SELECTED("PNG", Paths.FILEPICKER_IMAGE_PATH.path() + "selected.png", false, GL11.GL_NEAREST),
+	MENU_PICKER_PRESSED("PNG", Paths.FILEPICKER_IMAGE_PATH.path() + "active.png", false, GL11.GL_NEAREST),
 	
-	MENU_BUTTON_ACTIVE("PNG",Paths.MENUBUTTON_IMAGE_PATH.getPath()  + "active.png", false, GL11.GL_NEAREST),
-	MENU_BUTTON_MOUSEOVER("PNG",Paths.MENUBUTTON_IMAGE_PATH.getPath()  + "mouseover.png", false, GL11.GL_NEAREST),
-	MENU_BUTTON_PRESSED("PNG",Paths.MENUBUTTON_IMAGE_PATH.getPath()  + "pressed.png", false, GL11.GL_NEAREST),
-	MENU_BUTTON_INACTIVE("PNG",Paths.MENUBUTTON_IMAGE_PATH.getPath()  + "inactive.png", false, GL11.GL_NEAREST),
+	MENU_BUTTON_ACTIVE("PNG",Paths.MENUBUTTON_IMAGE_PATH.path()  + "active.png", false, GL11.GL_NEAREST),
+	MENU_BUTTON_MOUSEOVER("PNG",Paths.MENUBUTTON_IMAGE_PATH.path()  + "mouseover.png", false, GL11.GL_NEAREST),
+	MENU_BUTTON_PRESSED("PNG",Paths.MENUBUTTON_IMAGE_PATH.path()  + "pressed.png", false, GL11.GL_NEAREST),
+	MENU_BUTTON_INACTIVE("PNG",Paths.MENUBUTTON_IMAGE_PATH.path()  + "inactive.png", false, GL11.GL_NEAREST),
 	
 	
 	;
@@ -55,7 +55,7 @@ public enum Textures {
 		this.filter = filter;
 	}
 	
-	public Texture getTexture(){
+	public Texture texture(){
 		if(!textureLoaded())
 			initTexture();
 		return texture; 
