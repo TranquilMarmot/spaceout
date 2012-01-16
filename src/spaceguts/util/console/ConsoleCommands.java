@@ -90,9 +90,11 @@ class HelpCommand implements Command{
 	public void issue(StringTokenizer toker){
 		if(toker.hasMoreElements()){
 			ConsoleCommands command = ConsoleCommands.valueOf(toker.nextToken());
+			Console.console.print("HELP for " + command + ":");
 			command.help();
 		} else{
-			Console.console.print("Available commands:");
+			Console.console.print("AVAILABLE COMMANDS:");
+			Console.console.print("(use /help COMMAND or /COMMAND help for more details)");
 			for(ConsoleCommands command : ConsoleCommands.values())
 				Console.console.print(command.name());
 		}
