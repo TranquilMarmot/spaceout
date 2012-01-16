@@ -107,7 +107,6 @@ public class XMLParser {
 	 */
 	private static void makeEntity(Element ele) {
 		String type = ele.getNodeName().toLowerCase();
-		System.out.println("Making " + type);
 
 		if (type.equals("player")) {
 			makePlayer(ele);
