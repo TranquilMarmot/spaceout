@@ -1,7 +1,5 @@
 package spaceguts.util.debug;
 
-import org.lwjgl.input.Keyboard;
-
 import spaceguts.util.DisplayHelper;
 import spaceguts.util.Screenshot;
 import spaceguts.util.console.Console;
@@ -82,17 +80,17 @@ public class DebugKeyManager {
 
 		//TODO make all these go through KeyboardHandler instead
 		// handle the enter key being pressed to submit a line
-		if (Keyboard.isKeyDown(Keyboard.KEY_RETURN) && !returnDown) {
+		if (KeyBindings.SYS_CONSOLE_SUBMIT.isPressed() && !returnDown) {
 			Console.console.submit();
 			
 			returnDown = true;
 		}
-		if (!Keyboard.isKeyDown(Keyboard.KEY_RETURN)) {
+		if (!KeyBindings.SYS_CONSOLE_SUBMIT.isPressed()) {
 			returnDown = false;
 		}
 
 		// handle backspace
-		if (Keyboard.isKeyDown(Keyboard.KEY_BACK)) {
+		if (KeyBindings.SYS_CONSOLE_BACKSPACE.isPressed()) {
 			if(!backDown){
 				Console.console.backspace();
 				backDown = true;
@@ -103,25 +101,25 @@ public class DebugKeyManager {
 					Console.console.backspace();
 			}
 		}
-		if (!Keyboard.isKeyDown(Keyboard.KEY_BACK)){
+		if (!KeyBindings.SYS_CONSOLE_BACKSPACE.isPressed()){
 			backDown = false;
 			backspaceRepeatCounter = 0;
 		}
 
 		// handle scrolling up and down in the console
-		if (Keyboard.isKeyDown(Keyboard.KEY_NEXT) && !scrollUpDown) {
+		if (KeyBindings.SYS_CONSOLE_SCROLL_UP.isPressed() && !scrollUpDown) {
 			Console.console.scrollUp(1);
 			scrollUpDown = true;
 		}
-		if (!Keyboard.isKeyDown(Keyboard.KEY_NEXT))
+		if (!KeyBindings.SYS_CONSOLE_SCROLL_UP.isPressed())
 			scrollUpDown = false;
 
 		// handle scrolling up and down in the console
-		if (Keyboard.isKeyDown(Keyboard.KEY_PRIOR) && !scrollDownDown) {
+		if (KeyBindings.SYS_CONSOLE_SCROLL_DOWN.isPressed() && !scrollDownDown) {
 			Console.console.scrollDown(1);
 			scrollDownDown = true;
 		}
-		if (!Keyboard.isKeyDown(Keyboard.KEY_PRIOR))
+		if (!KeyBindings.SYS_CONSOLE_SCROLL_DOWN.isPressed())
 			scrollDownDown = false;
 		
 		// screenshot button

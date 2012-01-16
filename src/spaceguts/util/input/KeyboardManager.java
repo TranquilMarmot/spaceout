@@ -15,7 +15,17 @@ import spaceguts.util.console.Console;
  */
 public class KeyboardManager {
 	/** These keys are checked even when the console is on (if they weren't on this list, the game will attempt to print them to the console which wouldn't do anything) */
-	private final KeyBindings[] checkedWhenConsoleIsOn = { KeyBindings.SYS_CONSOLE, KeyBindings.SYS_SCREENSHOT, KeyBindings.SYS_DEBUG, KeyBindings.SYS_DEBUG_PHYSICS };
+	private final KeyBindings[] checkedWhenConsoleIsOn = {
+			KeyBindings.SYS_CONSOLE,
+			KeyBindings.SYS_SCREENSHOT,
+			KeyBindings.SYS_DEBUG,
+			KeyBindings.SYS_DEBUG_PHYSICS,
+			KeyBindings.SYS_CONSOLE_BACKSPACE,
+			KeyBindings.SYS_CONSOLE_NEXT_COMMAND,
+			KeyBindings.SYS_CONSOLE_PREVIOUS_COMMAND,
+			KeyBindings.SYS_CONSOLE_SCROLL_DOWN,
+			KeyBindings.SYS_CONSOLE_SCROLL_UP,
+			KeyBindings.SYS_CONSOLE_SUBMIT };
 	
 	/**
 	 * Loops through all the current Keyboard events and toggles booleans in 
@@ -24,6 +34,8 @@ public class KeyboardManager {
 		// loop through all keyboard events
 		while (Keyboard.next()) {		
 			int eventKey = Keyboard.getEventKey();
+			
+			//System.out.println(Keyboard.getKeyName(eventKey));
 			
 			// there are some special case keys, so there's a method to check for them
 			Keys key = getKey(eventKey);
