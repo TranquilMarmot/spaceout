@@ -1,5 +1,14 @@
 package spaceguts.graphics.glsl;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.FloatBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix3f;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
@@ -11,22 +20,96 @@ public class GLSLProgram {
 	private String logString;
 	
 	public GLSLProgram(){
+		handle = 0;
+		linked = false;
 	}
 	
 	
 	public boolean compileShaderFromFile(String fileName, ShaderTypes type){
+		try{
+			BufferedReader reader = new BufferedReader(new FileReader(fileName));
+			if(handle <= 0){
+				handle = GL20.glCreateProgram();
+				
+				if(handle == 0){
+					logString = "Unable to create shader program";
+					return false;
+				}
+			}
+			
+			String source = "";
+			String line;
+			while ((line = reader.readLine()) != null) {
+				source += "\n" + line;
+			}
+			
+			return compileShaderFromString(source, type);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+		
+		
 		return false;
 	}
 	
 	public boolean compileShaderFromString(String source, ShaderTypes type){
-		return false;
+		if(handle <= 0){
+			handle = GL20.glCreateProgram();
+			
+			if(handle == 0){
+				logString = "Unable to create shader program";
+				return false;
+			}
+		}
+		
+		int shaderHandle = GL20.glCreateShader(type.getGLInt());
+		
+		GL20.glShaderSource(shaderHandle, source);
+		GL20.glCompileShader(shaderHandle);
+		
+		int result = GL20.glGetShader(shaderHandle, GL20.GL_COMPILE_STATUS);
+		if(result == GL11.GL_FALSE){
+			int length = GL20.glGetShader(shaderHandle, GL20.GL_INFO_LOG_LENGTH);
+			logString = "";
+			if(length > 0){
+				logString = GL20.glGetShaderInfoLog(shaderHandle, length);
+			}
+			
+			return false;
+		} else{
+			GL20.glAttachShader(handle, shaderHandle);
+			return true;
+		}
 	}
 	
 	public boolean link(){
-		return false;
+		if(linked)
+			return true;
+		if(handle <= 0)
+			return false;
+		
+		GL20.glLinkProgram(handle);
+		
+		int status = GL20.glGetProgram(handle, GL20.GL_LINK_STATUS);
+		if(status == GL11.GL_FALSE){
+			int length = GL20.glGetProgram(handle, GL20.GL_INFO_LOG_LENGTH);
+			logString = "";
+			
+			if(length > 0){
+				logString =GL20.glGetProgramInfoLog(handle, length); 
+			}
+			
+			return false;
+		} else{
+			linked = true;
+			return linked;
+		}
 	}
 	
 	public void use(){
+		if(handle <= 0 || !linked)
+			return;
+		GL20.glUseProgram(handle);
 		
 	}
 	
@@ -43,50 +126,111 @@ public class GLSLProgram {
 	}
 	
 	public void bindAttribLocation(int location, String name){
+		GL20.glBindAttribLocation(handle, location, name);
 		
 	}
 	
 	public void bindFragDataLocation(int location, String name){
+		GL30.glBindFragDataLocation(handle, location, name);
 		
 	}
 	
 	public void setUniform(String name, float x, float y, float z){
-		
+		int loc = getUniformLocation(name);
+		if(loc >= 0){
+			GL20.glUniform3f(loc, x, y, z);
+		}
 	}
 	
 	public void setUniform(String name, Vector3f v){
+		this.setUniform(name, v.x, v.y, v.z);
 		
+	}
+	
+	public void setUniform(String name, float x, float y, float z, float w){
+		int loc = getUniformLocation(name);
+		if(loc >= 0){
+			GL20.glUniform4f(loc, x, y, z, w);
+		}
 	}
 	
 	public void setUniform(String name, Vector4f v){
-		
+		this.setUniform(name, v.x, v.y, v.z, v.w);
 	}
 	
+	// FIXME test this one and make sure it works
 	public void setUniform(String name, Matrix4f m){
-		
+		int loc = getUniformLocation(name);
+		if(loc >= 0){
+			FloatBuffer buf = BufferUtils.createFloatBuffer(16);
+			m.store(buf);
+			GL20.glUniformMatrix4(loc, false, buf);
+		}
 	}
 	
 	public void setUniform(String name, Matrix3f m){
-		
+		int loc = getUniformLocation(name);
+		if(loc >= 0){
+			FloatBuffer buf = BufferUtils.createFloatBuffer(9);
+			m.store(buf);
+			GL20.glUniformMatrix4(loc, false, buf);
+		}
 	}
 	
 	public void setUniform(String name, float val){
-		
+		int loc = getUniformLocation(name);
+		if(loc >= 0){
+			GL20.glUniform1f(loc, val);
+		}
 	}
 	
 	public void setUniform(String name, int val){
-		
+		int loc = getUniformLocation(name);
+		if(loc >= 0){
+			GL20.glUniform1i(loc, val);
+		}
 	}
 	
 	public void setUniform(String name, boolean val){
-		
+		int loc = getUniformLocation(name);
+		if(loc >= 0){
+			GL20.glUniform1i(loc, val ? 1 : 0);
+		}
 	}
 	
 	public void printActiveUniforms(){
+		int nUniforms, location, maxLen;
+		String name;
 		
+		maxLen = GL20.glGetProgram(handle, GL20.GL_ACTIVE_UNIFORM_MAX_LENGTH);
+		nUniforms = GL20.glGetProgram(handle, GL20.GL_ACTIVE_UNIFORMS);
+		
+		System.out.println(" Location | Name");
+		System.out.println("------------------------------------------------");
+		for(int i = 0; i < nUniforms; i++){
+			name = GL20.glGetActiveUniform(handle, i, maxLen);
+			location = GL20.glGetUniformLocation(handle, name);
+			System.out.println("  " + location + " | " + name);
+		}
 	}
 	
 	public void printActiveAttribs(){
+		int location, maxLength, nAttribs;
+		String name;
 		
+		maxLength = GL20.glGetProgram(handle, GL20.GL_ACTIVE_ATTRIBUTE_MAX_LENGTH);
+		nAttribs = GL20.glGetProgram(handle, GL20.GL_ACTIVE_ATTRIBUTES);
+		
+		System.out.println(" Index | Name");
+		System.out.println("------------------------------------------------");
+		for(int i = 0; i < nAttribs; i++){
+			name = GL20.glGetActiveAttrib(handle, i, maxLength);
+			location = GL20.glGetAttribLocation(handle, name);
+			System.out.println(" " + location + " | " + name);
+		}
+	}
+	
+	public int getUniformLocation(String name){
+		return GL20.glGetUniformLocation(handle, name);
 	}
 }

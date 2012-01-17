@@ -10,6 +10,8 @@ public enum Paths {
 	TEXTURE_PATH("res/images/textures/"),
 	
 	MODEL_PATH("res/models/"),
+	
+	SHADER_PATH("res/shaders/")
 	;
 	
 	String path;

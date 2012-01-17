@@ -7,6 +7,8 @@ import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
 import spaceguts.entities.Light;
 import spaceguts.graphics.Graphics;
+import spaceguts.graphics.glsl.GLSLProgram;
+import spaceguts.graphics.glsl.ShaderTypes;
 import spaceguts.graphics.gui.GUI;
 import spaceguts.graphics.gui.menu.MainMenu;
 import spaceguts.physics.Physics;
@@ -16,6 +18,7 @@ import spaceguts.util.input.KeyBindings;
 import spaceguts.util.input.KeyboardManager;
 import spaceguts.util.input.MouseManager;
 import spaceguts.util.resources.Models;
+import spaceguts.util.resources.Paths;
 import spaceguts.util.resources.ResourceLoader;
 import spaceguts.util.resources.Textures;
 
@@ -85,6 +88,20 @@ public class Runner {
 		
 		MainMenu mainMenu = new MainMenu();
 		GUI.addGUIObject(mainMenu);
+		
+		/* FIXME TEMP CODE */
+		GLSLProgram vert1 = new GLSLProgram();
+		
+		if(!vert1.compileShaderFromFile(Paths.SHADER_PATH.path() + "basic_uniform.vert", ShaderTypes.VERTEX)){
+			System.out.println(vert1.log());
+		}
+		
+		GLSLProgram frag1 = new GLSLProgram();
+		
+		if(!frag1.compileShaderFromFile(Paths.SHADER_PATH.path() + "basic_uniform.frag", ShaderTypes.FRAGMENT)){
+			System.out.println(frag1.log());
+		}
+		/* FIXME TEMP CODE */
 		
 		//initialize resources
 		ResourceLoader.addJob(Textures.MENU_BACKGROUND1);

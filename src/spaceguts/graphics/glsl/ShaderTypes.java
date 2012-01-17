@@ -17,7 +17,7 @@ public enum ShaderTypes {
 		this.glInt = glInt;
 	}
 	
-	public int getGLType(){
+	public int getGLInt(){
 		return glInt;
 	}
 }
