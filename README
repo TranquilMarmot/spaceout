@@ -1,113 +1,153 @@
-****************************************************************************************
-*                                                                                      *
-*                                      SPACEOUT                                        *
-*                                                                                      *
-****************************************************************************************
+*****************************************************************
+*                                                               *
+*          ______                                   _           *
+*         /  ____|                                 | |          *
+*         \  `--. _ __   __ _  ___  ___  ___  _   _| |_         *
+*          `--.  \ '_ \ / _` |/ __|/ _ \/   \| | | |  _|        *
+*         /\__/  / |_) | (_| | (__|  __/ (_) | |_| | |_         *
+*         \_____/| .__/ \__,_|\___|\___|\___/ \__,_|\__|        *
+*                | |                                            *
+*                |_|                                            *
+*                                                               *
+*****************************************************************
 
-STORY:
++-----------+
+|   STORY   |
++-----------+
 
-You are thrust into a future age where faster-than-light space travel has been made 
-possible through warp drives. They are not cheap, and can only be fitted
-on large spacecrafts known as motherships. (WIP)
+On the bicentennial of the desertion of Earth, the final habitable planets and 
+moons in a small group of planetary systems have been successfully terraformed 
+by a single government entity. The planets and moons at the furthest ends of the 
+habitable regions are largely over-looked by the unified government and as a 
+result they are controlled mostly by small, technologically-poor, local powers.
+
++---------------+
+| Game details: |
++---------------+ 
+
+When the game starts, you choose your Name, Gender, and Faction. Based on your
+faction, you will be allowed to choose from a number of starting ships. Each 
+faction will have ships that behave differently from eachother, as well as 
+having different strengths. When you choose a faction, your selection of
+starter ships will each be geared for slightly different tasks, also. The
+pirate faction is special in that you only get to choose from one starting
+ship and all of your ships beyond that will have to be acquired via either
+piracy, or the black market. There might be a special starting-mission for
+pirates in order to earn their first good ship. Once you choose your faction
+it may not be permanent, but you may only be a member of one of these factions
+at a time, and changing factions is a matter of gaining favor.
 
 +-----------------+
-|  SHIP CLASSES:  |
+| FACTION DETAILS |
 +-----------------+
 
-TRANSPORT CLASS
-+ Size: Collosal
-+ Purpose: Large scale transport, warping between systems
-+ Carries a certain number of ships, and crew on board
-+ You can walk around inside of transport class ships
+= Government Faction
+  Name: TBA
+  Notes: 
+    - The government has the most advanced starting ships. These ships
+    primarily require proprietary upgrades that can only be purchased 
+    through the manufacturer or on the black market.
+    - The guilds of the government faction provide cost reductions to
+    local government vendors. This is in contrast to the way outlaw
+    guilds behave, as the governemnt controls large cities with a wider
+    selection of goods than the smaller towns and villiages run by outlaws.
 
-	Mothership - This is your space station away from home
-	- Crew aids in mothership tasks.
-	- All ships which fit in a hanger can be flown in and out of motherships.
-	- Can warp around inside star-system but has long cooldown (10minutes?)
+= Outlaw Faction
+  Name: Outlaw (tentative)
+  Notes:
+    - Outlaw ships can be upgraded very easily, even by building the upgrade
+    yourself given the right tools, and knowledge. Outlaw ship upgrades can also 
+    be purchased through both proprietary and non-proprietary vendors, as well 
+    as the black market.
+    - Assuming that you are not wanted for breaking any government laws, you
+    are free to visit government controlled areas and purchase goods from
+    them at full cost.
 
-	Carrier - Designed for hauling ships and goods between planets, stations and systems.
-	- Only shuttles can be flown in or out of carriers	
-	- Larger ship hanger and cargo space than any other class
-  - Hangers are not large enough for other transport ships
-	- Carriers always require a crew of a certain size to operate
-	- Carriers require the largest warpdrive to operate
+= Pirate Faction
+  Name: Pirate 
+  Notes:
+    - The pirates don't choose a starting ship from a ship selection, instead
+    they recieve a mission to comandeer a government or outlaw ship.
+    - Since pirates are not welcome among other factions, they must acquire 
+    better ships through pirating/salvaging, or the black market.
+    - Pirates have no allegiances, but are generally unwelcome in government 
+    or outlaw controlled areas, so they will be able to make use of disguise.
 
------------------
-FIGHTER CLASS
-+ Size: Medium, Small
-+ Purpose: Combat, Exploration
-+ Carries a microwarp drive that allows for faster in-system travel, but no combat.
-+ Carries an advanced weapons/defense system allowing for different types of combat.
-+ Used for landing on/departing planets
++---------------------+
+| NPC FACTION DETAILS |
++---------------------+
 
-WIP
+= Engineered Life Form
+  Name: ELF (Engineered Life Form)
+  Notes: 
+    - Scary, in-human killing machine.
+    - Origin unknown, presumably created by the government faction.
 
------------------
-INDUSTRIAL CLASS
-+ Size: Large
-+ Purpose: Hauling, Asteroid Mining, Industrial Ops
-+ Strong defense/evasion system, but minimal weapons
++-------------------+
+| NPC GUILD DETAILS |
++-------------------+
 
-	Mining Ship - Uses mining lasers and tractor beams to gather resources from asteroids
-	- Much larger cargo space than Fighter class 
-	- Fits a small microwarp drive
-	- Has small to zero crew space
+Guilds will exist for each faction that a player is a part of. A player
+may become friendly with a guild by gaining enough favor from the guild.
+Whenever a player gains favor for a particular faction, the player will
+lose favor from any factions that don't get along. Guild alliances and 
+feuds will be desplayed clearly to the player in an in-game menu.
 
-	Blockade Runner - Fast, expensive ship, designed for hauling goods through unfavorable space.
-	- Larger cargo space than Fighter class
-	- Fits a microwarp drive.
-	- Strong evasive defense system (perhaps cloaking, chaffs, flares, and/or missile-targeting lasers)
-	- Has no crew space
+= Pirate Guilds
+  Name: TBA, separate NPC pirate guilds
+  Notes:
+    - Many pirate guilds don't get along. Choose carefully.
 
---------------
-MICRO CLASS
-+ Size: Tiny
-+ Purpose: Cheap, fast.
-+ Micros can not carry weapons, industrial riggs, or complex defense systems.
+= Outlaw Factions
+  Name: TBA, separate outlaw alliances
+  Notes:
+    - Sometimes outlaw guilds don't get along. Choose wisely.
 
-	Shuttle - A cheap way to get from a nearby station, to your mothership.
-
-	Pod - All ships need escape pods!
-	- This is what you fly when your ship goes bye-bye!
-	- No weapons or defenses, but FAST. (like built-in microwarp fast)
-	- Can board abandoned ships.
 
 +------------+
 |  CONTROLS  |
 +------------+
 
-Space flight Default Control Scheme:
+= Space flight Default Control Scheme:
 
-W        :     Forward
-A        :     Roll Left
-S        :     Backward
-D        :     Roll Right
-Space    :     Up
-Shift    :     Down
-Mouse1   :     Action 1
-Mouse2   :     Action 2
+  W        :     Forward
+  S        :     Backward
+  A        :     Strafe Left
+  D        :     Strafe Right
+  Mouse X  :     Pitch
+  Mouse Y  :     Roll
+  Space    :     Up
+  Shift    :     Down
+  Mouse1   :     Action 1
+  Mouse2   :     Action 2
 
-*All controls are relative to current direction of the ship.
+  *All controls are relative to current direction of the ship.
 
-Bio Default Control Scheme:
 
-W        :     Forward
-A        :     Left
-S        :     Backward
-D        :     Right
-Space    :     Jump
-Shift    :     Crouch
-Mouse1   :     Action 1 (Shoot)
-Mouse2   :     Action 2 (Scope)
+= Terrestrial Vehicle Default Control Scheme:
 
-Terrestrial Vehicle Default Control Scheme:
-(Will we even have cars? Probably not)
+  W        :     Forward
+  S        :     Stop/Reverse
+  Mouse X  :     Look up/down
+  Mouse Y  :     Rotate Camera (vehicle follows like halo, borderlands, etc.) 
+  Space    :     Emergency Brake?
+  Shift    :     Honk or something?
+  Mouse1   :     Equipment 1 (turret)
+  Mouse2   :     Equipment 2 (missiles)
 
-W        :     Forward
-A        :     Turn Left
-S        :     Stop/Reverse
-D        :     Turn Right
-Space    :     Emergency Brake?
-Shift    :     Honk or something?
-Mouse1   :     Turret 1?
-Mouse2   :     Turret 2?
+  * All controls are relative to the current direction of the camera
+
+= Bio Default Control Scheme:
+
+  W        :     Forward
+  S        :     Backward
+  A        :     Strafe Left
+  D        :     Strafe Right
+  Mouse X  :     Look up/down
+  Mouse Y  :     Turn left/right
+  E        :     Action 1 (Use)
+  Space    :     Jump
+  Shift    :     Crouch
+  Mouse1   :     Action 2 (Shoot, etc...)
+  Mouse2   :     Action 3 (Scope, etc...)
+  Scroll   :     Action Bar Selection
