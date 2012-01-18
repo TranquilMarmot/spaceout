@@ -15,6 +15,7 @@ import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 public class GLSLProgram {
+	public int shaderHandle;
 	private int handle;
 	private boolean linked;
 	private String logString;
@@ -27,7 +28,6 @@ public class GLSLProgram {
 	
 	public boolean compileShaderFromFile(String fileName, ShaderTypes type){
 		try{
-			BufferedReader reader = new BufferedReader(new FileReader(fileName));
 			if(handle <= 0){
 				handle = GL20.glCreateProgram();
 				
@@ -37,10 +37,11 @@ public class GLSLProgram {
 				}
 			}
 			
+			BufferedReader reader = new BufferedReader(new FileReader(fileName));
 			String source = "";
 			String line;
 			while ((line = reader.readLine()) != null) {
-				source += "\n" + line;
+				source += line + "\n";
 			}
 			
 			return compileShaderFromString(source, type);
@@ -62,7 +63,7 @@ public class GLSLProgram {
 			}
 		}
 		
-		int shaderHandle = GL20.glCreateShader(type.getGLInt());
+		shaderHandle = GL20.glCreateShader(type.getGLInt());
 		
 		GL20.glShaderSource(shaderHandle, source);
 		GL20.glCompileShader(shaderHandle);

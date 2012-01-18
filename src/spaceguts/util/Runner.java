@@ -6,21 +6,14 @@ import org.lwjgl.opengl.Display;
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
 import spaceguts.entities.Light;
-import spaceguts.graphics.Graphics;
-import spaceguts.graphics.glsl.GLSLProgram;
-import spaceguts.graphics.glsl.ShaderTypes;
+import spaceguts.graphics.glsl.GLSLRender;
 import spaceguts.graphics.gui.GUI;
-import spaceguts.graphics.gui.menu.MainMenu;
 import spaceguts.physics.Physics;
-import spaceguts.util.console.Console;
 import spaceguts.util.debug.Debug;
 import spaceguts.util.input.KeyBindings;
 import spaceguts.util.input.KeyboardManager;
 import spaceguts.util.input.MouseManager;
-import spaceguts.util.resources.Models;
-import spaceguts.util.resources.Paths;
 import spaceguts.util.resources.ResourceLoader;
-import spaceguts.util.resources.Textures;
 
 // Rule number 1: Tell everyone about Spaceout (ask them for ideas! We need ideas!).
 // Rule number 2: Comment everything motherfucker.
@@ -65,7 +58,8 @@ public class Runner {
 				// update everything
 				update();
 				// render the scene
-				Graphics.render();
+				//Graphics.render();
+				GLSLRender.render();
 				// update the display (this swaps the buffers)
 				Display.update();
 				Display.sync(DisplayHelper.targetFPS);
@@ -83,27 +77,16 @@ public class Runner {
 	 */
 	private void init() {
 		DisplayHelper.createWindow();
-		Graphics.initGL();		
+		//Graphics.initGL();		
 		Debug.init();
 		
-		MainMenu mainMenu = new MainMenu();
-		GUI.addGUIObject(mainMenu);
+		//MainMenu mainMenu = new MainMenu();
+		//GUI.addGUIObject(mainMenu);
 		
-		/* FIXME TEMP CODE */
-		GLSLProgram vert1 = new GLSLProgram();
-		
-		if(!vert1.compileShaderFromFile(Paths.SHADER_PATH.path() + "basic_uniform.vert", ShaderTypes.VERTEX)){
-			System.out.println(vert1.log());
-		}
-		
-		GLSLProgram frag1 = new GLSLProgram();
-		
-		if(!frag1.compileShaderFromFile(Paths.SHADER_PATH.path() + "basic_uniform.frag", ShaderTypes.FRAGMENT)){
-			System.out.println(frag1.log());
-		}
-		/* FIXME TEMP CODE */
+		GLSLRender.initGL();
 		
 		//initialize resources
+		/*
 		ResourceLoader.addJob(Textures.MENU_BACKGROUND1);
 		ResourceLoader.addJob(Textures.MENU_BACKGROUND2);
 		ResourceLoader.addJob(Textures.STARS);
@@ -127,6 +110,7 @@ public class Runner {
 		ResourceLoader.addJob(Textures.MENU_BUTTON_PRESSED);
 		ResourceLoader.addJob(Textures.MENU_SPACEOUT_TEXT);
 		ResourceLoader.processJobs();
+		*/
 		
 		Debug.printSysInfo();
 		System.out.println("-------------------------------");
@@ -192,9 +176,9 @@ public class Runner {
 
 		// release the mouse if the game's paused or the console is on or the
 		// menu is up
-		if (!paused && !Console.consoleOn && !GUI.menuUp)
-			Mouse.setGrabbed(true);
-		else
+		//if (!paused && !Console.consoleOn && !GUI.menuUp)
+		//	Mouse.setGrabbed(true);
+		//else
 			Mouse.setGrabbed(false);
 	}
 
