@@ -303,8 +303,14 @@ public class Console {
 			String command = toker.nextToken();
 			command = command.substring(1, command.length());
 			
+			boolean commandHelp = false;
+			
+			try{
+				commandHelp = comm.substring(command.length() + 2, command.length() + 6).equals("help");
+			} catch(StringIndexOutOfBoundsException e){}
+			
 			// if the command string is followed immediately by the string "help", call the help function for that command. Else, issue the command.
-			if(comm.length() > 7 && comm.substring(command.length() + 2, command.length() + 6).equals("help")){
+			if(comm.length() > 7 && commandHelp){
 				ConsoleCommands.help.issue(new StringTokenizer(command));
 			} else{
 				try {
