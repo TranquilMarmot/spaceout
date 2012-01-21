@@ -143,7 +143,7 @@ public class GLSLProgram {
 		maxLen = GL20.glGetProgram(handle, GL20.GL_ACTIVE_UNIFORM_MAX_LENGTH);
 		nUniforms = GL20.glGetProgram(handle, GL20.GL_ACTIVE_UNIFORMS);
 		
-		System.out.println(" Location | Name");
+		System.out.println("\n Active Uniforms");
 		System.out.println("------------------------------------------------");
 		for(int i = 0; i < nUniforms; i++){
 			name = GL20.glGetActiveUniform(handle, i, maxLen);
@@ -159,7 +159,7 @@ public class GLSLProgram {
 		maxLength = GL20.glGetProgram(handle, GL20.GL_ACTIVE_ATTRIBUTE_MAX_LENGTH);
 		nAttribs = GL20.glGetProgram(handle, GL20.GL_ACTIVE_ATTRIBUTES);
 		
-		System.out.println(" Index | Name");
+		System.out.println("\n Active Atributes");
 		System.out.println("------------------------------------------------");
 		for(int i = 0; i < nAttribs; i++){
 			name = GL20.glGetActiveAttrib(handle, i, maxLength);
