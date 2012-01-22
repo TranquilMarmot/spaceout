@@ -218,38 +218,33 @@ public class GLSLModelBuilder {
 	 */
 	public GLSLModel makeModel(Textures texture) {
 		FloatBuffer verticesBuf = BufferUtils.createFloatBuffer(vertices.size() * 3);
-		/*
 		for(Vector3f v : vertices){
 			verticesBuf.put(v.x);
 			verticesBuf.put(v.y);
 			verticesBuf.put(v.z);
 		}
-		*/
 		
 		FloatBuffer normalsBuf = BufferUtils.createFloatBuffer(normals.size() * 3);
-		/*
 		for(Vector3f n : normals){
 			normalsBuf.put(n.x);
 			normalsBuf.put(n.y);
 			normalsBuf.put(n.z);
 		}
-		*/
 		
 		FloatBuffer texCoordBuf = BufferUtils.createFloatBuffer(textureCoords.size() * 2);
-		/*
 		for(Point2f p : textureCoords){
 			texCoordBuf.put(p.x);
 			texCoordBuf.put(p.y);
 		}
-		*/
 		
-		IntBuffer indices = BufferUtils.createIntBuffer(vertexIndices.size());
+		IntBuffer indices = BufferUtils.createIntBuffer(vertexIndices.size() * 3);
 		for(int i[] : vertexIndices){
 			indices.put(i[0]);
 			indices.put(i[1]);
 			indices.put(i[2]);
 		}
 		
+		/*
 		int vertIndex = 0, txIndex = 0;
 		for(int i = 0; i < vertices.size(); i++){
 			Vector3f vert = vertices.get(i);
@@ -270,6 +265,7 @@ public class GLSLModelBuilder {
 			
 			txIndex += 2;
 		}
+		*/
 		
 		verticesBuf.rewind();
 		normalsBuf.rewind();

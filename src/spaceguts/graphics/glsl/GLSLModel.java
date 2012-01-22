@@ -23,7 +23,7 @@ public class GLSLModel {
 		vaoHandle = GL30.glGenVertexArrays();
 		GL30.glBindVertexArray(vaoHandle);
 		
-		IntBuffer handle = BufferUtils.createIntBuffer(4);
+		IntBuffer handle = BufferUtils.createIntBuffer(2);
 		GL15.glGenBuffers(handle);
 		
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, handle.get(0));
@@ -31,6 +31,7 @@ public class GLSLModel {
 		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0L);
 		GL20.glEnableVertexAttribArray(0);
 		
+		/*
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, handle.get(1));
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, normals, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0L);
@@ -40,8 +41,9 @@ public class GLSLModel {
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, textureCoords, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 0, 0L);
 		GL20.glEnableVertexAttribArray(2);
+		*/
 		
-		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, handle.get(3));
+		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, handle.get(1));
 		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indices, GL15.GL_STATIC_DRAW);
 	}
 	
@@ -51,7 +53,8 @@ public class GLSLModel {
 	
 	public void render(){
 		GL30.glBindVertexArray(vaoHandle);
-		GL11.glDrawElements(GL11.GL_TRIANGLES, numIndices, GL11.GL_INT, 0L);
+		
+		GL11.glDrawElements(GL11.GL_TRIANGLES, numIndices, GL11.GL_UNSIGNED_INT, 0L);
 	}
 	
 	

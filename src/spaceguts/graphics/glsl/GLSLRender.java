@@ -14,17 +14,71 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import spaceguts.graphics.render.Render3D;
 import spaceguts.util.DisplayHelper;
+import spaceguts.util.MatrixHelper;
 import spaceguts.util.QuaternionHelper;
 import spaceguts.util.resources.Paths;
+import spaceguts.util.resources.Textures;
 
 public class GLSLRender {
 	static int vaoHandle = 0;
 
 	private static GLSLProgram program;
 	private static float angle = 45.0f;
+	private static Matrix4f projection, modelview;
+	private static GLSLModel model;
+	
+	public static void render(){
+		program.use();
+		
+		Matrix4f mvp = new Matrix4f();
+		Matrix4f.mul(modelview, projection, mvp);
+		
+		//program.setUniform("MVP", mvp);
+		
+		model.render();
+	}
+	
+	public static void initGL(){
+		GL11.glViewport(0, 0, DisplayHelper.windowWidth,
+				DisplayHelper.windowHeight);
+		
+		projection = new Matrix4f();
+		
+		// calculate the current aspect ratio
+		float aspect = (float) DisplayHelper.windowWidth
+				/ (float) DisplayHelper.windowHeight;
+		
+		projection = MatrixHelper.perspective(45.0f, aspect, 1.0f, Render3D.drawDistance);
+		
+		modelview = new Matrix4f();
+		
+		model = GLSLModelLoader.loadObjFile(Paths.MODEL_PATH.path() + "ships/wing_x.obj", Textures.SHIP1);
+		
+		// create vertex shader
+		GLSLShader vertShader = new GLSLShader(ShaderTypes.VERTEX);
+		String vertFile = Paths.SHADER_PATH.path() + "model.vert";
+		if (!vertShader.compileShaderFromFile(vertFile))
+			System.out.println(vertShader.log());
 
-	public static void render() {
+		// create fragment shader
+		GLSLShader fragShader = new GLSLShader(ShaderTypes.FRAGMENT);
+		String fragFile = Paths.SHADER_PATH.path() + "model.frag";
+		if (!fragShader.compileShaderFromFile(fragFile)) {
+			System.out.println(fragShader.log());
+		}
+		
+		program = new GLSLProgram();
+		program.addShader(vertShader);
+		program.addShader(fragShader);
+		program.link();
+		
+		program.printActiveAttribs();
+		program.printActiveUniforms();
+	}
+
+	public static void renderUniformBlock() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		
 		//initUniformBlockBufferNew();
@@ -35,7 +89,7 @@ public class GLSLRender {
 		
 	}
 
-	public static void initGL() {
+	public static void initGLUniformBlock() {
 		
 		Vector3f test = new Vector3f(23.4f, 14.7f, 32.5f);
 		Quaternion anotherTest = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
