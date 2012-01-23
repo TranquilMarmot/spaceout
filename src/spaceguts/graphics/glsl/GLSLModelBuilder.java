@@ -1,12 +1,8 @@
 package spaceguts.graphics.glsl;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
 import javax.vecmath.Point2f;
 import javax.vecmath.Vector3f;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import spaceguts.util.model.Model;
@@ -217,65 +213,7 @@ public class GLSLModelBuilder {
 	 * @return A model built using the current indices
 	 */
 	public GLSLModel makeModel(Textures texture) {
-		FloatBuffer verticesBuf = BufferUtils.createFloatBuffer(vertices.size() * 3);
-		for(Vector3f v : vertices){
-			verticesBuf.put(v.x);
-			verticesBuf.put(v.y);
-			verticesBuf.put(v.z);
-		}
-		
-		/*
-		FloatBuffer normalsBuf = BufferUtils.createFloatBuffer(normals.size() * 3);
-		for(Vector3f n : normals){
-			normalsBuf.put(n.x);
-			normalsBuf.put(n.y);
-			normalsBuf.put(n.z);
-		}
-		
-		FloatBuffer texCoordBuf = BufferUtils.createFloatBuffer(textureCoords.size() * 2);
-		for(Point2f p : textureCoords){
-			texCoordBuf.put(p.x);
-			texCoordBuf.put(p.y);
-		}
-		*/
-		
-		IntBuffer indices = BufferUtils.createIntBuffer(vertexIndices.size() * 3);
-		for(int i[] : vertexIndices){
-			indices.put(i[0]);
-			indices.put(i[1]);
-			indices.put(i[2]);
-		}
-		
-		/*
-		int vertIndex = 0, txIndex = 0;
-		for(int i = 0; i < vertices.size(); i++){
-			Vector3f vert = vertices.get(i);
-			verticesBuf.put(vertIndex, vert.x);
-			verticesBuf.put(vertIndex + 1, vert.y);
-			verticesBuf.put(vertIndex + 2, vert.z);
-			
-			Vector3f norm = normals.get(i);
-			normalsBuf.put(vertIndex, norm.x);
-			normalsBuf.put(vertIndex + 1, norm.y);
-			normalsBuf.put(vertIndex + 2, norm.z);
-			
-			vertIndex += 3;
-			
-			Point2f tex = textureCoords.get(i);
-			texCoordBuf.put(txIndex, tex.x);
-			texCoordBuf.put(txIndex + 1, tex.x);
-			
-			txIndex += 2;
-		}
-		*/
-		
-		verticesBuf.rewind();
-		//normalsBuf.rewind();
-		//texCoordBuf.rewind();
-		indices.rewind();
-		
-		// TODO make this
-		return new GLSLModel(buildCollisionShape(), verticesBuf, indices);
+		return new GLSLModel(buildCollisionShape(), vertices, vertexIndices);
 	}
 	
 	/**
