@@ -10,37 +10,262 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL31;
+import org.lwjgl.util.vector.Matrix3f;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import spaceguts.graphics.render.Render3D;
 import spaceguts.util.DisplayHelper;
 import spaceguts.util.MatrixHelper;
 import spaceguts.util.QuaternionHelper;
+import spaceguts.util.input.Keys;
+import spaceguts.util.input.MouseManager;
 import spaceguts.util.resources.Paths;
-import spaceguts.util.resources.Textures;
 
 public class GLSLRender {
 	static int vaoHandle = 0;
 
 	private static GLSLProgram program;
-	private static float angle = 45.0f;
-	private static Matrix4f projection, modelview;
-	private static GLSLModel model;
+	private static float angle = 45.0f, zoom = 2;
+	private static Matrix4f projection, model, view;
+	//private static GLSLModel model;
+	private static VBOTorus torus;
 	
-	public static void render(){
+	static FloatBuffer MVBuffer, projBuffer;
+	
+	public static void render() {
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+
+		// buffer for transferring matrix to shader
+		MVBuffer.clear();
+		projBuffer.clear();
+
+		// create a quaternion and rotate it
+		Quaternion quat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		quat = QuaternionHelper.rotateZ(quat, angle);
+		
+		model.setIdentity();
+		model.translate(new Vector3f(0.0f, 0.0f, -zoom));
+		Matrix4f.mul(model, QuaternionHelper.toMatrix(quat), model);
+		model.store(MVBuffer);
+		MVBuffer.rewind();
+		
+		if(Keys.RIGHT.isPressed())
+			angle += 0.5f;
+		else if(Keys.LEFT.isPressed())
+			angle -= 0.5f;
+		
+		zoom -= MouseManager.wheel / 100;
+
+		// get the location of RotationMatrix
+		int location = GL20.glGetUniformLocation(program.getHandle(),
+				"ModelView");
+
+		if (location >= 0) {
+			// set the rotation matrix
+			GL20.glUniformMatrix4(location, false, MVBuffer);
+		} else {
+			System.out.println("ModelView uniform not found");
+		}
+		
+		
+		projection.store(projBuffer);
+		projBuffer.rewind();
+		
+		location = GL20.glGetUniformLocation(program.getHandle(),
+				"Projection");
+		
+		if (location >= 0) {
+			// set the rotation matrix
+			GL20.glUniformMatrix4(location, false, projBuffer);
+		} else {
+			System.out.println("Projection uniform not found");
+		}
+
+		// draw triangle
+		GL30.glBindVertexArray(vaoHandle);
+		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 3);
+	}
+
+	public static void initGL() {
+		MVBuffer = BufferUtils.createFloatBuffer(16);
+		projBuffer = BufferUtils.createFloatBuffer(16);
+		
+		model = new Matrix4f();
+		
+		//GL11.glEnable(GL11.GL_DEPTH_TEST);
+		//GL11.glDepthFunc(GL11.GL_GEQUAL);
+		
+		projection = MatrixHelper.perspective(45.0f, (float) DisplayHelper.windowWidth
+				/ (float) DisplayHelper.windowHeight, 0.1f,
+				500.0f);
+
+		projection.translate(new Vector3f(0.0f, 0.0f, -10.0f));
+		// set the clear color
+		GL11.glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+
+		// create vertex shader
+		GLSLShader vertShader = new GLSLShader(ShaderTypes.VERTEX);
+		String vertFile = Paths.SHADER_PATH.path() + "basic_uniform.vert";
+		if (!vertShader.compileShaderFromFile(vertFile))
+			System.out.println(vertShader.log());
+
+		// create fragment shader
+		GLSLShader fragShader = new GLSLShader(ShaderTypes.FRAGMENT);
+		String fragFile = Paths.SHADER_PATH.path() + "basic_uniform.frag";
+		if (!fragShader.compileShaderFromFile(fragFile)) {
+			System.out.println(fragShader.log());
+		}
+
+		// create and use program
+		program = new GLSLProgram();
+		program.addShader(fragShader);
+		program.addShader(vertShader);
+		program.link();
+		program.use();
+
+		program.printActiveUniforms();
+		program.printActiveAttribs();
+
+		/* BEGIN VERTEX ARRAY */
+		// create vertex buffer object handles
+		IntBuffer vboHandles = BufferUtils.createIntBuffer(2);
+		GL15.glGenBuffers(vboHandles);
+
+		// create poisition data
+		int positionBufferHandle = vboHandles.get(0);
+		FloatBuffer positionBuffer = BufferUtils.createFloatBuffer(9);
+		float[] positionData = { -0.8f, -0.8f, 0.0f, 0.8f, -0.8f, -5.0f, 0.0f,
+				0.8f, 0.0f };
+		positionBuffer.put(positionData);
+		positionBuffer.rewind();
+		// point the vertex buffer at the position data
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, positionBufferHandle);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, positionBuffer,
+				GL15.GL_STATIC_DRAW);
+
+		// create color data
+		int colorBufferHandle = vboHandles.get(1);
+		FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(9);
+		float[] colorData = { 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+				1.0f };
+		colorBuffer.put(colorData);
+		colorBuffer.rewind();
+		// point the vertex buffer at the color data
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, colorBufferHandle);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, colorBuffer,
+				GL15.GL_STATIC_DRAW);
+
+		// generate vertex array object
+		vaoHandle = GL30.glGenVertexArrays();
+		GL30.glBindVertexArray(vaoHandle);
+
+		// enable 0 (VertexPosition) and 1 (VertexColor) - see
+		// bindAttribLocation call
+		GL20.glEnableVertexAttribArray(0);
+		GL20.glEnableVertexAttribArray(1);
+
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, positionBufferHandle);
+		// 0 (VertexPosition) has three elements per vertex, is of type float,
+		// is not normalized, the data is tightly packed (0 stride), and there's
+		// no offset
+		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0L);
+
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, colorBufferHandle);
+		// 1 (VertexColor) has three elements per vertex, is of type float, is
+		// not normalized, it tightly packed, and there's no offset
+		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0L);
+	}
+	
+	public static void renderTorus(){
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		
+		
+		Matrix4f mv = new Matrix4f();
+		Matrix4f.mul(view, model, mv);
+		//program.setUniform("ModelViewMatrix", mv);
+		
+		/*
+		Matrix3f norm = new Matrix3f();
+		norm.m00 = mv.m00;
+		norm.m01 = mv.m01;
+		norm.m02 = mv.m02;
+		norm.m10 = mv.m10;
+		norm.m11 = mv.m11;
+		norm.m12 = mv.m12;
+		norm.m20 = mv.m20;
+		norm.m21 = mv.m21;
+		norm.m22 = mv.m22;
+		program.setUniform("NormalMatrix", norm);
+		*/
+		
+		Matrix4f mvp = new Matrix4f();
+		Matrix4f.mul(projection, mv, mvp);
+		program.setUniform("MVP", mvp);
+		
+		torus.render();
+	}
+	
+	public static void initGLTorus(){
+		GL11.glViewport(0, 0, DisplayHelper.windowWidth,
+				DisplayHelper.windowHeight);
+		
+		GLSLShader vert = new GLSLShader(ShaderTypes.VERTEX);
+		if(!vert.compileShaderFromFile(Paths.SHADER_PATH.path() + "diffuse_simple.vert"))
+			System.out.println(vert.log());
+		
+		GLSLShader frag = new GLSLShader(ShaderTypes.FRAGMENT);
+		if(!frag.compileShaderFromFile(Paths.SHADER_PATH.path() + "diffuse_simple.frag"))
+			System.out.println(frag.log());
+		
+		program = new GLSLProgram();
+		program.addShader(vert);
+		program.addShader(frag);
+		program.link();
+		program.use();
+		
+		program.printActiveAttribs();
+		program.printActiveUniforms();
+		
+		GL11.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		
+		torus = new VBOTorus(0.7f, 0.3f, 30, 30);
+		
+		model = new Matrix4f();
+		Quaternion rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		rotation = QuaternionHelper.rotateX(rotation, -35.0f);
+		rotation = QuaternionHelper.rotateY(rotation, 35.0f);
+		FloatBuffer rotBuf = BufferUtils.createFloatBuffer(16);
+		QuaternionHelper.toFloatBuffer(rotation, rotBuf);
+		model.load(rotBuf);
+		
+		view = MatrixHelper.lookAt(new Vector3f(0.0f, 0.0f, 2.0f), new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 1.0f, 0.0f));
+		
+		projection = new Matrix4f();
+		
+		/*
+		program.setUniform("Kd", 0.9f, 0.5f, 0.3f);
+		program.setUniform("Ld", 1.0f, 1.0f, 1.0f);
+		program.setUniform("LightPosition", new Vector4f(5.0f, 5.0f, 2.0f, 1.0f));
+		*/
+	}
+	
+	public static void renderModel(){
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		program.use();
 		
 		Matrix4f mvp = new Matrix4f();
-		Matrix4f.mul(modelview, projection, mvp);
+		Matrix4f.mul(model, projection, mvp);
 		
 		//program.setUniform("MVP", mvp);
 		
-		model.render();
+		//model.render();
 	}
 	
-	public static void initGL(){
+	public static void initGLModel(){
 		GL11.glViewport(0, 0, DisplayHelper.windowWidth,
 				DisplayHelper.windowHeight);
 		
@@ -52,9 +277,9 @@ public class GLSLRender {
 		
 		projection = MatrixHelper.perspective(45.0f, aspect, 1.0f, Render3D.drawDistance);
 		
-		modelview = new Matrix4f();
+		model = new Matrix4f();
 		
-		model = GLSLModelLoader.loadObjFile(Paths.MODEL_PATH.path() + "ships/wing_x.obj", Textures.SHIP1);
+		//model = GLSLModelLoader.loadObjFile(Paths.MODEL_PATH.path() + "ships/wing_x.obj", 100.0f, Textures.SHIP1);
 		
 		// create vertex shader
 		GLSLShader vertShader = new GLSLShader(ShaderTypes.VERTEX);
@@ -76,6 +301,11 @@ public class GLSLRender {
 		
 		program.printActiveAttribs();
 		program.printActiveUniforms();
+		
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glDepthFunc(GL11.GL_LEQUAL);
+		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
+		
 	}
 
 	public static void renderUniformBlock() {
@@ -289,123 +519,5 @@ public class GLSLRender {
 
 		// bind buffer object to the uniform block
 		GL30.glBindBufferBase(GL31.GL_UNIFORM_BUFFER, blockIndex, uboHandle);
-	}
-
-	public static void renderVertexArray() {
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-
-		// create a new matrix
-		Matrix4f rotationMatrix = new Matrix4f();
-		// set it to the identity matrix
-		rotationMatrix.setIdentity();
-		// rotate it by angle along the Z axis
-		rotationMatrix = rotationMatrix.rotate((float) Math
-				.toDegrees((double) angle), new Vector3f(0.0f, 0.0f, 1.0f));
-		// increase angle
-		// angle += 0.05f;
-
-		// buffer for transferring matrix to shader
-		FloatBuffer rotBuffer = BufferUtils.createFloatBuffer(16);
-
-		// create a quaternion and rotate it
-		Quaternion quat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-		quat = QuaternionHelper.rotateZ(quat, angle);
-		QuaternionHelper.toFloatBuffer(quat, rotBuffer);
-
-		// get the location of RotationMatrix
-		int location = GL20.glGetUniformLocation(program.getHandle(),
-				"RotationMatrix");
-
-		if (location >= 0) {
-			// set the rotation matrix
-			GL20.glUniformMatrix4(location, false, rotBuffer);
-		} else {
-			System.out.println("RotationMatrix uniform not found");
-		}
-
-		// draw triangle
-		GL30.glBindVertexArray(vaoHandle);
-		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 3);
-	}
-
-	public static void initGLVertexArray() {
-		// set the viewport
-		GL11.glViewport(0, 0, DisplayHelper.windowWidth,
-				DisplayHelper.windowHeight);
-
-		// set the clear color
-		GL11.glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-
-		// create vertex shader
-		GLSLShader vertShader = new GLSLShader(ShaderTypes.VERTEX);
-		String vertFile = Paths.SHADER_PATH.path() + "basic_uniformblock.vert";
-		if (!vertShader.compileShaderFromFile(vertFile))
-			System.out.println(vertShader.log());
-
-		// create fragment shader
-		GLSLShader fragShader = new GLSLShader(ShaderTypes.FRAGMENT);
-		String fragFile = Paths.SHADER_PATH.path() + "basic_uniformblock.frag";
-		if (!fragShader.compileShaderFromFile(fragFile)) {
-			System.out.println(fragShader.log());
-		}
-
-		// create and use program
-		program = new GLSLProgram();
-		program.addShader(fragShader);
-		program.addShader(vertShader);
-		program.link();
-		program.use();
-
-		program.printActiveUniforms();
-		program.printActiveAttribs();
-
-		/* BEGIN VERTEX ARRAY */
-		// create vertex buffer object handles
-		IntBuffer vboHandles = BufferUtils.createIntBuffer(2);
-		GL15.glGenBuffers(vboHandles);
-
-		// create poisition data
-		int positionBufferHandle = vboHandles.get(0);
-		FloatBuffer positionBuffer = BufferUtils.createFloatBuffer(9);
-		float[] positionData = { -0.8f, -0.8f, 0.0f, 0.8f, -0.8f, 0.0f, 0.0f,
-				0.8f, 0.0f };
-		positionBuffer.put(positionData);
-		positionBuffer.rewind();
-		// point the vertex buffer at the position data
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, positionBufferHandle);
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, positionBuffer,
-				GL15.GL_STATIC_DRAW);
-
-		// create color data
-		int colorBufferHandle = vboHandles.get(1);
-		FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(9);
-		float[] colorData = { 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-				1.0f };
-		colorBuffer.put(colorData);
-		colorBuffer.rewind();
-		// point the vertex buffer at the color data
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, colorBufferHandle);
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, colorBuffer,
-				GL15.GL_STATIC_DRAW);
-
-		// generate vertex array object
-		vaoHandle = GL30.glGenVertexArrays();
-		GL30.glBindVertexArray(vaoHandle);
-
-		// enable 0 (VertexPosition) and 1 (VertexColor) - see
-		// bindAttribLocation call
-		GL20.glEnableVertexAttribArray(0);
-		GL20.glEnableVertexAttribArray(1);
-
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, positionBufferHandle);
-		// 0 (VertexPosition) has three elements per vertex, is of type float,
-		// is not normalized, the data is tightly packed (0 stride), and there's
-		// no offset
-		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0L);
-
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, colorBufferHandle);
-		// 1 (VertexColor) has three elements per vertex, is of type float, is
-		// not normalized, it tightly packed, and there's no offset
-		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0L);
 	}
 }

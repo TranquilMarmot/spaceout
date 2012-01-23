@@ -60,9 +60,10 @@ public class GLSLModelLoader {
 					float y = (Float.parseFloat(toker.nextToken()) + offset.y) * scale.y;
 					float z = (Float.parseFloat(toker.nextToken()) + offset.z) * scale.z;
 					
-					org.lwjgl.util.vector.Vector3f rotated = QuaternionHelper.rotateVectorByQuaternion(new org.lwjgl.util.vector.Vector3f(x, y, z), rotation);
+					//org.lwjgl.util.vector.Vector3f rotated = QuaternionHelper.rotateVectorByQuaternion(new org.lwjgl.util.vector.Vector3f(x, y, z), rotation);
 
-					builder.addVertex(new Vector3f(rotated.x, rotated.y, rotated.z));
+					//builder.addVertex(new Vector3f(rotated.x, rotated.y, rotated.z));
+					builder.addVertex(new Vector3f(x, y, z));
 				}
 
 				if (lineType.equals("vn")) {

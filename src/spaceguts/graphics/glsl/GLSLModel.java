@@ -15,7 +15,7 @@ public class GLSLModel {
 	private int vaoHandle, numIndices;
 	private CollisionShape collisionShape;
 	
-	public GLSLModel(CollisionShape collisionShape, FloatBuffer vertices, FloatBuffer normals, FloatBuffer textureCoords, IntBuffer indices){
+	public GLSLModel(CollisionShape collisionShape, FloatBuffer vertices, IntBuffer indices){
 		this.collisionShape = collisionShape;
 		
 		numIndices = indices.capacity();

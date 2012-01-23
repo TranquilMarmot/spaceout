@@ -224,6 +224,7 @@ public class GLSLModelBuilder {
 			verticesBuf.put(v.z);
 		}
 		
+		/*
 		FloatBuffer normalsBuf = BufferUtils.createFloatBuffer(normals.size() * 3);
 		for(Vector3f n : normals){
 			normalsBuf.put(n.x);
@@ -236,6 +237,7 @@ public class GLSLModelBuilder {
 			texCoordBuf.put(p.x);
 			texCoordBuf.put(p.y);
 		}
+		*/
 		
 		IntBuffer indices = BufferUtils.createIntBuffer(vertexIndices.size() * 3);
 		for(int i[] : vertexIndices){
@@ -268,12 +270,12 @@ public class GLSLModelBuilder {
 		*/
 		
 		verticesBuf.rewind();
-		normalsBuf.rewind();
-		texCoordBuf.rewind();
+		//normalsBuf.rewind();
+		//texCoordBuf.rewind();
 		indices.rewind();
 		
 		// TODO make this
-		return new GLSLModel(buildCollisionShape(), verticesBuf, normalsBuf, texCoordBuf, indices);
+		return new GLSLModel(buildCollisionShape(), verticesBuf, indices);
 	}
 	
 	/**
