@@ -1,8 +1,5 @@
 package spaceguts.graphics.glsl;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
@@ -15,93 +12,42 @@ import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 public class GLSLProgram {
-	public int shaderHandle;
 	private int handle;
-	private boolean linked;
 	private String logString;
-	
-	public GLSLProgram(){
-		handle = 0;
+	private boolean linked;
+
+	public GLSLProgram() {
+		handle = GL20.glCreateProgram();
+
+		if (handle == 0)
+			System.out.println("Error creating shader program!!!");
+
 		linked = false;
 	}
-	
-	
-	public boolean compileShaderFromFile(String fileName, ShaderTypes type){
-		try{
-			if(handle <= 0){
-				handle = GL20.glCreateProgram();
-				
-				if(handle == 0){
-					logString = "Unable to create shader program";
-					return false;
-				}
-			}
-			
-			BufferedReader reader = new BufferedReader(new FileReader(fileName));
-			String source = "";
-			String line;
-			while ((line = reader.readLine()) != null) {
-				source += line + "\n";
-			}
-			
-			return compileShaderFromString(source, type);
-		}catch(IOException e){
-			e.printStackTrace();
-		}
-		
-		
-		return false;
+
+	public void addShader(GLSLShader shader) {
+		GL20.glAttachShader(handle, shader.getHandle());
 	}
-	
-	public boolean compileShaderFromString(String source, ShaderTypes type){
-		if(handle <= 0){
-			handle = GL20.glCreateProgram();
-			
-			if(handle == 0){
-				logString = "Unable to create shader program";
-				return false;
-			}
-		}
-		
-		shaderHandle = GL20.glCreateShader(type.getGLInt());
-		
-		GL20.glShaderSource(shaderHandle, source);
-		GL20.glCompileShader(shaderHandle);
-		
-		int result = GL20.glGetShader(shaderHandle, GL20.GL_COMPILE_STATUS);
-		if(result == GL11.GL_FALSE){
-			int length = GL20.glGetShader(shaderHandle, GL20.GL_INFO_LOG_LENGTH);
-			logString = "";
-			if(length > 0){
-				logString = GL20.glGetShaderInfoLog(shaderHandle, length);
-			}
-			
-			return false;
-		} else{
-			GL20.glAttachShader(handle, shaderHandle);
+
+	public boolean link() {
+		if (linked)
 			return true;
-		}
-	}
-	
-	public boolean link(){
-		if(linked)
-			return true;
-		if(handle <= 0)
+		if (handle <= 0)
 			return false;
-		
+
 		GL20.glLinkProgram(handle);
-		
+
 		int status = GL20.glGetProgram(handle, GL20.GL_LINK_STATUS);
-		if(status == GL11.GL_FALSE){
+		if (status == GL11.GL_FALSE) {
 			int length = GL20.glGetProgram(handle, GL20.GL_INFO_LOG_LENGTH);
 			logString = "";
-			
-			if(length > 0){
-				logString =GL20.glGetProgramInfoLog(handle, length); 
+
+			if (length > 0) {
+				logString = GL20.glGetProgramInfoLog(handle, length);
 			}
-			
+
 			return false;
-		} else{
+		} else {
 			linked = true;
 			return linked;
 		}
@@ -111,20 +57,11 @@ public class GLSLProgram {
 		if(handle <= 0 || !linked)
 			return;
 		GL20.glUseProgram(handle);
-		
 	}
 	
-	public String log(){
-		return logString;
-	}
-	
-	public int getHandle(){
-		return handle;
-	}
-	
-	public boolean isLinked(){
-		return linked;
-	}
+	public String log() { return logString; }
+	public int getHandle() { return handle; }
+	public boolean isLinked() { return linked; }
 	
 	public void bindAttribLocation(int location, String name){
 		GL20.glBindAttribLocation(handle, location, name);
@@ -206,7 +143,7 @@ public class GLSLProgram {
 		maxLen = GL20.glGetProgram(handle, GL20.GL_ACTIVE_UNIFORM_MAX_LENGTH);
 		nUniforms = GL20.glGetProgram(handle, GL20.GL_ACTIVE_UNIFORMS);
 		
-		System.out.println(" Location | Name");
+		System.out.println("\n Active Uniforms");
 		System.out.println("------------------------------------------------");
 		for(int i = 0; i < nUniforms; i++){
 			name = GL20.glGetActiveUniform(handle, i, maxLen);
@@ -222,7 +159,7 @@ public class GLSLProgram {
 		maxLength = GL20.glGetProgram(handle, GL20.GL_ACTIVE_ATTRIBUTE_MAX_LENGTH);
 		nAttribs = GL20.glGetProgram(handle, GL20.GL_ACTIVE_ATTRIBUTES);
 		
-		System.out.println(" Index | Name");
+		System.out.println("\n Active Atributes");
 		System.out.println("------------------------------------------------");
 		for(int i = 0; i < nAttribs; i++){
 			name = GL20.glGetActiveAttrib(handle, i, maxLength);
@@ -234,4 +171,6 @@ public class GLSLProgram {
 	public int getUniformLocation(String name){
 		return GL20.glGetUniformLocation(handle, name);
 	}
+	
+
 }

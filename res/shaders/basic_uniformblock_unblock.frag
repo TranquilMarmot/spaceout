@@ -8,11 +8,11 @@ layout ( std140 ) uniform BlobSettings {
   vec4 OuterColor;
   float RadiusInner;
   float RadiusOuter;
-} Blob;
+};
 
 void main() {
     float dx = TexCoord.x - 0.5;
     float dy = TexCoord.y - 0.5;
     float dist = sqrt(dx * dx + dy * dy);
-    FragColor = mix(Blob.InnerColor, Blob.OuterColor, smoothstep(Blob.RadiusInner, Blob.RadiusOuter, dist));
+    FragColor = mix(InnerColor, OuterColor, smoothstep(RadiusInner, RadiusOuter, dist));
 }
