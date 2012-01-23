@@ -28,7 +28,8 @@ public class GLSLRender {
 	static int vaoHandle = 0;
 
 	private static GLSLProgram program;
-	private static float angle = 45.0f, zoom = 2;
+	private static float zoom = 2;
+	private static Quaternion rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 	private static Matrix4f projection, model, view;
 	//private static GLSLModel model;
 	private static VBOTorus torus;
@@ -36,53 +37,37 @@ public class GLSLRender {
 	static FloatBuffer MVBuffer, projBuffer;
 	
 	public static void render() {
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
 		// buffer for transferring matrix to shader
 		MVBuffer.clear();
 		projBuffer.clear();
-
-		// create a quaternion and rotate it
-		Quaternion quat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-		quat = QuaternionHelper.rotateZ(quat, angle);
 		
 		model.setIdentity();
 		model.translate(new Vector3f(0.0f, 0.0f, -zoom));
-		Matrix4f.mul(model, QuaternionHelper.toMatrix(quat), model);
+		Matrix4f.mul(model, QuaternionHelper.toMatrix(rotation), model);
 		model.store(MVBuffer);
 		MVBuffer.rewind();
 		
+		if(MouseManager.button0){
+			rotation = QuaternionHelper.rotateY(rotation, MouseManager.dx);
+			rotation = QuaternionHelper.rotateX(rotation, MouseManager.dy);
+		}
+		
 		if(Keys.RIGHT.isPressed())
-			angle += 0.5f;
+			rotation = QuaternionHelper.rotateY(rotation, 0.5f);
 		else if(Keys.LEFT.isPressed())
-			angle -= 0.5f;
+			rotation = QuaternionHelper.rotateY(rotation, -0.5f);
+		
+		if(Keys.UP.isPressed())
+			rotation = QuaternionHelper.rotateX(rotation, 0.5f);
+		else if(Keys.DOWN.isPressed())
+			rotation = QuaternionHelper.rotateX(rotation, -0.5f);
 		
 		zoom -= MouseManager.wheel / 100;
-
-		// get the location of RotationMatrix
-		int location = GL20.glGetUniformLocation(program.getHandle(),
-				"ModelView");
-
-		if (location >= 0) {
-			// set the rotation matrix
-			GL20.glUniformMatrix4(location, false, MVBuffer);
-		} else {
-			System.out.println("ModelView uniform not found");
-		}
 		
-		
-		projection.store(projBuffer);
-		projBuffer.rewind();
-		
-		location = GL20.glGetUniformLocation(program.getHandle(),
-				"Projection");
-		
-		if (location >= 0) {
-			// set the rotation matrix
-			GL20.glUniformMatrix4(location, false, projBuffer);
-		} else {
-			System.out.println("Projection uniform not found");
-		}
+		program.setUniform("ModelView", model);
+		program.setUniform("Projection", projection);
 
 		// draw triangle
 		GL30.glBindVertexArray(vaoHandle);
@@ -95,14 +80,16 @@ public class GLSLRender {
 		
 		model = new Matrix4f();
 		
-		//GL11.glEnable(GL11.GL_DEPTH_TEST);
-		//GL11.glDepthFunc(GL11.GL_GEQUAL);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glDepthFunc(GL11.GL_LESS);
+		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
+		GL11.glClearDepth(500.0);
 		
 		projection = MatrixHelper.perspective(45.0f, (float) DisplayHelper.windowWidth
 				/ (float) DisplayHelper.windowHeight, 0.1f,
 				500.0f);
 
-		projection.translate(new Vector3f(0.0f, 0.0f, -10.0f));
+		//projection.translate(new Vector3f(0.0f, 0.0f, -10.0f));
 		// set the clear color
 		GL11.glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 

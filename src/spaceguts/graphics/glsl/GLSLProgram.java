@@ -102,6 +102,7 @@ public class GLSLProgram {
 		if(loc >= 0){
 			FloatBuffer buf = BufferUtils.createFloatBuffer(16);
 			m.store(buf);
+			buf.rewind();
 			GL20.glUniformMatrix4(loc, false, buf);
 		}
 	}
@@ -111,6 +112,7 @@ public class GLSLProgram {
 		if(loc >= 0){
 			FloatBuffer buf = BufferUtils.createFloatBuffer(9);
 			m.store(buf);
+			buf.rewind();
 			GL20.glUniformMatrix4(loc, false, buf);
 		}
 	}
