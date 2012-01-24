@@ -38,8 +38,6 @@ public class MatrixHelper {
 		
 		Matrix4f.mul(result, multMatrix, result);
 		
-		System.out.println(result.toString());
-		
 		return result;
 	}
 	

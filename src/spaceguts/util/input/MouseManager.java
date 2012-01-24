@@ -69,16 +69,16 @@ public class MouseManager {
 		 */
 
 		// only update dx and dy if the mouse isn't grabbed
-		if (Mouse.isGrabbed()) {
+		//if (Mouse.isGrabbed()) {
 			dx = (-(float) Mouse.getDX()) / verticalSensitivity;
 			dy = ((float) Mouse.getDY()) / horizontalSensitivity;
 			// invert if necessary
 			if (inverted)
 				dy = -dy;
-		} else {
-			dx = 0.0f;
-			dy = 0.0f;
-		}
+		//} else {
+		//	dx = 0.0f;
+		//	dy = 0.0f;
+		//}
 
 		// grab wheel change amount
 		wheel = (float) Mouse.getDWheel();
