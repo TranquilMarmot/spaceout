@@ -75,8 +75,10 @@ public class Box extends DynamicEntity{
 		for(int i = 0; i < indices.length; i++){
 			int[] ind = { indices[i], indices[i + 1], indices[i + 2] };
 			builder.addVertexIndices(ind);
+			builder.addNormalIndices(ind);
 		}
 		
+		/*
 		int groundCallList = GL11.glGenLists(1);
 		GL11.glNewList(groundCallList, GL11.GL_COMPILE);
 		{
@@ -116,10 +118,12 @@ public class Box extends DynamicEntity{
 			GL11.glEnd();
 		}
 		GL11.glEndList();
+		*/
 		
 		Textures groundTexture = Textures.CHECKERS;
 		
-		return new GLSLModel(groundShape, groundCallList, groundTexture);
+		
+		return builder.makeModel(groundTexture);
 	}
 
 }

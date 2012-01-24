@@ -154,6 +154,7 @@ public class Debug {
 	 */
 	@SuppressWarnings("unchecked")
 	public static void init() {
+		GL20.glUseProgram(0);
 		// initialize the font if this is the first draw
 		if (font == null) {
 			try {

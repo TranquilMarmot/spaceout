@@ -3,11 +3,15 @@ package spaceguts.graphics.glsl;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import javax.vecmath.Vector3f;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+
+import spaceguts.util.model.ModelBuilder;
 
 public class VBOTorus {
 	private int vaoHandle;
@@ -23,58 +27,52 @@ public class VBOTorus {
 		// generate vertices
 		generateVerts(outerRadius, innerRadius);
 		
-		// create and populate buffer objects
-		IntBuffer handle = BufferUtils.createIntBuffer(4);
-		GL15.glGenBuffers(handle);
-		
 		FloatBuffer v = BufferUtils.createFloatBuffer(verts.length);
 		v.put(verts);
 		v.rewind();
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, handle.get(0));
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, v, GL15.GL_STATIC_DRAW);
 		
 		FloatBuffer n = BufferUtils.createFloatBuffer(norms.length);
 		n.put(norms);
 		n.rewind();
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, handle.get(1));
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, n, GL15.GL_STATIC_DRAW);
 		
 		FloatBuffer t = BufferUtils.createFloatBuffer(tex.length);
 		t.put(tex);
 		t.rewind();
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, handle.get(2));
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, t, GL15.GL_STATIC_DRAW);
 		
 		IntBuffer ele = BufferUtils.createIntBuffer(el.length);
 		ele.put(el);
 		ele.rewind();
-		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, handle.get(3));
-		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, ele, GL15.GL_STATIC_DRAW);
 		
 		vaoHandle = GL30.glGenVertexArrays();
 		GL30.glBindVertexArray(vaoHandle);
 		
-		GL20.glEnableVertexAttribArray(0); // vertex position
+		// create and populate buffer objects
+		IntBuffer handle = BufferUtils.createIntBuffer(3);
+		GL15.glGenBuffers(handle);
+		
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, handle.get(0));
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, v, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0L);
+		GL20.glEnableVertexAttribArray(0); // vertex position
 		
-		GL20.glEnableVertexAttribArray(1); // vertex normal
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, handle.get(1));
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, n, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0L);
+		GL20.glEnableVertexAttribArray(1); // vertex normal
 		
-		GL20.glEnableVertexAttribArray(2); // texture coords
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, handle.get(2));
-		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 0, 0L);
+		//GL20.glEnableVertexAttribArray(2); // texture coords
+		//GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, handle.get(2));
+		//GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 0, 0L);
 		
-		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, handle.get(3));
+		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, handle.get(2));
+		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, ele, GL15.GL_STATIC_DRAW);
 		
 		GL30.glBindVertexArray(0);
-		
 	}
 	
 	public void render(){
 		GL30.glBindVertexArray(vaoHandle);
-		GL11.glDrawElements(GL11.GL_TRIANGLES, faces * 6, GL11.GL_INT, 0L);
+		GL11.glDrawElements(GL11.GL_TRIANGLES, faces * 6, GL11.GL_UNSIGNED_INT, 0L);
 	}
 	
 	private void generateVerts(float outerRadius, float innerRadius){
@@ -91,7 +89,7 @@ public class VBOTorus {
 		
 		// create vertices, normals and tex coords
 		int idx = 0, tidx = 0;
-		for(int ring = 0; ring < rings; ring++){
+		for(int ring = 0; ring <= rings; ring++){
 			double u = (double)(ring * ringFactor);
 			float cu = (float)(Math.cos(u));
 			float su = (float)(Math.sin(u));

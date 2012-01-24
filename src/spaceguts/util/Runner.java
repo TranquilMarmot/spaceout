@@ -1,7 +1,10 @@
 package spaceguts.util;
 
+import java.io.IOException;
+
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.newdawn.slick.SlickException;
 
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
@@ -61,8 +64,8 @@ public class Runner {
 				update();
 				// render the scene
 				//Graphics.render();
-				//GLSLRender.render();
-				GLSLGraphics.render();
+				GLSLRender.render();
+				//GLSLGraphics.render();
 				// update the display (this swaps the buffers)
 				Display.update();
 				Display.sync(DisplayHelper.targetFPS);
@@ -80,14 +83,15 @@ public class Runner {
 	 */
 	private void init() {
 		DisplayHelper.createWindow();
-		//Graphics.initGL();		
+		
 		Debug.init();
+		//Graphics.initGL();		
 		
-		MainMenu mainMenu = new MainMenu();
-		GUI.addGUIObject(mainMenu);
+		//MainMenu mainMenu = new MainMenu();
+		//GUI.addGUIObject(mainMenu);
 		
-		//GLSLRender.initGL();
-		GLSLGraphics.initGL();
+		GLSLRender.initGL();
+		//GLSLGraphics.initGL();
 		
 		//initialize resources
 		/*

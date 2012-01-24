@@ -33,7 +33,7 @@ public class GLSLModel {
 		
 		FloatBuffer vertBuffer = BufferUtils.createFloatBuffer(indices.size() * 9);
 		for(int i = 0; i < indices.size(); i++){
-			int[] tri = indices.get(i);
+			int[] tri = indices.get(i); 
 			Vector3f first = vertices.get(tri[0]);
 			vertBuffer.put(first.x);
 			vertBuffer.put(first.y);

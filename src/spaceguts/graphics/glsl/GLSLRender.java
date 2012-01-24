@@ -71,7 +71,8 @@ public class GLSLRender {
 		program.setUniform("ModelView", modelview);
 		program.setUniform("Projection", projection);
 
-		model.render();
+		torus.render();
+		//model.render();
 		// draw triangle
 		//GL30.glBindVertexArray(vaoHandle);
 		//GL11.glDrawElements(GL11.GL_QUADS, 20, GL11.GL_UNSIGNED_INT, 0L);
@@ -119,7 +120,9 @@ public class GLSLRender {
 		//program.printActiveUniforms();
 		//program.printActiveAttribs();
 
-		model = GLSLModelLoader.loadObjFile(Paths.MODEL_PATH.path() + "ships/wing_x.obj", Textures.SHIP1);
+		//model = GLSLModelLoader.loadObjFile(Paths.MODEL_PATH.path() + "ships/wing_x.obj", Textures.SHIP1);
+		//torus = new VBOTorus(0.7f, 0.3f, 30, 30);
+		torus = new VBOTorus(0.7f, 0.3f, 30, 30);
 	}
 	
 	public static void initCube(){		
