@@ -10,13 +10,10 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL31;
-import org.lwjgl.util.vector.Matrix3f;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.util.vector.Vector4f;
 
-import spaceguts.graphics.render.Render3D;
 import spaceguts.util.DisplayHelper;
 import spaceguts.util.MatrixHelper;
 import spaceguts.util.QuaternionHelper;
@@ -35,21 +32,24 @@ public class GLSLRender {
 	//private static GLSLModel model;
 	private static VBOTorus torus;
 	private static GLSLModel model;
+	private static int numTris;
 	
 	static FloatBuffer MVBuffer, projBuffer;
 	
-	public static void renderModelNew() {
+	public static void render() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
 		// buffer for transferring matrix to shader
 		MVBuffer.clear();
 		projBuffer.clear();
 		
+		projection = MatrixHelper.perspective(45.0f, (float) DisplayHelper.windowWidth
+				/ (float) DisplayHelper.windowHeight, 0.1f,
+				500.0f);
+		
 		modelview.setIdentity();
 		modelview.translate(new Vector3f(0.0f, 0.0f, -zoom));
 		Matrix4f.mul(modelview, QuaternionHelper.toMatrix(rotation), modelview);
-		modelview.store(MVBuffer);
-		MVBuffer.rewind();
 		
 		if(MouseManager.button0){
 			rotation = QuaternionHelper.rotateY(rotation, MouseManager.dx);
@@ -77,7 +77,7 @@ public class GLSLRender {
 		//GL11.glDrawElements(GL11.GL_QUADS, 20, GL11.GL_UNSIGNED_INT, 0L);
 	}
 
-	public static void initGLModelNew() {
+	public static void initGL() {
 		MVBuffer = BufferUtils.createFloatBuffer(16);
 		projBuffer = BufferUtils.createFloatBuffer(16);
 		
@@ -119,7 +119,7 @@ public class GLSLRender {
 		//program.printActiveUniforms();
 		//program.printActiveAttribs();
 
-		model = GLSLModelLoader.loadObjFile(Paths.MODEL_PATH.path() + "skybox.obj", Textures.SHIP1);
+		model = GLSLModelLoader.loadObjFile(Paths.MODEL_PATH.path() + "ships/wing_x.obj", Textures.SHIP1);
 	}
 	
 	public static void initCube(){		
@@ -146,13 +146,25 @@ public class GLSLRender {
 		                    1,1,0,  0,1,0,  0,0,0,  1,0,0,              // v1-v6-v7-v2
 		                    0,0,0,  0,0,1,  1,0,1,  1,0,0,              // v7-v4-v3-v2
 		                    0,0,1,  0,0,0,  0,1,0,  0,1,1};             // v4-v7-v6-v5
-							
+			
+		/*
 		int[] indices =     {0,1,2,3,
 		                     4,5,6,7,
 		                     8,9,10,11,
 		                     12,13,14,15,
 		                     16,17,18,19,
 		                     20,21,22,23};
+		 */
+		
+		int[] indices = {
+				0,1,2,  2,3,0,
+				1,2,3,  2,3,0,
+				4,5,6,  6,7,4,
+				8,9,10, 10,11,8,
+				12,13,14, 14,15,12,
+				16,17,18, 18,19,16,
+				20,21,22, 22,23,20
+		};
 				
 		FloatBuffer vertBuf = BufferUtils.createFloatBuffer(vertices.length);
 		vertBuf.put(vertices);
@@ -184,14 +196,22 @@ public class GLSLRender {
 		
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, vboHandles.get(2));
 		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indBuf, GL15.GL_STATIC_DRAW);
+		
+		numTris = indices.length;
 	}
 	
-	public static void render() {
+	public static void renderCube() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
 		// buffer for transferring matrix to shader
 		MVBuffer.clear();
 		projBuffer.clear();
+		
+		projection = MatrixHelper.perspective(45.0f, (float) DisplayHelper.windowWidth
+				/ (float) DisplayHelper.windowHeight, 0.1f,
+				500.0f);
+		projection.store(projBuffer);
+		projBuffer.rewind();
 		
 		modelview.setIdentity();
 		modelview.translate(new Vector3f(0.0f, 0.0f, -zoom));
@@ -221,10 +241,10 @@ public class GLSLRender {
 
 		// draw triangle
 		GL30.glBindVertexArray(vaoHandle);
-		GL11.glDrawElements(GL11.GL_QUADS, 20, GL11.GL_UNSIGNED_INT, 0L);
+		GL11.glDrawElements(GL11.GL_TRIANGLES, numTris, GL11.GL_UNSIGNED_INT, 0L);
 	}
 
-	public static void initGL() {
+	public static void initGLCube() {
 		MVBuffer = BufferUtils.createFloatBuffer(16);
 		projBuffer = BufferUtils.createFloatBuffer(16);
 		
@@ -341,61 +361,6 @@ public class GLSLRender {
 		program.setUniform("Ld", 1.0f, 1.0f, 1.0f);
 		program.setUniform("LightPosition", new Vector4f(5.0f, 5.0f, 2.0f, 1.0f));
 		*/
-	}
-	
-	public static void renderModel(){
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-		program.use();
-		
-		Matrix4f mvp = new Matrix4f();
-		Matrix4f.mul(modelview, projection, mvp);
-		
-		//program.setUniform("MVP", mvp);
-		
-		//model.render();
-	}
-	
-	public static void initGLModel(){
-		GL11.glViewport(0, 0, DisplayHelper.windowWidth,
-				DisplayHelper.windowHeight);
-		
-		projection = new Matrix4f();
-		
-		// calculate the current aspect ratio
-		float aspect = (float) DisplayHelper.windowWidth
-				/ (float) DisplayHelper.windowHeight;
-		
-		projection = MatrixHelper.perspective(45.0f, aspect, 1.0f, Render3D.drawDistance);
-		
-		modelview = new Matrix4f();
-		
-		//model = GLSLModelLoader.loadObjFile(Paths.MODEL_PATH.path() + "ships/wing_x.obj", 100.0f, Textures.SHIP1);
-		
-		// create vertex shader
-		GLSLShader vertShader = new GLSLShader(ShaderTypes.VERTEX);
-		String vertFile = Paths.SHADER_PATH.path() + "model.vert";
-		if (!vertShader.compileShaderFromFile(vertFile))
-			System.out.println(vertShader.log());
-
-		// create fragment shader
-		GLSLShader fragShader = new GLSLShader(ShaderTypes.FRAGMENT);
-		String fragFile = Paths.SHADER_PATH.path() + "model.frag";
-		if (!fragShader.compileShaderFromFile(fragFile)) {
-			System.out.println(fragShader.log());
-		}
-		
-		program = new GLSLProgram();
-		program.addShader(vertShader);
-		program.addShader(fragShader);
-		program.link();
-		
-		program.printActiveAttribs();
-		program.printActiveUniforms();
-		
-		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		GL11.glDepthFunc(GL11.GL_LEQUAL);
-		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
-		
 	}
 
 	public static void renderUniformBlock() {

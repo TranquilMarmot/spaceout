@@ -2,6 +2,7 @@ package spaceguts.graphics.glsl;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
 
 import javax.vecmath.Vector3f;
 
@@ -18,52 +19,54 @@ public class GLSLModel {
 	private int vaoHandle, numIndices;
 	private CollisionShape collisionShape;
 	
-	public GLSLModel(CollisionShape collisionShape, ObjectArrayList<Vector3f> vertices, ObjectArrayList<int[]> indices){
+	public GLSLModel(CollisionShape collisionShape, ObjectArrayList<Vector3f> vertices, ArrayList<int[]> indices){
 		this.collisionShape = collisionShape;
 		
-		numIndices = indices.size() / 3;
-		System.out.println(numIndices);
+		numIndices = indices.size() * 9;
 		
 		vaoHandle = GL30.glGenVertexArrays();
 		GL30.glBindVertexArray(vaoHandle);
 		
-		IntBuffer handle = BufferUtils.createIntBuffer(3);
-		GL15.glGenBuffers(handle);
-		
-		FloatBuffer vertBuffer = BufferUtils.createFloatBuffer(vertices.size() * 3);
-		for(Vector3f v : vertices){
-			System.out.println(v.x + " " + v.y + " " + v.z);
-			vertBuffer.put(v.x);
-			vertBuffer.put(v.y);
-			vertBuffer.put(v.z);
+		FloatBuffer vertBuffer = BufferUtils.createFloatBuffer(indices.size() * 9);
+		for(int i = 0; i < indices.size(); i++){
+			int[] tri = indices.get(i);
+			Vector3f first = vertices.get(tri[0]);
+			vertBuffer.put(first.x);
+			vertBuffer.put(first.y);
+			vertBuffer.put(first.z);
+			
+			Vector3f second = vertices.get(tri[1]);
+			vertBuffer.put(second.x);
+			vertBuffer.put(second.y);
+			vertBuffer.put(second.z);
+			
+			
+			Vector3f third = vertices.get(tri[2]);
+			vertBuffer.put(third.x);
+			vertBuffer.put(third.y);
+			vertBuffer.put(third.z);
 		}
 		vertBuffer.rewind();
 		
-		IntBuffer indexBuffer = BufferUtils.createIntBuffer(indices.size() * 3);
-		for(int[] i : indices){
-			System.out.println(i[0] + " " + i[1] + " " + i[2]);
-			indexBuffer.put(i[0]);
-			indexBuffer.put(i[1]);
-			indexBuffer.put(i[2]);
-		}
-		indexBuffer.rewind();
+		IntBuffer vboHandles = BufferUtils.createIntBuffer(2);
+		GL15.glGenBuffers(vboHandles);
 		
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, handle.get(0));
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboHandles.get(0));
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertBuffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0L);
 		GL20.glEnableVertexAttribArray(0);
 		
-		FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(vertices.size());
-		for(int i = 0; i < vertices.size(); i += 3){
-			colorBuffer.put(i, 0.0f);
-			colorBuffer.put(i + 1, 1.0f);
-			colorBuffer.put(i + 2, 0.0f);
+		FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(indices.size() * 9);
+		for(int i = 0; i < colorBuffer.capacity(); i += 3){
+			colorBuffer.put(0.0f);
+			colorBuffer.put(1.0f);
+			colorBuffer.put(0.0f);
 		}
 		colorBuffer.rewind();
 		
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, handle.get(1));
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboHandles.get(1));
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, colorBuffer, GL15.GL_STATIC_DRAW);
-		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0L);
+		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0L);
 		GL20.glEnableVertexAttribArray(1);
 		
 		/*
@@ -77,9 +80,6 @@ public class GLSLModel {
 		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 0, 0L);
 		GL20.glEnableVertexAttribArray(2);
 		*/
-		
-		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, handle.get(2));
-		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL15.GL_STATIC_DRAW);
 	}
 	
 	public CollisionShape getCollisionShape(){
@@ -88,7 +88,6 @@ public class GLSLModel {
 	
 	public void render(){
 		GL30.glBindVertexArray(vaoHandle);
-		
-		GL11.glDrawElements(GL11.GL_TRIANGLES, numIndices, GL11.GL_UNSIGNED_INT, 0L);
+		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, numIndices);
 	}	
 }

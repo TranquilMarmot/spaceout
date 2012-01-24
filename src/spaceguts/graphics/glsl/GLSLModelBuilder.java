@@ -1,9 +1,9 @@
 package spaceguts.graphics.glsl;
 
+import java.util.ArrayList;
+
 import javax.vecmath.Point2f;
 import javax.vecmath.Vector3f;
-
-import org.lwjgl.opengl.GL11;
 
 import spaceguts.util.model.Model;
 import spaceguts.util.model.ModelLoader;
@@ -28,21 +28,21 @@ public class GLSLModelBuilder {
 	private ObjectArrayList<Vector3f> vertices;
 
 	/** the normals of the model */
-	private ObjectArrayList<Vector3f> normals;
+	private ArrayList<Vector3f> normals;
 
 	/** the texture coordinates of the model */
-	private ObjectArrayList<Point2f> textureCoords;
+	private ArrayList<Point2f> textureCoords;
 
 	/** which vertices to call */
-	private ObjectArrayList<int[]> vertexIndices;
+	private ArrayList<int[]> vertexIndices;
 
 	/** which normals to call */
-	private ObjectArrayList<int[]> normalIndices;
+	private ArrayList<int[]> normalIndices;
 
 	/** which texture coordinates to call */
-	private ObjectArrayList<int[]> textureIndices;
+	private ArrayList<int[]> textureIndices;
 	
-	/** max and min values for the model being built (for general use, like bounding boxes) */
+	/** max and min values for the model being built */
 	public float maxX, minX, maxY, minY, maxZ, minZ = 0.0f;
 
 	/**
@@ -56,17 +56,17 @@ public class GLSLModelBuilder {
 		vertices = new ObjectArrayList<Vector3f>();
 		vertices.add(new Vector3f(0.0f, 0.0f, 0.0f));
 
-		normals = new ObjectArrayList<Vector3f>();
+		normals = new ArrayList<Vector3f>();
 		normals.add(new Vector3f(0.0f, 0.0f, 0.0f));
 
-		textureCoords = new ObjectArrayList<Point2f>();
+		textureCoords = new ArrayList<Point2f>();
 		textureCoords.add(new Point2f(0.0f, 0.0f));
 
 		// these just store which vertices to grab, don't need to add a blank
 		// element to them
-		vertexIndices = new ObjectArrayList<int[]>();
-		normalIndices = new ObjectArrayList<int[]>();
-		textureIndices = new ObjectArrayList<int[]>();
+		vertexIndices = new ArrayList<int[]>();
+		normalIndices = new ArrayList<int[]>();
+		textureIndices = new ArrayList<int[]>();
 	}
 
 	/**
@@ -79,6 +79,7 @@ public class GLSLModelBuilder {
 		// check for max and min values
 		if(vertex.x > maxX)
 			maxX = vertex.x;
+		
 		if(vertex.x < minX)
 			minX = vertex.x;
 		
@@ -213,6 +214,7 @@ public class GLSLModelBuilder {
 	 * @return A model built using the current indices
 	 */
 	public GLSLModel makeModel(Textures texture) {
+		//System.out.println(maxX * 1.0f + " " + minX * 1.0f + " " + maxY * 1.0f + " " + minY * 1.0f + " " + maxZ * 1.0f + " " + minZ * 1.0f);
 		return new GLSLModel(buildCollisionShape(), vertices, vertexIndices);
 	}
 	
@@ -229,64 +231,5 @@ public class GLSLModelBuilder {
 		hull.buildHull(margin);
 		
 		return new ConvexHullShape(hull.getVertexPointer());
-	}
-
-	/**
-	 * Builds a call list for drawing the model.
-	 * @return The call list to call to draw the model
-	 */
-	private int buildCallList() {
-		int callList = GL11.glGenLists(1);
-
-		GL11.glNewList(callList, GL11.GL_COMPILE_AND_EXECUTE);
-		{
-			for (int i = 0; i < vertexIndices.size(); i++) {
-				int[] verts = vertexIndices.get(i);
-				int[] norms = normalIndices.get(i);
-				int[] texts = textureIndices.get(i);
-
-				// triangle
-				if (verts.length == 3 && norms.length == 3 && texts.length == 3) {
-					GL11.glBegin(GL11.GL_TRIANGLES);
-					{
-						drawArrays(verts, norms, texts);
-					}
-					GL11.glEnd();
-				}
-				// quad
-				else if (verts.length == 4 && norms.length == 4
-						&& texts.length == 4) {
-					GL11.glBegin(GL11.GL_QUADS);
-					{
-						drawArrays(verts, norms, texts);
-					}
-					GL11.glEnd();
-				} else {
-					System.out
-							.println("Error! There's either not the right amount of indices for something, or there's not that same amount of geom, normal, and texture coordinates (ModelBuilder)");
-				}
-			}
-		}
-		GL11.glEndList();
-
-		return callList;
-	}
-
-	/**
-	 * Draws the arrays given.
-	 * @param verts Vertices to draw
-	 * @param norms Normals for the vertices
-	 * @param texCoords Texture coordinates for the vertices
-	 */
-	private void drawArrays(int[] verts, int[] norms, int[] texCoords) {
-		for (int i = 0; i < verts.length; i++) {
-			Vector3f vertex = vertices.get(verts[i]);
-			Vector3f normal = normals.get(norms[i]);
-			Point2f coord = textureCoords.get(texCoords[i]);
-
-			GL11.glTexCoord2f(coord.x, 1 - coord.y);
-			GL11.glNormal3f(normal.x, normal.y, normal.z);
-			GL11.glVertex3f(vertex.x, vertex.y, vertex.z);
-		}
 	}
 }
