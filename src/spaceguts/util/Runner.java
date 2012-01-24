@@ -6,8 +6,10 @@ import org.lwjgl.opengl.Display;
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
 import spaceguts.entities.Light;
+import spaceguts.graphics.glsl.GLSLGraphics;
 import spaceguts.graphics.glsl.GLSLRender;
 import spaceguts.graphics.gui.GUI;
+import spaceguts.graphics.gui.menu.MainMenu;
 import spaceguts.physics.Physics;
 import spaceguts.util.debug.Debug;
 import spaceguts.util.input.KeyBindings;
@@ -59,7 +61,8 @@ public class Runner {
 				update();
 				// render the scene
 				//Graphics.render();
-				GLSLRender.render();
+				//GLSLRender.render();
+				GLSLGraphics.render();
 				// update the display (this swaps the buffers)
 				Display.update();
 				Display.sync(DisplayHelper.targetFPS);
@@ -80,10 +83,11 @@ public class Runner {
 		//Graphics.initGL();		
 		Debug.init();
 		
-		//MainMenu mainMenu = new MainMenu();
-		//GUI.addGUIObject(mainMenu);
+		MainMenu mainMenu = new MainMenu();
+		GUI.addGUIObject(mainMenu);
 		
-		GLSLRender.initGL();
+		//GLSLRender.initGL();
+		GLSLGraphics.initGL();
 		
 		//initialize resources
 		/*

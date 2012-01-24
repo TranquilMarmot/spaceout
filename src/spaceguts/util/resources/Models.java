@@ -1,5 +1,7 @@
 package spaceguts.util.resources;
 
+import spaceguts.graphics.glsl.GLSLModel;
+import spaceguts.graphics.glsl.GLSLModelLoader;
 import spaceguts.util.model.Model;
 import spaceguts.util.model.ModelLoader;
 
@@ -15,7 +17,7 @@ public enum Models {
 	SKYBOX(Paths.MODEL_PATH.path() + "skybox.obj", 100000.0f, Textures.STARS);
 	
 	/** the actual model object */
-	private Model model;
+	private GLSLModel model;
 	/** which file to load the model from */
 	private String file;
 	/** what scale the model is at */
@@ -29,7 +31,7 @@ public enum Models {
 		this.texture = texture;
 	}
 	
-	public Model getModel(){
+	public GLSLModel getModel(){
 		if(!modelLoaded())
 			initModel();
 		return model; 
@@ -42,7 +44,7 @@ public enum Models {
 	public void initModel(){
 		//System.out.println("initializing model " + this);
 		if(!modelLoaded()){
-			model = ModelLoader.loadObjFile(file, scale, texture);
+			model = GLSLModelLoader.loadObjFile(file, scale, texture);
 		}
 	}
 }

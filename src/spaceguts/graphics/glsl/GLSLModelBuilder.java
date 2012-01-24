@@ -215,7 +215,7 @@ public class GLSLModelBuilder {
 	 */
 	public GLSLModel makeModel(Textures texture) {
 		//System.out.println(maxX * 1.0f + " " + minX * 1.0f + " " + maxY * 1.0f + " " + minY * 1.0f + " " + maxZ * 1.0f + " " + minZ * 1.0f);
-		return new GLSLModel(buildCollisionShape(), vertices, vertexIndices);
+		return new GLSLModel(buildCollisionShape(), vertices, vertexIndices, texture);
 	}
 	
 	/**
