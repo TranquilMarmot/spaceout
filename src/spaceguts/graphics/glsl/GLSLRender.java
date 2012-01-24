@@ -68,17 +68,100 @@ public class GLSLRender {
 		
 		zoom -= MouseManager.wheel / 100;
 		
-		program.setUniform("ModelView", modelview);
-		program.setUniform("Projection", projection);
+		program.setUniform("ModelViewMatrix", modelview);
+		program.setUniform("ProjectionMatrix", projection);
+		
+		
+		//Matrix3f normalMatrix = modelview.store3f(MVBuffer);
+		//TODO normal matrix, set light position and intensity, as well as object reflectivity ("NormalMatrix", "LightPosition", "Kd", "Ld")
 
 		torus.render();
-		//model.render();
-		// draw triangle
-		//GL30.glBindVertexArray(vaoHandle);
-		//GL11.glDrawElements(GL11.GL_QUADS, 20, GL11.GL_UNSIGNED_INT, 0L);
 	}
 
 	public static void initGL() {
+		MVBuffer = BufferUtils.createFloatBuffer(16);
+		projBuffer = BufferUtils.createFloatBuffer(16);
+		
+		modelview = new Matrix4f();
+		
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glDepthFunc(GL11.GL_LESS);
+		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
+		GL11.glClearDepth(500.0);
+		
+		projection = MatrixHelper.perspective(45.0f, (float) DisplayHelper.windowWidth
+				/ (float) DisplayHelper.windowHeight, 0.1f,
+				500.0f);
+
+		//projection.translate(new Vector3f(0.0f, 0.0f, -10.0f));
+		// set the clear color
+		GL11.glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
+
+		// create vertex shader
+		GLSLShader vertShader = new GLSLShader(ShaderTypes.VERTEX);
+		String vertFile = Paths.SHADER_PATH.path() + "diffuse.vert";
+		if (!vertShader.compileShaderFromFile(vertFile))
+			System.out.println(vertShader.log());
+
+		// create fragment shader
+		GLSLShader fragShader = new GLSLShader(ShaderTypes.FRAGMENT);
+		String fragFile = Paths.SHADER_PATH.path() + "diffuse.frag";
+		if (!fragShader.compileShaderFromFile(fragFile)) {
+			System.out.println(fragShader.log());
+		}
+
+		// create and use program
+		program = new GLSLProgram();
+		program.addShader(fragShader);
+		program.addShader(vertShader);
+		program.link();
+		program.use();
+
+		//program.printActiveUniforms();
+		//program.printActiveAttribs();
+
+		torus = new VBOTorus(0.7f, 0.3f, 30, 30);
+	}
+	
+	public static void renderModel() {
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+
+		// buffer for transferring matrix to shader
+		MVBuffer.clear();
+		projBuffer.clear();
+		
+		projection = MatrixHelper.perspective(45.0f, (float) DisplayHelper.windowWidth
+				/ (float) DisplayHelper.windowHeight, 0.1f,
+				500.0f);
+		
+		modelview.setIdentity();
+		modelview.translate(new Vector3f(0.0f, 0.0f, -zoom));
+		Matrix4f.mul(modelview, QuaternionHelper.toMatrix(rotation), modelview);
+		
+		if(MouseManager.button0){
+			rotation = QuaternionHelper.rotateY(rotation, MouseManager.dx);
+			rotation = QuaternionHelper.rotateX(rotation, MouseManager.dy);
+		}
+		
+		if(Keys.RIGHT.isPressed())
+			rotation = QuaternionHelper.rotateY(rotation, 0.5f);
+		else if(Keys.LEFT.isPressed())
+			rotation = QuaternionHelper.rotateY(rotation, -0.5f);
+		
+		if(Keys.UP.isPressed())
+			rotation = QuaternionHelper.rotateX(rotation, 0.5f);
+		else if(Keys.DOWN.isPressed())
+			rotation = QuaternionHelper.rotateX(rotation, -0.5f);
+		
+		zoom -= MouseManager.wheel / 100;
+		
+		program.setUniform("ModelView", modelview);
+		program.setUniform("Projection", projection);
+
+		model.render();
+	}
+
+	public static void initGLModel() {
 		MVBuffer = BufferUtils.createFloatBuffer(16);
 		projBuffer = BufferUtils.createFloatBuffer(16);
 		
@@ -120,9 +203,7 @@ public class GLSLRender {
 		//program.printActiveUniforms();
 		//program.printActiveAttribs();
 
-		//model = GLSLModelLoader.loadObjFile(Paths.MODEL_PATH.path() + "ships/wing_x.obj", Textures.SHIP1);
-		//torus = new VBOTorus(0.7f, 0.3f, 30, 30);
-		torus = new VBOTorus(0.7f, 0.3f, 30, 30);
+		model = GLSLModelLoader.loadObjFile(Paths.MODEL_PATH.path() + "ships/wing_x.obj", Textures.SHIP1);
 	}
 	
 	public static void initCube(){		

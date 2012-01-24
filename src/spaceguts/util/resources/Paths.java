@@ -11,7 +11,8 @@ public enum Paths {
 	
 	MODEL_PATH("res/models/"),
 	
-	SHADER_PATH("res/shaders/")
+	SHADER_PATH("res/shaders/"), 
+	FONT_PATH("res/fonts/")
 	;
 	
 	String path;
