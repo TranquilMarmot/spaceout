@@ -10,14 +10,14 @@ uniform vec3 Kd;            // Diffuse reflectivity
 uniform vec3 Ld;            // Diffuse light intensity
 
 uniform mat4 ModelViewMatrix;
-uniform mat3 NormalMatrix;
+//uniform mat3 NormalMatrix;
 uniform mat4 ProjectionMatrix;
 
 void main()
 {
-    vec3 tnorm = normalize( VertexNormal);
-    vec4 eyeCoords = ModelViewMatrix * vec4(VertexPosition,1.0);
-    vec3 s = normalize(vec3(LightPosition - eyeCoords));
+	mat3 NormalMatrix = mat3(ModelViewMatrix);
+    vec3 tnorm = normalize( NormalMatrix * VertexNormal);
+    vec3 s = normalize(vec3(LightPosition));
 
     LightIntensity = Ld * Kd * max( dot( s, tnorm ), 0.0 );
 

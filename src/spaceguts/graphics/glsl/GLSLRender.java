@@ -130,7 +130,7 @@ public class GLSLRender {
 		//program.printActiveAttribs();
 
 		//torus = new VBOTorus(0.7f, 0.3f, 30, 30);
-		model =  GLSLModelLoader.loadObjFile(Paths.MODEL_PATH.path() + "ships/wing_x.obj", Textures.SHIP1);
+		model =  GLSLModelLoader.loadObjFile(Paths.MODEL_PATH.path() + "ships/saucer.obj", Textures.SHIP1);
 	}
 	
 	public static void renderModel() {
