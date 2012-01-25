@@ -110,7 +110,7 @@ public class GLSLRender {
 		Vector3f Ls = new Vector3f(1.0f, 1.0f, 1.0f);
 		program.setUniform("Light.Ls", Ls);
 		
-		float shininess = 30.0f;
+		float shininess = 50.0f;
 		program.setUniform("Material.Shininess", shininess);
 
 		//torus.render();
@@ -160,7 +160,7 @@ public class GLSLRender {
 		//program.printActiveAttribs();
 
 		//torus = new VBOTorus(0.7f, 0.3f, 30, 30);
-		model = Models.WING_X.getModel();
+		model = Models.WESCOTT.getModel();
 	}
 	
 	public static void renderDiffuse() {

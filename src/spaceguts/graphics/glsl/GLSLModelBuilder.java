@@ -222,7 +222,7 @@ public class GLSLModelBuilder {
 	 * @return A model built using the current indices
 	 */
 	public GLSLModel makeModel(Textures texture) {
-		int numIndices = vertexIndices.size() * 9;
+		int numIndices = vertexIndices.size() * 3;
 		//System.out.println(maxX * 1.0f + " " + minX * 1.0f + " " + maxY * 1.0f + " " + minY * 1.0f + " " + maxZ * 1.0f + " " + minZ * 1.0f);
 		return new GLSLModel(buildCollisionShape(), fillArrayBuffers(), numIndices, texture);
 	}
