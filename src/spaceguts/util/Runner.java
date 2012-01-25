@@ -1,18 +1,13 @@
 package spaceguts.util;
 
-import java.io.IOException;
-
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
-import org.newdawn.slick.SlickException;
 
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
 import spaceguts.entities.Light;
-import spaceguts.graphics.glsl.GLSLGraphics;
 import spaceguts.graphics.glsl.GLSLRender;
 import spaceguts.graphics.gui.GUI;
-import spaceguts.graphics.gui.menu.MainMenu;
 import spaceguts.physics.Physics;
 import spaceguts.util.debug.Debug;
 import spaceguts.util.input.KeyBindings;
@@ -30,7 +25,7 @@ import spaceguts.util.resources.ResourceLoader;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.70.3";
+	public static final String VERSION = "0.0.70.6";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;

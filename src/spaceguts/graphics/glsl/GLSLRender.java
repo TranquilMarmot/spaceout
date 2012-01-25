@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL31;
-import org.lwjgl.util.vector.Matrix3f;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
@@ -21,6 +20,7 @@ import spaceguts.util.MatrixHelper;
 import spaceguts.util.QuaternionHelper;
 import spaceguts.util.input.Keys;
 import spaceguts.util.input.MouseManager;
+import spaceguts.util.resources.Models;
 import spaceguts.util.resources.Paths;
 import spaceguts.util.resources.Textures;
 
@@ -35,6 +35,8 @@ public class GLSLRender {
 	private static VBOTorus torus;
 	private static GLSLModel model;
 	private static int numTris;
+	private static Vector4f lightPosition = new Vector4f(-5.0f,5.0f,-2.0f, 1.0f);
+	private static Vector3f modelPosition = new Vector3f(0.0f, 0.0f, 0.0f);
 	
 	static FloatBuffer MVBuffer, projBuffer;
 	
@@ -50,8 +52,19 @@ public class GLSLRender {
 				500.0f);
 		
 		modelview.setIdentity();
-		modelview.translate(new Vector3f(0.0f, 0.0f, -zoom));
+		modelview.translate(modelPosition);
+		modelPosition.z = -zoom;
 		Matrix4f.mul(modelview, QuaternionHelper.toMatrix(rotation), modelview);
+		
+		if(Keys.W.isPressed())
+			modelPosition.y += 0.05f;
+		else if(Keys.S.isPressed())
+			modelPosition.y -= 0.05f;
+		
+		if(Keys.A.isPressed())
+			modelPosition.x -= 0.05f;
+		else if(Keys.D.isPressed())
+			modelPosition.x += 0.05f;
 		
 		if(MouseManager.button0){
 			rotation = QuaternionHelper.rotateY(rotation, MouseManager.dx);
@@ -59,35 +72,160 @@ public class GLSLRender {
 		}
 		
 		if(Keys.RIGHT.isPressed())
-			rotation = QuaternionHelper.rotateY(rotation, 0.5f);
+			lightPosition.x++;
+			//rotation = QuaternionHelper.rotateY(rotation, 0.5f);
 		else if(Keys.LEFT.isPressed())
-			rotation = QuaternionHelper.rotateY(rotation, -0.5f);
+			lightPosition.x--;
+			//rotation = QuaternionHelper.rotateY(rotation, -0.5f);
 		
 		if(Keys.UP.isPressed())
-			rotation = QuaternionHelper.rotateX(rotation, 0.5f);
+			lightPosition.y++;
+			//rotation = QuaternionHelper.rotateX(rotation, 0.5f);
 		else if(Keys.DOWN.isPressed())
-			rotation = QuaternionHelper.rotateX(rotation, -0.5f);
+			lightPosition.y--;
+			//rotation = QuaternionHelper.rotateX(rotation, -0.5f);
 		
 		zoom -= MouseManager.wheel / 100;
 		
 		program.setUniform("ModelViewMatrix", modelview);
 		program.setUniform("ProjectionMatrix", projection);
 		
-		//Vector4f lightPosition = new Vector4f(5.0f,5.0f,2.0f,1.0f);
-		Vector3f lightPosition = new Vector3f(5.0f,5.0f,2.0f);
-		program.setUniform("LightPosition", lightPosition);
+		program.setUniform("Light.Position", lightPosition);
 		
-		Vector3f Kd = new Vector3f(0.0f, 0.5f, 0.0f);
-		program.setUniform("Kd", Kd);
+		Vector3f Kd = new Vector3f(0.5f, 0.5f, 0.5f);
+		program.setUniform("Material.Kd" , Kd);
 		
 		Vector3f Ld = new Vector3f(1.0f, 1.0f, 1.0f);
-		program.setUniform("Ld", Ld);
+		program.setUniform("Light.Ld", Ld);
+		
+		Vector3f Ka = new Vector3f(0.5f, 0.5f, 0.5f);
+		program.setUniform("Material.Ka", Ka);
+		
+		Vector3f La = new Vector3f(0.4f, 0.4f, 0.4f);
+		program.setUniform("Light.La", La);
+		
+		Vector3f Ks = new Vector3f(0.8f, 0.8f, 0.8f);
+		program.setUniform("Material.Ks", Ks);
+		
+		Vector3f Ls = new Vector3f(1.0f, 1.0f, 1.0f);
+		program.setUniform("Light.Ls", Ls);
+		
+		float shininess = 30.0f;
+		program.setUniform("Material.Shininess", shininess);
 
 		//torus.render();
 		model.render();
 	}
 
 	public static void initGL() {
+		MVBuffer = BufferUtils.createFloatBuffer(16);
+		projBuffer = BufferUtils.createFloatBuffer(16);
+		
+		modelview = new Matrix4f();
+		
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glDepthFunc(GL11.GL_LESS);
+		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
+		GL11.glClearDepth(500.0);
+		
+		projection = MatrixHelper.perspective(45.0f, (float) DisplayHelper.windowWidth
+				/ (float) DisplayHelper.windowHeight, 0.1f,
+				500.0f);
+
+		//projection.translate(new Vector3f(0.0f, 0.0f, -10.0f));
+		// set the clear color
+		GL11.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+		// create vertex shader
+		GLSLShader vertShader = new GLSLShader(ShaderTypes.VERTEX);
+		String vertFile = Paths.SHADER_PATH.path() + "phong.vert";
+		if (!vertShader.compileShaderFromFile(vertFile))
+			System.out.println(vertShader.log());
+
+		// create fragment shader
+		GLSLShader fragShader = new GLSLShader(ShaderTypes.FRAGMENT);
+		String fragFile = Paths.SHADER_PATH.path() + "phong.frag";
+		if (!fragShader.compileShaderFromFile(fragFile)) {
+			System.out.println(fragShader.log());
+		}
+
+		// create and use program
+		program = new GLSLProgram();
+		program.addShader(fragShader);
+		program.addShader(vertShader);
+		program.link();
+		program.use();
+
+		//program.printActiveUniforms();
+		//program.printActiveAttribs();
+
+		//torus = new VBOTorus(0.7f, 0.3f, 30, 30);
+		model = Models.WING_X.getModel();
+	}
+	
+	public static void renderDiffuse() {
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+
+		// buffer for transferring matrix to shader
+		MVBuffer.clear();
+		projBuffer.clear();
+		
+		projection = MatrixHelper.perspective(45.0f, (float) DisplayHelper.windowWidth
+				/ (float) DisplayHelper.windowHeight, 0.1f,
+				500.0f);
+		
+		modelview.setIdentity();
+		modelview.translate(modelPosition);
+		modelPosition.z = -zoom;
+		Matrix4f.mul(modelview, QuaternionHelper.toMatrix(rotation), modelview);
+		
+		if(Keys.W.isPressed())
+			modelPosition.y += 0.05f;
+		else if(Keys.S.isPressed())
+			modelPosition.y -= 0.05f;
+		
+		if(Keys.A.isPressed())
+			modelPosition.x -= 0.05f;
+		else if(Keys.D.isPressed())
+			modelPosition.x += 0.05f;
+		
+		if(MouseManager.button0){
+			rotation = QuaternionHelper.rotateY(rotation, MouseManager.dx);
+			rotation = QuaternionHelper.rotateX(rotation, MouseManager.dy);
+		}
+		
+		if(Keys.RIGHT.isPressed())
+			lightPosition.x++;
+			//rotation = QuaternionHelper.rotateY(rotation, 0.5f);
+		else if(Keys.LEFT.isPressed())
+			lightPosition.x--;
+			//rotation = QuaternionHelper.rotateY(rotation, -0.5f);
+		
+		if(Keys.UP.isPressed())
+			lightPosition.y++;
+			//rotation = QuaternionHelper.rotateX(rotation, 0.5f);
+		else if(Keys.DOWN.isPressed())
+			lightPosition.y--;
+			//rotation = QuaternionHelper.rotateX(rotation, -0.5f);
+		
+		zoom -= MouseManager.wheel / 100;
+		
+		program.setUniform("ModelViewMatrix", modelview);
+		program.setUniform("ProjectionMatrix", projection);
+		
+		program.setUniform("Light.LightPosition", lightPosition);
+		
+		Vector3f Kd = new Vector3f(0.0f, 0.5f, 0.0f);
+		program.setUniform("Light.Kd", Kd);
+		
+		Vector3f Ld = new Vector3f(1.0f, 1.0f, 1.0f);
+		program.setUniform("Light.Ld", Ld);
+
+		torus.render();
+		//model.render();
+	}
+
+	public static void initGLDiffuse() {
 		MVBuffer = BufferUtils.createFloatBuffer(16);
 		projBuffer = BufferUtils.createFloatBuffer(16);
 		
@@ -129,8 +267,8 @@ public class GLSLRender {
 		//program.printActiveUniforms();
 		//program.printActiveAttribs();
 
-		//torus = new VBOTorus(0.7f, 0.3f, 30, 30);
-		model =  GLSLModelLoader.loadObjFile(Paths.MODEL_PATH.path() + "ships/saucer.obj", Textures.SHIP1);
+		torus = new VBOTorus(0.7f, 0.3f, 30, 30);
+		//model =  GLSLModelLoader.loadObjFile(Paths.MODEL_PATH.path() + "ships/saucer.obj", Textures.SHIP1);
 	}
 	
 	public static void renderModel() {

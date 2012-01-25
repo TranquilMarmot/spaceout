@@ -51,7 +51,7 @@ public class GLSLModelLoader {
 				String lineType = toker.nextToken();
 				
 				if (lineType.equals("o")) {
-					System.out.println("Loading " + toker.nextToken().substring(2));
+					//System.out.println("Loading " + toker.nextToken().substring(2));
 				}
 
 				if (lineType.equals("v")) {
