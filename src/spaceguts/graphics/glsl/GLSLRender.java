@@ -138,7 +138,7 @@ public class GLSLRender {
 
 		// create vertex shader
 		GLSLShader vertShader = new GLSLShader(ShaderTypes.VERTEX);
-		String vertFile = Paths.SHADER_PATH.path() + "phong.vert";
+		String vertFile = Paths.SHADER_PATH.path() + "function.vert";
 		if (!vertShader.compileShaderFromFile(vertFile))
 			System.out.println(vertShader.log());
 
@@ -160,7 +160,7 @@ public class GLSLRender {
 		//program.printActiveAttribs();
 
 		//torus = new VBOTorus(0.7f, 0.3f, 30, 30);
-		model = Models.WESCOTT.getModel();
+		model = Models.SAUCER.getModel();
 	}
 	
 	public static void renderDiffuse() {
