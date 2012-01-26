@@ -21,6 +21,7 @@ public class GLSLModel {
 	private int vaoHandle, numIndices;
 	private CollisionShape collisionShape;
 	private Textures texture;
+	boolean wireframe = false;
 	
 	public GLSLModel(CollisionShape collisionShape, int vaoHandle, int numIndices, Textures texture){
 		// these all come from the model loader
@@ -36,7 +37,10 @@ public class GLSLModel {
 	
 	public void render(){
 		GL30.glBindVertexArray(vaoHandle);
-		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, numIndices);
+		if(wireframe)
+			GL11.glDrawArrays(GL11.GL_LINES, 0, numIndices);
+		else
+			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, numIndices);
 	}
 
 	public Textures getTexture() {

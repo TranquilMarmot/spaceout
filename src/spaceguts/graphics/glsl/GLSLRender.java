@@ -29,7 +29,7 @@ public class GLSLRender {
 
 	private static GLSLProgram program;
 	private static float zoom = 10;
-	private static Quaternion rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+	private static Quaternion rotation = new Quaternion(-0.23499879f, -0.4204249f, 0.5374693f, 0.69221f);
 	private static Matrix4f projection, modelview;
 	//private static GLSLModel model;
 	private static VBOTorus torus;
@@ -38,6 +38,7 @@ public class GLSLRender {
 	private static int numTris;
 	private static Vector4f lightPosition = new Vector4f(-5.0f,5.0f,-2.0f, 1.0f);
 	private static Vector3f modelPosition = new Vector3f(0.0f, 0.0f, 0.0f);
+	private static boolean f1Down = false, f2Down = false, renderWhat = false;
 	
 	static FloatBuffer MVBuffer, projBuffer;
 	
@@ -67,10 +68,14 @@ public class GLSLRender {
 		else if(Keys.D.isPressed())
 			modelPosition.x += 0.05f;
 		
-		if(MouseManager.button0){
-			rotation = QuaternionHelper.rotateY(rotation, MouseManager.dx);
-			rotation = QuaternionHelper.rotateX(rotation, MouseManager.dy);
+		if(MouseManager.button0)
+			rotation = QuaternionHelper.rotate(rotation, new Vector3f(-MouseManager.dx, 0.0f, MouseManager.dy));
+		else if(MouseManager.button1){
+			rotation = QuaternionHelper.rotate(rotation, new Vector3f(0.0f, -MouseManager.dx, MouseManager.dy));
 		}
+		
+		if(MouseManager.button2)
+			zoom -= MouseManager.dy;
 		
 		if(Keys.RIGHT.isPressed())
 			lightPosition.x++;
@@ -114,8 +119,30 @@ public class GLSLRender {
 		float shininess = 50.0f;
 		program.setUniform("Material.Shininess", shininess);
 
-		//torus.render();
-		model.render();
+		if(renderWhat){
+			torus.render();
+			GL30.glBindVertexArray(0);
+		}
+		else{
+			model.render();
+			GL30.glBindVertexArray(0);
+		}
+		
+		if(Keys.F1.isPressed() && !f1Down){
+			model.wireframe = !model.wireframe;
+			f1Down = true;
+		}
+		
+		if(!Keys.F1.isPressed())
+			f1Down = false;
+		
+		if(Keys.F2.isPressed() && !f2Down){
+			renderWhat = !renderWhat;
+			f2Down = true;
+		}
+		
+		if(!Keys.F2.isPressed())
+			f2Down = false;
 	}
 
 	public static void initGL() {
@@ -157,11 +184,9 @@ public class GLSLRender {
 		program.link();
 		program.use();
 
-		//program.printActiveUniforms();
-		//program.printActiveAttribs();
-
-		//torus = new VBOTorus(0.7f, 0.3f, 30, 30);
+		torus = new VBOTorus(0.7f, 0.3f, 30, 30);
 		model = Models.SAUCER.getModel();
+		
 	}
 	
 	public static void renderDiffuse() {
