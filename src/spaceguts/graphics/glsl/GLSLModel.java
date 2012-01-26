@@ -12,15 +12,19 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
+import spaceguts.util.resources.Textures;
+
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.util.ObjectArrayList;
 
 public class GLSLModel {
 	private int vaoHandle, numIndices;
 	private CollisionShape collisionShape;
+	private Textures texture;
 	
-	public GLSLModel(CollisionShape collisionShape, ObjectArrayList<Vector3f> vertices, ArrayList<int[]> indices){
+	public GLSLModel(CollisionShape collisionShape, ObjectArrayList<Vector3f> vertices, ArrayList<int[]> indices, Textures texture){
 		this.collisionShape = collisionShape;
+		this.texture = texture;
 		
 		numIndices = indices.size() * 9;
 		
@@ -29,7 +33,7 @@ public class GLSLModel {
 		
 		FloatBuffer vertBuffer = BufferUtils.createFloatBuffer(indices.size() * 9);
 		for(int i = 0; i < indices.size(); i++){
-			int[] tri = indices.get(i);
+			int[] tri = indices.get(i); 
 			Vector3f first = vertices.get(tri[0]);
 			vertBuffer.put(first.x);
 			vertBuffer.put(first.y);
@@ -89,5 +93,9 @@ public class GLSLModel {
 	public void render(){
 		GL30.glBindVertexArray(vaoHandle);
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, numIndices);
+	}
+
+	public Textures getTexture() {
+		return texture;
 	}	
 }

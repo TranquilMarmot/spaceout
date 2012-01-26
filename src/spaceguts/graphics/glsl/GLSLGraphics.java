@@ -24,7 +24,7 @@ public class GLSLGraphics {
 	}
 	
 	public static void initGL(){
-		//GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
 		
@@ -35,6 +35,6 @@ public class GLSLGraphics {
 		
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
 		
-		
+		GLSLRender3D.init();
 	}
 }
