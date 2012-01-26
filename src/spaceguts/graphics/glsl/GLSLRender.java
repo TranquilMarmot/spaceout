@@ -33,6 +33,7 @@ public class GLSLRender {
 	private static Matrix4f projection, modelview;
 	//private static GLSLModel model;
 	private static VBOTorus torus;
+	private static VBOTeapot teapot;
 	private static GLSLModel model;
 	private static int numTris;
 	private static Vector4f lightPosition = new Vector4f(-5.0f,5.0f,-2.0f, 1.0f);
