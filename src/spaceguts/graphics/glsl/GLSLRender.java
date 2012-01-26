@@ -74,7 +74,7 @@ public class GLSLRender {
 		program.setUniform("ProjectionMatrix", projection);
 		
 		//Vector4f lightPosition = new Vector4f(5.0f,5.0f,2.0f,1.0f);
-		Vector4f lightPosition = new Vector4f(5.0f,5.0f,2.0f,1.0f);
+		Vector3f lightPosition = new Vector3f(5.0f,5.0f,2.0f);
 		program.setUniform("LightPosition", lightPosition);
 		
 		Vector3f Kd = new Vector3f(0.0f, 0.5f, 0.0f);
@@ -130,7 +130,7 @@ public class GLSLRender {
 		//program.printActiveAttribs();
 
 		//torus = new VBOTorus(0.7f, 0.3f, 30, 30);
-		model =  GLSLModelLoader.loadObjFile(Paths.MODEL_PATH.path() + "ships/wing_x.obj", Textures.SHIP1);
+		model =  GLSLModelLoader.loadObjFile(Paths.MODEL_PATH.path() + "ships/saucer.obj", Textures.SHIP1);
 	}
 	
 	public static void renderModel() {
