@@ -10,9 +10,11 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GL31;
+import org.lwjgl.util.vector.Matrix3f;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import spaceguts.util.DisplayHelper;
 import spaceguts.util.MatrixHelper;
@@ -71,11 +73,18 @@ public class GLSLRender {
 		program.setUniform("ModelViewMatrix", modelview);
 		program.setUniform("ProjectionMatrix", projection);
 		
+		//Vector4f lightPosition = new Vector4f(5.0f,5.0f,2.0f,1.0f);
+		Vector4f lightPosition = new Vector4f(5.0f,5.0f,2.0f,1.0f);
+		program.setUniform("LightPosition", lightPosition);
 		
-		//Matrix3f normalMatrix = modelview.store3f(MVBuffer);
-		//TODO normal matrix, set light position and intensity, as well as object reflectivity ("NormalMatrix", "LightPosition", "Kd", "Ld")
+		Vector3f Kd = new Vector3f(0.0f, 0.5f, 0.0f);
+		program.setUniform("Kd", Kd);
+		
+		Vector3f Ld = new Vector3f(1.0f, 1.0f, 1.0f);
+		program.setUniform("Ld", Ld);
 
-		torus.render();
+		//torus.render();
+		model.render();
 	}
 
 	public static void initGL() {
@@ -120,7 +129,8 @@ public class GLSLRender {
 		//program.printActiveUniforms();
 		//program.printActiveAttribs();
 
-		torus = new VBOTorus(0.7f, 0.3f, 30, 30);
+		//torus = new VBOTorus(0.7f, 0.3f, 30, 30);
+		model =  GLSLModelLoader.loadObjFile(Paths.MODEL_PATH.path() + "ships/wing_x.obj", Textures.SHIP1);
 	}
 	
 	public static void renderModel() {

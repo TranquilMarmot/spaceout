@@ -15,7 +15,7 @@ uniform mat4 ProjectionMatrix;
 
 void main()
 {
-    vec3 tnorm = normalize( NormalMatrix * VertexNormal);
+    vec3 tnorm = normalize( VertexNormal);
     vec4 eyeCoords = ModelViewMatrix * vec4(VertexPosition,1.0);
     vec3 s = normalize(vec3(LightPosition - eyeCoords));
 

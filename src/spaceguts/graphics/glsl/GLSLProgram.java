@@ -77,6 +77,8 @@ public class GLSLProgram {
 		int loc = getUniformLocation(name);
 		if(loc >= 0){
 			GL20.glUniform3f(loc, x, y, z);
+		} else{
+			System.out.println("Uniform variable " + name + " not found!");
 		}
 	}
 	
@@ -89,6 +91,8 @@ public class GLSLProgram {
 		int loc = getUniformLocation(name);
 		if(loc >= 0){
 			GL20.glUniform4f(loc, x, y, z, w);
+		} else{
+			System.out.println("Uniform variable " + name + " not found!");
 		}
 	}
 	
@@ -96,7 +100,6 @@ public class GLSLProgram {
 		this.setUniform(name, v.x, v.y, v.z, v.w);
 	}
 	
-	// FIXME test this one and make sure it works
 	public void setUniform(String name, Matrix4f m){
 		int loc = getUniformLocation(name);
 		if(loc >= 0){
@@ -104,6 +107,8 @@ public class GLSLProgram {
 			m.store(buf);
 			buf.rewind();
 			GL20.glUniformMatrix4(loc, false, buf);
+		} else{
+			System.out.println("Uniform variable " + name + " not found!");
 		}
 	}
 	
@@ -114,6 +119,8 @@ public class GLSLProgram {
 			m.store(buf);
 			buf.rewind();
 			GL20.glUniformMatrix4(loc, false, buf);
+		} else{
+			System.out.println("Uniform variable " + name + " not found!");
 		}
 	}
 	
@@ -121,6 +128,8 @@ public class GLSLProgram {
 		int loc = getUniformLocation(name);
 		if(loc >= 0){
 			GL20.glUniform1f(loc, val);
+		} else{
+			System.out.println("Uniform variable " + name + " not found!");
 		}
 	}
 	
@@ -128,6 +137,8 @@ public class GLSLProgram {
 		int loc = getUniformLocation(name);
 		if(loc >= 0){
 			GL20.glUniform1i(loc, val);
+		} else{
+			System.out.println("Uniform variable " + name + " not found!");
 		}
 	}
 	
@@ -135,6 +146,8 @@ public class GLSLProgram {
 		int loc = getUniformLocation(name);
 		if(loc >= 0){
 			GL20.glUniform1i(loc, val ? 1 : 0);
+		} else{
+			System.out.println("Uniform variable " + name + " not found!");
 		}
 	}
 	

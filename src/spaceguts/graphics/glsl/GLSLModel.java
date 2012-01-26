@@ -22,68 +22,12 @@ public class GLSLModel {
 	private CollisionShape collisionShape;
 	private Textures texture;
 	
-	public GLSLModel(CollisionShape collisionShape, ObjectArrayList<Vector3f> vertices, ArrayList<int[]> indices, Textures texture){
+	public GLSLModel(CollisionShape collisionShape, int vaoHandle, int numIndices, Textures texture){
+		// these all come from the model loader
+		this.vaoHandle = vaoHandle;
+		this.numIndices = numIndices;
 		this.collisionShape = collisionShape;
 		this.texture = texture;
-		
-		numIndices = indices.size() * 9;
-		
-		vaoHandle = GL30.glGenVertexArrays();
-		GL30.glBindVertexArray(vaoHandle);
-		
-		FloatBuffer vertBuffer = BufferUtils.createFloatBuffer(indices.size() * 9);
-		for(int i = 0; i < indices.size(); i++){
-			int[] tri = indices.get(i); 
-			Vector3f first = vertices.get(tri[0]);
-			vertBuffer.put(first.x);
-			vertBuffer.put(first.y);
-			vertBuffer.put(first.z);
-			
-			Vector3f second = vertices.get(tri[1]);
-			vertBuffer.put(second.x);
-			vertBuffer.put(second.y);
-			vertBuffer.put(second.z);
-			
-			
-			Vector3f third = vertices.get(tri[2]);
-			vertBuffer.put(third.x);
-			vertBuffer.put(third.y);
-			vertBuffer.put(third.z);
-		}
-		vertBuffer.rewind();
-		
-		IntBuffer vboHandles = BufferUtils.createIntBuffer(2);
-		GL15.glGenBuffers(vboHandles);
-		
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboHandles.get(0));
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertBuffer, GL15.GL_STATIC_DRAW);
-		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0L);
-		GL20.glEnableVertexAttribArray(0);
-		
-		FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(indices.size() * 9);
-		for(int i = 0; i < colorBuffer.capacity(); i += 3){
-			colorBuffer.put(0.0f);
-			colorBuffer.put(1.0f);
-			colorBuffer.put(0.0f);
-		}
-		colorBuffer.rewind();
-		
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboHandles.get(1));
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, colorBuffer, GL15.GL_STATIC_DRAW);
-		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0L);
-		GL20.glEnableVertexAttribArray(1);
-		
-		/*
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, handle.get(1));
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, normals, GL15.GL_STATIC_DRAW);
-		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0L);
-		GL20.glEnableVertexAttribArray(1);
-		
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, handle.get(2));
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, textureCoords, GL15.GL_STATIC_DRAW);
-		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 0, 0L);
-		GL20.glEnableVertexAttribArray(2);
-		*/
 	}
 	
 	public CollisionShape getCollisionShape(){

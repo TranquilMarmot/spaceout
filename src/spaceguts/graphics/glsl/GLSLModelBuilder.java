@@ -1,9 +1,17 @@
 package spaceguts.graphics.glsl;
 
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 
 import javax.vecmath.Point2f;
 import javax.vecmath.Vector3f;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 
 import spaceguts.util.model.Model;
 import spaceguts.util.model.ModelLoader;
@@ -214,8 +222,90 @@ public class GLSLModelBuilder {
 	 * @return A model built using the current indices
 	 */
 	public GLSLModel makeModel(Textures texture) {
+		int numIndices = vertexIndices.size() * 9;
 		//System.out.println(maxX * 1.0f + " " + minX * 1.0f + " " + maxY * 1.0f + " " + minY * 1.0f + " " + maxZ * 1.0f + " " + minZ * 1.0f);
-		return new GLSLModel(buildCollisionShape(), vertices, vertexIndices, texture);
+		return new GLSLModel(buildCollisionShape(), fillArrayBuffers(), numIndices, texture);
+	}
+	
+	private int fillArrayBuffers(){
+		int vaoHandle = GL30.glGenVertexArrays();
+		GL30.glBindVertexArray(vaoHandle);
+		
+		FloatBuffer vertBuffer = BufferUtils.createFloatBuffer(vertexIndices.size() * 9);
+		FloatBuffer normBuffer = BufferUtils.createFloatBuffer(normalIndices.size() * 9);
+		FloatBuffer texBuffer = BufferUtils.createFloatBuffer(textureIndices.size() * 6);
+		for(int i = 0; i < vertexIndices.size(); i++){
+			int[] triVerts = vertexIndices.get(i); 
+			int[] triNorms = normalIndices.get(i);
+			int[] triTex = textureIndices.get(i);
+			
+			Vector3f firstVert = vertices.get(triVerts[0]);
+			vertBuffer.put(firstVert.x);
+			vertBuffer.put(firstVert.y);
+			vertBuffer.put(firstVert.z);
+			Vector3f firstNorm = normals.get(triNorms[0]);
+			normBuffer.put(firstNorm.x);
+			normBuffer.put(firstNorm.y);
+			normBuffer.put(firstNorm.z);
+			Point2f firstTex = textureCoords.get(triTex[0]);
+			texBuffer.put(firstTex.x);
+			texBuffer.put(firstTex.y);
+			
+			Vector3f secondVert = vertices.get(triVerts[1]);
+			vertBuffer.put(secondVert.x);
+			vertBuffer.put(secondVert.y);
+			vertBuffer.put(secondVert.z);
+			Vector3f secondNorm = normals.get(triNorms[1]);
+			normBuffer.put(secondNorm.x);
+			normBuffer.put(secondNorm.y);
+			normBuffer.put(secondNorm.z);
+			Point2f secondTex = textureCoords.get(triTex[1]);
+			texBuffer.put(secondTex.x);
+			texBuffer.put(secondTex.y);
+			
+			
+			Vector3f thirdVert = vertices.get(triVerts[2]);
+			vertBuffer.put(thirdVert.x);
+			vertBuffer.put(thirdVert.y);
+			vertBuffer.put(thirdVert.z);
+			Vector3f thirdNorm = normals.get(triNorms[2]);
+			normBuffer.put(thirdNorm.x);
+			normBuffer.put(thirdNorm.y);
+			normBuffer.put(thirdNorm.z);
+			Point2f thirdTex = textureCoords.get(triTex[2]);
+			texBuffer.put(thirdTex.x);
+			texBuffer.put(thirdTex.y);
+		}
+		vertBuffer.rewind();
+		normBuffer.rewind();
+		texBuffer.rewind();
+		
+		IntBuffer vboHandles = BufferUtils.createIntBuffer(2);
+		GL15.glGenBuffers(vboHandles);
+		
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboHandles.get(0));
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertBuffer, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0L);
+		GL20.glEnableVertexAttribArray(0);
+		
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboHandles.get(1));
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, normBuffer, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0L);
+		GL20.glEnableVertexAttribArray(1);
+		
+		/*
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, handle.get(1));
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, normals, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0L);
+		GL20.glEnableVertexAttribArray(1);
+		
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, handle.get(2));
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, textureCoords, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 0, 0L);
+		GL20.glEnableVertexAttribArray(2);
+		*/
+		
+		return vaoHandle;
 	}
 	
 	/**
