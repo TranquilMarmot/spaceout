@@ -249,7 +249,7 @@ public class GLSLModelBuilder {
 			normBuffer.put(firstNorm.z);
 			Point2f firstTex = textureCoords.get(triTex[0]);
 			texBuffer.put(firstTex.x);
-			texBuffer.put(firstTex.y);
+			texBuffer.put(1 - firstTex.y);
 			
 			Vector3f secondVert = vertices.get(triVerts[1]);
 			vertBuffer.put(secondVert.x);
@@ -261,7 +261,7 @@ public class GLSLModelBuilder {
 			normBuffer.put(secondNorm.z);
 			Point2f secondTex = textureCoords.get(triTex[1]);
 			texBuffer.put(secondTex.x);
-			texBuffer.put(secondTex.y);
+			texBuffer.put(1 - secondTex.y);
 			
 			
 			Vector3f thirdVert = vertices.get(triVerts[2]);
@@ -274,13 +274,13 @@ public class GLSLModelBuilder {
 			normBuffer.put(thirdNorm.z);
 			Point2f thirdTex = textureCoords.get(triTex[2]);
 			texBuffer.put(thirdTex.x);
-			texBuffer.put(thirdTex.y);
+			texBuffer.put(1 - thirdTex.y);
 		}
 		vertBuffer.rewind();
 		normBuffer.rewind();
 		texBuffer.rewind();
 		
-		IntBuffer vboHandles = BufferUtils.createIntBuffer(2);
+		IntBuffer vboHandles = BufferUtils.createIntBuffer(3);
 		GL15.glGenBuffers(vboHandles);
 		
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboHandles.get(0));
@@ -293,17 +293,11 @@ public class GLSLModelBuilder {
 		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0L);
 		GL20.glEnableVertexAttribArray(1);
 		
-		/*
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, handle.get(1));
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, normals, GL15.GL_STATIC_DRAW);
-		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0L);
-		GL20.glEnableVertexAttribArray(1);
-		
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, handle.get(2));
-		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, textureCoords, GL15.GL_STATIC_DRAW);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboHandles.get(2));
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, texBuffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 0, 0L);
 		GL20.glEnableVertexAttribArray(2);
-		*/
+		
 		
 		return vaoHandle;
 	}

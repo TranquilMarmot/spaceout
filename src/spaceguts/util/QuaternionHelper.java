@@ -153,6 +153,16 @@ public class QuaternionHelper {
 
 		return new Vector3f(x, y, z);
 	}
+	
+	public static Quaternion rotate(Quaternion quat, Vector3f amount){
+		Quaternion ret = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		
+		ret = rotateX(quat, amount.x);
+		ret = rotateY(ret, amount.y);
+		ret = rotateZ(ret, amount.z);
+		
+		return ret;
+	}
 
 	/**
 	 * Rotate a quaternion along it's x axis a certain amount

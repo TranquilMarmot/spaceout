@@ -1,11 +1,14 @@
 package spaceguts.graphics.glsl;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+import org.lwjgl.opengl.GL40;
 import org.lwjgl.util.vector.Matrix3f;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
@@ -187,5 +190,28 @@ public class GLSLProgram {
 		return GL20.glGetUniformLocation(handle, name);
 	}
 	
+	public int getSubroutineIndex(String subroutine){
+		byte[] bytes = (subroutine + "\u0000").getBytes();
+		ByteBuffer phongBuf = BufferUtils.createByteBuffer(bytes.length + 1);
+		phongBuf.put(bytes);
+		phongBuf.rewind();
+		
+		return GL40.glGetSubroutineIndex(this.getHandle(), GL20.GL_VERTEX_SHADER, phongBuf);
+	}
+	
+	public void useVertexSubRoutines(int[] subroutines){
+		IntBuffer buf = BufferUtils.createIntBuffer(subroutines.length);
+		buf.put(subroutines);
+		buf.rewind();
+		
+		GL40.glUniformSubroutinesu(GL20.GL_VERTEX_SHADER, buf);
+	}
 
+	public void useFragmentSubRoutines(int[] subroutines){
+		IntBuffer buf = BufferUtils.createIntBuffer(subroutines.length);
+		buf.put(subroutines);
+		buf.rewind();
+		
+		GL40.glUniformSubroutinesu(GL20.GL_FRAGMENT_SHADER, buf);
+	}
 }

@@ -71,6 +71,14 @@ public class Debug {
 		if (Runner.paused && Entities.entitiesExist())
 			Debug.font.drawString((DisplayHelper.windowWidth / 2) - 25,
 					DisplayHelper.windowHeight / 2, "PAUSED");
+		
+		Debug.font.drawString(5, DisplayHelper.windowHeight - 121, 
+				"Left Click + Drag - Rotate X/Y\n" +
+				"Right Click + Drag - Rotate X/Z\n" +
+				"Middle Click + Drag - Move X/Y\n" +
+				"Mouse Wheel - Move Z\n" +
+				"Arrow Keys - Light Position\n" +
+				"M - Change Model");
 	}
 
 	public static void drawDebugInfo() {
@@ -138,7 +146,8 @@ public class Debug {
 		drawVersion();
 
 		// draw the current fps
-		font.drawString(DisplayHelper.windowWidth - 70, font.getDescent() + 25,
+		String fpsString = currentFPS + " fps";
+		font.drawString(DisplayHelper.windowWidth - font.getWidth(fpsString) - 2, font.getDescent() + 16,
 				currentFPS + " fps");
 	}
 
@@ -147,7 +156,7 @@ public class Debug {
 	 */
 	public static void drawVersion() {
 		// draw what version of Spaceout this is
-		font.drawString(DisplayHelper.windowWidth - 70, font.getDescent() + 5,
+		font.drawString(DisplayHelper.windowWidth - font.getWidth(Runner.VERSION) - 3, font.getDescent() - 4,
 				Runner.VERSION);
 	}
 

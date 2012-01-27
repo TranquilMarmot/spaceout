@@ -9,15 +9,17 @@ out vec3 Normal;
 out vec2 TexCoord;
 
 uniform mat4 ModelViewMatrix;
-uniform mat3 NormalMatrix;
 uniform mat4 ProjectionMatrix;
-uniform mat4 MVP;
+
+mat3 NormalMatrix;
 
 void main()
 {
-    TexCoord = VertexTexCoord;
+	NormalMatrix = mat3(ModelViewMatrix);
+    TexCoord = vec2(VertexTexCoord.x, VertexTexCoord.y);
     Normal = normalize( NormalMatrix * VertexNormal);
     Position = vec3( ModelViewMatrix * vec4(VertexPosition,1.0) );
 
+	mat4 MVP = ProjectionMatrix * ModelViewMatrix;
     gl_Position = MVP * vec4(VertexPosition,1.0);
 }
