@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.opengl.GL40;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
@@ -36,13 +35,13 @@ public class GLSLRender {
 	private static Matrix4f projection, modelview;
 	//private static GLSLModel model;
 	private static VBOTorus torus;
-	private static GLSLModel model;
+	private static GLSLModel model, ship;
 	private static int numTris;
 	private static Vector4f lightPosition = new Vector4f(-5.0f,5.0f,-2.0f, 0.0f);
 	private static Vector3f modelPosition = new Vector3f(0.0f, 0.0f, 0.0f);
 	private static boolean f1Down = false, f2Down = false, renderWhat = false;
 	private static int adsIndex, diffuseIndex;
-	private static Texture texture;
+	private static Texture saucerTexture, shipTexture;
 	
 	static FloatBuffer MVBuffer, projBuffer;
 	
@@ -74,9 +73,9 @@ public class GLSLRender {
 			modelPosition.x += 0.05f;
 		
 		if(MouseManager.button0)
-			rotation = QuaternionHelper.rotate(rotation, new Vector3f(-MouseManager.dx, 0.0f, MouseManager.dy));
+			rotation = QuaternionHelper.rotate(rotation, new Vector3f(MouseManager.dy, -MouseManager.dx, 0.0f));
 		else if(MouseManager.button1){
-			rotation = QuaternionHelper.rotate(rotation, new Vector3f(0.0f, -MouseManager.dx, MouseManager.dy));
+			rotation = QuaternionHelper.rotate(rotation, new Vector3f(MouseManager.dy, 0.0f, -MouseManager.dx));
 		}
 		
 		if(MouseManager.button2)
@@ -118,9 +117,15 @@ public class GLSLRender {
 		program.setUniform("Material.Shininess", shininess);
 		
 		if(renderWhat){
-			torus.render();
+			program.setUniform("Tex1", 1);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, shipTexture.getTextureID());
+			GL13.glActiveTexture(GL13.GL_TEXTURE1);
+			ship.render();
 		}
 		else{
+			program.setUniform("Tex1", 0);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, saucerTexture.getTextureID());
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			model.render();
 		}
 		
@@ -158,7 +163,7 @@ public class GLSLRender {
 
 		//projection.translate(new Vector3f(0.0f, 0.0f, -10.0f));
 		// set the clear color
-		GL11.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+		GL11.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 		// create vertex shader
 		GLSLShader vertShader = new GLSLShader(ShaderTypes.VERTEX);
@@ -180,25 +185,38 @@ public class GLSLRender {
 		program.link();
 		program.use();
 		
-		program.printActiveAttribs();
-		program.printActiveUniforms();
+		//program.printActiveAttribs();
+		//program.printActiveUniforms();
 
 		torus = new VBOTorus(0.7f, 0.3f, 30, 30);
 		model = Models.SAUCER.getModel();
+		ship = Models.WING_X.getModel();
 		
-		texture = Textures.SAUCER.texture();
+		saucerTexture = Textures.SAUCER.texture();
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, saucerTexture.getTextureID());
 		
-		byte[] pixels = texture.getTextureData();
+		byte[] pixels = saucerTexture.getTextureData();
 		ByteBuffer pixelBuf = BufferUtils.createByteBuffer(pixels.length);
 		pixelBuf.put(pixels);
 		pixelBuf.rewind();
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, texture.getTextureWidth(), texture.getTextureHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixelBuf);
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, saucerTexture.getTextureWidth(), saucerTexture.getTextureHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixelBuf);
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 		
 		program.setUniform("Tex1", 0);
+		
+		shipTexture = Textures.SHIP1.texture();
+		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, shipTexture.getTextureID());
+		
+		pixels = shipTexture.getTextureData();
+		ByteBuffer anotherPixelBuf = BufferUtils.createByteBuffer(pixels.length);
+		anotherPixelBuf.put(pixels);
+		anotherPixelBuf.rewind();
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 1, GL11.GL_RGBA, shipTexture.getTextureWidth(), shipTexture.getTextureHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, anotherPixelBuf);
+		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 	}
 	
 	public static void renderPhong() {

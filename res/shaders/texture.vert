@@ -16,7 +16,7 @@ mat3 NormalMatrix;
 void main()
 {
 	NormalMatrix = mat3(ModelViewMatrix);
-    TexCoord = VertexTexCoord;
+    TexCoord = vec2(VertexTexCoord.x, VertexTexCoord.y);
     Normal = normalize( NormalMatrix * VertexNormal);
     Position = vec3( ModelViewMatrix * vec4(VertexPosition,1.0) );
 

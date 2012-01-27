@@ -249,7 +249,7 @@ public class GLSLModelBuilder {
 			normBuffer.put(firstNorm.z);
 			Point2f firstTex = textureCoords.get(triTex[0]);
 			texBuffer.put(firstTex.x);
-			texBuffer.put(1.0f - firstTex.y);
+			texBuffer.put(1 - firstTex.y);
 			
 			Vector3f secondVert = vertices.get(triVerts[1]);
 			vertBuffer.put(secondVert.x);
@@ -261,7 +261,7 @@ public class GLSLModelBuilder {
 			normBuffer.put(secondNorm.z);
 			Point2f secondTex = textureCoords.get(triTex[1]);
 			texBuffer.put(secondTex.x);
-			texBuffer.put(1.0f - secondTex.y);
+			texBuffer.put(1 - secondTex.y);
 			
 			
 			Vector3f thirdVert = vertices.get(triVerts[2]);
@@ -272,6 +272,9 @@ public class GLSLModelBuilder {
 			normBuffer.put(thirdNorm.x);
 			normBuffer.put(thirdNorm.y);
 			normBuffer.put(thirdNorm.z);
+			Point2f thirdTex = textureCoords.get(triTex[2]);
+			texBuffer.put(thirdTex.x);
+			texBuffer.put(1 - thirdTex.y);
 		}
 		vertBuffer.rewind();
 		normBuffer.rewind();
