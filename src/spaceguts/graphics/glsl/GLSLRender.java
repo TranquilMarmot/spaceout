@@ -6,6 +6,7 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
@@ -14,6 +15,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
+import org.newdawn.slick.opengl.Texture;
 
 import spaceguts.util.DisplayHelper;
 import spaceguts.util.MatrixHelper;
@@ -22,13 +24,15 @@ import spaceguts.util.input.Keys;
 import spaceguts.util.input.MouseManager;
 import spaceguts.util.resources.Models;
 import spaceguts.util.resources.Paths;
+import spaceguts.util.resources.Textures;
 
 public class GLSLRender {
 	static int vaoHandle = 0;
 
 	private static GLSLProgram program;
 	private static float zoom = 10;
-	private static Quaternion rotation = new Quaternion(-0.23499879f, -0.4204249f, 0.5374693f, 0.69221f);
+	//private static Quaternion rotation = new Quaternion(-0.23499879f, -0.4204249f, 0.5374693f, 0.69221f);
+	private static Quaternion rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 	private static Matrix4f projection, modelview;
 	//private static GLSLModel model;
 	private static VBOTorus torus;
@@ -38,6 +42,7 @@ public class GLSLRender {
 	private static Vector3f modelPosition = new Vector3f(0.0f, 0.0f, 0.0f);
 	private static boolean f1Down = false, f2Down = false, renderWhat = false;
 	private static int adsIndex, diffuseIndex;
+	private static Texture texture;
 	
 	static FloatBuffer MVBuffer, projBuffer;
 	
@@ -113,10 +118,10 @@ public class GLSLRender {
 		program.setUniform("Material.Shininess", shininess);
 		
 		if(renderWhat){
-			model.render();
+			torus.render();
 		}
 		else{
-			torus.render();
+			model.render();
 		}
 		
 		if(Keys.F1.isPressed() && !f1Down){
@@ -153,17 +158,17 @@ public class GLSLRender {
 
 		//projection.translate(new Vector3f(0.0f, 0.0f, -10.0f));
 		// set the clear color
-		GL11.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		GL11.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
 		// create vertex shader
 		GLSLShader vertShader = new GLSLShader(ShaderTypes.VERTEX);
-		String vertFile = Paths.SHADER_PATH.path() + "pervertex.vert";
+		String vertFile = Paths.SHADER_PATH.path() + "texture.vert";
 		if (!vertShader.compileShaderFromFile(vertFile))
 			System.out.println(vertShader.log());
 
 		// create fragment shader
 		GLSLShader fragShader = new GLSLShader(ShaderTypes.FRAGMENT);
-		String fragFile = Paths.SHADER_PATH.path() + "pervertex.frag";
+		String fragFile = Paths.SHADER_PATH.path() + "texture.frag";
 		if (!fragShader.compileShaderFromFile(fragFile)) {
 			System.out.println(fragShader.log());
 		}
@@ -175,11 +180,25 @@ public class GLSLRender {
 		program.link();
 		program.use();
 		
-		//program.printActiveAttribs();
-		//program.printActiveUniforms();
+		program.printActiveAttribs();
+		program.printActiveUniforms();
 
 		torus = new VBOTorus(0.7f, 0.3f, 30, 30);
 		model = Models.SAUCER.getModel();
+		
+		texture = Textures.SAUCER.texture();
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture.getTextureID());
+		
+		byte[] pixels = texture.getTextureData();
+		ByteBuffer pixelBuf = BufferUtils.createByteBuffer(pixels.length);
+		pixelBuf.put(pixels);
+		pixelBuf.rewind();
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, texture.getTextureWidth(), texture.getTextureHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, pixelBuf);
+		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+		
+		program.setUniform("Tex1", 0);
 	}
 	
 	public static void renderPhong() {
