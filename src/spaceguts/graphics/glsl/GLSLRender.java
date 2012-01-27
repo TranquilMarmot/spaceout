@@ -3,6 +3,7 @@ package spaceguts.graphics.glsl;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Stack;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -21,13 +22,11 @@ import spaceguts.graphics.render.Render2D;
 import spaceguts.util.DisplayHelper;
 import spaceguts.util.MatrixHelper;
 import spaceguts.util.QuaternionHelper;
-import spaceguts.util.debug.Debug;
 import spaceguts.util.input.Keys;
 import spaceguts.util.input.MouseManager;
 import spaceguts.util.resources.Models;
 import spaceguts.util.resources.Paths;
 import spaceguts.util.resources.Textures;
-import spaceout.entities.dynamic.Player;
 import spaceout.entities.passive.Skybox;
 
 public class GLSLRender {
@@ -46,6 +45,7 @@ public class GLSLRender {
 	private static int adsIndex, diffuseIndex;
 	private static Texture saucerTexture, shipTexture;
 	private static Skybox skybox;
+	private static Stack<Matrix4f> modelviewStack;
 	
 	static FloatBuffer MVBuffer, projBuffer;
 	
@@ -64,11 +64,12 @@ public class GLSLRender {
 				500.0f);
 		
 		modelview.setIdentity();
+		modelview.rotate(25.0f, new Vector3f(1.0f, 0.0f, 0.5f));
 		program.setUniform("ModelViewMatrix", modelview);
 		program.setUniform("Light.LightEnabled", false);
 		skybox.draw();
 		
-		
+		modelview.setIdentity();
 		modelview.translate(modelPosition);
 		modelPosition.z = -zoom;
 		Matrix4f.mul(modelview, QuaternionHelper.toMatrix(rotation), modelview);
@@ -217,6 +218,8 @@ public class GLSLRender {
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, shipTexture.getTextureWidth(), shipTexture.getTextureHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, anotherPixelBuf);
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+		
+		modelviewStack = new Stack<Matrix4f>();
 	}
 	
 	public static void renderPhong() {
