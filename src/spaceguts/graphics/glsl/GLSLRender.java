@@ -16,9 +16,11 @@ import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 import org.newdawn.slick.opengl.Texture;
 
+import spaceguts.graphics.render.Render2D;
 import spaceguts.util.DisplayHelper;
 import spaceguts.util.MatrixHelper;
 import spaceguts.util.QuaternionHelper;
+import spaceguts.util.debug.Debug;
 import spaceguts.util.input.Keys;
 import spaceguts.util.input.MouseManager;
 import spaceguts.util.resources.Models;
@@ -47,6 +49,9 @@ public class GLSLRender {
 	
 	public static void render() {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+		
+		program.use();
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
 
 		// buffer for transferring matrix to shader
 		MVBuffer.clear();
@@ -62,37 +67,23 @@ public class GLSLRender {
 		Matrix4f.mul(modelview, QuaternionHelper.toMatrix(rotation), modelview);
 		program.setUniform("ModelViewMatrix", modelview);
 		
-		if(Keys.W.isPressed())
-			modelPosition.y += 0.05f;
-		else if(Keys.S.isPressed())
-			modelPosition.y -= 0.05f;
-		
-		if(Keys.A.isPressed())
-			modelPosition.x -= 0.05f;
-		else if(Keys.D.isPressed())
-			modelPosition.x += 0.05f;
-		
 		if(MouseManager.button0)
 			rotation = QuaternionHelper.rotate(rotation, new Vector3f(MouseManager.dy, -MouseManager.dx, 0.0f));
-		else if(MouseManager.button1){
+		else if(MouseManager.button2)
+			modelPosition.translate(-MouseManager.dx / 10.0f, MouseManager.dy / 10.0f, 0.0f);
+		if(MouseManager.button1)
 			rotation = QuaternionHelper.rotate(rotation, new Vector3f(MouseManager.dy, 0.0f, -MouseManager.dx));
-		}
-		
-		if(MouseManager.button2)
-			zoom -= MouseManager.dy;
 		
 		if(Keys.RIGHT.isPressed())
-			lightPosition.x++;
-			//rotation = QuaternionHelper.rotateY(rotation, 0.5f);
+			lightPosition.x += 0.25f;
 		else if(Keys.LEFT.isPressed())
-			lightPosition.x--;
-			//rotation = QuaternionHelper.rotateY(rotation, -0.5f);
+			lightPosition.x -= 0.25f;
 		
 		if(Keys.UP.isPressed())
-			lightPosition.y++;
+			lightPosition.y += 0.25f;
 			//rotation = QuaternionHelper.rotateX(rotation, 0.5f);
 		else if(Keys.DOWN.isPressed())
-			lightPosition.y--;
+			lightPosition.y -= 0.25f;
 			//rotation = QuaternionHelper.rotateX(rotation, -0.5f);
 		
 		zoom -= MouseManager.wheel / 100;
@@ -117,15 +108,11 @@ public class GLSLRender {
 		program.setUniform("Material.Shininess", shininess);
 		
 		if(renderWhat){
-			program.setUniform("Tex1", 1);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, shipTexture.getTextureID());
-			GL13.glActiveTexture(GL13.GL_TEXTURE1);
+			shipTexture.bind();
 			ship.render();
 		}
 		else{
-			program.setUniform("Tex1", 0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, saucerTexture.getTextureID());
-			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			saucerTexture.bind();
 			model.render();
 		}
 		
@@ -144,6 +131,9 @@ public class GLSLRender {
 		
 		if(!Keys.M.isPressed())
 			f2Down = false;
+		
+		GL20.glUseProgram(0);
+		Render2D.draw2DScene();
 	}
 
 	public static void initGL() {
@@ -207,14 +197,14 @@ public class GLSLRender {
 		program.setUniform("Tex1", 0);
 		
 		shipTexture = Textures.SHIP1.texture();
-		GL13.glActiveTexture(GL13.GL_TEXTURE1);
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, shipTexture.getTextureID());
 		
 		pixels = shipTexture.getTextureData();
 		ByteBuffer anotherPixelBuf = BufferUtils.createByteBuffer(pixels.length);
 		anotherPixelBuf.put(pixels);
 		anotherPixelBuf.rewind();
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 1, GL11.GL_RGBA, shipTexture.getTextureWidth(), shipTexture.getTextureHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, anotherPixelBuf);
+		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, shipTexture.getTextureWidth(), shipTexture.getTextureHeight(), 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, anotherPixelBuf);
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
 		GL11.glTexParameterf(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 	}
