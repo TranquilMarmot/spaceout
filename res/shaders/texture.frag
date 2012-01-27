@@ -9,6 +9,7 @@ uniform sampler2D Tex1;
 struct LightInfo {
   vec4 LightPosition;  // Light position in eye coords.
   vec3 LightIntensity; // A,D,S intensity
+  bool LightEnabled;
 };
 uniform LightInfo Light;
 
@@ -37,8 +38,12 @@ void phongModel( vec3 pos, vec3 norm, out vec3 ambAndDiff, out vec3 spec ) {
 }
 
 void main() {
-    vec3 ambAndDiff, spec;
     vec4 texColor = texture( Tex1, TexCoord );
-    phongModel( Position, Normal, ambAndDiff, spec );
-    FragColor = (vec4( ambAndDiff, 1.0 ) * texColor) + vec4(spec,1.0);
+    if(Light.LightEnabled){
+	    vec3 ambAndDiff, spec;
+	    phongModel( Position, Normal, ambAndDiff, spec );
+	    FragColor = (vec4( ambAndDiff, 1.0 ) * texColor) + vec4(spec,1.0);
+    } else{
+    	FragColor = (vec4(texColor));
+    }
 }
