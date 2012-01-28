@@ -95,13 +95,14 @@ public class GLSLRender3D {
 	private static void setUpLights(){
 		if(Entities.lights.size() > 1)
 			System.out.println("More than one light! Multiple lighting not yet implemented.");
-			Light l = Entities.lights.values().iterator().next();
-			float transX = Entities.camera.location.x - l.location.x;
-			float transY = Entities.camera.location.y - l.location.y;
-			float transZ = Entities.camera.location.z - l.location.z;
-			program.setUniform("Light.LightPosition", new Vector4f(transX, transY, transZ, 0.0f));
-			program.setUniform("Light.LightIntensity", l.intensity);
-			program.setUniform("Light.LightEnabled", true);
+		Light l = Entities.lights.values().iterator().next();
+		float transX = Entities.camera.location.x - l.location.x;
+		float transY = Entities.camera.location.y - l.location.y;
+		float transZ = Entities.camera.location.z - l.location.z;
+		Vector3f rotated = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(transX, transY, transZ), Entities.camera.rotation);
+		program.setUniform("Light.LightPosition", new Vector4f(rotated.x, rotated.y, rotated.z, 0.0f));
+		program.setUniform("Light.LightIntensity", l.intensity);
+		program.setUniform("Light.LightEnabled", true);
 	}
 	
 	private static void drawSkybox(){
@@ -170,6 +171,7 @@ public class GLSLRender3D {
 		Iterator<DynamicEntity> entityIterator = Entities.dynamicEntities.values().iterator();
 		while(entityIterator.hasNext()){
 			DynamicEntity ent = entityIterator.next();
+			System.out.println(ent.type);
 			
 			float transX = Entities.camera.location.x - ent.location.x;
 			float transY = Entities.camera.location.y - ent.location.y;
