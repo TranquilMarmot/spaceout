@@ -1,21 +1,11 @@
 package spaceguts.graphics.glsl;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
-
-import javax.vecmath.Vector3f;
-
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
 import spaceguts.util.resources.Textures;
 
 import com.bulletphysics.collision.shapes.CollisionShape;
-import com.bulletphysics.util.ObjectArrayList;
 
 public class GLSLModel {
 	private int vaoHandle, numIndices;

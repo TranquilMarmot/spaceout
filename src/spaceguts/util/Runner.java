@@ -6,9 +6,12 @@ import org.lwjgl.opengl.Display;
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
 import spaceguts.entities.Light;
+import spaceguts.graphics.glsl.GLSLGraphics;
 import spaceguts.graphics.glsl.GLSLRender;
 import spaceguts.graphics.gui.GUI;
+import spaceguts.graphics.gui.menu.MainMenu;
 import spaceguts.physics.Physics;
+import spaceguts.util.console.Console;
 import spaceguts.util.debug.Debug;
 import spaceguts.util.input.KeyBindings;
 import spaceguts.util.input.KeyboardManager;
@@ -59,8 +62,8 @@ public class Runner {
 				update();
 				// render the scene
 				//Graphics.render();
-				GLSLRender.render();
-				//GLSLGraphics.render();
+				//GLSLRender.render();
+				GLSLGraphics.render();
 				// update the display (this swaps the buffers)
 				Display.update();
 				Display.sync(DisplayHelper.targetFPS);
@@ -82,11 +85,11 @@ public class Runner {
 		Debug.init();
 		//Graphics.initGL();		
 		
-		//MainMenu mainMenu = new MainMenu();
-		//GUI.addGUIObject(mainMenu);
+		MainMenu mainMenu = new MainMenu();
+		GUI.addGUIObject(mainMenu);
 		
-		GLSLRender.initGL();
-		//GLSLGraphics.initGL();
+		//GLSLRender.initGL();
+		GLSLGraphics.initGL();
 		
 		//initialize resources
 		/*
@@ -179,9 +182,9 @@ public class Runner {
 
 		// release the mouse if the game's paused or the console is on or the
 		// menu is up
-		//if (!paused && !Console.consoleOn && !GUI.menuUp)
-		//	Mouse.setGrabbed(true);
-		//else
+		if (!paused && !Console.consoleOn && !GUI.menuUp)
+			Mouse.setGrabbed(true);
+		else
 			Mouse.setGrabbed(false);
 	}
 

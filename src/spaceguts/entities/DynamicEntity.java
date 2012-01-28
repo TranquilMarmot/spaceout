@@ -124,6 +124,49 @@ public class DynamicEntity extends Entity {
 		else
 			Physics.dynamicsWorld.addRigidBody(rigidBody);
 	}
+	
+	public DynamicEntity(Vector3f location, Quaternion rotation, CollisionShape shape,
+			float mass, float restitution, short collisionGroup,
+			short collidesWith) {
+		// see Entity for location and rotation
+		this.location = location;
+		this.rotation = rotation;
+
+		// the transform to use for putting the entity into the world
+		Transform transform = new Transform();
+		transform.setRotation(new Quat4f(rotation.x, rotation.y, rotation.z,
+				rotation.w));
+		transform.origin.set(location.x, location.y, location.z);
+		DefaultMotionState defaultState = new DefaultMotionState(transform);
+
+		// location to use for the entity (need a javax.vecmath Vector3f instead
+		// of the given org.lwjgl.util.vector Vector3f
+		javax.vecmath.Vector3f loca = new javax.vecmath.Vector3f(location.x,
+				location.y, location.z);
+
+		// no initial fall inertia (it isn't vital to set this)
+		javax.vecmath.Vector3f fallInertia = new javax.vecmath.Vector3f(0.0f,
+				0.0f, 0.0f);
+		shape.calculateLocalInertia(mass, fallInertia);
+
+		// create the rigid body based on all the stuff we've grabbed
+		RigidBodyConstructionInfo rigidBodyCI = new RigidBodyConstructionInfo(
+				mass, defaultState, shape, loca);
+		rigidBodyCI.restitution = restitution;
+		rigidBody = new RigidBody(rigidBodyCI);
+
+		// set the pointer so the entity can be updated (see
+		// DynamicEntityCallback)
+		rigidBody.setUserPointer(this);
+
+		// finally, add it to the world
+		if (collisionGroup != CollisionTypes.NOTHING
+				&& collidesWith != CollisionTypes.NOTHING)
+			Physics.dynamicsWorld.addRigidBody(rigidBody, collisionGroup,
+					collidesWith);
+		else
+			Physics.dynamicsWorld.addRigidBody(rigidBody);
+	}
 
 	/**
 	 * This update method is called at the end of every physics tick with the

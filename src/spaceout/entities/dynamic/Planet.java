@@ -6,16 +6,14 @@ import org.lwjgl.util.glu.Sphere;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import spaceguts.entities.DynamicEntity;
+import spaceguts.graphics.glsl.GLSLRender3D;
+import spaceguts.interfaces.Health;
 import spaceguts.physics.CollisionTypes;
-import spaceguts.util.model.Model;
 import spaceguts.util.resources.Textures;
 
 import com.bulletphysics.collision.dispatch.CollisionObject;
-import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.collision.shapes.SphereShape;
-
-import spaceguts.entities.DynamicEntity;
-import spaceguts.interfaces.Health;
 
 /**
  * Pretty much just a dynamic entity that's represented by a sphere
@@ -29,19 +27,21 @@ public class Planet extends DynamicEntity implements Health{
 	//FIXME planets shouldnt really have health this is for shits and giggles
 	int health = 100;
 	
+	private int callList;
+	
 	public Planet(Vector3f location, Quaternion rotation, float size,
 			float mass, float restitution, Textures texture) {
-		super(location, rotation, makeModel(size, texture), mass, restitution, COL_GROUP, COL_WITH);
+		super(location, rotation, new SphereShape(size), mass, restitution, COL_GROUP, COL_WITH);
+		
 		rigidBody.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 		rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(0.0f, 0.015f, 0.0f));
 		
 		this.type = "Planet";
+		
+		callList = getCallList(size);
 	}
 	
-	private static Model makeModel(float size, Textures texture){
-		// use a sphere collision shape
-		CollisionShape sphereShape = new SphereShape(size);
-		
+	private static int getCallList(float size){
 		// shpere to use to draw the sphere
 		Sphere drawSphere = new Sphere();
 		drawSphere.setNormals(GLU.GLU_SMOOTH);
@@ -53,20 +53,18 @@ public class Planet extends DynamicEntity implements Health{
 			drawSphere.draw(size, 10, 10);
 		}GL11.glEndList();
 		
-		// make the model
-		return new Model(sphereShape, sphereCallList, texture);
+		return sphereCallList;
 	}
 	
 	@Override
 	public void draw(){
-			GL11.glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-			super.draw();
-			GL11.glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+		GLSLRender3D.modelview.rotate(-90, new Vector3f(1.0f, 0.0f, 0.0f));
+		GL11.glCallList(callList);
+		GLSLRender3D.modelview.rotate(90, new Vector3f(1.0f, 0.0f, 0.0f));
 	}
 
 	@Override
 	public int getCurrentHealth() {
-		// TODO Auto-generated method stub
 		return health;
 	}
 

@@ -72,6 +72,7 @@ public class Debug {
 			Debug.font.drawString((DisplayHelper.windowWidth / 2) - 25,
 					DisplayHelper.windowHeight / 2, "PAUSED");
 		
+		/*
 		Debug.font.drawString(5, DisplayHelper.windowHeight - 121, 
 				"Left Click + Drag - Rotate X/Y\n" +
 				"Right Click + Drag - Rotate X/Z\n" +
@@ -79,6 +80,7 @@ public class Debug {
 				"Mouse Wheel - Move Z\n" +
 				"Arrow Keys - Light Position\n" +
 				"M - Change Model");
+		*/
 	}
 
 	public static void drawDebugInfo() {

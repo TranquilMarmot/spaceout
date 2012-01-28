@@ -5,9 +5,11 @@ import java.util.Stack;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
@@ -20,7 +22,7 @@ import spaceguts.util.QuaternionHelper;
 import spaceguts.util.resources.Paths;
 
 public class GLSLRender3D {
-	private static final String VERTEX_SHADER = "basic_uniform.vert", FRAGMENT_SHADER = "basic_uniform.frag";
+	private static final String VERTEX_SHADER = "texture.vert", FRAGMENT_SHADER = "texture.frag";
 	/** ModelView and Projection matrices */
 	public static Matrix4f projection, modelview;
 	private static Stack<Matrix4f> modelviewStack = new Stack<Matrix4f>();
@@ -39,32 +41,52 @@ public class GLSLRender3D {
 	public static void render3DScene(){
 		setUp3DRender();
 		
+		transformToCamera();
+		
+		if(Entities.skybox != null)
+			drawSkybox();
+		
+		setUpLights();
+		
+		//drawLights();
+		
+		//drawDynamicEntities();
+		
+		//drawPassiveEntities();
+		
+		drawPlayer();
+	}
+	
+	private static void setUp3DRender(){
+		program.use();
+		Vector3f Kd = new Vector3f(0.5f, 0.5f, 0.5f);
+		program.setUniform("Material.Kd" , Kd);
+		
+		Vector3f Ka = new Vector3f(0.5f, 0.5f, 0.5f);
+		program.setUniform("Material.Ka", Ka);
+		
+		Vector3f Ks = new Vector3f(0.8f, 0.8f, 0.8f);
+		program.setUniform("Material.Ks", Ks);
+		
+		float shininess = 50.0f;
+		program.setUniform("Material.Shininess", shininess);
+		
 		// calculate the current aspect ratio
 		float aspect = (float) DisplayHelper.windowWidth
 				/ (float) DisplayHelper.windowHeight;
 		
 		if(aspect != oldAspect){
 			projection = MatrixHelper.perspective(fov, aspect, 1.0f, drawDistance);
-			program.setUniform("Projection", projection);
+			program.setUniform("ProjectionMatrix", projection);
+			oldAspect = aspect;
 		}
 		
-		transformToCamera();
 		
-		drawLights();
 		
-		drawDynamicEntities();
-		
-		drawPassiveEntities();
-		
-		drawPlayer();
-		
-		GL20.glUseProgram(0);
-	}
-	
-	private static void setUp3DRender(){
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
-		program.use();
+		
+		modelview.setIdentity();
 	}
 	
 	private static void transformToCamera(){
@@ -72,7 +94,40 @@ public class GLSLRender3D {
 		Matrix4f.mul(modelview, QuaternionHelper.toMatrix(Entities.camera.rotation), modelview);
 	}
 	
+	private static void setUpLights(){
+		if(Entities.lights.size() > 1)
+			System.out.println("More than one light! Multiple lighting not yet implemented.");
+			Light l = Entities.lights.values().iterator().next();
+			float transX = Entities.camera.location.x - l.location.x;
+			float transY = Entities.camera.location.y - l.location.y;
+			float transZ = Entities.camera.location.z - l.location.z;
+			program.setUniform("Light.LightPosition", new Vector4f(transX, transY, transZ, 0.0f));
+			program.setUniform("Light.LightIntensity", l.intensity);
+			program.setUniform("Light.LightEnabled", true);
+	}
+	
+	private static void drawSkybox(){
+		program.setUniform("Light.LightEnabled", false);
+			
+		float transX = Entities.camera.location.x - Entities.skybox.location.x;
+		float transY = Entities.camera.location.y - Entities.skybox.location.y;
+		float transZ = Entities.camera.location.z - Entities.skybox.location.z;
+		
+		modelviewStack.push(modelview);{
+			modelview.translate(new Vector3f(transX, transY, transZ));
+			
+			Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+			Quaternion.negate(Entities.skybox.rotation, reverse);
+			Matrix4f.mul(modelview, QuaternionHelper.toMatrix(reverse), modelview);
+			
+			program.setUniform("ModelViewMatrix", modelview);
+			Entities.skybox.draw();
+		}modelview = modelviewStack.pop();
+		program.setUniform("Light.LightEnabled", true);
+	}
+	
 	private static void drawLights(){
+		program.setUniform("Light.LightEnabled", false);
 		Iterator<Light> lightIterator = Entities.lights.values().iterator();
 		while(lightIterator.hasNext()){
 			Light light = lightIterator.next();
@@ -84,10 +139,11 @@ public class GLSLRender3D {
 			modelviewStack.push(modelview);{
 				modelview.translate(new Vector3f(transX, transY, transZ));
 				
-				program.setUniform("ModelView", modelview);
+				program.setUniform("ModelViewMatrix", modelview);
 				light.draw();
 			}modelview = modelviewStack.pop();
 		}
+		program.setUniform("Light.LightEnabled", true);
 	}
 	
 	private static void drawPassiveEntities(){
@@ -106,7 +162,7 @@ public class GLSLRender3D {
 				Quaternion.negate(ent.rotation, reverse);
 				Matrix4f.mul(modelview, QuaternionHelper.toMatrix(reverse), modelview);
 				
-				program.setUniform("ModelView", modelview);
+				program.setUniform("ModelViewMatrix", modelview);
 				ent.draw();
 			}modelview = modelviewStack.pop();
 		}
@@ -132,7 +188,7 @@ public class GLSLRender3D {
 				Quaternion.negate(ent.rotation, reverse);
 				Matrix4f.mul(modelview, QuaternionHelper.toMatrix(reverse), modelview);
 				
-				program.setUniform("ModelView", modelview);
+				program.setUniform("ModelViewMatrix", modelview);
 				ent.draw();
 			}modelview = modelviewStack.pop();
 		}
@@ -150,16 +206,13 @@ public class GLSLRender3D {
 			Quaternion.negate(Entities.player.rotation, reverse);
 			Matrix4f.mul(modelview, QuaternionHelper.toMatrix(reverse), modelview);
 			
-			program.setUniform("ModelView", modelview);
+			program.setUniform("ModelViewMatrix", modelview);
 			Entities.player.draw();
 		}modelview = modelviewStack.pop();
 	}
 	
 	public static void init(){
 		modelview = new Matrix4f();
-		projection = MatrixHelper.perspective(GLSLRender3D.fov, (float) DisplayHelper.windowWidth
-				/ (float) DisplayHelper.windowHeight, 0.1f,
-				GLSLRender3D.drawDistance);
 		
 		// create vertex shader
 		GLSLShader vertShader = new GLSLShader(ShaderTypes.VERTEX);
@@ -180,5 +233,12 @@ public class GLSLRender3D {
 		program.addShader(vertShader);
 		program.link();
 		program.use();
+		
+		// calculate the current aspect ratio
+		float oldAspect = (float) DisplayHelper.windowWidth
+				/ (float) DisplayHelper.windowHeight;
+		
+		projection = MatrixHelper.perspective(fov, oldAspect, 1.0f, drawDistance);
+		program.setUniform("ProjectionMatrix", projection);
 	}
 }

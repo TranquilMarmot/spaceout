@@ -6,6 +6,7 @@ import org.lwjgl.util.glu.Sphere;
 import org.lwjgl.util.vector.Vector3f;
 
 import spaceguts.entities.Light;
+import spaceguts.graphics.glsl.GLSLRender3D;
 import spaceguts.util.resources.Textures;
 
 /**
@@ -38,13 +39,12 @@ public class Sun extends Light {
 	 * @param lightDiffuse
 	 *            Diffuse light
 	 */
-	public Sun(Vector3f location, float size, int light, float[] color,
-			float[] lightAmbient, float[] lightDiffuse) {
-		super(location, light, lightAmbient, lightDiffuse);
+	public Sun(Vector3f location, float size, float[] color,
+			Vector3f intensity) {
+		super(location, intensity);
 		this.size = size;
 		this.type = "sun";
 		this.color = color;
-		this.light = light;
 		initList();
 	}
 
@@ -67,11 +67,9 @@ public class Sun extends Light {
 	@Override
 	public void draw() {
 		// disable lighting to draw the sun, oh the irony
-		GL11.glDisable(GL11.GL_LIGHTING);
 		Textures.WHITE.texture().bind();
 		GL11.glColor3f(color[0], color[1], color[2]);
 		GL11.glCallList(list);
-		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 
 	@Override
