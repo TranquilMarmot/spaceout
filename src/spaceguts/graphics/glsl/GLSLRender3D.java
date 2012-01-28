@@ -1,7 +1,6 @@
 package spaceguts.graphics.glsl;
 
 import java.util.Iterator;
-import java.util.Stack;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
@@ -23,7 +22,6 @@ public class GLSLRender3D {
 	private static final String VERTEX_SHADER = "texture.vert", FRAGMENT_SHADER = "texture.frag";
 	/** ModelView and Projection matrices */
 	public static Matrix4f projection, modelview;
-	private static Stack<Matrix4f> modelviewStack = new Stack<Matrix4f>();
 	
 	/** Draw distance and field-of-view to use for rendering */
 	public static float drawDistance = 3000000.0f, fov =  45.0f;
@@ -46,13 +44,19 @@ public class GLSLRender3D {
 		
 		setUpLights();
 		
-		//drawLights();
+		drawLights();
 		
-		//drawDynamicEntities();
+		drawDynamicEntities();
 		
 		//drawPassiveEntities();
 		
 		drawPlayer();
+		
+		/*
+		 * Modelview matrix
+		 * Rotate, translate, transpose
+		 * Why so confusing
+		 */
 	}
 	
 	private static void setUp3DRender(){
@@ -89,17 +93,27 @@ public class GLSLRender3D {
 	
 	private static void transformToCamera(){
 		modelview.translate(new Vector3f(Entities.camera.xOffset, Entities.camera.yOffset, -Entities.camera.zoom));
-		Matrix4f.mul(modelview, QuaternionHelper.toMatrix(Entities.camera.rotation), modelview);
+		
+		
+		Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		Quaternion.negate(Entities.camera.rotation, reverse);
+		Matrix4f.mul(modelview, QuaternionHelper.toMatrix(reverse), modelview);
+		
+		
+		//Matrix4f.mul(modelview, QuaternionHelper.toMatrix(Entities.camera.rotation), modelview);
 	}
 	
 	private static void setUpLights(){
 		if(Entities.lights.size() > 1)
 			System.out.println("More than one light! Multiple lighting not yet implemented.");
 		Light l = Entities.lights.values().iterator().next();
-		float transX = Entities.camera.location.x - l.location.x;
-		float transY = Entities.camera.location.y - l.location.y;
-		float transZ = Entities.camera.location.z - l.location.z;
-		Vector3f rotated = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(transX, transY, transZ), Entities.camera.rotation);
+		float transX = Entities.camera.location.x + l.location.x;
+		float transY = Entities.camera.location.y + l.location.y;
+		float transZ = Entities.camera.location.z + l.location.z;
+		
+		Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		Quaternion.negate(Entities.camera.rotation, reverse);
+		Vector3f rotated = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(transX, transY, transZ), reverse);
 		program.setUniform("Light.LightPosition", new Vector4f(rotated.x, rotated.y, rotated.z, 0.0f));
 		program.setUniform("Light.LightIntensity", l.intensity);
 		program.setUniform("Light.LightEnabled", true);
@@ -112,16 +126,14 @@ public class GLSLRender3D {
 		float transY = Entities.camera.location.y - Entities.skybox.location.y;
 		float transZ = Entities.camera.location.z - Entities.skybox.location.z;
 		
-		modelviewStack.push(modelview);{
+		Matrix4f oldModelview = new Matrix4f(modelview);{
 			modelview.translate(new Vector3f(transX, transY, transZ));
 			
-			Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-			Quaternion.negate(Entities.skybox.rotation, reverse);
-			Matrix4f.mul(modelview, QuaternionHelper.toMatrix(reverse), modelview);
+			Matrix4f.mul(modelview, QuaternionHelper.toMatrix(Entities.skybox.rotation), modelview);
 			
 			program.setUniform("ModelViewMatrix", modelview);
 			Entities.skybox.draw();
-		}modelview = modelviewStack.pop();
+		}modelview = oldModelview;
 		program.setUniform("Light.LightEnabled", true);
 	}
 	
@@ -135,12 +147,12 @@ public class GLSLRender3D {
 			float transY = Entities.camera.location.y - light.location.y;
 			float transZ = Entities.camera.location.z - light.location.z;
 			
-			modelviewStack.push(modelview);{
+			Matrix4f oldModelview = new Matrix4f(modelview);{
 				modelview.translate(new Vector3f(transX, transY, transZ));
 				
 				program.setUniform("ModelViewMatrix", modelview);
 				light.draw();
-			}modelview = modelviewStack.pop();
+			}modelview = oldModelview;
 		}
 		program.setUniform("Light.LightEnabled", true);
 	}
@@ -154,16 +166,14 @@ public class GLSLRender3D {
 			float transY = Entities.camera.location.y - ent.location.y;
 			float transZ = Entities.camera.location.z - ent.location.z;
 			
-			modelviewStack.push(modelview);{
+			Matrix4f oldModelview = new Matrix4f(modelview);{
 				modelview.translate(new Vector3f(transX, transY, transZ));
 				
-				Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-				Quaternion.negate(ent.rotation, reverse);
-				Matrix4f.mul(modelview, QuaternionHelper.toMatrix(reverse), modelview);
+				Matrix4f.mul(modelview, QuaternionHelper.toMatrix(ent.rotation), modelview);
 				
 				program.setUniform("ModelViewMatrix", modelview);
 				ent.draw();
-			}modelview = modelviewStack.pop();
+			}modelview = oldModelview;
 		}
 	}
 	
@@ -171,26 +181,23 @@ public class GLSLRender3D {
 		Iterator<DynamicEntity> entityIterator = Entities.dynamicEntities.values().iterator();
 		while(entityIterator.hasNext()){
 			DynamicEntity ent = entityIterator.next();
-			System.out.println(ent.type);
 			
 			float transX = Entities.camera.location.x - ent.location.x;
 			float transY = Entities.camera.location.y - ent.location.y;
 			float transZ = Entities.camera.location.z - ent.location.z;
 			
-			modelviewStack.push(modelview);{
+			Matrix4f oldModelview = new Matrix4f(modelview);{
 				modelview.translate(new Vector3f(transX, transY, transZ));
 				
 				if(Physics.drawDebug){
 					//TODO this
 				}
 				
-				Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-				Quaternion.negate(ent.rotation, reverse);
-				Matrix4f.mul(modelview, QuaternionHelper.toMatrix(reverse), modelview);
+				Matrix4f.mul(modelview, QuaternionHelper.toMatrix(ent.rotation), modelview);
 				
 				program.setUniform("ModelViewMatrix", modelview);
 				ent.draw();
-			}modelview = modelviewStack.pop();
+			}modelview = oldModelview;
 		}
 	}
 	
@@ -199,16 +206,14 @@ public class GLSLRender3D {
 		float transY = Entities.camera.location.y - Entities.player.location.y;
 		float transZ = Entities.camera.location.z - Entities.player.location.z;
 		
-		modelviewStack.push(modelview);{
+		Matrix4f oldModelview = new Matrix4f(modelview);{
 			modelview.translate(new Vector3f(transX, transY, transZ));
 			
-			Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-			Quaternion.negate(Entities.player.rotation, reverse);
-			Matrix4f.mul(modelview, QuaternionHelper.toMatrix(reverse), modelview);
+			Matrix4f.mul(modelview, QuaternionHelper.toMatrix(Entities.player.rotation), modelview);
 			
 			program.setUniform("ModelViewMatrix", modelview);
 			Entities.player.draw();
-		}modelview = modelviewStack.pop();
+		}modelview = oldModelview;
 	}
 	
 	public static void init(){

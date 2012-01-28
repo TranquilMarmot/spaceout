@@ -1,6 +1,6 @@
 <Entities>
 	<Player>
-		<location>0.0f,0.0f,0.0f</location>
+		<location>00.0f,00.0f,-7000.0f</location>
 		<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
 		<mass>50.0f</mass>
 		<restitution>0.01f</restitution>

@@ -41,7 +41,7 @@ public class DisplayHelper {
 	private static String windowTitle = "Spaceout Pre-alpha " + Runner.VERSION;
 
 	/** target fps (might not be reached on slower machines) */
-	public static int targetFPS = 100000;
+	public static int targetFPS = 60;
 	
 	public static boolean vsync = false;
 

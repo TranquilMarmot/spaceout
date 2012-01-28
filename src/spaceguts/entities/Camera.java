@@ -28,7 +28,7 @@ public class Camera extends Entity {
 	protected long lastUpdate;
 
 	/** how fast the camera moves in free mode */
-	public float speed = 0.05f;
+	public float speed = 50.0f;
 
 	/** zoom level */
 	public float zoom;
