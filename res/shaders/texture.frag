@@ -24,7 +24,7 @@ uniform MaterialInfo Material;
 layout(location = 0) out vec4 FragColor;
 
 void phongModel( vec3 pos, vec3 norm, out vec3 ambAndDiff, out vec3 spec ) {
-    vec3 s = normalize(vec3(Light.LightPosition) - pos);
+    vec3 s = normalize(vec3(Light.LightPosition));
     vec3 v = normalize(-pos.xyz);
     vec3 r = reflect(-s, norm);
     vec3 ambient = Light.LightIntensity * Material.Ka;

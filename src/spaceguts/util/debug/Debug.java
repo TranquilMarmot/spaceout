@@ -27,8 +27,6 @@ import spaceguts.util.resources.Paths;
  * 
  */
 public class Debug {
-	private static final String FONT_PATH = "res/fonts/";
-
 	/** the current FPS */
 	public static int currentFPS;
 
