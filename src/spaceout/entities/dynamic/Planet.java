@@ -1,25 +1,10 @@
 package spaceout.entities.dynamic;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
-
-import javax.vecmath.Point2f;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL30;
-import org.lwjgl.util.glu.GLU;
-import org.lwjgl.util.glu.Sphere;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 import spaceguts.entities.DynamicEntity;
-import spaceguts.graphics.glsl.GLSLModelBuilder;
-import spaceguts.graphics.glsl.GLSLRender3D;
-import spaceguts.graphics.glsl.VBOQuadric;
+import spaceguts.graphics.shapes.VBOQuadric;
 import spaceguts.interfaces.Health;
 import spaceguts.physics.CollisionTypes;
 import spaceguts.util.QuaternionHelper;
@@ -42,8 +27,6 @@ public class Planet extends DynamicEntity implements Health{
 	
 	private Textures texture;
 	
-	//private int callList;
-	private int vaoHandle, numIndices;
 	private VBOQuadric quadric;
 	
 	public Planet(Vector3f location, Quaternion rotation, float size,
@@ -56,7 +39,7 @@ public class Planet extends DynamicEntity implements Health{
 		this.type = "Planet";
 		this.texture = texture;
 		
-		quadric = new VBOQuadric(size, 20, 20);
+		quadric = new VBOQuadric(size, 10, 10);
 	}
 	
 	@Override

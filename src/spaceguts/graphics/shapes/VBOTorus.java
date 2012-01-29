@@ -1,17 +1,13 @@
-package spaceguts.graphics.glsl;
+package spaceguts.graphics.shapes;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-
-import javax.vecmath.Vector3f;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-
-import spaceguts.util.model.ModelBuilder;
 
 public class VBOTorus {
 	private int vaoHandle;

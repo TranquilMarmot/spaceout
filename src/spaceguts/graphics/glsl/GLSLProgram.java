@@ -18,6 +18,9 @@ public class GLSLProgram {
 	private int handle;
 	private String logString;
 	private boolean linked;
+	
+	private FloatBuffer matrix4fBuffer = BufferUtils.createFloatBuffer(16);
+	private FloatBuffer matrix3fBuffer = BufferUtils.createFloatBuffer(9);
 
 	public GLSLProgram() {
 		handle = GL20.glCreateProgram();
@@ -106,10 +109,10 @@ public class GLSLProgram {
 	public void setUniform(String name, Matrix4f m){
 		int loc = getUniformLocation(name);
 		if(loc >= 0){
-			FloatBuffer buf = BufferUtils.createFloatBuffer(16);
-			m.store(buf);
-			buf.rewind();
-			GL20.glUniformMatrix4(loc, false, buf);
+			matrix4fBuffer.clear();
+			m.store(matrix4fBuffer);
+			matrix4fBuffer.rewind();
+			GL20.glUniformMatrix4(loc, false, matrix4fBuffer);
 		} else{
 			System.out.println("Uniform variable " + name + " not found!");
 		}
@@ -118,10 +121,10 @@ public class GLSLProgram {
 	public void setUniform(String name, Matrix3f m){
 		int loc = getUniformLocation(name);
 		if(loc >= 0){
-			FloatBuffer buf = BufferUtils.createFloatBuffer(9);
-			m.store(buf);
-			buf.rewind();
-			GL20.glUniformMatrix4(loc, false, buf);
+			matrix3fBuffer.clear();
+			m.store(matrix3fBuffer);
+			matrix3fBuffer.rewind();
+			GL20.glUniformMatrix4(loc, false, matrix3fBuffer);
 		} else{
 			System.out.println("Uniform variable " + name + " not found!");
 		}

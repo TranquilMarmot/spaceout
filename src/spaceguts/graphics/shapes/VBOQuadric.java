@@ -1,4 +1,4 @@
-package spaceguts.graphics.glsl;
+package spaceguts.graphics.shapes;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -11,13 +11,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.util.vector.Quaternion;
-import org.lwjgl.util.vector.Vector3f;
-
-import spaceguts.util.QuaternionHelper;
-import spaceguts.util.resources.Textures;
-
-import com.bulletphysics.collision.shapes.CollisionShape;
 
 public class VBOQuadric{
 	private int vaoHandle, numIndices;

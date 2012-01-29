@@ -2,18 +2,13 @@ package spaceout.entities.dynamic;
 
 import javax.vecmath.Vector3f;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 
 import spaceguts.entities.DynamicEntity;
-import spaceguts.graphics.glsl.GLSLModel;
-import spaceguts.graphics.glsl.GLSLModelBuilder;
 import spaceguts.physics.CollisionTypes;
 import spaceguts.util.model.Model;
+import spaceguts.util.model.ModelBuilder;
 import spaceguts.util.resources.Textures;
-
-import com.bulletphysics.collision.shapes.BoxShape;
-import com.bulletphysics.collision.shapes.CollisionShape;
 
 public class Box extends DynamicEntity{
 	final static short COL_GROUP = CollisionTypes.WALL;
@@ -25,15 +20,15 @@ public class Box extends DynamicEntity{
 		this.type = "Ground";
 	}
 	
-	private static GLSLModel makeModel(Vector3f size){
+	private static Model makeModel(Vector3f size){
 		float xSize = size.x;
 		float ySize = size.y;
 		float zSize = size.z;
 		
-		CollisionShape groundShape = new BoxShape(
-				new javax.vecmath.Vector3f(xSize, ySize, zSize));
+		//CollisionShape groundShape = new BoxShape(
+		//		new javax.vecmath.Vector3f(xSize, ySize, zSize));
 		
-		GLSLModelBuilder builder = new GLSLModelBuilder();
+		ModelBuilder builder = new ModelBuilder();
 		
 		float[] vertices = {
 				xSize, ySize, zSize,  -xSize, ySize, zSize,  -xSize, -ySize, zSize,  xSize, -ySize, zSize,

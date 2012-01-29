@@ -6,7 +6,6 @@ import org.lwjgl.util.glu.Sphere;
 import org.lwjgl.util.vector.Vector3f;
 
 import spaceguts.entities.Light;
-import spaceguts.graphics.glsl.GLSLRender3D;
 import spaceguts.util.resources.Textures;
 
 /**
@@ -20,7 +19,7 @@ public class Sun extends Light {
 	public float size;
 
 	/** the color of this sun */
-	private float[] color;
+	//private float[] color;
 
 	/** call list to use to draw this sun */
 	private int list;
@@ -44,7 +43,7 @@ public class Sun extends Light {
 		super(location, intensity);
 		this.size = size;
 		this.type = "sun";
-		this.color = color;
+		//this.color = color;
 		initList();
 	}
 
