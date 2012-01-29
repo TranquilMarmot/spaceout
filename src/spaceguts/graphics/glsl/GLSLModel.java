@@ -28,7 +28,7 @@ public class GLSLModel {
 	public void render(){
 		GL30.glBindVertexArray(vaoHandle);
 		if(wireframe)
-			GL11.glDrawArrays(GL11.GL_LINES, 0, numIndices);
+			GL11.glDrawArrays(GL11.GL_LINE_STRIP, 0, numIndices);
 		else
 			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, numIndices);
 	}
