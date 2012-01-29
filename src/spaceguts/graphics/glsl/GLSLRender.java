@@ -16,6 +16,7 @@ import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 import org.newdawn.slick.opengl.Texture;
 
+import spaceguts.entities.Camera;
 import spaceguts.graphics.render.Render2D;
 import spaceguts.util.DisplayHelper;
 import spaceguts.util.MatrixHelper;
@@ -26,16 +27,16 @@ import spaceguts.util.input.MouseManager;
 import spaceguts.util.resources.Models;
 import spaceguts.util.resources.Paths;
 import spaceguts.util.resources.Textures;
+import spaceout.entities.dynamic.Player;
+import spaceout.entities.passive.Skybox;
 
 public class GLSLRender {
 	static int vaoHandle = 0;
 
 	private static GLSLProgram program;
 	private static float zoom = 10;
-	//private static Quaternion rotation = new Quaternion(-0.23499879f, -0.4204249f, 0.5374693f, 0.69221f);
 	private static Quaternion rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 	private static Matrix4f projection, modelview;
-	//private static GLSLModel model;
 	private static VBOTorus torus;
 	private static GLSLModel model, ship;
 	private static int numTris;
@@ -44,6 +45,7 @@ public class GLSLRender {
 	private static boolean f1Down = false, f2Down = false, renderWhat = false;
 	private static int adsIndex, diffuseIndex;
 	private static Texture saucerTexture, shipTexture;
+	private static Skybox skybox;
 	
 	static FloatBuffer MVBuffer, projBuffer;
 	
@@ -62,6 +64,11 @@ public class GLSLRender {
 				500.0f);
 		
 		modelview.setIdentity();
+		program.setUniform("ModelViewMatrix", modelview);
+		program.setUniform("Light.LightEnabled", false);
+		skybox.draw();
+		
+		
 		modelview.translate(modelPosition);
 		modelPosition.z = -zoom;
 		Matrix4f.mul(modelview, QuaternionHelper.toMatrix(rotation), modelview);
@@ -107,6 +114,7 @@ public class GLSLRender {
 		float shininess = 50.0f;
 		program.setUniform("Material.Shininess", shininess);
 		
+		program.setUniform("Light.LightEnabled", true);
 		if(renderWhat){
 			shipTexture.bind();
 			ship.render();
@@ -181,6 +189,8 @@ public class GLSLRender {
 		torus = new VBOTorus(0.7f, 0.3f, 30, 30);
 		model = Models.SAUCER.getModel();
 		ship = Models.WING_X.getModel();
+		Camera c = new Camera(modelPosition);
+		skybox = new Skybox(c);
 		
 		saucerTexture = Textures.SAUCER.texture();
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);
