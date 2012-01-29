@@ -83,8 +83,6 @@ public class GLSLRender3D {
 			oldAspect = aspect;
 		}
 		
-		
-		
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		

@@ -101,13 +101,14 @@ public class Planet extends DynamicEntity implements Health{
 				
 				
 				x = (float)(-Math.sin(theta) * Math.sin(rho + drho));
-				y = (float)(Math.cos(theta) * Math.sin(rho * drho));
+				y = (float)(Math.cos(theta) * Math.sin(rho + drho));
 				z = (float)(Math.cos(rho + drho));
 				
 				normals.add(new javax.vecmath.Vector3f(x, y, z));
 				texCoords.add(new Point2f(s, t - dt));
-				s += ds;
 				vertices.add(new javax.vecmath.Vector3f(x * radius, y * radius, z * radius));
+				
+				s += ds;
 			}
 			t -= dt;
 		}
@@ -118,6 +119,24 @@ public class Planet extends DynamicEntity implements Health{
 		FloatBuffer normBuffer = BufferUtils.createFloatBuffer(normals.size() * 3);
 		FloatBuffer texBuffer = BufferUtils.createFloatBuffer(texCoords.size() * 2);
 		
+		for(int i = 0; i < vertices.size(); i ++){
+			javax.vecmath.Vector3f vert0 = vertices.get(i);
+			javax.vecmath.Vector3f norm0 = normals.get(i);
+			Point2f texCoord0 = texCoords.get(i);
+			
+			vertBuffer.put(vert0.x);
+			vertBuffer.put(vert0.y);
+			vertBuffer.put(vert0.z);
+			normBuffer.put(norm0.x);
+			normBuffer.put(norm0.y);
+			normBuffer.put(norm0.z);
+			texBuffer.put(texCoord0.x);
+			texBuffer.put(texCoord0.y);
+		}
+		
+		
+		
+		/*
 		for(int i = 0; i < vertices.size(); i++){
 			javax.vecmath.Vector3f vert = vertices.get(i);
 			javax.vecmath.Vector3f norm = normals.get(i);
@@ -132,6 +151,7 @@ public class Planet extends DynamicEntity implements Health{
 			texBuffer.put(texCoord.x);
 			texBuffer.put(texCoord.y);
 		}
+		*/
 		
 		vertBuffer.rewind();
 		normBuffer.rewind();
@@ -167,7 +187,7 @@ public class Planet extends DynamicEntity implements Health{
 		texture.texture().bind();
 		//GL11.glCallList(callList);
 		GL30.glBindVertexArray(vaoHandle);
-		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, numIndices);
+		GL11.glDrawArrays(GL11.GL_QUADS, 0, numIndices);
 		GLSLRender3D.modelview.rotate(90, new Vector3f(1.0f, 0.0f, 0.0f));
 	}
 
