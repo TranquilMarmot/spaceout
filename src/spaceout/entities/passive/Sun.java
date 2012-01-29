@@ -68,7 +68,6 @@ public class Sun extends Light {
 	public void draw() {
 		// disable lighting to draw the sun, oh the irony
 		Textures.WHITE.texture().bind();
-		GL11.glColor3f(color[0], color[1], color[2]);
 		GL11.glCallList(list);
 	}
 

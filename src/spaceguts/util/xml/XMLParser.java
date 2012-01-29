@@ -142,7 +142,7 @@ public class XMLParser {
 		
 		/* TEMP SHIP INFO TODO make this load from XML */
 		String shipName = "WingX";
-		Models shipModel = Models.WING_X;
+		Models shipModel = Models.WESCOTT;
 		int shipHealth = 100;
 		float shipMass = 50.0f;
 		float shipRestitution = 0.01f;

@@ -31,7 +31,7 @@ public class GLSLRender3D {
 			/ (float) DisplayHelper.windowHeight;
 	
 	/** the shader program to use */
-	private static GLSLProgram program;
+	public static GLSLProgram program;
 	
 	
 	public static void render3DScene(){
