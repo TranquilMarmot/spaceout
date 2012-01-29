@@ -1,9 +1,11 @@
 package spaceguts.util.debug;
 
+import java.awt.Font;
 import java.util.Formatter;
 
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.SlickException;
@@ -15,6 +17,7 @@ import spaceguts.util.DisplayHelper;
 import spaceguts.util.QuaternionHelper;
 import spaceguts.util.Runner;
 import spaceguts.util.console.Console;
+import spaceguts.util.resources.Paths;
 
 /**
  * Handles drawing all the debug info. This class also contains the console
@@ -24,8 +27,6 @@ import spaceguts.util.console.Console;
  * 
  */
 public class Debug {
-	private static final String FONT_PATH = "res/fonts/";
-
 	/** the current FPS */
 	public static int currentFPS;
 
@@ -68,6 +69,16 @@ public class Debug {
 		if (Runner.paused && Entities.entitiesExist())
 			Debug.font.drawString((DisplayHelper.windowWidth / 2) - 25,
 					DisplayHelper.windowHeight / 2, "PAUSED");
+		
+		/*
+		Debug.font.drawString(5, DisplayHelper.windowHeight - 121, 
+				"Left Click + Drag - Rotate X/Y\n" +
+				"Right Click + Drag - Rotate X/Z\n" +
+				"Middle Click + Drag - Move X/Y\n" +
+				"Mouse Wheel - Move Z\n" +
+				"Arrow Keys - Light Position\n" +
+				"M - Change Model");
+		*/
 	}
 
 	public static void drawDebugInfo() {
@@ -135,7 +146,8 @@ public class Debug {
 		drawVersion();
 
 		// draw the current fps
-		font.drawString(DisplayHelper.windowWidth - 70, font.getDescent() + 25,
+		String fpsString = currentFPS + " fps";
+		font.drawString(DisplayHelper.windowWidth - font.getWidth(fpsString) - 2, font.getDescent() + 16,
 				currentFPS + " fps");
 	}
 
@@ -144,7 +156,7 @@ public class Debug {
 	 */
 	public static void drawVersion() {
 		// draw what version of Spaceout this is
-		font.drawString(DisplayHelper.windowWidth - 70, font.getDescent() + 5,
+		font.drawString(DisplayHelper.windowWidth - font.getWidth(Runner.VERSION) - 3, font.getDescent() - 4,
 				Runner.VERSION);
 	}
 
@@ -153,10 +165,12 @@ public class Debug {
 	 */
 	@SuppressWarnings("unchecked")
 	public static void init() {
+		GL20.glUseProgram(0);
 		// initialize the font if this is the first draw
 		if (font == null) {
 			try {
-				font = new UnicodeFont(FONT_PATH + "VeraMono.ttf", 15, false,
+				Font awtFont = new Font(Paths.FONT_PATH.path() + "VeraMono.ttf", Font.PLAIN, 15);
+				font = new UnicodeFont(awtFont, 15, false,
 						false);
 				font.addAsciiGlyphs();
 				font.getEffects().add(new ColorEffect(java.awt.Color.WHITE));
@@ -240,6 +254,9 @@ public class Debug {
 		if (glDriver != null)
 			System.out.print("(" + glDriver + ")");
 		System.out.println();
+		
+		String glslVersion = GL11.glGetString(GL20.GL_SHADING_LANGUAGE_VERSION);
+		System.out.println("GLSL version " + glslVersion);
 
 		// print out info about the graphics card
 		String glVendor = GL11.glGetString(GL11.GL_VENDOR);

@@ -1,6 +1,7 @@
 package spaceguts.graphics.render;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
 import spaceguts.graphics.Graphics;
 import spaceguts.graphics.gui.GUI;
@@ -25,6 +26,10 @@ public class Render2D {
 	 * Sets up OpenGL for 2D drawing
 	 */
 	private static void setUp2DRender(){
+		GL20.glUseProgram(0);
+		//GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		
+		
 		// reset the projection matrix
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();

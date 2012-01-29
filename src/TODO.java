@@ -17,7 +17,7 @@
  * 			TODO Make an options menu for the menu screen
  * 			TODO Might be a good idea to have the Button constructor take a scale in to control how big the image is (xScale and yScale) rather than the size of the image
  * 		OpenGL
- * 			TODO Use GLSL and more modern OpenGL in place of the current arhaic methods
+ * 			TODO For the GLSL rendering loop, have the camera's location and rotation be a uniform and have each entity's location and rotation be a uniform as well
  * 			TODO Everything is impossible to find! Find a way to billboard text and have it drawn over something (text size probably based on distance from object)
  * 			TODO Mipmap textures so that they aren't as detailed from far away but are close up
  * 		Models

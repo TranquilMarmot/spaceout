@@ -2,6 +2,7 @@ package spaceguts.util;
 
 import java.nio.FloatBuffer;
 
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -152,6 +153,16 @@ public class QuaternionHelper {
 
 		return new Vector3f(x, y, z);
 	}
+	
+	public static Quaternion rotate(Quaternion quat, Vector3f amount){
+		Quaternion ret = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		
+		ret = rotateX(quat, amount.x);
+		ret = rotateY(ret, amount.y);
+		ret = rotateZ(ret, amount.z);
+		
+		return ret;
+	}
 
 	/**
 	 * Rotate a quaternion along it's x axis a certain amount
@@ -258,6 +269,43 @@ public class QuaternionHelper {
 		Vector3f multi = rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f,
 				amount), quat);
 		Vector3f.add(vec, multi, ret);
+		return ret;
+	}
+	
+	public static Matrix4f toMatrix(Quaternion quat){
+		float x2 = quat.x * quat.x;
+		float y2 = quat.y * quat.y;
+		float z2 = quat.z * quat.z;
+		float xy = quat.x * quat.y;
+		float xz = quat.x * quat.z;
+		float yz = quat.y * quat.z;
+		float wx = quat.w * quat.x;
+		float wy = quat.w * quat.y;
+		float wz = quat.w * quat.z;
+		
+		Matrix4f ret = new Matrix4f();
+
+
+		ret.m00 = (1.0f - 2.0f * (y2 + z2));
+		ret.m10 = (2.0f * (xy - wz));
+		ret.m20 = (2.0f * (xz + wy));
+		ret.m30 = (0.0f);
+		
+		ret.m01 = (2.0f * (xy + wz));
+		ret.m11 = (1.0f - 2.0f * (x2 + z2));
+		ret.m21 = (2.0f * (yz - wx));
+		ret.m31 = (0.0f);
+		
+		ret.m02 = (2.0f * (xz - wy));
+		ret.m12 = (2.0f * (yz + wx));
+		ret.m22 = (1.0f - 2.0f * (x2 + y2));
+		ret.m32 = (0.0f);
+		
+		ret.m03 = (0.0f);
+		ret.m13 = (0.0f);
+		ret.m23 = (0.0f);
+		ret.m33 = (1.0f);
+		
 		return ret;
 	}
 }

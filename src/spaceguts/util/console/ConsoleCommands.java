@@ -220,7 +220,7 @@ class ListCommand implements Command{
 		} else if(which.equals("lights") || which.equals("light")){
 			Console.console.print("Listing lights...");
 			for(Light l : Entities.lights.values())
-				Console.console.print(l.type + "; using light " + l.light);
+				Console.console.print(l.type + "; using light at " + l.location.x + " " + l.location.y + " " + l.location.z);
 		} else{
 			Console.console.print("List command not recognized! (" + which + ")");
 		}

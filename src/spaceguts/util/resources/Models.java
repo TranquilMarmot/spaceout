@@ -11,8 +11,9 @@ import spaceguts.util.model.ModelLoader;
 public enum Models {
 	WING_X(Paths.MODEL_PATH.path() + "ships/wing_x.obj", 0.5f, Textures.SHIP1),
 	LASERBULLET(Paths.MODEL_PATH.path() + "laserbullet.obj", 1.0f, Textures.LASERBULLET),
-	SAUCER(Paths.MODEL_PATH.path() + "ships/saucer.obj", 1.0f, Textures.SAUCER),
-	SKYBOX(Paths.MODEL_PATH.path() + "skybox.obj", 100000.0f, Textures.STARS);
+	SAUCER(Paths.MODEL_PATH.path() + "ships/new-saucer.obj", 1.0f, Textures.SAUCER),
+	SKYBOX(Paths.MODEL_PATH.path() + "skybox.obj", 100000.0f, Textures.STARS),
+	WESCOTT(Paths.MODEL_PATH.path() + "ships/wescott.obj", 1.0f, Textures.WESCOTT);
 	
 	/** the actual model object */
 	private Model model;
@@ -44,5 +45,9 @@ public enum Models {
 		if(!modelLoaded()){
 			model = ModelLoader.loadObjFile(file, scale, texture);
 		}
+	}
+	
+	public void render(){
+		
 	}
 }
