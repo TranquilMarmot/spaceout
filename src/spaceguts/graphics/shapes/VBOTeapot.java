@@ -1,4 +1,4 @@
-package spaceguts.graphics.glsl;
+package spaceguts.graphics.shapes;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;

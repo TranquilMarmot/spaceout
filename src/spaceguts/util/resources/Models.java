@@ -1,7 +1,7 @@
 package spaceguts.util.resources;
 
-import spaceguts.graphics.glsl.GLSLModel;
-import spaceguts.graphics.glsl.GLSLModelLoader;
+import spaceguts.util.model.Model;
+import spaceguts.util.model.ModelLoader;
 
 /**
  * All the possible models for the game. Each value in the enum also contains the path for the model, its scale, and which texture it uses.
@@ -16,7 +16,7 @@ public enum Models {
 	WESCOTT(Paths.MODEL_PATH.path() + "ships/wescott.obj", 1.0f, Textures.WESCOTT);
 	
 	/** the actual model object */
-	private GLSLModel model;
+	private Model model;
 	/** which file to load the model from */
 	private String file;
 	/** what scale the model is at */
@@ -30,7 +30,7 @@ public enum Models {
 		this.texture = texture;
 	}
 	
-	public GLSLModel getModel(){
+	public Model getModel(){
 		if(!modelLoaded())
 			initModel();
 		return model; 
@@ -43,7 +43,7 @@ public enum Models {
 	public void initModel(){
 		//System.out.println("initializing model " + this);
 		if(!modelLoaded()){
-			model = GLSLModelLoader.loadObjFile(file, scale, texture);
+			model = ModelLoader.loadObjFile(file, scale, texture);
 		}
 	}
 	

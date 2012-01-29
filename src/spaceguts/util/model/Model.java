@@ -1,57 +1,39 @@
 package spaceguts.util.model;
 
-import spaceguts.util.resources.ResourceLoader;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
+
 import spaceguts.util.resources.Textures;
 
 import com.bulletphysics.collision.shapes.CollisionShape;
 
-/**
- * A 3D model for drawing and colliding with things
- * 
- * @author TranquilMarmot
- * 
- */
 public class Model {
-	/** The collision shape to use for this model */
-	private CollisionShape shape;
-
-	/** The call list to use to draw this model */
-	private int callList;
-	
+	private int vaoHandle, numIndices;
+	private CollisionShape collisionShape;
 	private Textures texture;
-
-	/**
-	 * Model initializer
-	 * 
-	 * @param shape
-	 *            The CollisionShape to use for the model
-	 * @param callList
-	 *            The call list to call to draw the model
-	 * @param texture
-	 *            Which texture to use for this model (from
-	 *            {@link ResourceLoader}
-	 */
-	public Model(CollisionShape shape, int callList, Textures texture) {
-		this.shape = shape;
-		this.callList = callList;
+	public boolean wireframe = false;
+	
+	public Model(CollisionShape collisionShape, int vaoHandle, int numIndices, Textures texture){
+		// these all come from the model loader
+		this.vaoHandle = vaoHandle;
+		this.numIndices = numIndices;
+		this.collisionShape = collisionShape;
 		this.texture = texture;
 	}
 	
-	public Textures getTexture(){
+	public CollisionShape getCollisionShape(){
+		return collisionShape;
+	}
+	
+	public void render(){
+		GL30.glBindVertexArray(vaoHandle);
+		if(wireframe)
+			GL11.glDrawArrays(GL11.GL_LINE_STRIP, 0, numIndices);
+		else
+			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, numIndices);
+	}
+
+	public Textures getTexture() {
 		return texture;
-	}
-
-	/**
-	 * @return The model's CollisionShape
-	 */
-	public CollisionShape getCollisionShape() {
-		return shape;
-	}
-
-	/**
-	 * @return The model's call list
-	 */
-	public int getCallList() {
-		return callList;
-	}
+	}	
 }

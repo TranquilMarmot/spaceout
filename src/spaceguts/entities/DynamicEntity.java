@@ -2,11 +2,9 @@ package spaceguts.entities;
 
 import javax.vecmath.Quat4f;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-import spaceguts.graphics.glsl.GLSLModel;
 import spaceguts.physics.CollisionTypes;
 import spaceguts.physics.Physics;
 import spaceguts.util.model.Model;
@@ -29,7 +27,7 @@ public class DynamicEntity extends Entity {
 	public RigidBody rigidBody;
 
 	/** the model to use for this entity */
-	public GLSLModel model;
+	public Model model;
 
 	/**
 	 * if this is true, the next time the entity is updated it is removed from
@@ -40,7 +38,7 @@ public class DynamicEntity extends Entity {
 	/**
 	 * Overloaded constructor
 	 */
-	public DynamicEntity(Vector3f location, Quaternion rotation, GLSLModel model,
+	public DynamicEntity(Vector3f location, Quaternion rotation, Model model,
 			float mass, float restitution) {
 		this(location, rotation, model, mass, restitution,
 				CollisionTypes.NOTHING, CollisionTypes.NOTHING);
@@ -78,7 +76,7 @@ public class DynamicEntity extends Entity {
 	 * @param collisionGroup
 	 *            which group from {@link CollisionTypes} this entity belongs to
 	 */
-	public DynamicEntity(Vector3f location, Quaternion rotation, GLSLModel model,
+	public DynamicEntity(Vector3f location, Quaternion rotation, Model model,
 			float mass, float restitution, short collisionGroup,
 			short collidesWith) {
 		// see Entity for location and rotation
