@@ -1,11 +1,9 @@
 package spaceout.entities.passive;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
-import org.lwjgl.util.glu.Sphere;
 import org.lwjgl.util.vector.Vector3f;
 
 import spaceguts.entities.Light;
+import spaceguts.graphics.shapes.VBOQuadric;
 import spaceguts.util.resources.Textures;
 
 /**
@@ -17,12 +15,9 @@ import spaceguts.util.resources.Textures;
 public class Sun extends Light {
 	/** size of this sun */
 	public float size;
-
-	/** the color of this sun */
-	//private float[] color;
-
-	/** call list to use to draw this sun */
-	private int list;
+	
+	private Textures texture = Textures.SUN;
+	private VBOQuadric sphere;
 
 	/**
 	 * Sun constructor
@@ -38,36 +33,17 @@ public class Sun extends Light {
 	 * @param lightDiffuse
 	 *            Diffuse light
 	 */
-	public Sun(Vector3f location, float size, float[] color,
+	public Sun(Vector3f location, float size,
 			Vector3f intensity) {
 		super(location, intensity);
-		this.size = size;
+		sphere = new VBOQuadric(size, 15, 15);
 		this.type = "sun";
-		//this.color = color;
-		initList();
-	}
-
-	/**
-	 * Initializes the call list for this sun
-	 */
-	private void initList() {
-		Sphere sphere = new Sphere();
-		sphere.setNormals(GLU.GLU_SMOOTH);
-		sphere.setTextureFlag(false);
-
-		list = GL11.glGenLists(1);
-		GL11.glNewList(list, GL11.GL_COMPILE);
-		{
-			sphere.draw(size, 30, 30);
-		}
-		GL11.glEndList();
 	}
 
 	@Override
 	public void draw() {
-		// disable lighting to draw the sun, oh the irony
-		Textures.WHITE.texture().bind();
-		GL11.glCallList(list);
+		texture.texture().bind();
+		sphere.draw();
 	}
 
 	@Override

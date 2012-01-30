@@ -108,9 +108,9 @@ public class Render3D {
 		if(Entities.lights.size() > 1)
 			System.out.println("More than one light! Multiple lighting not yet implemented.");
 		Light l = Entities.lights.values().iterator().next();
-		float transX = Entities.camera.location.x + l.location.x;
-		float transY = Entities.camera.location.y + l.location.y;
-		float transZ = Entities.camera.location.z + l.location.z;
+		float transX = Entities.camera.location.x - l.location.x;
+		float transY = Entities.camera.location.y - l.location.y;
+		float transZ = Entities.camera.location.z - l.location.z;
 		
 		Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		Quaternion.negate(Entities.camera.rotation, reverse);

@@ -27,9 +27,8 @@ public class Sandbox extends Entity{
 		/* BEGIN SUN */
 		Vector3f sunLocation = new Vector3f(1500.0f, 1500.0f, -2.0f);
 		float sunSize = 150.0f;
-		float[] sunColor = { 1.0f, 1.0f, 0.3f };
 		Vector3f sunIntensity = new Vector3f(0.9f, 0.9f, 0.9f);
-		Sun sun = new Sun(sunLocation, sunSize, sunColor, sunIntensity);
+		Sun sun = new Sun(sunLocation, sunSize, sunIntensity);
 		Entities.addLight(sun);
 		/* END SUN */
 		

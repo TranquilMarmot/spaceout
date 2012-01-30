@@ -175,50 +175,9 @@ public class XMLParser {
 	private static void makeSun(Element ele) {
 		Vector3f location = getVector3f(ele, "location");
 		float size = getFloat(ele, "size");
-
-		float[] color = getColor(ele, "color");
-		
 		Vector3f intensity = getVector3f(ele, "intensity");
-		
-		/*
-		float[] lightAmbient = getColor(ele, "lightAmbient");
-		float[] lightDiffuse = getColor(ele, "lightDiffuse");
 
-		
-		int light = getInt(ele, "light");
-		int glLight = GL11.GL_LIGHT0;
-		switch (light) {
-		case (0):
-			glLight = GL11.GL_LIGHT0;
-			break;
-		case (1):
-			glLight = GL11.GL_LIGHT1;
-			break;
-		case (2):
-			glLight = GL11.GL_LIGHT2;
-			break;
-		case (3):
-			glLight = GL11.GL_LIGHT3;
-			break;
-		case (4):
-			glLight = GL11.GL_LIGHT4;
-			break;
-		case (5):
-			glLight = GL11.GL_LIGHT5;
-			break;
-		case (6):
-			glLight = GL11.GL_LIGHT6;
-			break;
-		case (7):
-			glLight = GL11.GL_LIGHT7;
-			break;
-		default:
-			System.out
-					.println("Error getting glLight for Sun! Using GL_LIGHT0");
-		}
-		*/
-
-		Sun sun = new Sun(location, size, color,
+		Sun sun = new Sun(location, size,
 				intensity);
 		
 		Entities.addLight(sun);
