@@ -1,11 +1,17 @@
 package spaceguts.util.model;
 
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 
 import javax.vecmath.Point2f;
 import javax.vecmath.Vector3f;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 
 import spaceguts.util.resources.Textures;
 
@@ -24,9 +30,6 @@ import com.bulletphysics.util.ObjectArrayList;
  * @see ModelLoader
  */
 public class ModelBuilder {
-	/** the name of the model */
-	public String name;
-
 	/** the vertices of the model */
 	private ObjectArrayList<Vector3f> vertices;
 
@@ -217,8 +220,84 @@ public class ModelBuilder {
 	 * @return A model built using the current indices
 	 */
 	public Model makeModel(Textures texture) {
+		int numIndices = vertexIndices.size() * 3;
 		//System.out.println(maxX * 1.0f + " " + minX * 1.0f + " " + maxY * 1.0f + " " + minY * 1.0f + " " + maxZ * 1.0f + " " + minZ * 1.0f);
-		return new Model(buildCollisionShape(), buildCallList(), texture);
+		return new Model(buildCollisionShape(), fillArrayBuffers(), numIndices, texture);
+	}
+	
+	private int fillArrayBuffers(){
+		int vaoHandle = GL30.glGenVertexArrays();
+		GL30.glBindVertexArray(vaoHandle);
+		
+		FloatBuffer vertBuffer = BufferUtils.createFloatBuffer(vertexIndices.size() * 9);
+		FloatBuffer normBuffer = BufferUtils.createFloatBuffer(normalIndices.size() * 9);
+		FloatBuffer texBuffer = BufferUtils.createFloatBuffer(textureIndices.size() * 6);
+		for(int i = 0; i < vertexIndices.size(); i++){
+			int[] triVerts = vertexIndices.get(i); 
+			int[] triNorms = normalIndices.get(i);
+			int[] triTex = textureIndices.get(i);
+			
+			Vector3f firstVert = vertices.get(triVerts[0]);
+			vertBuffer.put(firstVert.x);
+			vertBuffer.put(firstVert.y);
+			vertBuffer.put(firstVert.z);
+			Vector3f firstNorm = normals.get(triNorms[0]);
+			normBuffer.put(firstNorm.x);
+			normBuffer.put(firstNorm.y);
+			normBuffer.put(firstNorm.z);
+			Point2f firstTex = textureCoords.get(triTex[0]);
+			texBuffer.put(firstTex.x);
+			texBuffer.put(1 - firstTex.y);
+			
+			Vector3f secondVert = vertices.get(triVerts[1]);
+			vertBuffer.put(secondVert.x);
+			vertBuffer.put(secondVert.y);
+			vertBuffer.put(secondVert.z);
+			Vector3f secondNorm = normals.get(triNorms[1]);
+			normBuffer.put(secondNorm.x);
+			normBuffer.put(secondNorm.y);
+			normBuffer.put(secondNorm.z);
+			Point2f secondTex = textureCoords.get(triTex[1]);
+			texBuffer.put(secondTex.x);
+			texBuffer.put(1 - secondTex.y);
+			
+			
+			Vector3f thirdVert = vertices.get(triVerts[2]);
+			vertBuffer.put(thirdVert.x);
+			vertBuffer.put(thirdVert.y);
+			vertBuffer.put(thirdVert.z);
+			Vector3f thirdNorm = normals.get(triNorms[2]);
+			normBuffer.put(thirdNorm.x);
+			normBuffer.put(thirdNorm.y);
+			normBuffer.put(thirdNorm.z);
+			Point2f thirdTex = textureCoords.get(triTex[2]);
+			texBuffer.put(thirdTex.x);
+			texBuffer.put(1 - thirdTex.y);
+		}
+		vertBuffer.rewind();
+		normBuffer.rewind();
+		texBuffer.rewind();
+		
+		IntBuffer vboHandles = BufferUtils.createIntBuffer(3);
+		GL15.glGenBuffers(vboHandles);
+		
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboHandles.get(0));
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertBuffer, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0L);
+		GL20.glEnableVertexAttribArray(0);
+		
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboHandles.get(1));
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, normBuffer, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0L);
+		GL20.glEnableVertexAttribArray(1);
+		
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboHandles.get(2));
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, texBuffer, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 0, 0L);
+		GL20.glEnableVertexAttribArray(2);
+		
+		
+		return vaoHandle;
 	}
 	
 	/**
@@ -234,72 +313,5 @@ public class ModelBuilder {
 		hull.buildHull(margin);
 		
 		return new ConvexHullShape(hull.getVertexPointer());
-	}
-
-	/**
-	 * Builds a call list for drawing the model.
-	 * @return The call list to call to draw the model
-	 */
-	private int buildCallList() {
-		int callList = GL11.glGenLists(1);
-
-		GL11.glNewList(callList, GL11.GL_COMPILE_AND_EXECUTE);
-		{
-			for (int i = 0; i < vertexIndices.size(); i++) {
-				int[] verts = vertexIndices.get(i);
-				int[] norms = normalIndices.get(i);
-				int[] texts = textureIndices.get(i);
-
-				// triangle
-				if (verts.length == 3 && norms.length == 3 && texts.length == 3) {
-					GL11.glBegin(GL11.GL_TRIANGLES);
-					{
-						drawArrays(verts, norms, texts);
-					}
-					GL11.glEnd();
-				}
-				// quad
-				else if (verts.length == 4 && norms.length == 4
-						&& texts.length == 4) {
-					GL11.glBegin(GL11.GL_QUADS);
-					{
-						drawArrays(verts, norms, texts);
-					}
-					GL11.glEnd();
-				} else {
-					System.out
-							.println("Error! There's either not the right amount of indices for something, or there's not that same amount of geom, normal, and texture coordinates (ModelBuilder)");
-				}
-			}
-		}
-		GL11.glEndList();
-
-		return callList;
-	}
-
-	/**
-	 * Draws the arrays given.
-	 * @param verts Vertices to draw
-	 * @param norms Normals for the vertices
-	 * @param texCoords Texture coordinates for the vertices
-	 */
-	private void drawArrays(int[] verts, int[] norms, int[] texCoords) {
-		for (int i = 0; i < verts.length; i++) {
-			Vector3f vertex = vertices.get(verts[i]);
-			Vector3f normal = normals.get(norms[i]);
-			Point2f coord = textureCoords.get(texCoords[i]);
-
-			GL11.glTexCoord2f(coord.x, 1 - coord.y);
-			GL11.glNormal3f(normal.x, normal.y, normal.z);
-			GL11.glVertex3f(vertex.x, vertex.y, vertex.z);
-		}
-	}
-
-	/**
-	 * 
-	 * @return The name of the ModelBuilder (might not be set)
-	 */
-	public String getName() {
-		return name;
 	}
 }

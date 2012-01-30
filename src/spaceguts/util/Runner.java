@@ -29,7 +29,7 @@ import spaceguts.util.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.67";
+	public static final String VERSION = "0.0.73";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
@@ -62,6 +62,8 @@ public class Runner {
 				// update everything
 				update();
 				// render the scene
+				//Graphics.render();
+				//GLSLRender.render();
 				Graphics.render();
 				// update the display (this swaps the buffers)
 				Display.update();
@@ -80,11 +82,15 @@ public class Runner {
 	 */
 	private void init() {
 		DisplayHelper.createWindow();
-		Graphics.initGL();		
+		
 		Debug.init();
+		//Graphics.initGL();		
 		
 		MainMenu mainMenu = new MainMenu();
 		GUI.addGUIObject(mainMenu);
+		
+		//GLSLRender.initGL();
+		Graphics.initGL();
 		
 		//initialize resources
 		ResourceLoader.addJob(Textures.MENU_BACKGROUND1);
@@ -99,7 +105,7 @@ public class Runner {
 		ResourceLoader.addJob(Textures.EARTH);
 		ResourceLoader.addJob(Textures.LASERBULLET);
 		ResourceLoader.addJob(Models.LASERBULLET);
-		ResourceLoader.addJob(Models.WING_X);
+		ResourceLoader.addJob(Models.WESCOTT);
 		ResourceLoader.addJob(Textures.MENU_PICKER_ACTIVE);
 		ResourceLoader.addJob(Textures.MENU_PICKER_MOUSEOVER);
 		ResourceLoader.addJob(Textures.MENU_PICKER_SELECTED);

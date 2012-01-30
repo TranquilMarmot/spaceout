@@ -1,219 +1,250 @@
 package spaceguts.graphics.render;
 
-import java.nio.FloatBuffer;
 import java.util.Iterator;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
+import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 
-import spaceguts.physics.Physics;
-import spaceguts.util.DisplayHelper;
-import spaceguts.util.QuaternionHelper;
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
 import spaceguts.entities.Light;
-import spaceguts.graphics.Graphics;
+import spaceguts.graphics.glsl.GLSLProgram;
+import spaceguts.graphics.glsl.GLSLShader;
+import spaceguts.graphics.glsl.ShaderTypes;
+import spaceguts.physics.Physics;
+import spaceguts.util.DisplayHelper;
+import spaceguts.util.MatrixHelper;
+import spaceguts.util.QuaternionHelper;
+import spaceguts.util.resources.Paths;
 
-/**
- * Handles all 3D rendering. For the moment, also updates Entities.entities.
- * 
- * @author TranquilMarmot
- * @see Graphics
- */
 public class Render3D {
-	/** how far to draw objects */
-	public static float drawDistance = 3000000.0f;
-
-	private static FloatBuffer cameraRotBuffer = BufferUtils
-			.createFloatBuffer(16);
-
-	/**
-	 * Updates and draws everything in Entities.entities
-	 */
-	public static void render3DScene() {
-		// prepare to do 3D rendering
+	private static final String VERTEX_SHADER = "texture.vert", FRAGMENT_SHADER = "texture.frag";
+	/** ModelView and Projection matrices */
+	public static Matrix4f projection, modelview;
+	
+	/** Draw distance and field-of-view to use for rendering */
+	public static float drawDistance = 3000000.0f, fov =  45.0f;
+	
+	/** old aspect ratio is saved to know when to change the projection matrix */
+	private static float oldAspect = (float) DisplayHelper.windowWidth
+			/ (float) DisplayHelper.windowHeight;
+	
+	/** the shader program to use */
+	public static GLSLProgram program;
+	
+	
+	public static void render3DScene(){
 		setUp3DRender();
-
-		// set up lights
-		setUpLighting();
 		
 		transformToCamera();
 		
-		// draw the skybox first
 		if(Entities.skybox != null)
-			Entities.skybox.draw();
+			drawSkybox();
 		
-		// set up lights before we render our scene
-		for (Light l : Entities.lights.values()) {
-			l.setUpLight();
-		}
-
-		// draw any lights
+		setUpLights();
+		
 		drawLights();
 		
-		//draw all dynamic entities
 		drawDynamicEntities();
 		
-		// draw all static entities
-		drawPassiveEntities();
+		//drawPassiveEntities();
 		
-		// draw the player
 		drawPlayer();
+		
+		/*
+		 * Modelview matrix
+		 * Rotate, translate, transpose
+		 * Why so confusing
+		 */
 	}
 	
-	/**
-	 * Transforms the ModelView matrix to the current camera position and rotation
-	 */
-	private static void transformToCamera(){
-		// handle any camera offset
-		GL11.glTranslatef(Entities.camera.xOffset, Entities.camera.yOffset,
-				-Entities.camera.zoom);
-
-		// rotate based on camera rotation
-		QuaternionHelper.toFloatBuffer(Entities.camera.rotation,
-				cameraRotBuffer);
-		GL11.glMultMatrix(cameraRotBuffer);
-	}
-	
-	/**
-	 * Draws all entities
-	 */
-	private static void drawDynamicEntities(){
-		Iterator<DynamicEntity> entityIterator = Entities.dynamicEntities.values().iterator();
-		while (entityIterator.hasNext()) {
-			DynamicEntity ent = entityIterator.next();
-			
-			// figure out where to translate to
-			float transX = Entities.camera.location.x - ent.location.x;
-			float transY = Entities.camera.location.y - ent.location.y;
-			float transZ = Entities.camera.location.z - ent.location.z;
-
-			GL11.glPushMatrix();{
-				GL11.glTranslatef(transX, transY, transZ);
-				
-				if(Physics.drawDebug){
-					ent.drawPhysicsDebug();
-				}
-				
-				Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-				Quaternion.negate(ent.rotation, reverse);
-				QuaternionHelper.toFloatBuffer(reverse, cameraRotBuffer);
-				GL11.glMultMatrix(cameraRotBuffer);
-				
-				ent.draw();
-			}GL11.glPopMatrix();
-		}
-	}
-	
-	/**
-	 * Draws all entities
-	 */
-	private static void drawPassiveEntities(){
-		Iterator<Entity> entityIterator = Entities.passiveEntities.values().iterator();
-		while (entityIterator.hasNext()) {
-			Entity ent = entityIterator.next();
-			
-			// figure out where to translate to
-			float transX = Entities.camera.location.x - ent.location.x;
-			float transY = Entities.camera.location.y - ent.location.y;
-			float transZ = Entities.camera.location.z - ent.location.z;
-
-			GL11.glPushMatrix();{
-				GL11.glTranslatef(transX, transY, transZ);
-				
-				Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-				Quaternion.negate(ent.rotation, reverse);
-				QuaternionHelper.toFloatBuffer(reverse, cameraRotBuffer);
-				GL11.glMultMatrix(cameraRotBuffer);
-				
-				ent.draw();
-			}GL11.glPopMatrix();
-		}
-	}
-	
-	/**
-	 * Draws all lights. Note that lights are set up earlier in the rendering loop,
-	 * and as such don't need to be set up here.
-	 */
-	private static void drawLights(){
-		Iterator<Light> entityIterator = Entities.lights.values().iterator();
-		while (entityIterator.hasNext()) {
-			Light ent = entityIterator.next();
-			
-			// figure out where to translate to
-			float transX = Entities.camera.location.x - ent.location.x;
-			float transY = Entities.camera.location.y - ent.location.y;
-			float transZ = Entities.camera.location.z - ent.location.z;
-
-			GL11.glPushMatrix();{
-				GL11.glTranslatef(transX, transY, transZ);
-				
-				ent.draw();
-			}GL11.glPopMatrix();
-		}
-	}
-	
-	/**
-	 * Draws the player
-	 */
-	private static void drawPlayer(){
-		//System.out.println(Entities.player.rotation.x + ", " + Entities.player.rotation.y + ", "  + Entities.player.rotation.z + ", " + Entities.player.rotation.w);
-		float transX = Entities.camera.location.x - Entities.player.location.x;
-		float transY = Entities.camera.location.y - Entities.player.location.y;
-		float transZ = Entities.camera.location.z - Entities.player.location.z;
-
-		GL11.glPushMatrix();{
-			GL11.glTranslatef(transX, transY, transZ);
-			
-			/*
-			if(Physics.drawDebug){
-				Entities.player.drawPhysicsDebug();
-			}
-			*/
-			
-			Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-			Quaternion.negate(Entities.player.rotation, reverse);
-			QuaternionHelper.toFloatBuffer(reverse, cameraRotBuffer);
-			GL11.glMultMatrix(cameraRotBuffer);
-			
-			Entities.player.draw();
-		}GL11.glPopMatrix();
-	}
-
-	/**
-	 * Sets up any lighting for the scene
-	 */
-	private static void setUpLighting() {
-		// enable lighting and select a lighting model
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glLightModeli(GL11.GL_LIGHT_MODEL_LOCAL_VIEWER, GL11.GL_TRUE);
-		GL11.glLightModeli(GL11.GL_LIGHT_MODEL_TWO_SIDE, GL11.GL_TRUE);
-		GL11.glShadeModel(GL11.GL_SMOOTH);
-	}
-
-	/**
-	 * Prepares OpenGL matrices for 3D drawing
-	 */
-	private static void setUp3DRender() {
-		// select and reset the projection matrix
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-
+	private static void setUp3DRender(){
+		program.use();
+		Vector3f Kd = new Vector3f(0.5f, 0.5f, 0.5f);
+		program.setUniform("Material.Kd" , Kd);
+		
+		Vector3f Ka = new Vector3f(0.5f, 0.5f, 0.5f);
+		program.setUniform("Material.Ka", Ka);
+		
+		Vector3f Ks = new Vector3f(0.8f, 0.8f, 0.8f);
+		program.setUniform("Material.Ks", Ks);
+		
+		float shininess = 50.0f;
+		program.setUniform("Material.Shininess", shininess);
+		
 		// calculate the current aspect ratio
 		float aspect = (float) DisplayHelper.windowWidth
 				/ (float) DisplayHelper.windowHeight;
-		GLU.gluPerspective(45.0f, aspect, 1.0f, drawDistance);
-
-		// we're done setting up the Projection matrix, on to the Modelview
-		// matrix
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glLoadIdentity();
-
-		// disable blending for now
+		
+		if(aspect != oldAspect){
+			projection = MatrixHelper.perspective(fov, aspect, 1.0f, drawDistance);
+			program.setUniform("ProjectionMatrix", projection);
+			oldAspect = aspect;
+		}
+		
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		
+		modelview.setIdentity();
+	}
+	
+	private static void transformToCamera(){
+		modelview.translate(new Vector3f(Entities.camera.xOffset, Entities.camera.yOffset, -Entities.camera.zoom));
+		
+		
+		Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		Quaternion.negate(Entities.camera.rotation, reverse);
+		Matrix4f.mul(modelview, QuaternionHelper.toMatrix(reverse), modelview);
+		
+		
+		//Matrix4f.mul(modelview, QuaternionHelper.toMatrix(Entities.camera.rotation), modelview);
+	}
+	
+	private static void setUpLights(){
+		if(Entities.lights.size() > 1)
+			System.out.println("More than one light! Multiple lighting not yet implemented.");
+		Light l = Entities.lights.values().iterator().next();
+		float transX = Entities.camera.location.x + l.location.x;
+		float transY = Entities.camera.location.y + l.location.y;
+		float transZ = Entities.camera.location.z + l.location.z;
+		
+		Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		Quaternion.negate(Entities.camera.rotation, reverse);
+		Vector3f rotated = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(transX, transY, transZ), reverse);
+		program.setUniform("Light.LightPosition", new Vector4f(rotated.x, rotated.y, rotated.z, 0.0f));
+		program.setUniform("Light.LightIntensity", l.intensity);
+		program.setUniform("Light.LightEnabled", true);
+	}
+	
+	private static void drawSkybox(){
+		program.setUniform("Light.LightEnabled", false);
+			
+		float transX = Entities.camera.location.x - Entities.skybox.location.x;
+		float transY = Entities.camera.location.y - Entities.skybox.location.y;
+		float transZ = Entities.camera.location.z - Entities.skybox.location.z;
+		
+		Matrix4f oldModelview = new Matrix4f(modelview);{
+			modelview.translate(new Vector3f(transX, transY, transZ));
+			
+			Matrix4f.mul(modelview, QuaternionHelper.toMatrix(Entities.skybox.rotation), modelview);
+			
+			program.setUniform("ModelViewMatrix", modelview);
+			Entities.skybox.draw();
+		}modelview = oldModelview;
+		program.setUniform("Light.LightEnabled", true);
+	}
+	
+	private static void drawLights(){
+		program.setUniform("Light.LightEnabled", false);
+		Iterator<Light> lightIterator = Entities.lights.values().iterator();
+		while(lightIterator.hasNext()){
+			Light light = lightIterator.next();
+			
+			float transX = Entities.camera.location.x - light.location.x;
+			float transY = Entities.camera.location.y - light.location.y;
+			float transZ = Entities.camera.location.z - light.location.z;
+			
+			Matrix4f oldModelview = new Matrix4f(modelview);{
+				modelview.translate(new Vector3f(transX, transY, transZ));
+				
+				program.setUniform("ModelViewMatrix", modelview);
+				light.draw();
+			}modelview = oldModelview;
+		}
+		program.setUniform("Light.LightEnabled", true);
+	}
+	
+	private static void drawPassiveEntities(){
+		Iterator<Entity> entityIterator = Entities.passiveEntities.values().iterator();
+		while(entityIterator.hasNext()){
+			Entity ent = entityIterator.next();
+			
+			float transX = Entities.camera.location.x - ent.location.x;
+			float transY = Entities.camera.location.y - ent.location.y;
+			float transZ = Entities.camera.location.z - ent.location.z;
+			
+			Matrix4f oldModelview = new Matrix4f(modelview);{
+				modelview.translate(new Vector3f(transX, transY, transZ));
+				
+				Matrix4f.mul(modelview, QuaternionHelper.toMatrix(ent.rotation), modelview);
+				
+				program.setUniform("ModelViewMatrix", modelview);
+				ent.draw();
+			}modelview = oldModelview;
+		}
+	}
+	
+	private static void drawDynamicEntities(){
+		Iterator<DynamicEntity> entityIterator = Entities.dynamicEntities.values().iterator();
+		while(entityIterator.hasNext()){
+			DynamicEntity ent = entityIterator.next();
+			
+			float transX = Entities.camera.location.x - ent.location.x;
+			float transY = Entities.camera.location.y - ent.location.y;
+			float transZ = Entities.camera.location.z - ent.location.z;
+			
+			Matrix4f oldModelview = new Matrix4f(modelview);{
+				modelview.translate(new Vector3f(transX, transY, transZ));
+				
+				if(Physics.drawDebug){
+					//TODO this
+				}
+				
+				Matrix4f.mul(modelview, QuaternionHelper.toMatrix(ent.rotation), modelview);
+				
+				program.setUniform("ModelViewMatrix", modelview);
+				ent.draw();
+			}modelview = oldModelview;
+		}
+	}
+	
+	private static void drawPlayer(){
+		float transX = Entities.camera.location.x - Entities.player.location.x;
+		float transY = Entities.camera.location.y - Entities.player.location.y;
+		float transZ = Entities.camera.location.z - Entities.player.location.z;
+		
+		Matrix4f oldModelview = new Matrix4f(modelview);{
+			modelview.translate(new Vector3f(transX, transY, transZ));
+			
+			Matrix4f.mul(modelview, QuaternionHelper.toMatrix(Entities.player.rotation), modelview);
+			
+			program.setUniform("ModelViewMatrix", modelview);
+			Entities.player.draw();
+		}modelview = oldModelview;
+	}
+	
+	public static void init(){
+		modelview = new Matrix4f();
+		
+		// create vertex shader
+		GLSLShader vertShader = new GLSLShader(ShaderTypes.VERTEX);
+		String vertFile = Paths.SHADER_PATH.path() + VERTEX_SHADER;
+		if (!vertShader.compileShaderFromFile(vertFile))
+			System.out.println(vertShader.log());
+
+		// create fragment shader
+		GLSLShader fragShader = new GLSLShader(ShaderTypes.FRAGMENT);
+		String fragFile = Paths.SHADER_PATH.path() + FRAGMENT_SHADER;
+		if (!fragShader.compileShaderFromFile(fragFile)) {
+			System.out.println(fragShader.log());
+		}
+
+		// create and use program
+		program = new GLSLProgram();
+		program.addShader(fragShader);
+		program.addShader(vertShader);
+		program.link();
+		program.use();
+		
+		// calculate the current aspect ratio
+		float oldAspect = (float) DisplayHelper.windowWidth
+				/ (float) DisplayHelper.windowHeight;
+		
+		projection = MatrixHelper.perspective(fov, oldAspect, 1.0f, drawDistance);
+		program.setUniform("ProjectionMatrix", projection);
 	}
 }

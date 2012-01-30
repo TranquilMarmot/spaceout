@@ -1,27 +1,17 @@
 <Entities>
 	<Player>
-		<location>-1070.111f,1980.284f,-1550000.0f</location>
-		<rotation>0.002583359f,-0.0559893f,0.9984302f,0.00012266426f</rotation>
+		<location>00.0f,00.0f,-1550000.0f</location>
+		<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
 		<mass>50.0f</mass>
 		<restitution>0.01f</restitution>
 		<model>SHIP1</model>
 	</Player>
 	
-	<Saucer>
-		<location>-569.06f,1898.569f,-1549890.625</location>
-		<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
-		<mass>1.0f</mass>
-		<restitution>0.01f</restitution>
-		<model>SAUCER</model>
-	</Saucer>
-	
 	<Sun>
 		<location>0.0f,0.0f,0.0f</location>
 		<size>1392.0f</size>
 		<color>1.0f,1.0f,0.3f</color>
-		<lightAmbient>1.0f,1.0f,1.0f</lightAmbient>
-		<lightDiffuse>1.0f,1.0f,1.0f</lightDiffuse>
-		<light>1</light>
+		<intensity>0.8f,0.8f,0.8f</intensity>
 	</Sun>
 
 	<Planet>
@@ -32,11 +22,4 @@
 		<mass>5000.0f</mass>
 		<size>6371.0f</size>
 	</Planet>
-	
-	<Debris>
-		<numStars>500</numStars>
-		<range>50000.0f</range>
-		<seed>420133742L</seed>
-	</Debris>
-
 </Entities>

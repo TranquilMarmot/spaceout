@@ -1,21 +1,17 @@
 package spaceout.entities.dynamic;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
-import org.lwjgl.util.glu.Sphere;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import spaceguts.entities.DynamicEntity;
+import spaceguts.graphics.shapes.VBOQuadric;
+import spaceguts.interfaces.Health;
 import spaceguts.physics.CollisionTypes;
-import spaceguts.util.model.Model;
+import spaceguts.util.QuaternionHelper;
 import spaceguts.util.resources.Textures;
 
 import com.bulletphysics.collision.dispatch.CollisionObject;
-import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.collision.shapes.SphereShape;
-
-import spaceguts.entities.DynamicEntity;
-import spaceguts.interfaces.Health;
 
 /**
  * Pretty much just a dynamic entity that's represented by a sphere
@@ -29,44 +25,31 @@ public class Planet extends DynamicEntity implements Health{
 	//FIXME planets shouldnt really have health this is for shits and giggles
 	int health = 100;
 	
+	private Textures texture;
+	
+	private VBOQuadric quadric;
+	
 	public Planet(Vector3f location, Quaternion rotation, float size,
 			float mass, float restitution, Textures texture) {
-		super(location, rotation, makeModel(size, texture), mass, restitution, COL_GROUP, COL_WITH);
+		super(location, QuaternionHelper.rotate(rotation, new Vector3f(90.0f, 0.0f, 0.0f)), new SphereShape(size), mass, restitution, COL_GROUP, COL_WITH);
+		
 		rigidBody.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 		rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(0.0f, 0.015f, 0.0f));
 		
 		this.type = "Planet";
-	}
-	
-	private static Model makeModel(float size, Textures texture){
-		// use a sphere collision shape
-		CollisionShape sphereShape = new SphereShape(size);
+		this.texture = texture;
 		
-		// shpere to use to draw the sphere
-		Sphere drawSphere = new Sphere();
-		drawSphere.setNormals(GLU.GLU_SMOOTH);
-		drawSphere.setTextureFlag(true);
-		
-		// create a call list for the sphere
-		int sphereCallList = GL11.glGenLists(1);
-		GL11.glNewList(sphereCallList, GL11.GL_COMPILE);{
-			drawSphere.draw(size, 10, 10);
-		}GL11.glEndList();
-		
-		// make the model
-		return new Model(sphereShape, sphereCallList, texture);
+		quadric = new VBOQuadric(size, 10, 10);
 	}
 	
 	@Override
 	public void draw(){
-			GL11.glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-			super.draw();
-			GL11.glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+		texture.texture().bind();
+		quadric.draw();
 	}
 
 	@Override
 	public int getCurrentHealth() {
-		// TODO Auto-generated method stub
 		return health;
 	}
 

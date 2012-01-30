@@ -5,7 +5,6 @@ import java.util.StringTokenizer;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 import org.w3c.dom.Document;
@@ -122,7 +121,7 @@ public class XMLParser {
 	}
 
 	private static void makeSaucer(Element ele) {
-		Vector3f location = getLocation(ele);
+		Vector3f location = getVector3f(ele, "location");
 		Quaternion rotation = getRotation(ele);
 		float mass = getFloat(ele, "mass");
 		float restitution = getFloat(ele, "restitution");
@@ -135,14 +134,14 @@ public class XMLParser {
 	}
 
 	private static void makePlayer(Element ele) {
-		Vector3f location = getLocation(ele);
+		Vector3f location = getVector3f(ele, "location");
 		Quaternion rotation = getRotation(ele);
 		float mass = getFloat(ele, "mass");
 		float restitution = getFloat(ele, "restitution");
 		
 		/* TEMP SHIP INFO TODO make this load from XML */
 		String shipName = "WingX";
-		Models shipModel = Models.WING_X;
+		Models shipModel = Models.WESCOTT;
 		int shipHealth = 100;
 		float shipMass = 50.0f;
 		float shipRestitution = 0.01f;
@@ -174,13 +173,18 @@ public class XMLParser {
 	}
 
 	private static void makeSun(Element ele) {
-		Vector3f location = getLocation(ele);
+		Vector3f location = getVector3f(ele, "location");
 		float size = getFloat(ele, "size");
 
 		float[] color = getColor(ele, "color");
+		
+		Vector3f intensity = getVector3f(ele, "intensity");
+		
+		/*
 		float[] lightAmbient = getColor(ele, "lightAmbient");
 		float[] lightDiffuse = getColor(ele, "lightDiffuse");
 
+		
 		int light = getInt(ele, "light");
 		int glLight = GL11.GL_LIGHT0;
 		switch (light) {
@@ -212,9 +216,10 @@ public class XMLParser {
 			System.out
 					.println("Error getting glLight for Sun! Using GL_LIGHT0");
 		}
+		*/
 
-		Sun sun = new Sun(location, size, glLight, color,
-				lightAmbient, lightDiffuse);
+		Sun sun = new Sun(location, size, color,
+				intensity);
 		
 		Entities.addLight(sun);
 	}
@@ -235,7 +240,7 @@ public class XMLParser {
 					.println("Error! Didn't find texture while creating Planet "
 							+ name + " in XMLParser!");
 
-		Vector3f location = getLocation(ele);
+		Vector3f location = getVector3f(ele, "location");
 		Quaternion rotation = getRotation(ele);
 		float mass = getFloat(ele, "mass");
 		float size = getFloat(ele, "size");
@@ -255,8 +260,8 @@ public class XMLParser {
 	 *            The element to get the location from
 	 * @return A vector representing he location
 	 */
-	private static Vector3f getLocation(Element ele) {
-		String loc = getString(ele, "location");
+	private static Vector3f getVector3f(Element ele, String tag) {
+		String loc = getString(ele, tag);
 		StringTokenizer toker = new StringTokenizer(loc, ",");
 		float x = Float.parseFloat(toker.nextToken());
 		float y = Float.parseFloat(toker.nextToken());

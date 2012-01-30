@@ -8,60 +8,61 @@ import java.util.StringTokenizer;
 import javax.vecmath.Point2f;
 import javax.vecmath.Vector3f;
 
+import org.lwjgl.util.vector.Quaternion;
+
+import spaceguts.util.QuaternionHelper;
 import spaceguts.util.resources.Textures;
 
-/**
- * Handles loading models from external files.
- * @author TranquilMarmot
- *
- */
 public class ModelLoader {
 	public static Model loadObjFile(String file, Textures texture){
-		return loadObjFile(file, new Vector3f(0.0f, 0.0f, 0.0f), 1.0f, 1.0f, 1.0f, texture);
+		return loadObjFile(file, new Vector3f(1.0f, 1.0f, 1.0f), new Vector3f(0.0f, 0.0f, 0.0f), new Quaternion(0.0f, 0.0f, 0.0f, 1.0f), texture);
 	}
 	
 	public static Model loadObjFile(String file, float scale, Textures texture){
-		return loadObjFile(file, new Vector3f(0.0f, 0.0f, 0.0f), scale, scale, scale, texture);
+		return loadObjFile(file, new Vector3f(scale, scale, scale), new Vector3f(0.0f, 0.0f, 0.0f), new Quaternion(0.0f, 0.0f, 0.0f, 1.0f), texture);
 	}
 	
-	public static Model loadObjFile(String file, float xScale, float yScale, float zScale, Textures texture){
-		return loadObjFile(file, new Vector3f(0.0f, 0.0f, 0.0f), xScale, yScale, zScale, texture);
+	public static Model loadObjFile(String file, Quaternion rotation, Textures texture){
+		return loadObjFile(file, new Vector3f(1.0f, 1.0f, 1.0f), new Vector3f(0.0f, 0.0f, 0.0f), rotation, texture);
 	}
 	
-	/**
-	 * Loads a wavefront .obj file. See <a href="http://en.wikipedia.org/wiki/Wavefront_.obj_file">the wikipedia page on obj files</a> for more info.
-	 * @param file File to load model from
-	 * @param offset Offset for the model's center
-	 * @param scale The scale to create the model at
-	 * @return A model representing the given file
-	 */
-	public static Model loadObjFile(String file, Vector3f offset, float xScale, float yScale, float zScale, Textures texture) {
-		Model m = null;
-
-		try {
+	public static Model loadObjFile(String file, Vector3f scale, Textures texture){
+		return loadObjFile(file, scale, new Vector3f(0.0f, 0.0f, 0.0f), new Quaternion(0.0f, 0.0f, 0.0f, 1.0f), texture);
+	}
+	
+	public static Model loadObjFile(String file, float scale, Quaternion rotation, Textures texture){
+		return loadObjFile(file, new Vector3f(scale, scale, scale), new Vector3f(0.0f, 0.0f, 0.0f), rotation, texture);
+	}
+	
+	public static Model loadObjFile(String file, Vector3f scale, Vector3f offset, Quaternion rotation, Textures texture){
+		Model model = null;
+		
+		try{
 			BufferedReader reader = new BufferedReader(new FileReader(file));
-
+			
 			String line;
-
+			
 			ModelBuilder builder = new ModelBuilder();
-
-			// go through the whooole file
-			while ((line = reader.readLine()) != null) {
+			
+			while((line = reader.readLine()) != null){
 				// split the line up at spaces
 				StringTokenizer toker = new StringTokenizer(line, " ");
 				// grab the line's type
 				String lineType = toker.nextToken();
 				
 				if (lineType.equals("o")) {
-					builder.name = toker.nextToken().substring(2);
+					//System.out.println("Loading " + toker.nextToken().substring(2));
 				}
 
 				if (lineType.equals("v")) {
 					// grab the coordinates
-					float x = (Float.parseFloat(toker.nextToken()) + offset.x) * xScale;
-					float y = (Float.parseFloat(toker.nextToken()) + offset.y) * yScale;
-					float z = (Float.parseFloat(toker.nextToken()) + offset.z) * zScale;
+					float x = (Float.parseFloat(toker.nextToken()) + offset.x) * scale.x;
+					float y = (Float.parseFloat(toker.nextToken()) + offset.y) * scale.y;
+					float z = (Float.parseFloat(toker.nextToken()) + offset.z) * scale.z;
+					
+					//org.lwjgl.util.vector.Vector3f rotated = QuaternionHelper.rotateVectorByQuaternion(new org.lwjgl.util.vector.Vector3f(x, y, z), rotation);
 
+					//builder.addVertex(new Vector3f(rotated.x, rotated.y, rotated.z));
 					builder.addVertex(new Vector3f(x, y, z));
 				}
 
@@ -70,8 +71,10 @@ public class ModelLoader {
 					float x = Float.parseFloat(toker.nextToken());
 					float y = Float.parseFloat(toker.nextToken());
 					float z = Float.parseFloat(toker.nextToken());
+					
+					org.lwjgl.util.vector.Vector3f rotated = QuaternionHelper.rotateVectorByQuaternion(new org.lwjgl.util.vector.Vector3f(x, y, z), rotation);
 
-					builder.addNormal(new Vector3f(x, y, z));
+					builder.addNormal(new Vector3f(rotated.x, rotated.y, rotated.z));
 				}
 
 				if (line.startsWith("vt")) {
@@ -105,16 +108,13 @@ public class ModelLoader {
 					builder.addTetxureIndices(textureIndices);
 				}
 			}
-
-			m = builder.makeModel(texture);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (NullPointerException e) {
-			System.out
-					.println("Fuck fuck fuck fuck!");
+			
+			model = builder.makeModel(texture);
+			
+		} catch(IOException e){
 			e.printStackTrace();
 		}
-
-		return m;
+		
+		return model;
 	}
 }
