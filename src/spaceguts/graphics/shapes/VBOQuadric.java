@@ -26,7 +26,7 @@ public class VBOQuadric{
 		float s;
 		float ds = 1.0f / (float)slices;
 		float dt = 1.0f / (float)stacks;
-		float t = 0.0f;
+		float t = 1.0f;
 		
 		for(int i = 0; i < stacks; i++){
 			rho = i * drho;
