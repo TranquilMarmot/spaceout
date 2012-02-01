@@ -207,7 +207,7 @@ public class DynamicEntity extends Entity {
 		CollisionShape shape = model.getCollisionShape();
 
 		Physics.dynamicsWorld.debugDrawObject(worldTransform, shape,
-				new javax.vecmath.Vector3f(0.0f, 0.0f, 1.0f));
+				new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
 	}
 
 	@Override

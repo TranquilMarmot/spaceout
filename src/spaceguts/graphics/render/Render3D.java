@@ -191,7 +191,7 @@ public class Render3D {
 				modelview.translate(new Vector3f(transX, transY, transZ));
 				
 				if(Physics.drawDebug){
-					//TODO this
+					ent.drawPhysicsDebug();
 				}
 				
 				Matrix4f.mul(modelview, QuaternionHelper.toMatrix(ent.rotation), modelview);
