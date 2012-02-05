@@ -25,6 +25,7 @@ public enum Textures {
 	MERCURY("JPG", Paths.TEXTURE_PATH.path() + "mercury.jpg", true, GL11.GL_NEAREST),
 	VENUS("JPG", Paths.TEXTURE_PATH.path() + "venus.jpg", true, GL11.GL_NEAREST),
 	MARS("JPG", Paths.TEXTURE_PATH.path() + "mars.jpg", true, GL11.GL_NEAREST),
+	SUN("JPG", Paths.TEXTURE_PATH.path() + "sun.jpg", true, GL11.GL_NEAREST),
 	
 	// GUI
 	MENU_BACKGROUND1("JPG", Paths.BACKGROUND_IMAGE_PATH.path() + "apod1.jpg", false, GL11.GL_NEAREST),

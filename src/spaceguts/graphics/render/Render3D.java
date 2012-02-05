@@ -51,7 +51,7 @@ public class Render3D {
 		
 		drawDynamicEntities();
 		
-		//drawPassiveEntities();
+		drawPassiveEntities();
 		
 		drawPlayer();
 		
@@ -99,18 +99,15 @@ public class Render3D {
 		Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		Quaternion.negate(Entities.camera.rotation, reverse);
 		Matrix4f.mul(modelview, QuaternionHelper.toMatrix(reverse), modelview);
-		
-		
-		//Matrix4f.mul(modelview, QuaternionHelper.toMatrix(Entities.camera.rotation), modelview);
 	}
 	
 	private static void setUpLights(){
 		if(Entities.lights.size() > 1)
 			System.out.println("More than one light! Multiple lighting not yet implemented.");
 		Light l = Entities.lights.values().iterator().next();
-		float transX = Entities.camera.location.x + l.location.x;
-		float transY = Entities.camera.location.y + l.location.y;
-		float transZ = Entities.camera.location.z + l.location.z;
+		float transX = Entities.camera.location.x - l.location.x;
+		float transY = Entities.camera.location.y - l.location.y;
+		float transZ = Entities.camera.location.z - l.location.z;
 		
 		Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		Quaternion.negate(Entities.camera.rotation, reverse);
@@ -191,7 +188,7 @@ public class Render3D {
 				modelview.translate(new Vector3f(transX, transY, transZ));
 				
 				if(Physics.drawDebug){
-					//TODO this
+					ent.drawPhysicsDebug();
 				}
 				
 				Matrix4f.mul(modelview, QuaternionHelper.toMatrix(ent.rotation), modelview);

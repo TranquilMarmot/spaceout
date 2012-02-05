@@ -26,7 +26,7 @@ public class VBOQuadric{
 		float s;
 		float ds = 1.0f / (float)slices;
 		float dt = 1.0f / (float)stacks;
-		float t = 0.0f;
+		float t = 1.0f;
 		
 		for(int i = 0; i < stacks; i++){
 			rho = i * drho;
@@ -55,7 +55,7 @@ public class VBOQuadric{
 			t -= dt;
 		}
 		
-		numIndices = vertices.size() * 3;
+		numIndices = vertices.size();
 		
 		FloatBuffer vertBuffer = BufferUtils.createFloatBuffer(vertices.size() * 3);
 		FloatBuffer normBuffer = BufferUtils.createFloatBuffer(normals.size() * 3);

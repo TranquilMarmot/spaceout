@@ -15,6 +15,7 @@ import spaceout.entities.dynamic.Planet;
 import spaceout.entities.dynamic.Player;
 import spaceout.entities.passive.Skybox;
 import spaceout.entities.passive.Sun;
+import spaceout.entities.passive.particles.Debris;
 import spaceout.ship.Ship;
 
 /**
@@ -27,9 +28,8 @@ public class Sandbox extends Entity{
 		/* BEGIN SUN */
 		Vector3f sunLocation = new Vector3f(1500.0f, 1500.0f, -2.0f);
 		float sunSize = 150.0f;
-		float[] sunColor = { 1.0f, 1.0f, 0.3f };
 		Vector3f sunIntensity = new Vector3f(0.9f, 0.9f, 0.9f);
-		Sun sun = new Sun(sunLocation, sunSize, sunColor, sunIntensity);
+		Sun sun = new Sun(sunLocation, sunSize, sunIntensity);
 		Entities.addLight(sun);
 		/* END SUN */
 		
@@ -91,9 +91,9 @@ public class Sandbox extends Entity{
 		
 		
 		/* BEGIN DEBRIS */
-		//Debris debris = new Debris(Entities.camera, 500, 50000.0f, 420133742L);
-		//debris.update();
-		//Entities.addPassiveEntity(debris);
+		Debris debris = new Debris(Entities.camera, 500, 250000.0f, 420133742L);
+		debris.update();
+		Entities.addPassiveEntity(debris);
 		/* END DEBRIS */
 	}
 	
