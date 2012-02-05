@@ -1,10 +1,7 @@
 package spaceout.entities.passive.particles;
 
-import java.nio.FloatBuffer;
 import java.util.Random;
 
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
@@ -213,7 +210,7 @@ public class Debris extends Entity {
 	@Override
 	public void draw() {
 		// we don't want lighting for our particles
-		Render3D.program.setUniform("Light.LightEnabled", false);
+		//Render3D.program.setUniform("Light.LightEnabled", false);
 
 		Quaternion revQuat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		Entities.camera.rotation.negate(revQuat);
@@ -223,6 +220,7 @@ public class Debris extends Entity {
 
 		// loop through all the particles to draw them
 		for (Particle s : particles) {
+			s.update();
 			// translate to the star
 			float transx = this.location.x - s.location.x;
 			float transy = this.location.y - s.location.y;
@@ -241,7 +239,7 @@ public class Debris extends Entity {
 		}
 
 		// don't forget to re-enable lighting!
-		Render3D.program.setUniform("Light.LightEnabled", true);
+		//Render3D.program.setUniform("Light.LightEnabled", true);
 	}
 
 	/**
@@ -257,6 +255,32 @@ public class Debris extends Entity {
 		public Particle(float x, float y, float z, float size) {
 			location = new Vector3f(x, y, z);
 			this.size = size;
+		}
+		
+		public void update(){
+			/*
+			float scale = 10.0f;
+			if(randy.nextBoolean()){
+				if(randy.nextBoolean())
+					this.location.x += randy.nextFloat() * scale;
+				else
+					this.location.x -= randy.nextFloat() * scale;
+			}
+			
+			if(randy.nextBoolean()){
+				if(randy.nextBoolean())
+					this.location.y += randy.nextFloat() * scale;
+				else
+					this.location.y -= randy.nextFloat() * scale;
+			}
+			
+			if(randy.nextBoolean()){
+				if(randy.nextBoolean())
+					this.location.z += randy.nextFloat() * scale;
+				else
+					this.location.z -= randy.nextFloat() * scale;
+			}
+			*/
 		}
 	}
 

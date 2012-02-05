@@ -34,9 +34,10 @@ public class Circle2D {
 			texCoords.add(new Point2f(u, v));
 		}
 		
-		numIndices = vertices.size() * 3;
+		numIndices = vertices.size();
 		
 		FloatBuffer vertBuf = BufferUtils.createFloatBuffer(vertices.size() * 3);
+		FloatBuffer normBuf = BufferUtils.createFloatBuffer(vertices.size() * 3);
 		FloatBuffer texBuf = BufferUtils.createFloatBuffer(texCoords.size() * 2);
 		
 		for(int i = 0; i < vertices.size(); i++){
@@ -48,10 +49,15 @@ public class Circle2D {
 			Point2f tex = texCoords.get(i);
 			texBuf.put(tex.x);
 			texBuf.put(tex.y);
+			
+			normBuf.put(tex.x);
+			normBuf.put(tex.y);
+			normBuf.put(0.0f);
 		}
 		
 		vertBuf.rewind();
 		texBuf.rewind();
+		normBuf.rewind();
 		
 		vaoHandle = GL30.glGenVertexArrays();
 		GL30.glBindVertexArray(vaoHandle);
@@ -64,9 +70,15 @@ public class Circle2D {
 		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0L);
 		GL20.glEnableVertexAttribArray(0);
 		
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboHandles.get(1));
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, normBuf, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0L);
+		GL20.glEnableVertexAttribArray(1);
+		
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboHandles.get(2));
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, texBuf, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 0, 0L);
+		GL20.glEnableVertexAttribArray(2);
 	}
 	
 	public void draw(){
