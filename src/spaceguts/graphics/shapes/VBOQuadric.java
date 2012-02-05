@@ -55,7 +55,7 @@ public class VBOQuadric{
 			t -= dt;
 		}
 		
-		numIndices = vertices.size() * 3;
+		numIndices = vertices.size();
 		
 		FloatBuffer vertBuffer = BufferUtils.createFloatBuffer(vertices.size() * 3);
 		FloatBuffer normBuffer = BufferUtils.createFloatBuffer(normals.size() * 3);
