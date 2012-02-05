@@ -42,8 +42,11 @@ public class KeyboardManager {
 			// whether or not the key is being pressed or released this frame
 			boolean keyState = Keyboard.getEventKeyState();
 			
+			// release the key if it's being released
+			if(!keyState){
+				key.release();
 			// if the console is on, we'll check if the key being pressed is a special key, else we'll write to the console
-			if(Console.consoleOn){
+			} else if(Console.consoleOn){
 				//if this turns to true, it means the key isn't written to the console and is pressed instead
 				boolean specialKey = false;
 				
@@ -57,24 +60,17 @@ public class KeyboardManager {
 				}
 				
 				// print to the console if it's not a special key
-				if(!specialKey){
+				if(specialKey){
+					key.press();
+				} else{
 					Character c = Keyboard.getEventCharacter();
 					if (!Character.isIdentifierIgnorable(c) && !c.equals('`')
 							&& !c.equals('\n') && !c.equals('\r')) {
 						Console.console.putCharacter(c);
 					}
-				// else toggle the key's state
-				} else{
-					if(keyState)
-						key.press();
-					else
-						key.release();
 				}
 			} else{
-				if(keyState)
-					key.press();
-				else
-					key.release();
+				key.press();
 			}
 		}
 	}

@@ -15,6 +15,7 @@ import spaceout.entities.dynamic.Planet;
 import spaceout.entities.dynamic.Player;
 import spaceout.entities.passive.Skybox;
 import spaceout.entities.passive.Sun;
+import spaceout.entities.passive.particles.Debris;
 import spaceout.ship.Ship;
 
 /**
@@ -90,9 +91,9 @@ public class Sandbox extends Entity{
 		
 		
 		/* BEGIN DEBRIS */
-		//Debris debris = new Debris(Entities.camera, 500, 50000.0f, 420133742L);
-		//debris.update();
-		//Entities.addPassiveEntity(debris);
+		Debris debris = new Debris(Entities.camera, 500, 250000.0f, 420133742L);
+		debris.update();
+		Entities.addPassiveEntity(debris);
 		/* END DEBRIS */
 	}
 	

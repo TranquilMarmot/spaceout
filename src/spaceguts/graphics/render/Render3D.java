@@ -51,7 +51,7 @@ public class Render3D {
 		
 		drawDynamicEntities();
 		
-		//drawPassiveEntities();
+		drawPassiveEntities();
 		
 		drawPlayer();
 		
@@ -99,9 +99,6 @@ public class Render3D {
 		Quaternion reverse = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		Quaternion.negate(Entities.camera.rotation, reverse);
 		Matrix4f.mul(modelview, QuaternionHelper.toMatrix(reverse), modelview);
-		
-		
-		//Matrix4f.mul(modelview, QuaternionHelper.toMatrix(Entities.camera.rotation), modelview);
 	}
 	
 	private static void setUpLights(){
