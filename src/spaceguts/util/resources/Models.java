@@ -1,7 +1,7 @@
 package spaceguts.util.resources;
 
-import spaceguts.util.model.Model;
-import spaceguts.util.model.ModelLoader;
+import spaceguts.graphics.model.Model;
+import spaceguts.graphics.model.ModelLoader;
 
 /**
  * All the possible models for the game. Each value in the enum also contains the path for the model, its scale, and which texture it uses.

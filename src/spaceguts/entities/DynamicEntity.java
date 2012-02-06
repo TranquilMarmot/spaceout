@@ -5,9 +5,9 @@ import javax.vecmath.Quat4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import spaceguts.graphics.model.Model;
 import spaceguts.physics.CollisionTypes;
 import spaceguts.physics.Physics;
-import spaceguts.util.model.Model;
 import spaceguts.util.resources.Models;
 
 import com.bulletphysics.collision.shapes.CollisionShape;

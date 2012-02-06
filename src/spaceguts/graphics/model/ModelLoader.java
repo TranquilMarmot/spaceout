@@ -1,4 +1,4 @@
-package spaceguts.util.model;
+package spaceguts.graphics.model;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

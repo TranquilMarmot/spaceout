@@ -1,11 +1,9 @@
-package spaceguts.graphics;
+package spaceguts.graphics.render;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 import spaceguts.entities.Entities;
-import spaceguts.graphics.render.Render3D;
-import spaceguts.graphics.render.Render2D;
 
 public class Graphics {
 	public static void render(){
@@ -25,8 +23,6 @@ public class Graphics {
 	}
 	
 	public static void initGL(){
-		//GL11.glEnable(GL11.GL_TEXTURE_2D);
-		
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
 		
 		GL11.glEnable(GL11.GL_DEPTH_TEST);

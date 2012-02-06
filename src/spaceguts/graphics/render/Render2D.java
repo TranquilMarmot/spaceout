@@ -3,7 +3,6 @@ package spaceguts.graphics.render;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
-import spaceguts.graphics.Graphics;
 import spaceguts.graphics.gui.GUI;
 import spaceguts.util.DisplayHelper;
 

@@ -6,9 +6,9 @@ import org.lwjgl.opengl.Display;
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
 import spaceguts.entities.Light;
-import spaceguts.graphics.Graphics;
 import spaceguts.graphics.gui.GUI;
 import spaceguts.graphics.gui.menu.MainMenu;
+import spaceguts.graphics.render.Graphics;
 import spaceguts.physics.Physics;
 import spaceguts.util.console.Console;
 import spaceguts.util.debug.Debug;
@@ -29,7 +29,7 @@ import spaceguts.util.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.74.1";
+	public static final String VERSION = "0.0.74.3";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
@@ -62,8 +62,6 @@ public class Runner {
 				// update everything
 				update();
 				// render the scene
-				//Graphics.render();
-				//GLSLRender.render();
 				Graphics.render();
 				// update the display (this swaps the buffers)
 				Display.update();
@@ -83,13 +81,11 @@ public class Runner {
 	private void init() {
 		DisplayHelper.createWindow();
 		
-		Debug.init();
-		//Graphics.initGL();		
+		Debug.init();		
 		
 		MainMenu mainMenu = new MainMenu();
 		GUI.addGUIObject(mainMenu);
 		
-		//GLSLRender.initGL();
 		Graphics.initGL();
 		
 		//initialize resources
