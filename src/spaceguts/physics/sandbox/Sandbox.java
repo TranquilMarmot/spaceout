@@ -91,7 +91,7 @@ public class Sandbox extends Entity{
 		
 		
 		/* BEGIN DEBRIS */
-		Debris debris = new Debris(Entities.camera, 1000, 100000.0f, 420133742L);
+		Debris debris = new Debris(Entities.camera, 2500, 25000.0f, 420133742L);
 		debris.update();
 		Entities.addPassiveEntity(debris);
 		/* END DEBRIS */
