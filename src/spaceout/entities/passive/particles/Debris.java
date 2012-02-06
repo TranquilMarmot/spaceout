@@ -237,7 +237,6 @@ public class Debris extends Entity {
 				Render3D.program.setUniform("ModelViewMatrix", Render3D.modelview);
 
 				// draw the star
-				//circle.draw();
 				GL11.glDrawArrays(GL11.GL_TRIANGLE_FAN, 0, circle.getNumIndices());
 			}Render3D.modelview = oldModelview;
 		}

@@ -12,7 +12,6 @@ import spaceguts.util.QuaternionHelper;
 import spaceguts.util.resources.Textures;
 
 import com.bulletphysics.collision.dispatch.CollisionObject;
-import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.linearmath.Transform;
 
