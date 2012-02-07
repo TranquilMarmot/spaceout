@@ -14,7 +14,7 @@ import spaceguts.util.console.Console;
  * 
  */
 public class KeyboardManager {
-	/** These keys are checked even when the console is on (if they weren't on this list, the game will attempt to print them to the console which wouldn't do anything) */
+	/** These keys are checked even when the console is on (if they weren't on this list, the game would attempt to print them to the console which wouldn't do anything) */
 	private final KeyBindings[] checkedWhenConsoleIsOn = {
 			KeyBindings.SYS_CONSOLE,
 			KeyBindings.SYS_SCREENSHOT,
@@ -25,7 +25,8 @@ public class KeyboardManager {
 			KeyBindings.SYS_CONSOLE_PREVIOUS_COMMAND,
 			KeyBindings.SYS_CONSOLE_SCROLL_DOWN,
 			KeyBindings.SYS_CONSOLE_SCROLL_UP,
-			KeyBindings.SYS_CONSOLE_SUBMIT };
+			KeyBindings.SYS_CONSOLE_SUBMIT 
+	};
 	
 	/**
 	 * Loops through all the current Keyboard events and toggles booleans in 
@@ -37,7 +38,7 @@ public class KeyboardManager {
 			
 			//System.out.println(Keyboard.getKeyName(eventKey));
 			
-			// there are some special case keys, so there's a method to check for them
+			// there are some special case keys, so there's a method in this class to check for them
 			Keys key = getKey(eventKey);
 			// whether or not the key is being pressed or released this frame
 			boolean keyState = Keyboard.getEventKeyState();
@@ -87,39 +88,39 @@ public class KeyboardManager {
 		Keys key = null;
 		
 		switch(eventKey){
-		case(Keyboard.KEY_0):
-			key = Keys.ZERO;
-			break;
-		case(Keyboard.KEY_1):
-			key = Keys.ONE;
-			break;
-		case(Keyboard.KEY_2):
-			key = Keys.TWO;
-			break;
-		case(Keyboard.KEY_3):
-			key = Keys.THREE;
-			break;
-		case(Keyboard.KEY_4):
-			key = Keys.FOUR;
-			break;
-		case(Keyboard.KEY_5):
-			key = Keys.FIVE;
-			break;
-		case(Keyboard.KEY_6):
-			key = Keys.SIX;
-			break;
-		case(Keyboard.KEY_7):
-			key = Keys.SEVEN;
-			break;
-		case(Keyboard.KEY_8):
-			key = Keys.EIGHT;
-			break;
-		case(Keyboard.KEY_9):
-			key = Keys.NINE;
-			break;
-		default:
-			key = Keys.valueOf(Keyboard.getKeyName(eventKey));
-	}
+			case(Keyboard.KEY_0):
+				key = Keys.ZERO;
+				break;
+			case(Keyboard.KEY_1):
+				key = Keys.ONE;
+				break;
+			case(Keyboard.KEY_2):
+				key = Keys.TWO;
+				break;
+			case(Keyboard.KEY_3):
+				key = Keys.THREE;
+				break;
+			case(Keyboard.KEY_4):
+				key = Keys.FOUR;
+				break;
+			case(Keyboard.KEY_5):
+				key = Keys.FIVE;
+				break;
+			case(Keyboard.KEY_6):
+				key = Keys.SIX;
+				break;
+			case(Keyboard.KEY_7):
+				key = Keys.SEVEN;
+				break;
+			case(Keyboard.KEY_8):
+				key = Keys.EIGHT;
+				break;
+			case(Keyboard.KEY_9):
+				key = Keys.NINE;
+				break;
+			default:
+				key = Keys.valueOf(Keyboard.getKeyName(eventKey));
+		}
 		
 		return key;
 	}

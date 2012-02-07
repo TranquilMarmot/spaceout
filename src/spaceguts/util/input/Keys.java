@@ -9,14 +9,17 @@ public enum Keys implements Button{
 	/* 
 	 * If you notice any missing keys, add them!
 	 * It's important that all of these have the same exact name
-	 * as what is returned by Keyboard.getKeyName(eventKey);
+	 * as the string returned by Keyboard.getKeyName(eventKey);
+	 * If the key you want doesn't start with a letter (i.e. all the numbers),
+	 * then add it with a unique name and add it to the switch
+	 * statement in the KeyboardManager.getKey() method
 	 */
 	ESCAPE,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,F11,F12,SYSRQ,SCROLL,PAUSE,
 	GRAVE,ONE,TWO,THREE,FOUR,FIVE,SIX,SEVEN,EIGHT,NINE,ZERO,MINUS,EQUALS,BACK,
 	TAB,Q,W,E,R,T,Y,U,I,O,P,LBRACKET,RBRACKET,BACKSLASH,
 	CAPITAL,A,S,D,F,G,H,J,K,L,SEMICOLON,APOSTROPHE,RETURN,
 	LSHIFT,Z,X,C,V,B,N,M,COMMA,PERIOD,SLASH,RSHIFT,
-	LCONTROL,LWIN,LMENU,SPACE,RMENU,APPS,RCONTROL,
+	LCONTROL,LWIN,LMENU,SPACE,RMENU,RWIN,APPS,RCONTROL,
 	HOME,END,INSERT,PRIOR,NEXT,DELETE,
 	UP,DOWN,LEFT,RIGHT,
 	NUMLOCK,DIVIDE,MULTIPLY,SUBTRACT,ADD,DECIMAL,

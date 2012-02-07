@@ -1,7 +1,7 @@
 package spaceguts.util.input;
 
 /**
- * Bindings for all the special input \for the game. They will all be initialized to their default values,
+ * Bindings for all the special input for the game. They will all be initialized to their default values,
  * but they can easily be changed using the setKey() method.
  * @author TranquilMarmot
  * @see Button
@@ -43,7 +43,7 @@ public enum KeyBindings {
 	
 	/**
 	 * KeyBindings constructor
-	 * @param buttons Keys to use for the binding
+	 * @param buttons Buttons to use for the binding
 	 */
 	private KeyBindings(Button[] buttons){
 		this.buttons = buttons;
@@ -60,6 +60,9 @@ public enum KeyBindings {
 		return false;
 	}
 	
+	/**
+	 * @return True if this is the first call to pressedOnce since the key was pressed, else false
+	 */
 	public boolean pressedOnce(){
 		for(Button button : buttons){
 			if(button.pressedOnce())
@@ -84,8 +87,41 @@ public enum KeyBindings {
 		Button[] newKeys = new Keys[buttons.length + 1];
 		for(int i = 0; i < buttons.length; i++)
 			newKeys[i] = buttons[i];
-		newKeys[buttons.length + 1] = newButton;
+		newKeys[buttons.length] = newButton;
 		this.setButtons(newKeys);
+	}
+	
+	/**
+	 * Removes a button that activated the binding (does nothing if button doesn't already activate binding)
+	 * @param oldButton Button to remove
+	 */
+	public void removeButton(Button oldButton){
+		// index of oldButton in buttons
+		int bIndex = -1;
+		
+		// find bIndex
+		for(int i = 0; i < buttons.length; i++){
+			if(buttons[i] == oldButton)
+				bIndex = i;
+		}
+		
+		// found oldButton
+		if(bIndex != -1){
+			Button[] newButtons = new Button[buttons.length - 1];
+			for(int i = 0; i < buttons.length; i++){
+				// skip the button being removed
+				if(i == bIndex)
+					continue;
+				
+				// add old buttons, minus the old button
+				if(i < bIndex)
+					newButtons[i] = buttons[i];
+				else
+					newButtons[i - 1] = buttons[i];
+			}
+			
+			this.setButtons(newButtons);
+		}
 	}
 	
 	/**
@@ -99,5 +135,24 @@ public enum KeyBindings {
 				return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * To string, or not to string -- that is the question
+	 * Whether 'tis nobler in the mind to suffer
+	 * The slings and arrows of outrageous fortune
+	 * Or to take arms against a sea of troubles
+	 * And by opposing them. To die, to sleep--
+	 * No more
+	 * 
+	 * Shakespeare while you code!
+	 */
+	public String toString(){
+		String ret = "";
+		for(int i = 0; i < buttons.length; i++){
+			ret += buttons[i].toString() + " ";
+		}
+		
+		return ret;
 	}
 }
