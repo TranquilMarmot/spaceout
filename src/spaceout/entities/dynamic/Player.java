@@ -6,7 +6,6 @@ import org.lwjgl.util.vector.Vector3f;
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
 import spaceguts.graphics.gui.GUI;
-import spaceguts.interfaces.Health;
 import spaceguts.physics.CollisionTypes;
 import spaceguts.util.QuaternionHelper;
 import spaceguts.util.Runner;
@@ -14,6 +13,7 @@ import spaceguts.util.console.Console;
 import spaceguts.util.input.KeyBindings;
 import spaceguts.util.input.MouseManager;
 import spaceguts.util.resources.Models;
+import spaceout.interfaces.Health;
 import spaceout.ship.Ship;
 
 import com.bulletphysics.collision.dispatch.CollisionObject;

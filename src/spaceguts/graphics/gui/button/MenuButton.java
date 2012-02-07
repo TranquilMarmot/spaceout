@@ -5,8 +5,8 @@ import java.awt.event.ActionEvent;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 
+import spaceguts.util.Debug;
 import spaceguts.util.DisplayHelper;
-import spaceguts.util.debug.Debug;
 import spaceguts.util.resources.Textures;
 
 /**

@@ -52,7 +52,7 @@ public class KeyboardManager {
 				
 				// go through all the special keys
 				for(KeyBindings binding : checkedWhenConsoleIsOn){
-					if(binding.isKey(key)){
+					if(binding.isButton(key)){
 						//found a special key
 						specialKey = true;
 						break;

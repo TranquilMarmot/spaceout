@@ -1,4 +1,4 @@
-package spaceguts.physics.debug;
+package spaceguts.physics;
 
 import javax.vecmath.Vector3f;
 

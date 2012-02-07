@@ -25,8 +25,9 @@ public class Render2D {
 	 * Sets up OpenGL for 2D drawing
 	 */
 	private static void setUp2DRender(){
+		// use fixed function pipeline for 2D rendering
 		GL20.glUseProgram(0);
-		//GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
+		GL11.glColor3f(0.0f, 0.0f, 0.0f);
 		
 		
 		// reset the projection matrix

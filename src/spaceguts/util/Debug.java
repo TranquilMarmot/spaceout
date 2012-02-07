@@ -1,4 +1,4 @@
-package spaceguts.util.debug;
+package spaceguts.util;
 
 import java.awt.Font;
 import java.util.Formatter;
@@ -13,10 +13,8 @@ import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
 import spaceguts.entities.Entities;
-import spaceguts.util.DisplayHelper;
-import spaceguts.util.QuaternionHelper;
-import spaceguts.util.Runner;
 import spaceguts.util.console.Console;
+import spaceguts.util.input.KeyBindings;
 import spaceguts.util.resources.Paths;
 
 /**
@@ -30,33 +28,94 @@ public class Debug {
 	/** the current FPS */
 	public static int currentFPS;
 
-	// time at the last frame
+	/** time at the last frame */
 	private static Long lastFrame = 0L;
-	// last FPS time
+	/** last FPS time */
 	private static Long lastFPS = null;
-	// counter to keep track of FPS
+	/** counter to keep track of FPS */
 	private static int fpsCount;
 
 	/** whether or not debug info is being displayed */
 	public static boolean displayDebug = true;
 
-	// whether or not the console is up
-	// public static boolean consoleOn = false;
-	// public static boolean commandOn = false;
-
-	// call list to draw a rectangle behind the debug info
+	/** call list to draw a rectangle behind the debug info */
 	private static int rectangleCallList = 0;
 
-	// font for printing stuff to the screen
+	/** font for printing stuff to the screen */
 	public static UnicodeFont font = null;
+	
+	/** make it so backspace can be held down for the console */
+	private static int backspaceRepeatCounter = 0;
+	private static int backspaceRepeatWait = 30;
 
 	public static void update() {
 		// update keys
-		DebugKeyManager.updateKeys();
+		checkKeys();
 		
 		Console.console.update();
 		
 		updateFPS();
+	}
+	
+	private static void checkKeys(){
+		// debug key
+		if(KeyBindings.SYS_DEBUG.pressedOnce())
+			displayDebug = !displayDebug;
+		
+		// console key
+		if(KeyBindings.SYS_CONSOLE.pressedOnce()){
+			Console.consoleOn = !Console.consoleOn;
+			Console.console.autoClose = false;
+		}
+		
+		// command key
+		if(KeyBindings.SYS_COMMAND.pressedOnce()){
+			if (Console.consoleOn == false) {
+				Console.consoleOn = true;
+				Console.commandOn = true;
+				Console.console.autoClose = true;
+			}
+		}
+		
+		// chat key
+		if(KeyBindings.SYS_CHAT.pressedOnce()){
+			if (Console.consoleOn == false) {
+				Console.consoleOn = true;
+				Console.console.autoClose = true;
+			}
+		}
+		
+		// console submit key
+		if(KeyBindings.SYS_CONSOLE_SUBMIT.pressedOnce())
+			Console.console.submit();
+		
+		// console scroll up
+		if(KeyBindings.SYS_CONSOLE_SCROLL_UP.pressedOnce())
+			Console.console.scrollUp(1);
+		
+		// console scroll down
+		if(KeyBindings.SYS_CONSOLE_SCROLL_DOWN.pressedOnce())
+			Console.console.scrollDown(1);
+		
+		// screenshot key
+		if(KeyBindings.SYS_SCREENSHOT.pressedOnce())
+			Screenshot.takeScreenshot(DisplayHelper.windowWidth,
+					DisplayHelper.windowHeight);
+		
+		// backspace key
+		// if the key is only pressed once (not held down), backspace
+		if(KeyBindings.SYS_CONSOLE_BACKSPACE.pressedOnce()){
+			Console.console.backspace();
+		// if the key is being held down, increment the counter and backspace if counter is finished
+		} else if(KeyBindings.SYS_CONSOLE_BACKSPACE.isPressed()){
+			if(backspaceRepeatCounter < backspaceRepeatWait)
+				backspaceRepeatCounter++;
+			else if(backspaceRepeatCounter == backspaceRepeatWait)
+				Console.console.backspace();
+		} else{
+			// set counter to 0 if key isn't being held down
+			backspaceRepeatCounter = 0;
+		}
 	}
 
 	public static void draw() {
@@ -69,16 +128,6 @@ public class Debug {
 		if (Runner.paused && Entities.entitiesExist())
 			Debug.font.drawString((DisplayHelper.windowWidth / 2) - 25,
 					DisplayHelper.windowHeight / 2, "PAUSED");
-		
-		/*
-		Debug.font.drawString(5, DisplayHelper.windowHeight - 121, 
-				"Left Click + Drag - Rotate X/Y\n" +
-				"Right Click + Drag - Rotate X/Z\n" +
-				"Middle Click + Drag - Move X/Y\n" +
-				"Mouse Wheel - Move Z\n" +
-				"Arrow Keys - Light Position\n" +
-				"M - Change Model");
-		*/
 	}
 
 	public static void drawDebugInfo() {

@@ -1,4 +1,4 @@
-package spaceguts.physics.sandbox;
+package spaceguts.physics;
 
 import java.util.Random;
 

@@ -5,11 +5,11 @@ import org.lwjgl.util.vector.Vector3f;
 
 import spaceguts.entities.DynamicEntity;
 import spaceguts.graphics.shapes.VBOQuadric;
-import spaceguts.interfaces.Health;
 import spaceguts.physics.CollisionTypes;
 import spaceguts.physics.Physics;
 import spaceguts.util.QuaternionHelper;
 import spaceguts.util.resources.Textures;
+import spaceout.interfaces.Health;
 
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.shapes.SphereShape;

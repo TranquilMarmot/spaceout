@@ -1,4 +1,4 @@
-package spaceguts.physics;
+package spaceout;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -7,8 +7,9 @@ import javax.vecmath.Quat4f;
 
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
-import spaceguts.interfaces.Bullet;
-import spaceguts.interfaces.Health;
+import spaceguts.physics.Physics;
+import spaceout.interfaces.Bullet;
+import spaceout.interfaces.Health;
 
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.narrowphase.ManifoldPoint;
@@ -17,7 +18,7 @@ import com.bulletphysics.dynamics.DynamicsWorld;
 import com.bulletphysics.dynamics.InternalTickCallback;
 import com.bulletphysics.linearmath.Transform;
 
-class DynamicEntityCallback extends InternalTickCallback {
+public class DynamicEntityCallback extends InternalTickCallback {
 	@Override
 	public void internalTick(DynamicsWorld world, float timeStep) {
 		Iterator<CollisionObject> it = world.getCollisionObjectArray()

@@ -12,9 +12,9 @@ import spaceguts.graphics.gui.GUIObject;
 import spaceguts.graphics.gui.button.MenuButton;
 import spaceguts.graphics.gui.menu.filepicker.FilePicker;
 import spaceguts.physics.Physics;
-import spaceguts.physics.sandbox.Sandbox;
+import spaceguts.physics.Sandbox;
+import spaceguts.util.Debug;
 import spaceguts.util.DisplayHelper;
-import spaceguts.util.debug.Debug;
 import spaceguts.util.resources.Textures;
 import spaceguts.util.xml.XMLParser;
 
