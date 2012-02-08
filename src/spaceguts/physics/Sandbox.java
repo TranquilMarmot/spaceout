@@ -102,22 +102,28 @@ public class Sandbox extends Entity{
 		float sphereSize = randy.nextInt(200) / 10.0f;
 		
 		Textures sphereTexture;
+		String tex;
 		
 		switch(randy.nextInt(4)){
 		case 0:
 			sphereTexture = Textures.EARTH;
+			tex = "Earth";
 			break;
 		case 1:
 			sphereTexture = Textures.MERCURY;
+			tex = "Mercury";
 			break;
 		case 2:
 			sphereTexture = Textures.VENUS;
+			tex = "Venus";
 			break;
 		case 3:
 			sphereTexture = Textures.MARS;
+			tex = "Mars";
 			break;
 		default:
 			sphereTexture = Textures.EARTH;
+			tex = "Earth";
 		}
 		
 		float sphereX = 0.0f + (randy.nextFloat() * 100.0f);
@@ -130,6 +136,7 @@ public class Sandbox extends Entity{
 		float sphereMass = sphereSize * 2.0f;
 		
 		Planet p = new Planet(sphereLocation, sphereRotation, sphereSize, sphereMass, 0.0f, sphereTexture);
+		p.type = tex;
 		
 		Entities.addDynamicEntity(p);
 	}

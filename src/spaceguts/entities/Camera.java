@@ -28,7 +28,7 @@ public class Camera extends Entity {
 	protected long lastUpdate;
 
 	/** how fast the camera moves in free mode */
-	public float speed = 50.0f;
+	public float speed = 10.0f;
 
 	/** zoom level */
 	public float zoom;
@@ -38,7 +38,7 @@ public class Camera extends Entity {
 	public float xOffset;
 	
 	/** used to preserve offset when switching modes */
-	private float oldYOffset, oldXOffset;
+	private float oldYOffset, oldXOffset, oldMinZoom;
 
 	/** maximum zoom level */
 	private float maxZoom = 3000.0f;
@@ -136,8 +136,10 @@ public class Camera extends Entity {
 				vanityMode = true;
 				oldYOffset = yOffset;
 				oldXOffset = xOffset;
+				oldMinZoom = minZoom;
 				yOffset = 0;
 				xOffset = 0;
+				minZoom = 0;
 			} else if (vanityMode && !freeMode) {
 				vanityMode = false;
 				freeMode = true;
@@ -146,6 +148,7 @@ public class Camera extends Entity {
 				rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 				yOffset = oldYOffset;
 				xOffset = oldXOffset;
+				minZoom = oldMinZoom;
 			}
 			modeKeyDown = true;
 		}
