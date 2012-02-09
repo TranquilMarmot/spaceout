@@ -8,8 +8,10 @@ import org.lwjgl.util.vector.Vector3f;
 import spaceguts.graphics.model.Model;
 import spaceguts.physics.CollisionTypes;
 import spaceguts.physics.Physics;
+import spaceguts.util.QuaternionHelper;
 import spaceguts.util.resources.Models;
 
+import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback;
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
@@ -208,6 +210,23 @@ public class DynamicEntity extends Entity {
 
 		Physics.dynamicsWorld.debugDrawObject(worldTransform, shape,
 				new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
+	}
+	
+	public ClosestRayResultCallback rayTest(Vector3f direction){
+		// rotate the direction we want to test so that it's realtive to the entity's rotation
+		Vector3f endRotated = QuaternionHelper.rotateVectorByQuaternion(direction, rotation);
+		Vector3f endAdd = new Vector3f();
+		// add the rotated direction to the current location to get the end vector
+		Vector3f.add(location, endRotated, endAdd);
+		
+		javax.vecmath.Vector3f start = new javax.vecmath.Vector3f(location.x, location.y, location.z);
+		javax.vecmath.Vector3f end = new javax.vecmath.Vector3f(endAdd.x, endAdd.y, endAdd.z);
+		
+		ClosestRayResultCallback callback = new ClosestRayResultCallback(start, end);
+		Physics.dynamicsWorld.rayTest(start, end, callback);
+		
+		return callback;
+		
 	}
 
 	@Override

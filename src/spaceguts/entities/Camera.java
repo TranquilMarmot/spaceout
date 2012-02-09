@@ -3,7 +3,12 @@ package spaceguts.entities;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback;
+
+import spaceguts.graphics.render.Render3D;
+import spaceguts.physics.Physics;
 import spaceguts.util.Debug;
+import spaceguts.util.DisplayHelper;
 import spaceguts.util.QuaternionHelper;
 import spaceguts.util.Runner;
 import spaceguts.util.console.Console;
@@ -232,6 +237,33 @@ public class Camera extends Entity {
 				this.rotation = QuaternionHelper.rotateZ(this.rotation, -delta);
 			if (rollLeft)
 				this.rotation = QuaternionHelper.rotateZ(this.rotation, delta);
+		}
+	}
+	
+	public DynamicEntity rayTestAtCursor(){
+		int halfWidth = DisplayHelper.windowWidth / 2;
+		int halfHeight = DisplayHelper.windowHeight / 2;
+		int adjustedX = MouseManager.x - halfWidth;
+		int adjustedY = MouseManager.y - halfHeight;
+		
+		Vector3f newLocation = new Vector3f(location.x + adjustedX, location.y + adjustedY, location.z);
+		
+		Vector3f endOfTheGalaxy = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, Render3D.drawDistance), rotation);
+		Vector3f endAdd = new Vector3f();
+		Vector3f.add(newLocation, endOfTheGalaxy, endAdd);
+		
+		javax.vecmath.Vector3f start = new javax.vecmath.Vector3f(newLocation.x, newLocation.y, newLocation.z);
+		javax.vecmath.Vector3f end = new javax.vecmath.Vector3f(endAdd.x, endAdd.y, endAdd.z);
+		
+		//System.out.println(adjustedX + " " + adjustedY + " | " + start.x + " " + start.y + " " + start.z + " | " + end.x + " " + end.y + " " + end.z);
+		
+		ClosestRayResultCallback callback = new ClosestRayResultCallback(start, end);
+		Physics.dynamicsWorld.rayTest(start, end, callback);
+		
+		if(callback.hasHit()){
+			return (DynamicEntity)callback.collisionObject.getUserPointer();
+		} else{
+			return null;
 		}
 	}
 

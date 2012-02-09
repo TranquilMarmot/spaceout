@@ -3,12 +3,15 @@ package spaceguts.physics;
 
 import javax.vecmath.Vector3f;
 
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
+import spaceguts.graphics.render.Render3D;
 import spaceguts.util.QuaternionHelper;
+import spaceguts.util.console.Console;
 import spaceguts.util.input.KeyBindings;
 import spaceguts.util.input.MouseManager;
 import spaceout.DynamicEntityCallback;
@@ -105,40 +108,22 @@ public class Physics {
 		
 		
 		/* FIXME TEMP CODE */
-		Quaternion revQuat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-		Entities.camera.rotation.negate(revQuat);
-		
-		
-		float sX = Entities.camera.location.x - Entities.camera.xOffset;
-		float sY = Entities.camera.location.y - Entities.camera.yOffset;
-		float sZ = Entities.camera.location.z - Entities.camera.zoom;
-		org.lwjgl.util.vector.Vector3f startRotate = QuaternionHelper.rotateVectorByQuaternion(new org.lwjgl.util.vector.Vector3f(sX, sY, sZ), Entities.camera.rotation);
-		Vector3f start = new Vector3f(startRotate.x, startRotate.y, startRotate.z);
-		
-		org.lwjgl.util.vector.Vector3f endRotate = new org.lwjgl.util.vector.Vector3f();
-		org.lwjgl.util.vector.Vector3f subRotate = QuaternionHelper.rotateVectorByQuaternion(new org.lwjgl.util.vector.Vector3f(0.0f, 0.0f, 1000.0f), Entities.camera.rotation);
-		org.lwjgl.util.vector.Vector3f.sub(startRotate, subRotate, endRotate);
-		
-		Vector3f end = new Vector3f(endRotate.x, endRotate.y, endRotate.z);
-		
-		GL11.glBegin(GL11.GL_LINES);{
-			GL11.glVertex3f(start.x, start.y, start.z);
-			GL11.glVertex3f(end.x, end.y, end.z);
-		} GL11.glEnd();
-		
-		
-		//System.out.println(start.x + " " + start.y + " " + start.z + " | " + end.x + " " + end.y + " " + end.z + " | " + Entities.player.location.x + " " + Entities.player.location.y + " " + Entities.player.location.z);
-		
-		ClosestRayResultCallback callback = new ClosestRayResultCallback(start, end);
-		dynamicsWorld.rayTest(start, end, callback);
-		
+		/*
+		ClosestRayResultCallback callback = Entities.player.rayTest(new org.lwjgl.util.vector.Vector3f(0.0f, 0.0f, Render3D.drawDistance));
 		if(callback.hasHit()){
 			CollisionObject obj = callback.collisionObject;
 			DynamicEntity ent = (DynamicEntity)obj.getUserPointer();
-			System.out.println(ent.type + " " + counter + " | " + ent.location.x + " " + ent.location.y + " " + ent.location.z + " | " + start.x + " " + start.y + " " + start.z);
+			Console.console.print(ent.type + " " + counter);
 			counter++;
-		}
+		}*/
 		
+		if(!Mouse.isGrabbed()){
+			DynamicEntity underCursor = Entities.camera.rayTestAtCursor();
+			if(underCursor != null){
+				Console.console.print(underCursor.type + " " + counter);
+				counter++;
+			}
+		}
 		/* FIXME TEMP CODE */
 	}
 
