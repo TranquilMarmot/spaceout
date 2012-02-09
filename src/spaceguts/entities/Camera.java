@@ -3,8 +3,6 @@ package spaceguts.entities;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback;
-
 import spaceguts.graphics.render.Render3D;
 import spaceguts.physics.Physics;
 import spaceguts.util.Debug;
@@ -14,6 +12,8 @@ import spaceguts.util.Runner;
 import spaceguts.util.console.Console;
 import spaceguts.util.input.KeyBindings;
 import spaceguts.util.input.MouseManager;
+
+import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback;
 
 /**
  * A camera that tells how the scene is being looked at
@@ -241,21 +241,65 @@ public class Camera extends Entity {
 	}
 	
 	public DynamicEntity rayTestAtCursor(){
-		int halfWidth = DisplayHelper.windowWidth / 2;
-		int halfHeight = DisplayHelper.windowHeight / 2;
-		int adjustedX = MouseManager.x - halfWidth;
-		int adjustedY = MouseManager.y - halfHeight;
+		/*
+		 * FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME FIXME
+		 */
+		float halfWidth = DisplayHelper.windowWidth / 2.0f;
+		float halfHeight = DisplayHelper.windowHeight / 2.0f;
+		float adjustedX = MouseManager.x - halfWidth;
+		float adjustedY = MouseManager.y - halfHeight;
 		
-		Vector3f newLocation = new Vector3f(location.x + adjustedX, location.y + adjustedY, location.z);
+		//Quaternion rev = new Quaternion();
+		//rotation.negate(rev);
+		
+		
+		Vector3f realLocation = new Vector3f(location.x + xOffset, location.y + yOffset, location.z - zoom);
+		Vector3f s = new Vector3f(realLocation.x + adjustedX, realLocation.y + adjustedY, realLocation.z);
+		
+		Vector3f adj = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(adjustedX, adjustedY, Render3D.drawDistance), rotation);
+		Vector3f e = new Vector3f();
+		Vector3f.add(realLocation, adj, e);
+		
+		
+		/*
+		Vector3f adj = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(-adjustedX, adjustedY, 0.0f), rotation);
+		
+		Vector3f realLocation = new Vector3f(location.x + xOffset, location.y + yOffset, location.z - zoom);
+		
+		Vector3f s = new Vector3f();
+		Vector3f.add(realLocation, adj, s);
+		
+		Vector3f infinity = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, Render3D.drawDistance), rotation);
+		
+		Vector3f e = new Vector3f();
+		Vector3f.add(s, infinity, e);
+		*/
+		
+		javax.vecmath.Vector3f start = new javax.vecmath.Vector3f(s.x, s.y, s.z);
+		javax.vecmath.Vector3f end = new javax.vecmath.Vector3f(e.x, e.y, e.z);
+		
+		
+		
+		/*
+		float aspect = (float)DisplayHelper.windowWidth / (float)DisplayHelper.windowHeight;
+		
+		//Vector3f newLocation = QuaternionHelper.moveX(rotation, location, adjustedX);
+		//newLocation = QuaternionHelper.moveY(rotation, newLocation, adjustedY);
+		
+		Vector3f adjustedRotated = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(adjustedX, adjustedY, 0.0f), rotation);
+		
+		//Vector3f newLocation = new Vector3f();
+		//Vector3f.add(location, new Vector3f(adjustedX, adjustedY, 0.0f), newLocation);
 		
 		Vector3f endOfTheGalaxy = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, Render3D.drawDistance), rotation);
 		Vector3f endAdd = new Vector3f();
-		Vector3f.add(newLocation, endOfTheGalaxy, endAdd);
+		Vector3f.add(location, endOfTheGalaxy, endAdd);
 		
-		javax.vecmath.Vector3f start = new javax.vecmath.Vector3f(newLocation.x, newLocation.y, newLocation.z);
+		javax.vecmath.Vector3f start = new javax.vecmath.Vector3f(location.x, location.y, location.z);
 		javax.vecmath.Vector3f end = new javax.vecmath.Vector3f(endAdd.x, endAdd.y, endAdd.z);
 		
-		//System.out.println(adjustedX + " " + adjustedY + " | " + start.x + " " + start.y + " " + start.z + " | " + end.x + " " + end.y + " " + end.z);
+		System.out.println(adjustedX + " " + adjustedY + " | " + start.x + " " + start.y + " " + start.z + " | " + end.x + " " + end.y + " " + end.z);
+		*/
 		
 		ClosestRayResultCallback callback = new ClosestRayResultCallback(start, end);
 		Physics.dynamicsWorld.rayTest(start, end, callback);
