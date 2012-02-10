@@ -3,25 +3,16 @@ package spaceguts.physics;
 
 import javax.vecmath.Vector3f;
 
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Quaternion;
-
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
-import spaceguts.graphics.render.Render3D;
-import spaceguts.util.QuaternionHelper;
 import spaceguts.util.console.Console;
 import spaceguts.util.input.KeyBindings;
-import spaceguts.util.input.MouseManager;
 import spaceout.DynamicEntityCallback;
 
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
 import com.bulletphysics.collision.dispatch.CollisionDispatcher;
-import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback;
-import com.bulletphysics.collision.dispatch.CollisionWorld.RayResultCallback;
 import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
 import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
@@ -117,12 +108,11 @@ public class Physics {
 			counter++;
 		}*/
 		
-		if(!Mouse.isGrabbed()){
-			DynamicEntity underCursor = Entities.camera.rayTestAtCursor();
-			if(underCursor != null){
-				Console.console.print(underCursor.type + " " + counter);
-				counter++;
-			}
+		ClosestRayResultCallback cameraRay = Entities.camera.rayTestAtCenter();
+		if(cameraRay.hasHit()){
+			DynamicEntity ent = (DynamicEntity) cameraRay.collisionObject.getUserPointer();
+			Console.console.print(ent.type + " " + counter);
+			counter++;
 		}
 		/* FIXME TEMP CODE */
 	}

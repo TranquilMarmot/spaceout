@@ -28,6 +28,7 @@ public enum Textures {
 	SUN("JPG", Paths.TEXTURE_PATH.path() + "sun.jpg", true, GL11.GL_NEAREST),
 	
 	// GUI
+	CROSSHAIR("PNG", Paths.CROSSHAIR_PATH.path(), false, GL11.GL_NEAREST),
 	MENU_BACKGROUND1("JPG", Paths.BACKGROUND_IMAGE_PATH.path() + "apod1.jpg", false, GL11.GL_NEAREST),
 	MENU_BACKGROUND2("JPG", Paths.BACKGROUND_IMAGE_PATH.path() + "apod2.jpg", false, GL11.GL_NEAREST),
 	MENU_SPACEOUT_TEXT("PNG", Paths.MENU_IMAGE_PATH.path() + "spaceout.png", false, GL11.GL_NEAREST),

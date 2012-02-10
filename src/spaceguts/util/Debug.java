@@ -16,6 +16,7 @@ import spaceguts.entities.Entities;
 import spaceguts.util.console.Console;
 import spaceguts.util.input.KeyBindings;
 import spaceguts.util.resources.Paths;
+import spaceguts.util.resources.Textures;
 
 /**
  * Handles drawing all the debug info. This class also contains the console
@@ -47,6 +48,9 @@ public class Debug {
 	/** make it so backspace can be held down for the console */
 	private static int backspaceRepeatCounter = 0;
 	private static int backspaceRepeatWait = 30;
+	
+	public static int crosshairWidth = 8, crosshairHeight = 8;
+	public static Vector3f crosshairColor = new Vector3f(1.0f, 1.0f, 1.0f);
 
 	public static void update() {
 		// update keys
@@ -124,10 +128,35 @@ public class Debug {
 			drawDebugInfo();
 		}
 		
+		drawCrosshair();
+		
 		// draw 'PAUSED' in the middle of the screen if the game is paused
 		if (Runner.paused && Entities.entitiesExist())
 			Debug.font.drawString((DisplayHelper.windowWidth / 2) - 25,
 					DisplayHelper.windowHeight / 2, "PAUSED");
+	}
+	
+	private static void drawCrosshair(){
+		Textures.CROSSHAIR.texture().bind();
+		
+		
+		GL11.glColor3f(crosshairColor.x, crosshairColor.y, crosshairColor.z);
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0, 0);
+		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) - crosshairWidth, (DisplayHelper.windowHeight / 2.0f) + crosshairHeight);
+
+		GL11.glTexCoord2f(Textures.CROSSHAIR.texture().getWidth(), 0);
+		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) + crosshairWidth, (DisplayHelper.windowHeight / 2.0f) + crosshairHeight);
+
+		GL11.glTexCoord2f(Textures.CROSSHAIR.texture().getWidth(), Textures.CROSSHAIR.texture().getHeight());
+		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) + crosshairWidth, (DisplayHelper.windowHeight / 2.0f) - crosshairHeight);
+
+		GL11.glTexCoord2f(0, Textures.CROSSHAIR.texture().getHeight());
+		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) - crosshairWidth, (DisplayHelper.windowHeight / 2.0f) - crosshairHeight);
+		GL11.glEnd();
+		
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		//GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 
 	public static void drawDebugInfo() {

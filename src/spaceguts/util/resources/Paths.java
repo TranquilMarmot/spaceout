@@ -7,6 +7,8 @@ public enum Paths {
 	FILEPICKER_IMAGE_PATH("res/images/gui/FilePicker/"),
 	BACKGROUND_IMAGE_PATH("res/images/gui/Menu/Background/"),
 	
+	CROSSHAIR_PATH("res/images/gui/crosshair.png"),
+	
 	TEXTURE_PATH("res/images/textures/"),
 	
 	MODEL_PATH("res/models/"),

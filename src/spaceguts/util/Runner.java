@@ -28,7 +28,7 @@ import spaceguts.util.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.74.7";
+	public static final String VERSION = "0.0.74.9";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
@@ -92,7 +92,7 @@ public class Runner {
 		ResourceLoader.addJob(Textures.MENU_BACKGROUND2);
 		ResourceLoader.addJob(Textures.STARS);
 		ResourceLoader.addJob(Textures.WHITE);
-		ResourceLoader.addJob(Textures.CHECKERS);
+		//ResourceLoader.addJob(Textures.CHECKERS);
 		ResourceLoader.addJob(Textures.SHIP1);
 		ResourceLoader.addJob(Textures.VENUS);
 		ResourceLoader.addJob(Textures.MARS);
@@ -110,6 +110,7 @@ public class Runner {
 		ResourceLoader.addJob(Textures.MENU_BUTTON_MOUSEOVER);
 		ResourceLoader.addJob(Textures.MENU_BUTTON_PRESSED);
 		ResourceLoader.addJob(Textures.MENU_SPACEOUT_TEXT);
+		ResourceLoader.addJob(Textures.CROSSHAIR);
 		ResourceLoader.processJobs();
 		
 		Debug.printSysInfo();

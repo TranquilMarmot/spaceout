@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
-import spaceguts.graphics.render.Render3D;
 import spaceguts.util.resources.Textures;
 
 import com.bulletphysics.collision.shapes.CollisionShape;
