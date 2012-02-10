@@ -3,16 +3,12 @@ package spaceguts.physics;
 
 import javax.vecmath.Vector3f;
 
-import spaceguts.entities.DynamicEntity;
-import spaceguts.entities.Entities;
-import spaceguts.util.console.Console;
 import spaceguts.util.input.KeyBindings;
 import spaceout.DynamicEntityCallback;
 
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
 import com.bulletphysics.collision.dispatch.CollisionDispatcher;
-import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback;
 import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
 import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
@@ -49,9 +45,6 @@ public class Physics {
 
 	/** whether or not to draw physics debug info */
 	public static boolean drawDebug = false;
-	
-	// FIXME TEMP
-	private static int counter = 0;
 
 	/**
 	 * Initializes the physics engine
@@ -64,7 +57,7 @@ public class Physics {
 		DefaultCollisionConfiguration collisionConfiguration = new DefaultCollisionConfiguration();
 		dispatcher = new CollisionDispatcher(collisionConfiguration);
 
-		// wut
+		// wat
 		solver = new SequentialImpulseConstraintSolver();
 
 		// the world everything is in

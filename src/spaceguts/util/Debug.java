@@ -18,6 +18,7 @@ import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
 import spaceguts.util.console.Console;
 import spaceguts.util.input.KeyBindings;
+import spaceguts.util.input.MouseManager;
 import spaceguts.util.resources.Paths;
 import spaceguts.util.resources.Textures;
 
@@ -56,6 +57,7 @@ public class Debug {
 	public static Vector3f crosshairColor = new Vector3f(1.0f, 1.0f, 1.0f);
 	
 	private static DynamicEntity lookingAt;
+	private static boolean entityGrabbed = false;
 
 	public static void update() {
 		// update keys
@@ -218,9 +220,13 @@ public class Debug {
 					cameraInfo += "\n(free)";
 				font.drawString(3, 114, cameraInfo, Color.blue);
 				
-				String look = "At crosshair: ";
+				String look;
+				if(entityGrabbed)
+					look = "Grabbed:      ";
+				else
+					look = "At crosshair: ";
 				if(lookingAt != null){
-					look += lookingAt.type + " | " + lookingAt.hashCode();
+					look += lookingAt.hashCode() + " | " + lookingAt.type + " | Mass: " + lookingAt.rigidBody.getInvMass();
 				}
 				font.drawString(100, 3, look, Color.green);
 
@@ -357,11 +363,28 @@ public class Debug {
 	}
 	
 	private static void whatsTheCameraLookingAt(){
+		if(Entities.camera.freeMode){
+			if(entityGrabbed){
+				Vector3f impulse = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(MouseManager.dx * 250, MouseManager.dy * -250, 0.0f), Entities.camera.rotation);
+				
+				System.out.println(impulse.x + " " + impulse.y + " " + impulse.z);
+				
+				lookingAt.rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(impulse.x, impulse.y, impulse.z));
+			}
+		}
+		
 		ClosestRayResultCallback cameraRay = Entities.camera.rayTestAtCenter();
-		if(cameraRay.hasHit()){
+		if(cameraRay.hasHit() && !entityGrabbed){
 			lookingAt = (DynamicEntity) cameraRay.collisionObject.getUserPointer();
-		} else{
+			
+			if(MouseManager.button0 & !entityGrabbed){
+
+				
+				entityGrabbed = true;
+			}
+		} else if(!MouseManager.button0){
 			lookingAt = null;
+			entityGrabbed = false;
 		}
 	}
 }

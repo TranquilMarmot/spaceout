@@ -134,7 +134,7 @@ public class Player extends DynamicEntity implements Health {
 				this.rotation.y, this.rotation.z, this.rotation.w);
 
 		// move the bullet to in front of the player so it doesn't it the player
-		Vector3f bulletMoveAmount = new Vector3f(0.0f, 0.0f, 10.0f);
+		Vector3f bulletMoveAmount = new Vector3f(0.0f, 0.0f, 0.0f);
 		bulletMoveAmount = QuaternionHelper.rotateVectorByQuaternion(
 				bulletMoveAmount, bulletRotation);
 		Vector3f.add(bulletLocation, bulletMoveAmount, bulletLocation);

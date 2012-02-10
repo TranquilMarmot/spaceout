@@ -28,7 +28,7 @@ import spaceguts.util.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.74.9";
+	public static final String VERSION = "0.0.74.10";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
