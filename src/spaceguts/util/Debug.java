@@ -12,6 +12,9 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
+import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback;
+
+import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
 import spaceguts.util.console.Console;
 import spaceguts.util.input.KeyBindings;
@@ -51,6 +54,8 @@ public class Debug {
 	
 	public static int crosshairWidth = 8, crosshairHeight = 8;
 	public static Vector3f crosshairColor = new Vector3f(1.0f, 1.0f, 1.0f);
+	
+	private static DynamicEntity lookingAt;
 
 	public static void update() {
 		// update keys
@@ -59,6 +64,9 @@ public class Debug {
 		Console.console.update();
 		
 		updateFPS();
+		
+		if(Entities.camera != null)
+			whatsTheCameraLookingAt();
 	}
 	
 	private static void checkKeys(){
@@ -209,6 +217,12 @@ public class Debug {
 				else if (Entities.camera.freeMode)
 					cameraInfo += "\n(free)";
 				font.drawString(3, 114, cameraInfo, Color.blue);
+				
+				String look = "At crosshair: ";
+				if(lookingAt != null){
+					look += lookingAt.type + " | " + lookingAt.hashCode();
+				}
+				font.drawString(100, 3, look, Color.green);
 
 				javax.vecmath.Vector3f linear = new javax.vecmath.Vector3f();
 				Entities.player.rigidBody.getLinearVelocity(linear);
@@ -340,5 +354,14 @@ public class Debug {
 		String glVendor = GL11.glGetString(GL11.GL_VENDOR);
 		String glRenderer = GL11.glGetString(GL11.GL_RENDERER);
 		System.out.println(glRenderer + " (" + glVendor + ")");
+	}
+	
+	private static void whatsTheCameraLookingAt(){
+		ClosestRayResultCallback cameraRay = Entities.camera.rayTestAtCenter();
+		if(cameraRay.hasHit()){
+			lookingAt = (DynamicEntity) cameraRay.collisionObject.getUserPointer();
+		} else{
+			lookingAt = null;
+		}
 	}
 }

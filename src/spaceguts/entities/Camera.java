@@ -244,15 +244,22 @@ public class Camera extends Entity {
 	 * @return A RayResultCallback that says whether or not something was hit
 	 */
 	public ClosestRayResultCallback rayTestAtCenter(){
-		Vector3f newLocation = new Vector3f(location.x, location.y, location.z);
+		// rotate the camera's offsets by its current rotation to get the offsets on the right plane
+		Vector3f offsets = new Vector3f(xOffset, yOffset, -zoom);
+		Vector3f actualLocation = QuaternionHelper.rotateVectorByQuaternion(offsets, rotation);
+		// add location to rotated offsets to get actual camera position
+		Vector3f.add(location, actualLocation, actualLocation);
 		
+		// create a vector far at as out we can see, then rotate it by the camera's current rotation to get it on the right plane
 		Vector3f endOfTheGalaxy = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, Render3D.drawDistance), rotation);
 		Vector3f endAdd = new Vector3f();
-		Vector3f.add(newLocation, endOfTheGalaxy, endAdd);
+		// add the vector at the end to the camera's location to get a straight line going to the end
+		Vector3f.add(actualLocation, endOfTheGalaxy, endAdd);
 		
-		javax.vecmath.Vector3f start = new javax.vecmath.Vector3f(newLocation.x, newLocation.y, newLocation.z);
+		javax.vecmath.Vector3f start = new javax.vecmath.Vector3f(actualLocation.x, actualLocation.y, actualLocation.z);
 		javax.vecmath.Vector3f end = new javax.vecmath.Vector3f(endAdd.x, endAdd.y, endAdd.z);
 		
+		// perform test
 		ClosestRayResultCallback callback = new ClosestRayResultCallback(start, end);
 		Physics.dynamicsWorld.rayTest(start, end, callback);
 		

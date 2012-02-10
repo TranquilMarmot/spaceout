@@ -95,26 +95,6 @@ public class Physics {
 		if (!KeyBindings.SYS_DEBUG_PHYSICS.isPressed()) {
 			debugDown = false;
 		}
-		
-		
-		
-		/* FIXME TEMP CODE */
-		/*
-		ClosestRayResultCallback callback = Entities.player.rayTest(new org.lwjgl.util.vector.Vector3f(0.0f, 0.0f, Render3D.drawDistance));
-		if(callback.hasHit()){
-			CollisionObject obj = callback.collisionObject;
-			DynamicEntity ent = (DynamicEntity)obj.getUserPointer();
-			Console.console.print(ent.type + " " + counter);
-			counter++;
-		}*/
-		
-		ClosestRayResultCallback cameraRay = Entities.camera.rayTestAtCenter();
-		if(cameraRay.hasHit()){
-			DynamicEntity ent = (DynamicEntity) cameraRay.collisionObject.getUserPointer();
-			Console.console.print(ent.type + " " + counter);
-			counter++;
-		}
-		/* FIXME TEMP CODE */
 	}
 
 	/**
