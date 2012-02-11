@@ -61,6 +61,9 @@ public class Camera extends Entity {
 
 	/** how fast the camera rolls */
 	float rollSpeed = 13.0f;
+	
+	public DynamicEntity lookingAt;
+	public boolean entityGrabbed = false;
 
 	/**
 	 * Camera constructor
@@ -88,6 +91,8 @@ public class Camera extends Entity {
 	 * Update the camera. Ths handles following other things, mode switches etc.
 	 */
 	public void update() {
+		whatsTheCameraLookingAt();
+		
 		// if we're not following anything, we're in free mode
 		if (following == null) {
 			vanityMode = false;
@@ -264,6 +269,37 @@ public class Camera extends Entity {
 		Physics.dynamicsWorld.rayTest(start, end, callback);
 		
 		return callback;
+	}
+	
+	private void whatsTheCameraLookingAt(){
+		if(freeMode){
+			if(entityGrabbed){
+				Vector3f impulse = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(MouseManager.dx * 250, MouseManager.dy * -250, 0.0f), Entities.camera.rotation);
+				
+				//System.out.println(impulse.x + " " + impulse.y + " " + impulse.z);
+				
+				lookingAt.rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(impulse.x, impulse.y, impulse.z));
+			}
+		}
+		
+		ClosestRayResultCallback cameraRay = rayTestAtCenter();
+		if(cameraRay.hasHit() && !entityGrabbed){
+			lookingAt = (DynamicEntity) cameraRay.collisionObject.getUserPointer();
+			
+			if(MouseManager.button0 & !entityGrabbed){
+				entityGrabbed = true;
+			}
+		} else if(!MouseManager.button0){
+			lookingAt = null;
+			entityGrabbed = false;
+		}
+	}
+	
+	public Vector3f getLocationWithOffset(){
+		float x = location.x + xOffset;
+		float y = location.y + yOffset;
+		float z = location.z - zoom;
+		return new Vector3f(x, y, z);
 	}
 
 	/**

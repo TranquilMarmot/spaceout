@@ -12,13 +12,9 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
-import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback;
-
-import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
 import spaceguts.util.console.Console;
 import spaceguts.util.input.KeyBindings;
-import spaceguts.util.input.MouseManager;
 import spaceguts.util.resources.Paths;
 import spaceguts.util.resources.Textures;
 
@@ -55,9 +51,6 @@ public class Debug {
 	
 	public static int crosshairWidth = 8, crosshairHeight = 8;
 	public static Vector3f crosshairColor = new Vector3f(1.0f, 1.0f, 1.0f);
-	
-	private static DynamicEntity lookingAt;
-	private static boolean entityGrabbed = false;
 
 	public static void update() {
 		// update keys
@@ -66,9 +59,6 @@ public class Debug {
 		Console.console.update();
 		
 		updateFPS();
-		
-		if(Entities.camera != null)
-			whatsTheCameraLookingAt();
 	}
 	
 	private static void checkKeys(){
@@ -221,12 +211,12 @@ public class Debug {
 				font.drawString(3, 114, cameraInfo, Color.blue);
 				
 				String look;
-				if(entityGrabbed)
+				if(Entities.camera.entityGrabbed)
 					look = "Grabbed:      ";
 				else
 					look = "At crosshair: ";
-				if(lookingAt != null){
-					look += lookingAt.hashCode() + " | " + lookingAt.type + " | Mass: " + lookingAt.rigidBody.getInvMass();
+				if(Entities.camera.lookingAt != null){
+					look += Entities.camera.lookingAt.hashCode() + " | " + Entities.camera.lookingAt.type + " | Mass: " + Entities.camera.lookingAt.rigidBody.getInvMass();
 				}
 				font.drawString(100, 3, look, Color.green);
 
@@ -360,31 +350,5 @@ public class Debug {
 		String glVendor = GL11.glGetString(GL11.GL_VENDOR);
 		String glRenderer = GL11.glGetString(GL11.GL_RENDERER);
 		System.out.println(glRenderer + " (" + glVendor + ")");
-	}
-	
-	private static void whatsTheCameraLookingAt(){
-		if(Entities.camera.freeMode){
-			if(entityGrabbed){
-				Vector3f impulse = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(MouseManager.dx * 250, MouseManager.dy * -250, 0.0f), Entities.camera.rotation);
-				
-				System.out.println(impulse.x + " " + impulse.y + " " + impulse.z);
-				
-				lookingAt.rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(impulse.x, impulse.y, impulse.z));
-			}
-		}
-		
-		ClosestRayResultCallback cameraRay = Entities.camera.rayTestAtCenter();
-		if(cameraRay.hasHit() && !entityGrabbed){
-			lookingAt = (DynamicEntity) cameraRay.collisionObject.getUserPointer();
-			
-			if(MouseManager.button0 & !entityGrabbed){
-
-				
-				entityGrabbed = true;
-			}
-		} else if(!MouseManager.button0){
-			lookingAt = null;
-			entityGrabbed = false;
-		}
 	}
 }

@@ -3,6 +3,8 @@ package spaceguts.physics;
 
 import javax.vecmath.Vector3f;
 
+import org.lwjgl.input.Controller;
+
 import spaceguts.util.input.KeyBindings;
 import spaceout.DynamicEntityCallback;
 
