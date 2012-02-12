@@ -50,6 +50,13 @@ public class ModelBuilder {
 	
 	/** max and min values for the model being built */
 	public float maxX, minX, maxY, minY, maxZ, minZ = 0.0f;
+	
+	private int startIndex = 0, endIndex = 0;
+	
+	private ArrayList<ModelPart> modelParts;
+	private Material currentMaterial;
+	
+	private boolean makingModelPart = false;
 
 	/**
 	 * ModelBuilder initializer
@@ -73,6 +80,8 @@ public class ModelBuilder {
 		vertexIndices = new ArrayList<int[]>();
 		normalIndices = new ArrayList<int[]>();
 		textureIndices = new ArrayList<int[]>();
+		
+		modelParts = new ArrayList<ModelPart>();
 	}
 
 	/**
@@ -135,6 +144,10 @@ public class ModelBuilder {
 			System.out
 					.println("Error! Array not a triangle or a quad! (ModelBuilder)");
 		}
+		
+		// increase the end index so we know how many triangles to draw for this part
+		endIndex += 6;
+		//System.out.println(startIndex + " " + endIndex);
 	}
 
 	/**
@@ -221,8 +234,11 @@ public class ModelBuilder {
 	 */
 	public Model makeModel(Textures texture) {
 		int numIndices = vertexIndices.size() * 3;
+		//System.out.println("num: " + numIndices);
+		if(makingModelPart)
+			endMaterial();
 		//System.out.println(maxX * 1.0f + " " + minX * 1.0f + " " + maxY * 1.0f + " " + minY * 1.0f + " " + maxZ * 1.0f + " " + minZ * 1.0f);
-		return new Model(buildCollisionShape(), fillArrayBuffers(), numIndices, texture);
+		return new Model(buildCollisionShape(), fillArrayBuffers(), modelParts, texture);
 	}
 	
 	private int fillArrayBuffers(){
@@ -298,6 +314,22 @@ public class ModelBuilder {
 		
 		
 		return vaoHandle;
+	}
+	
+	public void startMaterial(Material mat){
+		currentMaterial = mat;
+		makingModelPart = true;
+	}
+	
+	public void endMaterial(){
+		modelParts.add(new ModelPart(currentMaterial, startIndex, endIndex));
+		startIndex = endIndex;
+		makingModelPart = false;
+		//System.out.println("ending mat");
+	}
+	
+	public boolean isMakingModelPart(){
+		return makingModelPart;
 	}
 	
 	/**

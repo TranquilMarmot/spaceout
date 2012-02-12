@@ -16,18 +16,18 @@ public class ModelPart {
 	private Material material;
 	
 	/** How to draw this model part*/
-	private int vaoHandle, numIndices;
+	private int startIndex, endIndex;
 	
 	/**
 	 * 
 	 * @param material Material to use
-	 * @param vaoHandle VAO Handle containing vertices
-	 * @param numIndices Number of indices to draw with glDrawArrays
+	 * @param startIndex VAO Handle containing vertices
+	 * @param endIndex Number of indices to draw with glDrawArrays
 	 */
-	public ModelPart(Material material, int vaoHandle, int numIndices){
+	public ModelPart(Material material, int startIndex, int endIndex){
 		this.material = material;
-		this.vaoHandle = vaoHandle;
-		this.numIndices = numIndices;
+		this.startIndex = startIndex;
+		this.endIndex = endIndex;
 	}
 	
 	/**
@@ -41,7 +41,6 @@ public class ModelPart {
 	 * Draw the model part
 	 */
 	public void draw(){
-		GL30.glBindVertexArray(vaoHandle);
-		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, numIndices);
+		GL11.glDrawArrays(GL11.GL_TRIANGLES, startIndex, endIndex);
 	}
 }

@@ -34,7 +34,7 @@ public class ModelLoader {
 		return loadObjFile(file, new Vector3f(scale, scale, scale), new Vector3f(0.0f, 0.0f, 0.0f), rotation, texture);
 	}
 	
-	public static Model loadObjFile(String file, Vector3f scale, Vector3f offset, Quaternion rotation, Textures texture){
+	public static Model loadObjFileOld(String file, Vector3f scale, Vector3f offset, Quaternion rotation, Textures texture){
 		Model model = null;
 		loadMaterialList(file);
 		
@@ -120,11 +120,9 @@ public class ModelLoader {
 	}
 	
 	
-	public static Model loadObjFileNew(String file, Vector3f scale, Vector3f offset, Quaternion rotation, Textures texture){
+	public static Model loadObjFile(String file, Vector3f scale, Vector3f offset, Quaternion rotation, Textures texture){
 		Model model = null;
 		MaterialList materials = loadMaterialList(file);
-		
-		int startIndex = 0, endIndex = 0;
 		
 		try{
 			BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -174,8 +172,11 @@ public class ModelLoader {
 				}
 				
 				if(line.startsWith("usemtl")){
+					if(builder.isMakingModelPart())
+						builder.endMaterial();
+					
 					String mat = toker.nextToken();
-					Material material = materials.getMaterial(mat);
+					builder.startMaterial(materials.getMaterial(mat));
 				}
 
 				if (line.startsWith("f")) {
@@ -200,8 +201,6 @@ public class ModelLoader {
 					builder.addVertexIndices(vertexIndices);
 					builder.addNormalIndices(normalIndices);
 					builder.addTetxureIndices(textureIndices);
-					
-					endIndex++;
 				}
 			}
 			

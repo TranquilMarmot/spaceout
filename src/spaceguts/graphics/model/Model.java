@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
+import spaceguts.graphics.render.Render3D;
 import spaceguts.util.resources.Textures;
 
 import com.bulletphysics.collision.shapes.CollisionShape;
@@ -21,13 +22,12 @@ public class Model {
 	private Textures texture;
 	private ArrayList<ModelPart> parts;
 	
-	public Model(CollisionShape collisionShape, int vaoHandle, int numIndices, Textures texture){
+	public Model(CollisionShape collisionShape, int vaoHandle, ArrayList<ModelPart> parts, Textures texture){
 		// these all come from the model loader
 		this.vaoHandle = vaoHandle;
-		this.numIndices = numIndices;
 		this.collisionShape = collisionShape;
 		this.texture = texture;
-		//this.parts = parts;
+		this.parts = parts;
 	}
 	
 	public CollisionShape getCollisionShape(){
@@ -35,14 +35,15 @@ public class Model {
 	}
 	
 	public void render(){
-		//for(ModelPart p : parts){
-		//	Material mat = p.getMaterial();
-		//	Render3D.setCurrentMaterial(mat.getKd(), mat.getKa(), mat.getKs(), mat.getShininess());
-		//	p.draw();
-		//}
-		
 		GL30.glBindVertexArray(vaoHandle);
-		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, numIndices);
+		for(ModelPart p : parts){
+			Material mat = p.getMaterial();
+			Render3D.setCurrentMaterial(mat.getKd(), mat.getKa(), mat.getKs(), mat.getShininess());
+			p.draw();
+		}
+		
+		//GL30.glBindVertexArray(vaoHandle);
+		//GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, numIndices);
 	}
 
 	public Textures getTexture() {
