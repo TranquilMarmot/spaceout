@@ -190,9 +190,6 @@ public class Render3D {
 	private static void drawDynamicEntities(){
 		Iterator<DynamicEntity> entityIterator = Entities.dynamicEntities.values().iterator();
 		while(entityIterator.hasNext()){
-			// FIXME might be a better spot to put this
-			useDefaultMaterial();
-			
 			DynamicEntity ent = entityIterator.next();
 			
 			float transX = Entities.camera.location.x - ent.location.x;

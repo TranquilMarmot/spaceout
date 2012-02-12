@@ -41,9 +41,6 @@ public class Model {
 			Render3D.setCurrentMaterial(mat.getKd(), mat.getKa(), mat.getKs(), mat.getShininess());
 			p.draw();
 		}
-		
-		//GL30.glBindVertexArray(vaoHandle);
-		//GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, numIndices);
 	}
 
 	public Textures getTexture() {

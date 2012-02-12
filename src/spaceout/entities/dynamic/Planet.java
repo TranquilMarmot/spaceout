@@ -4,6 +4,7 @@ import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 import spaceguts.entities.DynamicEntity;
+import spaceguts.graphics.render.Render3D;
 import spaceguts.graphics.shapes.VBOQuadric;
 import spaceguts.physics.CollisionTypes;
 import spaceguts.physics.Physics;
@@ -48,6 +49,7 @@ public class Planet extends DynamicEntity implements Health{
 	
 	@Override
 	public void draw(){
+		Render3D.useDefaultMaterial();
 		texture.texture().bind();
 		quadric.draw();
 	}

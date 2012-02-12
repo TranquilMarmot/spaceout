@@ -18,7 +18,7 @@ public enum Textures {
 	SHIP1("PNG", Paths.TEXTURE_PATH.path() + "ship1.png", false, GL11.GL_NEAREST),
 	LASERBULLET("PNG", Paths.TEXTURE_PATH.path() + "laserbullet.png", false, GL11.GL_NEAREST),
 	SAUCER("PNG", Paths.TEXTURE_PATH.path() + "saucer.png", false, GL11.GL_NEAREST),
-	WESCOTT("PNG", Paths.TEXTURE_PATH.path() + "wescott.png", false, GL11.GL_NEAREST),
+	WESCOTT("PNG", Paths.MODEL_PATH.path() + "ships/wescott-8-beta/wescott-8-beta.png", false, GL11.GL_NEAREST),
 	
 	// Planets
 	EARTH ("JPG", Paths.TEXTURE_PATH.path() + "earthbig.jpg", true, GL11.GL_NEAREST),

@@ -13,7 +13,7 @@ public enum Models {
 	LASERBULLET(Paths.MODEL_PATH.path() + "laserbullet.obj", 3.5f, Textures.LASERBULLET),
 	SAUCER(Paths.MODEL_PATH.path() + "ships/new-saucer.obj", 1.0f, Textures.SAUCER),
 	SKYBOX(Paths.MODEL_PATH.path() + "box.obj", 100000.0f, Textures.STARS),
-	WESCOTT(Paths.MODEL_PATH.path() + "ships/wescott.obj", 1.0f, Textures.WESCOTT);
+	WESCOTT(Paths.MODEL_PATH.path() + "ships/wescott-8-beta/wescott-8-beta.obj", 1.0f, Textures.WESCOTT);
 	
 	/** the actual model object */
 	private Model model;
