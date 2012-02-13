@@ -51,6 +51,11 @@ public class ModelBuilder {
 	/** max and min values for the model being built */
 	public float maxX, minX, maxY, minY, maxZ, minZ = 0.0f;
 	
+	/**
+	 * Each {@link ModelPart} has a startIndex and an endIndex.
+	 * As the ModelLoader goes through a .obj file, whenever it reaches
+	 * a new material it calls  
+	 */
 	private int startIndex = 0, endIndex = 0;
 	
 	private ArrayList<ModelPart> modelParts;
@@ -119,8 +124,10 @@ public class ModelBuilder {
 	 */
 	public void addVertexIndices(int[] indices) {
 		// add if it's just a triangle
-		if (indices.length == 3)
+		if (indices.length == 3){
 			vertexIndices.add(indices);
+			endIndex += 3;
+		}
 		// else split the quad into two triangles
 		else if (indices.length == 4) {
 			/*
@@ -140,14 +147,12 @@ public class ModelBuilder {
 			tri2[2] = indices[0];
 
 			vertexIndices.add(tri2);
+			
+			endIndex += 6;
 		} else {
 			System.out
 					.println("Error! Array not a triangle or a quad! (ModelBuilder)");
 		}
-		
-		// increase the end index so we know how many triangles to draw for this part
-		endIndex += 6;
-		//System.out.println(startIndex + " " + endIndex);
 	}
 
 	/**
@@ -233,18 +238,21 @@ public class ModelBuilder {
 	 * @return A model built using the current indices
 	 */
 	public Model makeModel(Textures texture) {
-		int numIndices = vertexIndices.size() * 3;
-		//System.out.println("num: " + numIndices);
 		if(makingModelPart)
 			endMaterial();
-		//System.out.println(maxX * 1.0f + " " + minX * 1.0f + " " + maxY * 1.0f + " " + minY * 1.0f + " " + maxZ * 1.0f + " " + minZ * 1.0f);
-		return new Model(buildCollisionShape(), fillArrayBuffers(), modelParts, texture);
+		return new Model(buildCollisionShape(), fillVertexArray(), modelParts, texture);
 	}
 	
-	private int fillArrayBuffers(){
+	/**
+	 * Fills an array buffer with the given data
+	 * @return The vertex array object handle
+	 */
+	private int fillVertexArray(){
+		// get a handle for a VAO
 		int vaoHandle = GL30.glGenVertexArrays();
 		GL30.glBindVertexArray(vaoHandle);
 		
+		// create buffers and fill them with data
 		FloatBuffer vertBuffer = BufferUtils.createFloatBuffer(vertexIndices.size() * 9);
 		FloatBuffer normBuffer = BufferUtils.createFloatBuffer(normalIndices.size() * 9);
 		FloatBuffer texBuffer = BufferUtils.createFloatBuffer(textureIndices.size() * 6);
@@ -290,13 +298,16 @@ public class ModelBuilder {
 			texBuffer.put(thirdTex.x);
 			texBuffer.put(1 - thirdTex.y);
 		}
+		// be kind, please rewind()!
 		vertBuffer.rewind();
 		normBuffer.rewind();
 		texBuffer.rewind();
 		
+		// handles for filling buffer objects
 		IntBuffer vboHandles = BufferUtils.createIntBuffer(3);
 		GL15.glGenBuffers(vboHandles);
 		
+		// actually fill the buffers
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboHandles.get(0));
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertBuffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0L);
@@ -312,22 +323,33 @@ public class ModelBuilder {
 		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 0, 0L);
 		GL20.glEnableVertexAttribArray(2);
 		
-		
 		return vaoHandle;
 	}
 	
+	/**
+	 * This should be called whenever a new set of vertices with a different material needs to be created.
+	 * This should be called only while adding vertex indices (not vertices themselves)
+	 * @param mat Material to use for incoming vertex indices
+	 */
 	public void startMaterial(Material mat){
 		currentMaterial = mat;
 		makingModelPart = true;
 	}
 	
+	/**
+	 * Ends the current material
+	 */
 	public void endMaterial(){
+		// add the model part
 		modelParts.add(new ModelPart(currentMaterial, startIndex, endIndex));
+		// next set of indices
 		startIndex = endIndex;
 		makingModelPart = false;
-		//System.out.println("ending mat");
 	}
 	
+	/**
+	 * @return Whether or not a model part is being made right now (for when the end of a file is reached)
+	 */
 	public boolean isMakingModelPart(){
 		return makingModelPart;
 	}

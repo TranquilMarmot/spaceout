@@ -13,6 +13,14 @@ import org.lwjgl.util.vector.Quaternion;
 import spaceguts.util.QuaternionHelper;
 import spaceguts.util.resources.Textures;
 
+/**
+ * This class loads in an obj file using a {@link ModelBuilder} and returns a {@link Model}
+ * @author TranquilMarmot
+ * @see Model
+ * @see ModelBuilder
+ * @see ModelPart
+ *
+ */
 public class ModelLoader {
 	public static Model loadObjFile(String file, Textures texture){
 		return loadObjFile(file, new Vector3f(1.0f, 1.0f, 1.0f), new Vector3f(0.0f, 0.0f, 0.0f), new Quaternion(0.0f, 0.0f, 0.0f, 1.0f), texture);
@@ -34,101 +42,29 @@ public class ModelLoader {
 		return loadObjFile(file, new Vector3f(scale, scale, scale), new Vector3f(0.0f, 0.0f, 0.0f), rotation, texture);
 	}
 	
-	public static Model loadObjFileOld(String file, Vector3f scale, Vector3f offset, Quaternion rotation, Textures texture){
-		Model model = null;
-		loadMaterialList(file);
-		
-		try{
-			BufferedReader reader = new BufferedReader(new FileReader(file));
-			
-			String line;
-			
-			ModelBuilder builder = new ModelBuilder();
-			
-			while((line = reader.readLine()) != null){
-				// split the line up at spaces
-				StringTokenizer toker = new StringTokenizer(line, " ");
-				// grab the line's type
-				String lineType = toker.nextToken();
-				
-				if (lineType.equals("o")) {
-					//System.out.println("Loading " + toker.nextToken().substring(2));
-				}
-
-				if (lineType.equals("v")) {
-					// grab the coordinates
-					float x = (Float.parseFloat(toker.nextToken()) + offset.x) * scale.x;
-					float y = (Float.parseFloat(toker.nextToken()) + offset.y) * scale.y;
-					float z = (Float.parseFloat(toker.nextToken()) + offset.z) * scale.z;
-					
-					//org.lwjgl.util.vector.Vector3f rotated = QuaternionHelper.rotateVectorByQuaternion(new org.lwjgl.util.vector.Vector3f(x, y, z), rotation);
-
-					//builder.addVertex(new Vector3f(rotated.x, rotated.y, rotated.z));
-					builder.addVertex(new Vector3f(x, y, z));
-				}
-
-				if (lineType.equals("vn")) {
-					// grab the coordinates
-					float x = Float.parseFloat(toker.nextToken());
-					float y = Float.parseFloat(toker.nextToken());
-					float z = Float.parseFloat(toker.nextToken());
-					
-					org.lwjgl.util.vector.Vector3f rotated = QuaternionHelper.rotateVectorByQuaternion(new org.lwjgl.util.vector.Vector3f(x, y, z), rotation);
-
-					builder.addNormal(new Vector3f(rotated.x, rotated.y, rotated.z));
-				}
-
-				if (line.startsWith("vt")) {
-					float u = Float.parseFloat(toker.nextToken());
-					float v = Float.parseFloat(toker.nextToken());
-
-					builder.addTextureCoords(new Point2f(u, v));
-				}
-
-				if (line.startsWith("f")) {
-					// to see if we're dealing with a triangle or a quad
-					int numVertices = toker.countTokens();
-
-					int[] vertexIndices = new int[numVertices];
-					int[] normalIndices = new int[numVertices];
-					int[] textureIndices = new int[numVertices];
-					
-					for(int i = 0; i < numVertices; i++){
-						String indices = toker.nextToken();
-						StringTokenizer split = new StringTokenizer(indices, "/");
-						// the obj file goes vertex/texture-coordinate/normal
-						vertexIndices[i] = Integer.parseInt(split.nextToken());
-						textureIndices[i] = Integer.parseInt(split.nextToken());
-						normalIndices[i] = Integer.parseInt(split.nextToken());
-					}
-					
-					
-					// add the indices to the model builder
-					builder.addVertexIndices(vertexIndices);
-					builder.addNormalIndices(normalIndices);
-					builder.addTetxureIndices(textureIndices);
-				}
-			}
-			
-			model = builder.makeModel(texture);
-			
-		} catch(IOException e){
-			e.printStackTrace();
-		}
-		
-		return model;
-	}
-	
-	
+	/**
+	 * Get a model from an obj file
+	 * @param file File to load the model in from
+	 * @param scale Scale to load the model in at
+	 * @param offset Location offset to give each vertex being loaded
+	 * @param rotation Rotation offset to give each vertex being loaded
+	 * @param texture The texture from {@link Textures} to use for the model
+	 * @return A model loaded from the file
+	 */
 	public static Model loadObjFile(String file, Vector3f scale, Vector3f offset, Quaternion rotation, Textures texture){
+		// our model
 		Model model = null;
+		
+		// list of materials
 		MaterialList materials = loadMaterialList(file);
 		
 		try{
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			
+			// current line
 			String line;
 			
+			// our model builder
 			ModelBuilder builder = new ModelBuilder();
 			
 			while((line = reader.readLine()) != null){
@@ -137,10 +73,12 @@ public class ModelLoader {
 				// grab the line's type
 				String lineType = toker.nextToken();
 				
+				// object name
 				if (lineType.equals("o")) {
-					//System.out.println("Loading " + toker.nextToken().substring(2));
+					//System.out.println("Loading " + toker.nextToken());
 				}
 
+				// vertex
 				if (lineType.equals("v")) {
 					// grab the coordinates
 					float x = (Float.parseFloat(toker.nextToken()) + offset.x) * scale.x;
@@ -153,6 +91,7 @@ public class ModelLoader {
 					builder.addVertex(new Vector3f(x, y, z));
 				}
 
+				// normal
 				if (lineType.equals("vn")) {
 					// grab the coordinates
 					float x = Float.parseFloat(toker.nextToken());
@@ -164,6 +103,7 @@ public class ModelLoader {
 					builder.addNormal(new Vector3f(rotated.x, rotated.y, rotated.z));
 				}
 
+				// texture coord
 				if (line.startsWith("vt")) {
 					float u = Float.parseFloat(toker.nextToken());
 					float v = Float.parseFloat(toker.nextToken());
@@ -171,7 +111,9 @@ public class ModelLoader {
 					builder.addTextureCoords(new Point2f(u, v));
 				}
 				
+				// new material
 				if(line.startsWith("usemtl")){
+					// end the current material if we're on one
 					if(builder.isMakingModelPart())
 						builder.endMaterial();
 					
@@ -179,8 +121,9 @@ public class ModelLoader {
 					builder.startMaterial(materials.getMaterial(mat));
 				}
 
+				// face
 				if (line.startsWith("f")) {
-					// to see if we're dealing with a triangle or a quad
+					// to see if we're dealing with a triangle or a quad (the ModelBuilder automaticall splits quads into triangles)
 					int numVertices = toker.countTokens();
 
 					int[] vertexIndices = new int[numVertices];
@@ -213,25 +156,39 @@ public class ModelLoader {
 		return model;
 	}
 	
+	/**
+	 * Get a material list for an obj file
+	 * @param file .obj file to load .mtl file for (string should contain ".obj" at the end)
+	 * @return List of materials from .mtl file
+	 */
 	private static MaterialList loadMaterialList(String file){
+		// rename the file to be ".mtl" instead of ".obj"
 		StringTokenizer toke = new StringTokenizer(file, ".");
 		file = toke.nextToken() + ".mtl";
 		
-		
+		// material list
 		MaterialList list = new MaterialList();
 		try{
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			
+			// current line
 			String line;
+			
+			// name of the material (important!)
 			String name = "NULL";
+			// vectors for ambient, diffuse, specular
 			org.lwjgl.util.vector.Vector3f Ka = null, Kd = null, Ks = null;
+			// shininess
 			float Shininess = -1.0f;
 			
+			// whether or not we're loading a material right now
 			boolean loadingMaterial = false;
+			// whether or not a material has been loaded (ready to be added to list)
 			boolean materialLoaded = false;
 			
-			
+			// go through the whole .mtl file
 			while((line = reader.readLine()) != null){
+				// new material
 				if(line.startsWith("newmtl")){
 					name = line.substring(line.indexOf("newmtl") + 7, line.length());
 					Ka = null;
@@ -243,6 +200,7 @@ public class ModelLoader {
 				}
 				
 				else if(loadingMaterial){
+					// grab variable
 					if(line.startsWith("Ns")){
 						StringTokenizer toker = new StringTokenizer(line, " ");
 						toker.nextToken();
@@ -255,16 +213,17 @@ public class ModelLoader {
 						Ks = getColor(line);
 					}
 					
+					// if we have all the necessary variables, we're done loading this material and it can be added to the list
 					if(Shininess != -1.0f && Ka != null && Ks != null && Kd != null){
 						materialLoaded = true;
 					}
 				}
 				
+				// add material to list if it's loaded
 				if(materialLoaded){
 					Material mat = new Material(Ka, Kd, Ks, Shininess);
 					list.addMaterial(name, mat);
 				}
-				
 			}
 		} catch(IOException e){
 			e.printStackTrace();
@@ -273,6 +232,11 @@ public class ModelLoader {
 		return list;
 	}
 	
+	/**
+	 * Get a vector representing a color from a string
+	 * @param line Line to get color from
+	 * @return Color from string
+	 */
 	private static org.lwjgl.util.vector.Vector3f getColor(String line){
 		StringTokenizer toker = new StringTokenizer(line, " " );
 		toker.nextToken();
@@ -280,9 +244,5 @@ public class ModelLoader {
 		float y = Float.parseFloat(toker.nextToken());
 		float z = Float.parseFloat(toker.nextToken());
 		return new org.lwjgl.util.vector.Vector3f(x, y, z);
-	}
-	
-	private Model loadModel(MaterialList materials){
-		return null;
 	}
 }

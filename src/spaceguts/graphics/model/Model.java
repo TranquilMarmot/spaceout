@@ -2,7 +2,6 @@ package spaceguts.graphics.model;
 
 import java.util.ArrayList;
 
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
 import spaceguts.graphics.render.Render3D;
@@ -17,7 +16,7 @@ import com.bulletphysics.collision.shapes.CollisionShape;
  *
  */
 public class Model {
-	private int vaoHandle, numIndices;
+	private int vaoHandle;
 	private CollisionShape collisionShape;
 	private Textures texture;
 	private ArrayList<ModelPart> parts;

@@ -3,22 +3,41 @@ package spaceguts.graphics.model;
 import java.util.HashMap;
 
 /**
- * This would contain all the materials loaded in from a .mtl file
+ * This would contain all the materials loaded in from a .mtl file.
+ * The {@link ModelLoader} creates a MaterialList for every .obj file. 
  * @author TranquilMarmot
+ * @see ModelLoader
+ * @see Material
+ * @see ModelBuilder
  *
  */
 public class MaterialList {
+	/** the actual list of materials*/
 	private HashMap<String, Material> list;
 	
+	/**
+	 * Constructor
+	 */
 	public MaterialList(){
 		list = new HashMap<String, Material>();
 	}
 	
+	/**
+	 * Add a new material to the list
+	 * @param name Name of the material
+	 * @param mat The material itself
+	 */
 	public void addMaterial(String name, Material mat){
 		list.put(name, mat);
 	}
 	
+	/**
+	 * Get a material by name
+	 * @param name Name of require material
+	 * @return The material matching the given name
+	 */
 	public Material getMaterial(String name){
+		// HashMap makes this easy!
 		return list.get(name);
 	}
 	

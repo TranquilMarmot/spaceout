@@ -1,7 +1,6 @@
 package spaceguts.graphics.model;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
 
 /**
  * Defines a section of a {@link Model} with a specific {@link Material}
