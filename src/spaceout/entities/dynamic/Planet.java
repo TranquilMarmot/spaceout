@@ -44,7 +44,7 @@ public class Planet extends DynamicEntity implements Health{
 		this.type = "Planet";
 		this.texture = texture;
 		
-		quadric = new VBOQuadric(size, 10, 10);
+		quadric = new VBOQuadric(size, 20, 20);
 	}
 	
 	@Override

@@ -21,11 +21,11 @@ public enum Textures {
 	WESCOTT("PNG", Paths.SHIPS_PATH.path() + "wescott-8-beta/wescott-8-beta.png", false, GL11.GL_NEAREST),
 	
 	// Planets
-	EARTH ("JPG", Paths.TEXTURE_PATH.path() + "planets/earth.jpg", true, GL11.GL_NEAREST),
-	MERCURY("JPG", Paths.TEXTURE_PATH.path() + "planets/mercury.jpg", true, GL11.GL_NEAREST),
-	VENUS("JPG", Paths.TEXTURE_PATH.path() + "planets/venus.jpg", true, GL11.GL_NEAREST),
-	MARS("JPG", Paths.TEXTURE_PATH.path() + "planets/mars.jpg", true, GL11.GL_NEAREST),
-	SUN("JPG", Paths.TEXTURE_PATH.path() + "planets/sun.jpg", true, GL11.GL_NEAREST),
+	EARTH ("JPG", Paths.TEXTURE_PATH.path() + "planets/earth.jpg", true, GL11.GL_LINEAR),
+	MERCURY("JPG", Paths.TEXTURE_PATH.path() + "planets/mercury.jpg", true, GL11.GL_LINEAR),
+	VENUS("JPG", Paths.TEXTURE_PATH.path() + "planets/venus.jpg", true, GL11.GL_LINEAR),
+	MARS("JPG", Paths.TEXTURE_PATH.path() + "planets/mars.jpg", true, GL11.GL_LINEAR),
+	SUN("JPG", Paths.TEXTURE_PATH.path() + "planets/sun.jpg", true, GL11.GL_LINEAR),
 	
 	// GUI
 	CROSSHAIR("PNG", Paths.CROSSHAIR_PATH.path(), false, GL11.GL_NEAREST),

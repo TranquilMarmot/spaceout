@@ -36,7 +36,7 @@ public class Sun extends Light {
 	public Sun(Vector3f location, float size,
 			Vector3f intensity) {
 		super(location, intensity);
-		sphere = new VBOQuadric(size, 15, 15);
+		sphere = new VBOQuadric(size, 25, 25);
 		this.type = "sun";
 	}
 
