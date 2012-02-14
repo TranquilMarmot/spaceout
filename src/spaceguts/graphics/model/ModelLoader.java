@@ -81,6 +81,8 @@ public class ModelLoader {
 		// get the name of the directory
 		String name = directory.substring(lastSlash);
 		
+		System.out.println("Loading " + name);
+		
 		// get a list of materials
 		MaterialList materials = loadMaterialList(directory + name + ".mtl");
 		
@@ -141,11 +143,11 @@ public class ModelLoader {
 				// new material
 				if(line.startsWith("usemtl")){
 					// end the current material if we're on one
-					if(builder.isMakingModelPart())
-						builder.endMaterial();
+					//if(builder.isMakingModelPart())
+					//	builder.endModelPart();
 					
 					String mat = toker.nextToken();
-					builder.startMaterial(materials.getMaterial(mat));
+					builder.startModelPart(materials.getMaterial(mat));
 				}
 
 				// face

@@ -59,6 +59,7 @@ public class Model {
 			Render3D.setCurrentMaterial(mat.getKd(), mat.getKa(), mat.getKs(), mat.getShininess());
 			p.draw();
 		}
+		GL30.glBindVertexArray(0);
 	}
 
 	/**

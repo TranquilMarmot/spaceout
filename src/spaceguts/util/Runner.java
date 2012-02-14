@@ -103,6 +103,8 @@ public class Runner {
 		ResourceLoader.addJob(Textures.LASERBULLET);
 		ResourceLoader.addJob(Models.LASERBULLET);
 		ResourceLoader.addJob(Models.WESCOTT);
+		ResourceLoader.addJob(Models.SAUCER);
+		ResourceLoader.addJob(Models.SKYBOX);
 		ResourceLoader.addJob(Textures.MENU_PICKER_ACTIVE);
 		ResourceLoader.addJob(Textures.MENU_PICKER_MOUSEOVER);
 		ResourceLoader.addJob(Textures.MENU_PICKER_SELECTED);

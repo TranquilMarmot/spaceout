@@ -238,8 +238,9 @@ public class ModelBuilder {
 	 * @return A model built using the current indices
 	 */
 	public Model makeModel(Textures texture) {
-		if(makingModelPart)
-			endMaterial();
+		if(makingModelPart){
+			endModelPart();
+		}
 		return new Model(buildCollisionShape(), fillVertexArray(), modelParts, texture);
 	}
 	
@@ -323,6 +324,8 @@ public class ModelBuilder {
 		GL20.glVertexAttribPointer(2, 2, GL11.GL_FLOAT, false, 0, 0L);
 		GL20.glEnableVertexAttribArray(2);
 		
+		GL30.glBindVertexArray(0);
+		
 		return vaoHandle;
 	}
 	
@@ -331,7 +334,12 @@ public class ModelBuilder {
 	 * This should be called only while adding vertex indices (not vertices themselves)
 	 * @param mat Material to use for incoming vertex indices
 	 */
-	public void startMaterial(Material mat){
+	public void startModelPart(Material mat){
+		if(isMakingModelPart())
+			endModelPart();
+		
+		
+		//System.out.println("beginning model part, start index " + startIndex + " end index " + endIndex + " mat: " + mat.getKa() + " " + mat.getKs() + " " + mat.getKd());
 		currentMaterial = mat;
 		makingModelPart = true;
 	}
@@ -339,7 +347,8 @@ public class ModelBuilder {
 	/**
 	 * Ends the current material
 	 */
-	public void endMaterial(){
+	public void endModelPart(){
+		//System.out.println("ending model part, start index " + startIndex + " end index " + endIndex + " mat: " + currentMaterial.getKa() + " " + currentMaterial.getKs() + " " + currentMaterial.getKd() + "\n-=-=-=-=-=-=");
 		// add the model part
 		modelParts.add(new ModelPart(currentMaterial, startIndex, endIndex));
 		// next set of indices
