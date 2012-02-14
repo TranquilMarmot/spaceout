@@ -2,7 +2,7 @@ package spaceguts.graphics.gui;
 
 import java.util.HashMap;
 
-import spaceguts.util.debug.Debug;
+import spaceguts.util.Debug;
 
 /**
  * Handles all the GUI objects

@@ -85,4 +85,12 @@ public class Circle2D {
 		GL30.glBindVertexArray(vaoHandle);
 		GL11.glDrawArrays(GL11.GL_TRIANGLE_FAN, 0, numIndices);
 	}
+	
+	public int getVaoHandle(){
+		return vaoHandle;
+	}
+	
+	public int getNumIndices(){
+		return numIndices;
+	}
 }

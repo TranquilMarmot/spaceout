@@ -3,8 +3,8 @@ package spaceguts.physics;
 
 import javax.vecmath.Vector3f;
 
-import spaceguts.physics.debug.PhysicsDebugDrawer;
-import spaceguts.util.input.KeyBindings;
+import spaceguts.input.KeyBindings;
+import spaceout.DynamicEntityCallback;
 
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
@@ -57,7 +57,7 @@ public class Physics {
 		DefaultCollisionConfiguration collisionConfiguration = new DefaultCollisionConfiguration();
 		dispatcher = new CollisionDispatcher(collisionConfiguration);
 
-		// wut
+		// wat
 		solver = new SequentialImpulseConstraintSolver();
 
 		// the world everything is in

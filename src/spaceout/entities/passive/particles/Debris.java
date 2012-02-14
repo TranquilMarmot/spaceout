@@ -2,6 +2,8 @@ package spaceout.entities.passive.particles;
 
 import java.util.Random;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
@@ -12,7 +14,7 @@ import spaceguts.graphics.render.Render3D;
 import spaceguts.graphics.shapes.Circle2D;
 import spaceguts.util.Noise;
 import spaceguts.util.QuaternionHelper;
-import spaceguts.util.resources.Textures;
+import spaceout.resources.Textures;
 
 /**
  * Fancy-looking space debris effect using perlin noise.
@@ -44,7 +46,7 @@ public class Debris extends Entity {
 	 * to a random stars location. Making it a lot bigger makes the stars
 	 * generate farther apart
 	 */
-	private final float JUMP_AMOUNT = 150000.0f;
+	private final float JUMP_AMOUNT = 1500000.0f;
 
 	/**
 	 * Create some cool space debris so you know which way you're going
@@ -217,6 +219,7 @@ public class Debris extends Entity {
 
 		// bind a white texture
 		Textures.WHITE.texture().bind();
+		GL30.glBindVertexArray(circle.getVaoHandle());
 
 		// loop through all the particles to draw them
 		for (Particle s : particles) {
@@ -234,7 +237,7 @@ public class Debris extends Entity {
 				Render3D.program.setUniform("ModelViewMatrix", Render3D.modelview);
 
 				// draw the star
-				circle.draw();
+				GL11.glDrawArrays(GL11.GL_TRIANGLE_FAN, 0, circle.getNumIndices());
 			}Render3D.modelview = oldModelview;
 		}
 

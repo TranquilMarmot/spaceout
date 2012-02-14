@@ -1,23 +1,24 @@
 package spaceguts.util;
 
+import java.util.Random;
+
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
 import spaceguts.entities.Light;
-import spaceguts.graphics.Graphics;
 import spaceguts.graphics.gui.GUI;
 import spaceguts.graphics.gui.menu.MainMenu;
+import spaceguts.graphics.render.Graphics;
+import spaceguts.input.KeyBindings;
+import spaceguts.input.KeyboardManager;
+import spaceguts.input.MouseManager;
 import spaceguts.physics.Physics;
 import spaceguts.util.console.Console;
-import spaceguts.util.debug.Debug;
-import spaceguts.util.input.KeyBindings;
-import spaceguts.util.input.KeyboardManager;
-import spaceguts.util.input.MouseManager;
-import spaceguts.util.resources.Models;
-import spaceguts.util.resources.ResourceLoader;
-import spaceguts.util.resources.Textures;
+import spaceout.resources.Models;
+import spaceout.resources.ResourceLoader;
+import spaceout.resources.Textures;
 
 // Rule number 1: Tell everyone about Spaceout (ask them for ideas! We need ideas!).
 // Rule number 2: Comment everything motherfucker.
@@ -29,7 +30,7 @@ import spaceguts.util.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.74";
+	public static final String VERSION = "0.0.75";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
@@ -62,8 +63,6 @@ public class Runner {
 				// update everything
 				update();
 				// render the scene
-				//Graphics.render();
-				//GLSLRender.render();
 				Graphics.render();
 				// update the display (this swaps the buffers)
 				Display.update();
@@ -83,22 +82,20 @@ public class Runner {
 	private void init() {
 		DisplayHelper.createWindow();
 		
-		Debug.init();
-		//Graphics.initGL();		
+		Debug.init();		
 		
 		MainMenu mainMenu = new MainMenu();
 		GUI.addGUIObject(mainMenu);
 		
-		//GLSLRender.initGL();
 		Graphics.initGL();
 		
 		//initialize resources
 		ResourceLoader.addJob(Textures.MENU_BACKGROUND1);
 		ResourceLoader.addJob(Textures.MENU_BACKGROUND2);
-		ResourceLoader.addJob(Textures.STARS);
+		ResourceLoader.addJob(Textures.SKYBOX);
 		ResourceLoader.addJob(Textures.WHITE);
-		ResourceLoader.addJob(Textures.CHECKERS);
-		ResourceLoader.addJob(Textures.SHIP1);
+		//ResourceLoader.addJob(Textures.CHECKERS);
+		ResourceLoader.addJob(Textures.WING_X);
 		ResourceLoader.addJob(Textures.VENUS);
 		ResourceLoader.addJob(Textures.MARS);
 		ResourceLoader.addJob(Textures.MERCURY);
@@ -115,6 +112,7 @@ public class Runner {
 		ResourceLoader.addJob(Textures.MENU_BUTTON_MOUSEOVER);
 		ResourceLoader.addJob(Textures.MENU_BUTTON_PRESSED);
 		ResourceLoader.addJob(Textures.MENU_SPACEOUT_TEXT);
+		ResourceLoader.addJob(Textures.CROSSHAIR);
 		ResourceLoader.processJobs();
 		
 		Debug.printSysInfo();
@@ -193,5 +191,17 @@ public class Runner {
 	private void shutdown() {
 		Display.destroy();
 		DisplayHelper.frame.dispose();
+		System.out.println(shutdownString());
+	}
+	
+	private String shutdownString(){
+		
+		String[] shutdown = { "Goodbye, world...", "Goodbye, cruel world...", "See ya...", "Later...", "Buh-bye...", "Thank you, come again!...",
+				"I guess this is goodbye...", "Until next time...", "¡Adios, amigos!...", "WAIT DON'T CLOSE ME I HAVE A SECRET TO TELL YOU...",
+				"Game over, man! Game over!!!..."};
+		
+		Random randy = new Random();
+		
+		return shutdown[randy.nextInt(shutdown.length)];
 	}
 }

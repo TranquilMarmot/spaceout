@@ -19,10 +19,10 @@ import spaceguts.physics.Physics;
 import spaceguts.util.DisplayHelper;
 import spaceguts.util.MatrixHelper;
 import spaceguts.util.QuaternionHelper;
-import spaceguts.util.resources.Paths;
+import spaceout.resources.Paths;
 
 public class Render3D {
-	private static final String VERTEX_SHADER = "texture.vert", FRAGMENT_SHADER = "texture.frag";
+	private static final String VERTEX_SHADER = "main.vert", FRAGMENT_SHADER = "main.frag";
 	/** ModelView and Projection matrices */
 	public static Matrix4f projection, modelview;
 	
@@ -35,6 +35,11 @@ public class Render3D {
 	
 	/** the shader program to use */
 	public static GLSLProgram program;
+	
+	private static final Vector3f DEFAULT_KD = new Vector3f(0.5f, 0.5f, 0.5f);
+	private static final Vector3f DEFAULT_KA = new Vector3f(0.5f, 0.5f, 0.5f);
+	private static final Vector3f DEFAULT_KS = new Vector3f(0.8f, 0.8f, 0.8f);
+	private static final float DEFAULT_SHINY = 50.0f;
 	
 	
 	public static void render3DScene(){
@@ -64,17 +69,7 @@ public class Render3D {
 	
 	private static void setUp3DRender(){
 		program.use();
-		Vector3f Kd = new Vector3f(0.5f, 0.5f, 0.5f);
-		program.setUniform("Material.Kd" , Kd);
-		
-		Vector3f Ka = new Vector3f(0.5f, 0.5f, 0.5f);
-		program.setUniform("Material.Ka", Ka);
-		
-		Vector3f Ks = new Vector3f(0.8f, 0.8f, 0.8f);
-		program.setUniform("Material.Ks", Ks);
-		
-		float shininess = 50.0f;
-		program.setUniform("Material.Shininess", shininess);
+		useDefaultMaterial();
 		
 		// calculate the current aspect ratio
 		float aspect = (float) DisplayHelper.windowWidth
@@ -90,6 +85,20 @@ public class Render3D {
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		
 		modelview.setIdentity();
+	}
+	
+	public static void setCurrentMaterial(Vector3f Kd, Vector3f Ka, Vector3f Ks, float shininess){
+		program.setUniform("Material.Kd" , Kd);
+		program.setUniform("Material.Ka", Ka);
+		program.setUniform("Material.Ks", Ks);
+		program.setUniform("Material.Shininess", shininess);
+	}
+	
+	public static void useDefaultMaterial(){
+		program.setUniform("Material.Kd" , DEFAULT_KD);
+		program.setUniform("Material.Ka", DEFAULT_KA);
+		program.setUniform("Material.Ks", DEFAULT_KS);
+		program.setUniform("Material.Shininess", DEFAULT_SHINY);
 	}
 	
 	private static void transformToCamera(){
@@ -158,6 +167,9 @@ public class Render3D {
 	private static void drawPassiveEntities(){
 		Iterator<Entity> entityIterator = Entities.passiveEntities.values().iterator();
 		while(entityIterator.hasNext()){
+			// FIXME might be a better spot to put this
+			useDefaultMaterial();
+			
 			Entity ent = entityIterator.next();
 			
 			float transX = Entities.camera.location.x - ent.location.x;

@@ -4,7 +4,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 
 import spaceguts.entities.Entity;
-import spaceguts.util.resources.Models;
+import spaceout.resources.Models;
 
 /**
  * Skybox to make it seem like there's stars everywhere. Follows an Entity
