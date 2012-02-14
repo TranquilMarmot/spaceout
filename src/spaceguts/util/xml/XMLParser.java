@@ -15,13 +15,13 @@ import spaceguts.entities.Camera;
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
 import spaceguts.util.console.Console;
-import spaceguts.util.resources.Models;
-import spaceguts.util.resources.Textures;
 import spaceout.entities.dynamic.Planet;
 import spaceout.entities.dynamic.Player;
 import spaceout.entities.passive.Skybox;
 import spaceout.entities.passive.Sun;
 import spaceout.entities.passive.particles.Debris;
+import spaceout.resources.Models;
+import spaceout.resources.Textures;
 import spaceout.ship.Ship;
 
 /**

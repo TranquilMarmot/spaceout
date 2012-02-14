@@ -11,7 +11,7 @@ import spaceguts.graphics.gui.button.MenuButton;
 import spaceguts.util.Debug;
 import spaceguts.util.DisplayHelper;
 import spaceguts.util.Runner;
-import spaceguts.util.resources.Textures;
+import spaceout.resources.Textures;
 
 /**
  * Main menu to show when the game first runs

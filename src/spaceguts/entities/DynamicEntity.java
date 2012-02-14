@@ -9,7 +9,7 @@ import spaceguts.graphics.model.Model;
 import spaceguts.physics.CollisionTypes;
 import spaceguts.physics.Physics;
 import spaceguts.util.QuaternionHelper;
-import spaceguts.util.resources.Models;
+import spaceout.resources.Models;
 
 import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback;
 import com.bulletphysics.collision.shapes.CollisionShape;

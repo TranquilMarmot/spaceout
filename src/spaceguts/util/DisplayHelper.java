@@ -16,7 +16,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 
-import spaceguts.util.input.KeyBindings;
+import spaceguts.input.KeyBindings;
 
 /**
  * This class handles creating and displaying a resizeable window to render to
@@ -73,7 +73,7 @@ public class DisplayHelper {
 		frame.setLayout(new BorderLayout());
 		frame.setBackground(java.awt.Color.black);
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(
-				ICON_PATH + "spoutlogo.png"));
+				ICON_PATH + "icon.png"));
 		final Canvas canvas = new Canvas();
 
 		// add listeners to the canvas

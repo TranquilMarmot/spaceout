@@ -1,4 +1,4 @@
-package spaceguts.util.resources;
+package spaceout.resources;
 
 import spaceguts.graphics.model.Model;
 import spaceguts.graphics.model.ModelLoader;
@@ -9,11 +9,11 @@ import spaceguts.graphics.model.ModelLoader;
  *
  */
 public enum Models {
-	WING_X(Paths.MODEL_PATH.path() + "ships/wing_x.obj", 0.5f, Textures.SHIP1),
-	LASERBULLET(Paths.MODEL_PATH.path() + "laserbullet.obj", 3.5f, Textures.LASERBULLET),
-	SAUCER(Paths.MODEL_PATH.path() + "ships/new-saucer.obj", 100.0f, Textures.SAUCER),
-	SKYBOX(Paths.MODEL_PATH.path() + "box.obj", 100000.0f, Textures.STARS),
-	WESCOTT(Paths.MODEL_PATH.path() + "ships/wescott-8-beta/wescott-8-beta.obj", 1.0f, Textures.WESCOTT);
+	WING_X(Paths.SHIPS_PATH.path() + "wing_x", 0.5f, Textures.WING_X),
+	LASERBULLET(Paths.MODEL_PATH.path() + "laserbullet", 3.5f, Textures.LASERBULLET),
+	SAUCER(Paths.SHIPS_PATH.path() + "saucer", 1.0f, Textures.SAUCER),
+	SKYBOX(Paths.MODEL_PATH.path() + "box", 100000.0f, Textures.SKYBOX),
+	WESCOTT(Paths.SHIPS_PATH.path() + "wescott-8-beta", 1.0f, Textures.WESCOTT);
 	
 	/** the actual model object */
 	private Model model;

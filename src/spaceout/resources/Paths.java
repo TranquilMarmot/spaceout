@@ -1,4 +1,4 @@
-package spaceguts.util.resources;
+package spaceout.resources;
 
 public enum Paths {
 	// images
@@ -12,6 +12,7 @@ public enum Paths {
 	TEXTURE_PATH("res/images/textures/"),
 	
 	MODEL_PATH("res/models/"),
+	SHIPS_PATH(MODEL_PATH.path() + "/ships/"),
 	
 	SHADER_PATH("res/shaders/"), 
 	FONT_PATH("res/fonts/")

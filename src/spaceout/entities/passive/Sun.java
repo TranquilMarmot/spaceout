@@ -4,7 +4,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import spaceguts.entities.Light;
 import spaceguts.graphics.shapes.VBOQuadric;
-import spaceguts.util.resources.Textures;
+import spaceout.resources.Textures;
 
 /**
  * A sun that gives off light.

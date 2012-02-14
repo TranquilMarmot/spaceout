@@ -6,8 +6,8 @@ import org.lwjgl.util.vector.Vector3f;
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entity;
 import spaceguts.physics.CollisionTypes;
-import spaceguts.util.resources.Models;
 import spaceout.interfaces.Bullet;
+import spaceout.resources.Models;
 
 /**
  * Bullet that just keeps going straight

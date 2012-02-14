@@ -1,4 +1,4 @@
-package spaceguts.util.resources;
+package spaceout.resources;
 
 import java.util.LinkedList;
 

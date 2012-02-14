@@ -1,4 +1,4 @@
-package spaceguts.util.input;
+package spaceguts.input;
 
 /**
  * Possible buttons for a game pad

@@ -1,4 +1,4 @@
-package spaceguts.util.input;
+package spaceguts.input;
 /**
  * All the possible keys on the keyboard
  * @author TranquilMarmot

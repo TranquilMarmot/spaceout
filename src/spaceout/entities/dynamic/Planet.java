@@ -9,8 +9,8 @@ import spaceguts.graphics.shapes.VBOQuadric;
 import spaceguts.physics.CollisionTypes;
 import spaceguts.physics.Physics;
 import spaceguts.util.QuaternionHelper;
-import spaceguts.util.resources.Textures;
 import spaceout.interfaces.Health;
+import spaceout.resources.Textures;
 
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.shapes.SphereShape;

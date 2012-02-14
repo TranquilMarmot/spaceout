@@ -14,7 +14,7 @@ import spaceguts.graphics.render.Render3D;
 import spaceguts.graphics.shapes.Circle2D;
 import spaceguts.util.Noise;
 import spaceguts.util.QuaternionHelper;
-import spaceguts.util.resources.Textures;
+import spaceout.resources.Textures;
 
 /**
  * Fancy-looking space debris effect using perlin noise.

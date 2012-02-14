@@ -19,10 +19,10 @@ import spaceguts.physics.Physics;
 import spaceguts.util.DisplayHelper;
 import spaceguts.util.MatrixHelper;
 import spaceguts.util.QuaternionHelper;
-import spaceguts.util.resources.Paths;
+import spaceout.resources.Paths;
 
 public class Render3D {
-	private static final String VERTEX_SHADER = "texture.vert", FRAGMENT_SHADER = "texture.frag";
+	private static final String VERTEX_SHADER = "main.vert", FRAGMENT_SHADER = "main.frag";
 	/** ModelView and Projection matrices */
 	public static Matrix4f projection, modelview;
 	

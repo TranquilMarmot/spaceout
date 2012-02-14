@@ -8,10 +8,10 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.UnicodeFont;
 
+import spaceguts.input.MouseManager;
 import spaceguts.util.Debug;
 import spaceguts.util.DisplayHelper;
-import spaceguts.util.input.MouseManager;
-import spaceguts.util.resources.Textures;
+import spaceout.resources.Textures;
 
 /**
  * Console for printing text and interacting with the game. Note that there

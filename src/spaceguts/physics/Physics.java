@@ -3,7 +3,7 @@ package spaceguts.physics;
 
 import javax.vecmath.Vector3f;
 
-import spaceguts.util.input.KeyBindings;
+import spaceguts.input.KeyBindings;
 import spaceout.DynamicEntityCallback;
 
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;

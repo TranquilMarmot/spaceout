@@ -4,13 +4,13 @@ import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 import spaceguts.graphics.render.Render3D;
+import spaceguts.input.KeyBindings;
+import spaceguts.input.MouseManager;
 import spaceguts.physics.Physics;
 import spaceguts.util.Debug;
 import spaceguts.util.QuaternionHelper;
 import spaceguts.util.Runner;
 import spaceguts.util.console.Console;
-import spaceguts.util.input.KeyBindings;
-import spaceguts.util.input.MouseManager;
 
 import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback;
 

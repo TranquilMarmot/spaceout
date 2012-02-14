@@ -13,10 +13,10 @@ import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
 import spaceguts.entities.Entities;
+import spaceguts.input.KeyBindings;
 import spaceguts.util.console.Console;
-import spaceguts.util.input.KeyBindings;
-import spaceguts.util.resources.Paths;
-import spaceguts.util.resources.Textures;
+import spaceout.resources.Paths;
+import spaceout.resources.Textures;
 
 /**
  * Handles drawing all the debug info. This class also contains the console

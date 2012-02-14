@@ -1,4 +1,4 @@
-package spaceguts.util.input;
+package spaceguts.input;
 
 /**
  * This interface is used in {@link Keys} and {@link Buttons}, so that they can both be easily referenced in {@link KeyBindings}

@@ -15,8 +15,8 @@ import spaceguts.physics.Physics;
 import spaceguts.physics.Sandbox;
 import spaceguts.util.Debug;
 import spaceguts.util.DisplayHelper;
-import spaceguts.util.resources.Textures;
 import spaceguts.util.xml.XMLParser;
+import spaceout.resources.Textures;
 
 /**
  * Menu to load an XML file.

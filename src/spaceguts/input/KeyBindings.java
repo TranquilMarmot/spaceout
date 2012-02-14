@@ -1,4 +1,4 @@
-package spaceguts.util.input;
+package spaceguts.input;
 
 /**
  * Bindings for all the special input for the game. They will all be initialized to their default values,

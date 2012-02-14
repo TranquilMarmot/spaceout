@@ -1,4 +1,4 @@
-package spaceguts.util.input;
+package spaceguts.input;
 
 import org.lwjgl.input.Mouse;
 

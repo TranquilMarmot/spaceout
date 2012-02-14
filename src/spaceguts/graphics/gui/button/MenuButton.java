@@ -7,7 +7,7 @@ import org.newdawn.slick.Color;
 
 import spaceguts.util.Debug;
 import spaceguts.util.DisplayHelper;
-import spaceguts.util.resources.Textures;
+import spaceout.resources.Textures;
 
 /**
  * A button that stays in the same place regardless of window size! It does this by being offset from the center.

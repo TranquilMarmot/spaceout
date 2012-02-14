@@ -11,10 +11,23 @@ import javax.vecmath.Vector3f;
 import org.lwjgl.util.vector.Quaternion;
 
 import spaceguts.util.QuaternionHelper;
-import spaceguts.util.resources.Textures;
+import spaceout.resources.Textures;
 
 /**
- * This class loads in an obj file using a {@link ModelBuilder} and returns a {@link Model}
+ * This class loads in an obj file using a {@link ModelBuilder} and returns a {@link Model}.
+ * There's a ton of different ways to call loadObjFile, you only need to use one that gives you the
+ * options you need.
+ * 
+ * The 'directory' String passed in to loadObjFile should point to a directory that contains
+ * a .obj file and a .mtl file. It's assumed that the .obj and .mtl files have the same name
+ * and that name matches the name of the directory.
+ * 
+ * So, for example, a directory look like:
+ * 	model/
+ * 		model.obj
+ * 		model.mtl
+ * 		model.png
+ * 
  * @author TranquilMarmot
  * @see Model
  * @see ModelBuilder
@@ -22,44 +35,58 @@ import spaceguts.util.resources.Textures;
  *
  */
 public class ModelLoader {
-	public static Model loadObjFile(String file, Textures texture){
-		return loadObjFile(file, new Vector3f(1.0f, 1.0f, 1.0f), new Vector3f(0.0f, 0.0f, 0.0f), new Quaternion(0.0f, 0.0f, 0.0f, 1.0f), texture);
+	public static Model loadObjFile(String directory, Textures texture){
+		return loadObjFile(directory, new Vector3f(1.0f, 1.0f, 1.0f), new Vector3f(0.0f, 0.0f, 0.0f), new Quaternion(0.0f, 0.0f, 0.0f, 1.0f), texture);
 	}
 	
-	public static Model loadObjFile(String file, float scale, Textures texture){
-		return loadObjFile(file, new Vector3f(scale, scale, scale), new Vector3f(0.0f, 0.0f, 0.0f), new Quaternion(0.0f, 0.0f, 0.0f, 1.0f), texture);
+	public static Model loadObjFile(String directory, float scale, Textures texture){
+		return loadObjFile(directory, new Vector3f(scale, scale, scale), new Vector3f(0.0f, 0.0f, 0.0f), new Quaternion(0.0f, 0.0f, 0.0f, 1.0f), texture);
 	}
 	
-	public static Model loadObjFile(String file, Quaternion rotation, Textures texture){
-		return loadObjFile(file, new Vector3f(1.0f, 1.0f, 1.0f), new Vector3f(0.0f, 0.0f, 0.0f), rotation, texture);
+	public static Model loadObjFile(String directory, Quaternion rotation, Textures texture){
+		return loadObjFile(directory, new Vector3f(1.0f, 1.0f, 1.0f), new Vector3f(0.0f, 0.0f, 0.0f), rotation, texture);
 	}
 	
-	public static Model loadObjFile(String file, Vector3f scale, Textures texture){
-		return loadObjFile(file, scale, new Vector3f(0.0f, 0.0f, 0.0f), new Quaternion(0.0f, 0.0f, 0.0f, 1.0f), texture);
+	public static Model loadObjFile(String directory, Vector3f scale, Textures texture){
+		return loadObjFile(directory, scale, new Vector3f(0.0f, 0.0f, 0.0f), new Quaternion(0.0f, 0.0f, 0.0f, 1.0f), texture);
 	}
 	
-	public static Model loadObjFile(String file, float scale, Quaternion rotation, Textures texture){
-		return loadObjFile(file, new Vector3f(scale, scale, scale), new Vector3f(0.0f, 0.0f, 0.0f), rotation, texture);
+	public static Model loadObjFile(String directory, float scale, Quaternion rotation, Textures texture){
+		return loadObjFile(directory, new Vector3f(scale, scale, scale), new Vector3f(0.0f, 0.0f, 0.0f), rotation, texture);
 	}
 	
 	/**
 	 * Get a model from an obj file
-	 * @param file File to load the model in from
+	 * @param directory Directory to load the model in from. The directory must contain a .obj and a .mtl file with the same name as the directory.
 	 * @param scale Scale to load the model in at
 	 * @param offset Location offset to give each vertex being loaded
 	 * @param rotation Rotation offset to give each vertex being loaded
 	 * @param texture The texture from {@link Textures} to use for the model
 	 * @return A model loaded from the file
 	 */
-	public static Model loadObjFile(String file, Vector3f scale, Vector3f offset, Quaternion rotation, Textures texture){
+	public static Model loadObjFile(String directory, Vector3f scale, Vector3f offset, Quaternion rotation, Textures texture){
 		// our model
 		Model model = null;
 		
-		// list of materials
-		MaterialList materials = loadMaterialList(file);
+		// find out the name of the directory
+		int lastSlash = 0;
+		char[] chars = directory.toCharArray();
+		for(int i = chars.length - 1; i >= 0; i--){
+			if(chars[i] == '/'){
+				lastSlash = i;
+				break;
+			}
+		}
+		
+		// get the name of the directory
+		String name = directory.substring(lastSlash);
+		
+		// get a list of materials
+		MaterialList materials = loadMaterialList(directory + name + ".mtl");
 		
 		try{
-			BufferedReader reader = new BufferedReader(new FileReader(file));
+			// open the .obj file
+			BufferedReader reader = new BufferedReader(new FileReader(directory + name + ".obj"));
 			
 			// current line
 			String line;
@@ -162,10 +189,6 @@ public class ModelLoader {
 	 * @return List of materials from .mtl file
 	 */
 	private static MaterialList loadMaterialList(String file){
-		// rename the file to be ".mtl" instead of ".obj"
-		StringTokenizer toke = new StringTokenizer(file, ".");
-		file = toke.nextToken() + ".mtl";
-		
 		// material list
 		MaterialList list = new MaterialList();
 		try{
