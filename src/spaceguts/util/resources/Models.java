@@ -11,7 +11,7 @@ import spaceguts.graphics.model.ModelLoader;
 public enum Models {
 	WING_X(Paths.MODEL_PATH.path() + "ships/wing_x.obj", 0.5f, Textures.SHIP1),
 	LASERBULLET(Paths.MODEL_PATH.path() + "laserbullet.obj", 3.5f, Textures.LASERBULLET),
-	SAUCER(Paths.MODEL_PATH.path() + "ships/new-saucer.obj", 1.0f, Textures.SAUCER),
+	SAUCER(Paths.MODEL_PATH.path() + "ships/new-saucer.obj", 100.0f, Textures.SAUCER),
 	SKYBOX(Paths.MODEL_PATH.path() + "box.obj", 100000.0f, Textures.STARS),
 	WESCOTT(Paths.MODEL_PATH.path() + "ships/wescott-8-beta/wescott-8-beta.obj", 1.0f, Textures.WESCOTT);
 	

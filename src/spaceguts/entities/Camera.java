@@ -278,6 +278,8 @@ public class Camera extends Entity {
 				
 				//System.out.println(impulse.x + " " + impulse.y + " " + impulse.z);
 				
+				lookingAt.rigidBody.activate();
+				
 				lookingAt.rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(impulse.x, impulse.y, impulse.z));
 			}
 		}

@@ -13,6 +13,14 @@
 		<color>1.0f,1.0f,0.3f</color>
 		<intensity>0.8f,0.8f,0.8f</intensity>
 	</Sun>
+	
+	<Saucer>
+    	<location>-569.06f,1898.569f,-1549890.625</location>
+    	<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
+    	<mass>1.0f</mass>
+    	<restitution>0.01f</restitution>
+    	<model>SAUCER</model>
+    </Saucer>
 
 	<Planet>
 		<name>Earth</name>
