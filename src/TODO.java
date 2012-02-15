@@ -30,14 +30,15 @@
  * 			TODO Make an options menu for the menu screen
  * 			TODO Might be a good idea to have the Button constructor take a scale in to control how big the image is (xScale and yScale) rather than the size of the image
  * 		OpenGL
- * 			TODO Everything is impossible to find! Find a way to billboard text and have it drawn over something (text size probably based on distance from object)
+ * 			TODO Everything is impossible to find! Find a way to billboard an image and have it drawn over something (size probably based on distance from object)
  * 			TODO Mipmap textures so that they aren't as detailed from far away but are close up
  * 			TODO Antialiasing
  * 			TODO Inside the cockpit view!
  * 			TODO Particle effects- thrusters, explosions, etc.
  * 			TODO Get multiple lights working- have bullets give off a glow
- * 			TODO Spotlights- espeically ones attached to ships
+ * 			TODO Spotlights- especially ones attached to ships
  * 			TODO Shadows
+ * 			TODO You know how in Super Smash Bros, when somebody is off screen there's a little bubble with a rendering of them in it? That might be nice for finding ships.
  * 		Models
  * 			TODO Multiple objects in one file
  * 			TODO Right now, it assumes that the obj file has vertices, normals, and texture coordinates in it.
@@ -47,6 +48,7 @@
  * 			TODO Create an AnimatedModel class that has a an addFrame(Frame frame) and int curFrame.
  * System
  * 		General
+ * 			TODO Make a loading screen!
  * 			TODO Look into having ships stored as a zip file containing an obj, a png, and an xml file (is it too slow? easier if its uncompressed?)
  * 			TODO Add a "/save" command that saves the game and return to the main menu
  * 		Console
@@ -55,6 +57,8 @@
  * 			TODO Chat color parsing
  * 			TODO Make ctrl+v work with the console
  * 			TODO Add tabs to the console (one for chat, one for commands, one for combat, etc.)
+ * 			TODO System console! One that comes down from the top of the screen
+ * 			TODO Use System.setOut(PrintStream out) to set System.out.println to print to the system console (might also be good to do System.setErr(PrintStream out) to do the same)
  * 		XML
  * 			TODO Figure out how to write to XML files
  * 			TODO Store all options in XML files
@@ -65,6 +69,7 @@
  * 			TODO Make a menu for placing new entities
  *			TODO Add a way to toggle rigidbody activation states
  *			TODO Right click to rotate, left click to move (mouse wheel while grabbed moves along Z)
+ *			TODO Make a model importer that takes in an obj file and lets you edit the mtl file and see how it would look in-game (look into blender plugins)
  * Gameplay
  * 			TODO More weapons
  * 			TODO Story

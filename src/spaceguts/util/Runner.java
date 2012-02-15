@@ -90,6 +90,7 @@ public class Runner {
 		Graphics.initGL();
 		
 		//initialize resources
+		// TODO loading screen!
 		ResourceLoader.addJob(Textures.MENU_BACKGROUND1);
 		ResourceLoader.addJob(Textures.MENU_BACKGROUND2);
 		ResourceLoader.addJob(Textures.SKYBOX);
@@ -196,11 +197,14 @@ public class Runner {
 		System.out.println(shutdownString());
 	}
 	
+	/**
+	 * This is a secret method that does secret things
+	 * @return None of your business
+	 */
 	private String shutdownString(){
-		
 		String[] shutdown = { "Goodbye, world...", "Goodbye, cruel world...", "See ya...", "Later...", "Buh-bye...", "Thank you, come again!...",
-				"I guess this is goodbye...", "Until next time...", "¡Adios, amigos!...", "WAIT DON'T CLOSE ME I HAVE A SECRET TO TELL YOU...",
-				"Game over, man! Game over!!!..."};
+				"I guess this is goodbye...", "Until next time...", "¡Adios, amigo!...", "WAIT DON'T CLOSE ME I HAVE A SECRET TO TELL YOU...",
+				"Game over, man! Game over!!!...", "As long as I get to watch you walk away..."};
 		
 		Random randy = new Random();
 		

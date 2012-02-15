@@ -128,10 +128,21 @@ public class ModelBuilder {
 		// add if it's just a triangle
 		if (indices.length == 3){
 			vertexIndices.add(indices);
+			
+			// increase the count of indices for the current model part by 3 (one triangle)
 			count += 3;
 		}
 		// else split the quad into two triangles
 		else if (indices.length == 4) {
+			/*
+			 * NOTE
+			 * It might be important to note that, for every quad split into a triangle,
+			 * two of its vertex indices are duplicated. So what was originally
+			 * 4 indices become 6 indices.
+			 * This makes drawing much simpler, as OpenGL can only draw in one mode
+			 * (i.e. GL_TRIANGLES or GL_QUADS). So we don't have to keep switching
+			 * between the two (just draw all triangles).
+			 */
 			/*
 			 * Given indices 0,1,2,3 a quad can be split into two triangles:
 			 * 0,1,2 and 2,3,0
@@ -150,6 +161,7 @@ public class ModelBuilder {
 
 			vertexIndices.add(tri2);
 			
+			// increase the count of indices for the current model part by 6 (two triangle)
 			count += 6;
 		} else {
 			System.out

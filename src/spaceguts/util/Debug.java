@@ -13,6 +13,7 @@ import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
 import spaceguts.entities.Entities;
+import spaceguts.graphics.gui.GUI;
 import spaceguts.input.KeyBindings;
 import spaceguts.util.console.Console;
 import spaceout.resources.Paths;
@@ -67,7 +68,7 @@ public class Debug {
 			displayDebug = !displayDebug;
 		
 		// console key
-		if(KeyBindings.SYS_CONSOLE.pressedOnce()){
+		if(KeyBindings.SYS_CONSOLE.pressedOnce() && !GUI.menuUp){
 			Console.consoleOn = !Console.consoleOn;
 			Console.console.autoClose = false;
 		}
@@ -319,6 +320,17 @@ public class Debug {
 	public static void printSysInfo() {
 		// print out which version of Spaceout this is
 		System.out.println("Spaceout version " + Runner.VERSION);
+		
+		// print out JVM info
+		String vmName = System.getProperty("java.vm.name");
+		String vmVersion = System.getProperty("java.vm.version");
+		String vmVendor = System.getProperty("java.vm.vendor");
+		String jvm = vmName + " version " + vmVersion + " (" + vmVendor + ")";
+		
+		System.out.println(jvm);
+		
+		if(!vmVendor.equals("Sun Microsystems Inc."))
+			System.out.println("NOTE: It is recommended that you use Sun's Java Virtual Machine. Using a different JVM might have unforseen problems");
 
 		// print out LWJGL version, followed by whether the system is 32 or 64
 		// bit
