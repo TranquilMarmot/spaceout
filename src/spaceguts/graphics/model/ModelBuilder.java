@@ -52,15 +52,16 @@ public class ModelBuilder {
 	public float maxX, minX, maxY, minY, maxZ, minZ = 0.0f;
 	
 	/**
-	 * Each {@link ModelPart} has a startIndex and an endIndex.
-	 * As the ModelLoader goes through a .obj file, whenever it reaches
-	 * a new material it calls  
+	 * See {@link ModelPart}
 	 */
-	private int startIndex = 0, endIndex = 0;
-	
-	private ArrayList<ModelPart> modelParts;
+	private int currentIndex = 0, count = 0;
+	/** material to use for current ModelPart*/
 	private Material currentMaterial;
 	
+	/** all the model parts */
+	private ArrayList<ModelPart> modelParts;
+	
+	/** Whether or not we're in the middle of making a ModelPart (endModelPart hasn't been called after beginModelPart) */
 	private boolean makingModelPart = false;
 
 	/**
@@ -86,6 +87,7 @@ public class ModelBuilder {
 		normalIndices = new ArrayList<int[]>();
 		textureIndices = new ArrayList<int[]>();
 		
+		// initialize model parts array
 		modelParts = new ArrayList<ModelPart>();
 	}
 
@@ -126,7 +128,7 @@ public class ModelBuilder {
 		// add if it's just a triangle
 		if (indices.length == 3){
 			vertexIndices.add(indices);
-			endIndex += 3;
+			count += 3;
 		}
 		// else split the quad into two triangles
 		else if (indices.length == 4) {
@@ -148,7 +150,7 @@ public class ModelBuilder {
 
 			vertexIndices.add(tri2);
 			
-			endIndex += 6;
+			count += 6;
 		} else {
 			System.out
 					.println("Error! Array not a triangle or a quad! (ModelBuilder)");
@@ -331,33 +333,37 @@ public class ModelBuilder {
 	
 	/**
 	 * This should be called whenever a new set of vertices with a different material needs to be created.
-	 * This should be called only while adding vertex indices (not vertices themselves)
+	 * This should be called after all vertices have been added and while vertex indices are being added
 	 * @param mat Material to use for incoming vertex indices
 	 */
 	public void startModelPart(Material mat){
+		// end the current model part if we're making one
 		if(isMakingModelPart())
 			endModelPart();
 		
-		
-		//System.out.println("beginning model part, start index " + startIndex + " end index " + endIndex + " mat: " + mat.getKa() + " " + mat.getKs() + " " + mat.getKd());
+		// set the current material
 		currentMaterial = mat;
+		// let everyone know that we're now making a model part
 		makingModelPart = true;
 	}
 	
 	/**
-	 * Ends the current material
+	 * Ends the current model part
 	 */
 	public void endModelPart(){
-		//System.out.println("ending model part, start index " + startIndex + " end index " + endIndex + " mat: " + currentMaterial.getKa() + " " + currentMaterial.getKs() + " " + currentMaterial.getKd() + "\n-=-=-=-=-=-=");
 		// add the model part
-		modelParts.add(new ModelPart(currentMaterial, startIndex, endIndex));
-		// next set of indices
-		startIndex = endIndex;
+		modelParts.add(new ModelPart(currentMaterial, currentIndex, count));
+		
+		// advance the current index and set count to 0 for the next model part
+		currentIndex += count;
+		count = 0;
+		
+		// let everyone know that we're done making the current model part
 		makingModelPart = false;
 	}
 	
 	/**
-	 * @return Whether or not a model part is being made right now (for when the end of a file is reached)
+	 * @return Whether or not a model part is being made right now
 	 */
 	public boolean isMakingModelPart(){
 		return makingModelPart;

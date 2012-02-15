@@ -28,12 +28,17 @@ public class MaterialList {
 	 * @param mat The material itself
 	 */
 	public void addMaterial(String name, Material mat){
+		/*
+		 * HashMap oh HashMap
+		 * Give you key and element
+		 * Store them good for me
+		 */
 		list.put(name, mat);
 	}
 	
 	/**
 	 * Get a material by name
-	 * @param name Name of require material
+	 * @param name Name of material
 	 * @return The material matching the given name
 	 */
 	public Material getMaterial(String name){

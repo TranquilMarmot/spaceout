@@ -81,8 +81,6 @@ public class ModelLoader {
 		// get the name of the directory
 		String name = directory.substring(lastSlash);
 		
-		System.out.println("Loading " + name);
-		
 		// get a list of materials
 		MaterialList materials = loadMaterialList(directory + name + ".mtl");
 		

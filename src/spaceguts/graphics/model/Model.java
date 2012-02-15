@@ -54,11 +54,13 @@ public class Model {
 	 */
 	public void render(){
 		GL30.glBindVertexArray(vaoHandle);
+		
+		// loop through each part, set its material and draw
 		for(ModelPart p : parts){
-			Material mat = p.getMaterial();
-			Render3D.setCurrentMaterial(mat.getKd(), mat.getKa(), mat.getKs(), mat.getShininess());
+			Render3D.setCurrentMaterial(p.getMaterial());
 			p.draw();
 		}
+		
 		GL30.glBindVertexArray(0);
 	}
 
