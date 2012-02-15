@@ -8,10 +8,10 @@ import org.lwjgl.opengl.GL11;
 import spaceguts.graphics.gui.GUI;
 import spaceguts.graphics.gui.GUIObject;
 import spaceguts.graphics.gui.button.MenuButton;
+import spaceguts.util.Debug;
 import spaceguts.util.DisplayHelper;
 import spaceguts.util.Runner;
-import spaceguts.util.debug.Debug;
-import spaceguts.util.resources.Textures;
+import spaceout.resources.Textures;
 
 /**
  * Main menu to show when the game first runs

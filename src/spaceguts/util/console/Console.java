@@ -8,10 +8,10 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.UnicodeFont;
 
+import spaceguts.input.MouseManager;
+import spaceguts.util.Debug;
 import spaceguts.util.DisplayHelper;
-import spaceguts.util.debug.Debug;
-import spaceguts.util.input.MouseManager;
-import spaceguts.util.resources.Textures;
+import spaceout.resources.Textures;
 
 /**
  * Console for printing text and interacting with the game. Note that there
@@ -151,17 +151,32 @@ public class Console {
 			if (Console.consoleOn) {
 				// Draw the box
 				Textures.WHITE.texture().bind();
+				/* BEGIN CONSOLE BACKGROUND */ 
 				GL11.glColor4f(0.15f, 0.15f, 0.15f, 0.35f);
 				GL11.glBegin(GL11.GL_QUADS);
 				{
+					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight - Debug.font.getAscent() - 7);
+					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight - ((Console.console.numLines + 2) * Debug.font.getAscent()));
+					GL11.glVertex2f((consoleWidth * 9) + 10,
+							DisplayHelper.windowHeight - ((Console.console.numLines + 2) * Debug.font.getAscent()));
+					GL11.glVertex2f((consoleWidth * 9) + 10,
+							DisplayHelper.windowHeight - Debug.font.getAscent() - 7);
+				}
+				GL11.glEnd();
+				/* END CONSOLE BACKGROUND */ 
+				
+				/* BEGIN INPUT BOX */
+				GL11.glColor4f(0.20f, 0.20f, 0.20f, 0.35f);
+				GL11.glBegin(GL11.GL_QUADS);
+				{
 					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight);
-					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight - 225.0f);
-					GL11.glVertex2f((consoleWidth * 9) + 10,
-							DisplayHelper.windowHeight - 225.0f);
-					GL11.glVertex2f((consoleWidth * 9) + 10,
+					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight - Debug.font.getAscent() - 7);
+					GL11.glVertex2f(DisplayHelper.windowWidth, DisplayHelper.windowHeight - Debug.font.getAscent() - 7);
+					GL11.glVertex2f(DisplayHelper.windowWidth,
 							DisplayHelper.windowHeight);
 				}
 				GL11.glEnd();
+				/* END INPUT BOX */
 
 				// Draw the blinking cursor
 				String toPrint = "> " + input;

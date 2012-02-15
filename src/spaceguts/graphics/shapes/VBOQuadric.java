@@ -105,5 +105,6 @@ public class VBOQuadric{
 	public void draw(){
 		GL30.glBindVertexArray(vaoHandle);
 		GL11.glDrawArrays(GL11.GL_QUAD_STRIP, 0, numIndices);
+		GL30.glBindVertexArray(0);
 	}
 }
