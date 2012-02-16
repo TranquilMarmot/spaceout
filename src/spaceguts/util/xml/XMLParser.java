@@ -255,6 +255,7 @@ public class XMLParser {
 	 *            The tag to get the color from
 	 * @return A float array containing the color
 	 */
+	/*
 	private static Vector3f getColor(Element ele, String tag) {
 		String text = getString(ele, tag);
 		StringTokenizer toker = new StringTokenizer(text, ",");
@@ -265,6 +266,7 @@ public class XMLParser {
 
 		return new Vector3f(r, g, b);
 	}
+	*/
 
 	/**
 	 * Gets a string from an element

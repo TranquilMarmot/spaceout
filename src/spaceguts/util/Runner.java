@@ -30,7 +30,7 @@ import spaceout.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.75.2";
+	public static final String VERSION = "0.0.75.5";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
@@ -194,17 +194,18 @@ public class Runner {
 	private void shutdown() {
 		Display.destroy();
 		DisplayHelper.frame.dispose();
-		System.out.println(shutdownString());
+		System.out.println(goodbye());
 	}
 	
 	/**
 	 * This is a secret method that does secret things
 	 * @return None of your business
 	 */
-	private String shutdownString(){
+	private String goodbye(){
 		String[] shutdown = { "Goodbye, world...", "Goodbye, cruel world...", "See ya...", "Later...", "Buh-bye...", "Thank you, come again!...",
-				"I guess this is goodbye...", "Until next time...", "¡Adios, amigo!...", "WAIT DON'T CLOSE ME I HAVE A SECRET TO TELL YOU...",
-				"Game over, man! Game over!!!...", "As long as I get to watch you walk away..."};
+				"Until Next Time...", "¡Adios, Amigo!...", "Game Over, Man! Game Over!!!...", "And So, I Bid You Adieu...", "So Long, And Thanks For All The Fish...",
+				"Ciao...", "Y'all Come Back Now, Ya Hear?...", "Catch You Later!...", "Mahalo And Aloha...", "Sayonara...", "Thanks For Playing!...",
+				"Auf Wiedersehen..."};
 		
 		Random randy = new Random();
 		

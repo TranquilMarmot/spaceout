@@ -139,13 +139,6 @@ public class Console {
 		// where to draw the console (x stays at 10)
 		y = DisplayHelper.windowHeight - advanceY - 10;
 
-		// figure out how many lines to print out
-		int stringsToPrint = text.size() - (numLines + 1);
-		// avoid any possibility of out of bounds (the for loop is kind of
-		// weird. if stringsToPrint == -1, then it doesn't print out any lines)
-		if (stringsToPrint < 0)
-			stringsToPrint = -1;
-
 		// If the console is enabled.
 		if (consoleEnabled) {
 			if (Console.consoleOn) {
@@ -187,8 +180,16 @@ public class Console {
 			}
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
+			
+			// figure out how many lines to print out
+			int stringsToPrint = text.size() - (numLines + 1);
+			// avoid any possibility of out of bounds (the for loop is kind of
+			// weird. if stringsToPrint == -1, then it doesn't print out any lines)
+			if (stringsToPrint < 0)
+				stringsToPrint = -1;
+			
 			// print out however many strings, going backwards
-			// (we want the latest strings to be printed first)
+			// (we want the most recent strings to be printed first)
 			for (int i = text.size() - 1 - scroll; i > stringsToPrint - scroll
 					&& i >= 0; i--) {
 
