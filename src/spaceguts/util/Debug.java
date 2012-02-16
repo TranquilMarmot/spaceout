@@ -226,15 +226,17 @@ public class Debug {
 					cameraInfo += "\n(free)";
 				font.drawString(3, 114, cameraInfo, Color.blue);
 				
-				String look;
-				if(Entities.camera.builder.entityGrabbed)
-					look = "Grabbed:      ";
-				else
-					look = "At crosshair: ";
-				if(Entities.camera.builder.lookingAt != null){
-					look += Entities.camera.builder.lookingAt.hashCode() + " | " + Entities.camera.builder.lookingAt.type + " | Mass: " + Entities.camera.builder.lookingAt.rigidBody.getInvMass();
+				if(Entities.camera.buildMode){
+					String look;
+					if(Entities.camera.builder.entityGrabbed)
+						look = "Grabbed:      ";
+					else
+						look = "At crosshair: ";
+					if(Entities.camera.builder.lookingAt != null){
+						look += Entities.camera.builder.lookingAt.hashCode() + " | " + Entities.camera.builder.lookingAt.type + " | Mass: " + Entities.camera.builder.lookingAt.rigidBody.getInvMass();
+					}
+					font.drawString(100, 3, look, Color.green);
 				}
-				font.drawString(100, 3, look, Color.green);
 
 				javax.vecmath.Vector3f linear = new javax.vecmath.Vector3f();
 				Entities.player.rigidBody.getLinearVelocity(linear);

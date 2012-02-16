@@ -34,8 +34,6 @@ public class Runner {
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
-	/** keeps the pause button from repeatedly pausing and unpausing */
-	private boolean pauseDown = false;
 
 	/** if this is true, it means it's time to shut down ASAP */
 	public static boolean done = false;
@@ -171,13 +169,8 @@ public class Runner {
 		// if pauseDown is true, it means that the pause button is being
 		// held,
 		// so it avoids repeatedly flipping paused when the key is held
-		if (KeyBindings.SYS_PAUSE.isPressed() && !pauseDown) {
+		if (KeyBindings.SYS_PAUSE.pressedOnce()) {
 			paused = !paused;
-			pauseDown = true;
-		}
-
-		if (!KeyBindings.SYS_PAUSE.isPressed()) {
-			pauseDown = false;
 		}
 
 		// release the mouse if the game's paused or the console is on or the
@@ -205,7 +198,8 @@ public class Runner {
 		String[] shutdown = { "Goodbye, world...", "Goodbye, cruel world...", "See ya...", "Later...", "Buh-bye...", "Thank you, come again!...",
 				"Until Next Time...", "¡Adios, Amigo!...", "Game Over, Man! Game Over!!!...", "And So, I Bid You Adieu...", "So Long, And Thanks For All The Fish...",
 				"Ciao...", "Y'all Come Back Now, Ya Hear?...", "Catch You Later!...", "Mahalo And Aloha...", "Sayonara...", "Thanks For Playing!...",
-				"Auf Wiedersehen..."};
+				"Auf Wiedersehen...", "Yo homes, smell ya later!... (looked up at my kingdom, I was finally there, to sit on my throne as the Prince of Bel-air)"};
+		// FIRST FRESH PRINCE REFERENCE FOR THIS GAME, TAKE NOTE THIS IS HISTORIC
 		
 		Random randy = new Random();
 		

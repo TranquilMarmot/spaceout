@@ -101,7 +101,8 @@ public class Camera extends Entity {
 	 * Update the camera. Ths handles following other things, mode switches etc.
 	 */
 	public void update() {
-		builder.update();
+		if(buildMode)
+			builder.update();
 		
 		// if we're not following anything, we're in free mode
 		if (following == null) {
