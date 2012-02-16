@@ -34,6 +34,9 @@ public class ResourceLoader {
 			m = modelsToLoad.remove();
 			m.initModel();
 		}
+		
+		// try and force garbage collection to get rid of any spare data left over from loading things
+		System.gc();
 	}
 	
 	public static boolean jobsExist(){
