@@ -31,7 +31,7 @@ public class Builder {
 	/** What the builder is looking at */
 	public DynamicEntity lookingAt;
 	/** whether or not what the builder is looking at has been grabbed */
-	public boolean entityGrabbed = false;
+	public boolean leftGrabbed = false, rightGrabbed = false;
 	
 	/**
 	 * Builder constructor
@@ -58,58 +58,78 @@ public class Builder {
 	 * rotates what's being looked at if the right mouse button is down
 	 */
 	private void whatsTheCameraLookingAt(){
-		// check if anything has been grabbed
-		ClosestRayResultCallback cameraRay = camera.rayTestAtCenter();
-		if(cameraRay.hasHit() && !entityGrabbed){
-			lookingAt = (DynamicEntity) cameraRay.collisionObject.getUserPointer();
+		if(!leftGrabbed && !rightGrabbed){
+			// check if anything has been grabbed
+			ClosestRayResultCallback cameraRay = camera.rayTestAtCenter();
 			
-			if((MouseManager.button0 || MouseManager.button1) & !entityGrabbed){
-				lookingAt.rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
-				lookingAt.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
-				entityGrabbed = true;
+			if(cameraRay.hasHit()){
+				lookingAt = (DynamicEntity) cameraRay.collisionObject.getUserPointer();
+				
+				if(!leftGrabbed && MouseManager.button0){
+						lookingAt.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
+						leftGrabbed = true;
+				}
+				
+				if(!rightGrabbed && MouseManager.button1){
+						lookingAt.rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
+						rightGrabbed = true;
+				}
+			} else {
+				lookingAt = null;
 			}
-		} else if(!MouseManager.button0 && !MouseManager.button1){
-			lookingAt = null;
-			entityGrabbed = false;
 		}
 		
-		
-		if(entityGrabbed){
-			// move entity
-			if(MouseManager.button0){
-				Vector3f impulse = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(MouseManager.dx * 10, -MouseManager.dy * 10, MouseManager.wheel / 10), Entities.camera.rotation);
-				
-				Transform trans = new Transform();
-				lookingAt.rigidBody.getWorldTransform(trans);
-				
-				trans.origin.add(new javax.vecmath.Vector3f(impulse.x, impulse.y, impulse.z));
-				
-				lookingAt.rigidBody.setWorldTransform(trans);
-			}
+		if(lookingAt != null && (leftGrabbed || rightGrabbed)){
+			if(!lookingAt.rigidBody.isActive())
+				lookingAt.rigidBody.activate();
 			
-			// rotate entity FIXME doesn't work properly
-			if(MouseManager.button1){
-				if(MouseManager.dx != 0 || MouseManager.dy != 0 || MouseManager.wheel != 0){
+			if(leftGrabbed){
+				if(MouseManager.button0){
+					float dx = MouseManager.dx * 10;
+					float dy = -MouseManager.dy * 10;
+					float dz = MouseManager.wheel / 10;
+					
+					Vector3f impulse = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(dx, dy, dz), Entities.camera.rotation);
+					
 					Transform trans = new Transform();
 					lookingAt.rigidBody.getWorldTransform(trans);
 					
-					Quat4f rot = new Quat4f();
-					trans.getRotation(rot);
-					
-					Vector3f impulse = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(MouseManager.dx * 10, -MouseManager.dy * 10, MouseManager.wheel / 10), Entities.camera.rotation);
-					
-					Quaternion newRot = QuaternionHelper.rotate(new Quaternion(rot.x, rot.y, rot.z, rot.w), impulse);
-					
-					trans.setRotation(new Quat4f(newRot.x, newRot.y, newRot.z, newRot.z));
+					trans.origin.add(new javax.vecmath.Vector3f(impulse.x, impulse.y, impulse.z));
 					
 					lookingAt.rigidBody.setWorldTransform(trans);
+				} else {
+					leftGrabbed = false;
+				}
+			}
+			
+			if(rightGrabbed){
+				if(MouseManager.button1){
+					if(MouseManager.dx != 0 || MouseManager.dy != 0 || MouseManager.wheel != 0){
+						Transform trans = new Transform();
+						lookingAt.rigidBody.getWorldTransform(trans);
+						
+						Quat4f rot = new Quat4f();
+						trans.getRotation(rot);
+						
+						Vector3f amount = new Vector3f(-MouseManager.dy * 10, MouseManager.dx * 10, MouseManager.wheel / 10);
+						
+						Vector3f impulse = QuaternionHelper.rotateVectorByQuaternion(amount, Entities.camera.rotation);
+						
+						Quaternion newRot = QuaternionHelper.rotate(new Quaternion(rot.x, rot.y, rot.z, rot.w), impulse);
+						
+						trans.setRotation(new Quat4f(newRot.x, newRot.y, newRot.z, newRot.w));
+						
+						lookingAt.rigidBody.setWorldTransform(trans);
+					}
+				} else{
+					rightGrabbed = false;
 				}
 			}
 		}
 	}
 	
 	/**
-	 * Adds a random sphere to the world
+	 * Adds a random sphere to the world, right in front of the camera
 	 */
 	private void addRandomSphere(){
 		Random randy = new Random();

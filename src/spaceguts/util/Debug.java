@@ -228,7 +228,7 @@ public class Debug {
 				
 				if(Entities.camera.buildMode){
 					String look;
-					if(Entities.camera.builder.entityGrabbed)
+					if(Entities.camera.builder.leftGrabbed || Entities.camera.builder.rightGrabbed)
 						look = "Grabbed:      ";
 					else
 						look = "At crosshair: ";

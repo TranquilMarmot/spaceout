@@ -122,7 +122,7 @@ public class Camera extends Entity {
 		// entity
 		if (!freeMode && !vanityMode) {
 			this.rotation.set(following.rotation);
-		} else if (vanityMode || freeMode) {
+		} else if ((vanityMode || freeMode) && !builder.rightGrabbed) {
 			// if we're in vanity or free mode, apply any rotation changes
 			this.rotation = QuaternionHelper.rotateX(this.rotation, MouseManager.dy);
 			this.rotation = QuaternionHelper.rotateY(this.rotation, MouseManager.dx);
@@ -246,7 +246,7 @@ public class Camera extends Entity {
 		// controls console scrolling)
 		if (!Console.consoleOn) {
 			if (MouseManager.wheel != 0) {
-				if(buildMode && !builder.entityGrabbed){
+				if(buildMode && !builder.leftGrabbed){
 					speed += (speed * zoomSensitivity / MouseManager.wheel);
 					
 					// keep zoom in bounds
