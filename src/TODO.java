@@ -49,6 +49,7 @@
  * System
  * 		General
  * 			TODO Debug class shouldn't really be all static- variables are being hammered every update (in the init() method)
+ * 			TODO Make methods in the QuaternionHelper to take javax.vecmath.Vector3f and javax.vecmath.Quat4f objects (but still do the same math on them)
  * 			TODO Make a loading screen!
  * 			TODO Look into having ships stored as a zip file containing an obj, a png, and an xml file (is it too slow? easier if its uncompressed?)
  * 			TODO Add a "/save" command that saves the game and return to the main menu
@@ -67,10 +68,10 @@
  * 		Builder
  * 			TODO Make a CameraMode class that keeps track of things like max zoom, min zoom, offsets, etc (then it will just be set whenever the mode is switched! Make a CameraModes enum)
  * 			TODO Give the camera an object in the physics world so it bumps into things (figure out how to get it to collide, but not effect other things when it hits them) - might require a lot of fiddling with things!
- * 			TODO Make grabbed entititys gravitate to the cursor
+ * 			TODO Make the crosshair behave differently when it's grabbing things (i.e. make it an open hand and when you grab something it changes)
+ * 			TODO Make the item at the crosshair glow with an outline, like in Left 4 Dead (this will require writing a new shader)
+ * 			TODO Make grabbed entitities gravitate to the cursor
  * 			TODO Make a menu for placing new entities (SPACEBAR while in free mode)
- *			TODO Add a way to toggle rigidbody activation states
- *			TODO Right click to rotate, left click to move (mouse wheel while grabbed moves along Z)
  *			TODO Make a model importer that takes in an obj file and lets you edit the mtl file and see how it would look in-game (look into blender plugins)
  * Gameplay
  * 			TODO More weapons

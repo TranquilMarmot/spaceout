@@ -30,7 +30,7 @@ import spaceout.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.75.5";
+	public static final String VERSION = "0.0.75.7";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
@@ -198,11 +198,9 @@ public class Runner {
 		String[] shutdown = { "Goodbye, world...", "Goodbye, cruel world...", "See ya...", "Later...", "Buh-bye...", "Thank you, come again!...",
 				"Until Next Time...", "¡Adios, Amigo!...", "Game Over, Man! Game Over!!!...", "And So, I Bid You Adieu...", "So Long, And Thanks For All The Fish...",
 				"Ciao...", "Y'all Come Back Now, Ya Hear?...", "Catch You Later!...", "Mahalo And Aloha...", "Sayonara...", "Thanks For Playing!...",
-				"Auf Wiedersehen...", "Yo homes, smell ya later!... (looked up at my kingdom, I was finally there, to sit on my throne as the Prince of Bel-air)"};
+				"Auf Wiedersehen...", "Yo Homes, Smell Ya Later!... (Looked Up At My Kingdom, I Was Finally There, To Sit On My Throne As The Prince Of Bel-air)"};
 		// FIRST FRESH PRINCE REFERENCE FOR THIS GAME, TAKE NOTE THIS IS HISTORIC
 		
-		Random randy = new Random();
-		
-		return shutdown[randy.nextInt(shutdown.length)];
+		return shutdown[new Random().nextInt(shutdown.length)];
 	}
 }

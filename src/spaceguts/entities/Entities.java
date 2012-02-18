@@ -74,7 +74,7 @@ public class Entities {
 	 * @return Whether or not there are any entities at the moment
 	 */
 	public static boolean entitiesExist() {
-		return !passiveEntities.isEmpty() || !dynamicEntities.isEmpty();
+		return !passiveEntities.isEmpty() || !dynamicEntities.isEmpty() || player != null;
 	}
 
 	/**

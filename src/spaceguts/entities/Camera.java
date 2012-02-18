@@ -6,6 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 import spaceguts.graphics.render.Render3D;
 import spaceguts.input.KeyBindings;
 import spaceguts.input.MouseManager;
+import spaceguts.physics.Builder;
 import spaceguts.physics.Physics;
 import spaceguts.util.Debug;
 import spaceguts.util.QuaternionHelper;
@@ -245,7 +246,7 @@ public class Camera extends Entity {
 		// controls console scrolling)
 		if (!Console.consoleOn) {
 			if (MouseManager.wheel != 0) {
-				if(buildMode){
+				if(buildMode && !builder.entityGrabbed){
 					speed += (speed * zoomSensitivity / MouseManager.wheel);
 					
 					// keep zoom in bounds
@@ -351,6 +352,9 @@ public class Camera extends Entity {
 		return callback;
 	}
 	
+	/**
+	 * @return The camera's position with its xOffset, yOffset and zoom taken into consideration
+	 */
 	public Vector3f getLocationWithOffset(){
 		float x = location.x + xOffset;
 		float y = location.y + yOffset;

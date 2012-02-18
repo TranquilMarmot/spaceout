@@ -6,13 +6,11 @@ import java.awt.event.ActionListener;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 
-import spaceguts.entities.Entities;
 import spaceguts.graphics.gui.GUI;
 import spaceguts.graphics.gui.GUIObject;
 import spaceguts.graphics.gui.button.MenuButton;
 import spaceguts.graphics.gui.menu.filepicker.FilePicker;
 import spaceguts.physics.Physics;
-import spaceguts.physics.Sandbox;
 import spaceguts.util.Debug;
 import spaceguts.util.DisplayHelper;
 import spaceguts.util.xml.XMLParser;
@@ -74,16 +72,8 @@ public class LoadMenu extends GUIObject {
 					Physics.initPhysics();
 					
 					String selectedFile = picker.getSelected().getFile();
-					/* FIXME this if statement is only temporary!!! */
-					if (selectedFile.equals("PhysicsSandbox.xml")) {
-						Sandbox sandy = new Sandbox();
-						sandy.createSandboxWorld();
-						Entities.addPassiveEntity(sandy);
-					} else {
 						// load entities from XML
-						XMLParser.loadEntitiesFromXmlFile(path
-								+ selectedFile);
-					}
+						XMLParser.loadEntitiesFromXmlFile(path + selectedFile);
 					// create the pause menu
 					GUI.addGUIObject(new PauseMenu());
 

@@ -32,6 +32,8 @@ public class Render3D {
 	/** ModelView and Projection matrices */
 	public static Matrix4f projection, modelview;
 	
+	private static Matrix4f oldModelview = new Matrix4f();
+	
 	/** Draw distance and field-of-view to use for rendering */
 	public static float drawDistance = 3000000.0f, fov =  45.0f;
 	
@@ -171,14 +173,14 @@ public class Render3D {
 		float transY = Entities.camera.location.y - Entities.skybox.location.y;
 		float transZ = Entities.camera.location.z - Entities.skybox.location.z;
 		
-		Matrix4f oldModelview = new Matrix4f(modelview);{
+		oldModelview.load(modelview);{
 			modelview.translate(new Vector3f(transX, transY, transZ));
 			
 			Matrix4f.mul(modelview, QuaternionHelper.toMatrix(Entities.skybox.rotation), modelview);
 			
 			program.setUniform("ModelViewMatrix", modelview);
 			Entities.skybox.draw();
-		}modelview = oldModelview;
+		}modelview.load(oldModelview);
 		program.setUniform("Light.LightEnabled", true);
 	}
 	
@@ -195,12 +197,12 @@ public class Render3D {
 			float transY = Entities.camera.location.y - light.location.y;
 			float transZ = Entities.camera.location.z - light.location.z;
 			
-			Matrix4f oldModelview = new Matrix4f(modelview);{
+			oldModelview.load(modelview);{
 				modelview.translate(new Vector3f(transX, transY, transZ));
 				
 				program.setUniform("ModelViewMatrix", modelview);
 				light.draw();
-			}modelview = oldModelview;
+			}modelview.load(oldModelview);
 		}
 		program.setUniform("Light.LightEnabled", true);
 	}
@@ -220,14 +222,14 @@ public class Render3D {
 			float transY = Entities.camera.location.y - ent.location.y;
 			float transZ = Entities.camera.location.z - ent.location.z;
 			
-			Matrix4f oldModelview = new Matrix4f(modelview);{
+			oldModelview.load(modelview);{
 				modelview.translate(new Vector3f(transX, transY, transZ));
 				
 				Matrix4f.mul(modelview, QuaternionHelper.toMatrix(ent.rotation), modelview);
 				
 				program.setUniform("ModelViewMatrix", modelview);
 				ent.draw();
-			}modelview = oldModelview;
+			}modelview.load(oldModelview);
 		}
 	}
 	
@@ -243,7 +245,7 @@ public class Render3D {
 			float transY = Entities.camera.location.y - ent.location.y;
 			float transZ = Entities.camera.location.z - ent.location.z;
 			
-			Matrix4f oldModelview = new Matrix4f(modelview);{
+			oldModelview.load(modelview);{
 				modelview.translate(new Vector3f(transX, transY, transZ));
 				
 				if(Physics.drawDebug){
@@ -254,7 +256,7 @@ public class Render3D {
 				
 				program.setUniform("ModelViewMatrix", modelview);
 				ent.draw();
-			}modelview = oldModelview;
+			}modelview.load(oldModelview);
 		}
 	}
 	
@@ -266,14 +268,14 @@ public class Render3D {
 		float transY = Entities.camera.location.y - Entities.player.location.y;
 		float transZ = Entities.camera.location.z - Entities.player.location.z;
 		
-		Matrix4f oldModelview = new Matrix4f(modelview);{
+		oldModelview.load(modelview);{
 			modelview.translate(new Vector3f(transX, transY, transZ));
 			
 			Matrix4f.mul(modelview, QuaternionHelper.toMatrix(Entities.player.rotation), modelview);
 			
 			program.setUniform("ModelViewMatrix", modelview);
 			Entities.player.draw();
-		}modelview = oldModelview;
+		}modelview.load(oldModelview);
 	}
 	
 	/**
