@@ -7,16 +7,18 @@
  * 			TODO After the first time, the fullscreen key has to be pressed twice to have an effect
  * 			TODO Destroy the Java AWT window when going into fullscreen, then create it again on leaving fullscreen
  * JBullet
+ * 			TODO Fix physics debug drawing (might require fiddling with shaders)
  * 			TODO Add a thing to the Physics Debug that also draws an arrow representing the current speed (first point is entity origin, second is origin+linear velocity)
  * 			TODO Give things thrusters
  * 			TODO Figure out how to warp things
  * 			TODO Figure out how to get a ship to reorient itself to start going in a new direction when the direction it's facing is changed
- * 			TODO Revamp controls! First person cockpit view- ship turns a different speed based on how far from the center the cursor would be
  * 			TODO Third person ship controls like Halo- you look where you want to go and the ship turns towards it	
- * 			TODO Explosions!
- * 			TODO Turrets
+ * 			TODO Explosions! Use a sphere to see what objects are inside of the explosion and apply impulSe accordingly
+ * 			TODO Turrets (pivoting on joints)
+ * 			TODO Maybe things shouldn't just float away forever (reduce linear velocity verrrrry slowly)
+ * 			TODO Machine gun that just sends out ray tests for bullets
  * OpenAL
- * 			TODO Decide on a format for sound files (ogg?)
+ * 			TODO Decide on a format for sound files (wav? ogg?)
  * 			TODO Figure out how to make noises
  * 			TODO Figure out how to make noises at a specific spot (doppler effect?)
  * 			TODO Create a nice interface for making noises when things happen
@@ -77,6 +79,11 @@
  * 			TODO More weapons
  * 			TODO Story
  * 			TODO Multiplayer
+ * 		Control
+ * 			TODO Xbox 360 controller support
+ * 			TODO Make the mouse be represented by something that moves around the screen, and then turn the ship a different speed based on how far the mouse is from the middle of the screen.
+ * 				 Would work for controllers, too! When the right thumbstick is moved, the thing on screen moves with it and when the stick is released it goes back to the middle.
+ * 				 This could also be used for precision aiming, if un-projecting the mouse coordinates doesn't prove to be too hard
  * 		AI
  * 			TODO Make some basic AI routines- seek, etc.
  * 			TODO Make our own scripting language? Find an already created one? Possibilities are endless.

@@ -47,10 +47,13 @@ public class Debug {
 	private static int backspaceRepeatCounter = 0;
 	private static int backspaceRepeatWait = 30;
 	
+	// FIXME should the crosshair be its own class?
 	public static int crosshairWidth = 8, crosshairHeight = 8;
-	public static Vector3f crosshairColor = new Vector3f(1.0f, 1.0f, 1.0f);
+	public static Vector3f defaultCrosshairColor = new Vector3f(1.0f, 1.0f, 1.0f),
+						   selectedCrosshairColor = new Vector3f(0.3f, 0.8f, 0.3f),
+						   grabbedCrosshairColor = new Vector3f(0.3f, 0.3f, 0.8f);
 	
-	/** String formatter */
+	/** String formatters */
 	private static Formatter cameraInfoFormatter, locationFormatter;
 
 	public static void update() {
@@ -130,7 +133,8 @@ public class Debug {
 		
 		Console.console.draw();
 		
-		drawCrosshair();
+		if(Entities.camera != null)
+			drawCrosshair();
 		
 		// draw 'PAUSED' in the middle of the screen if the game is paused
 		if (Runner.paused && Entities.entitiesExist())
@@ -139,10 +143,18 @@ public class Debug {
 	}
 	
 	private static void drawCrosshair(){
+		// bind texture
 		Textures.CROSSHAIR.texture().bind();
 		
+		// change crosshair color TODO the crosshair should have different images instead of just different colors
+		if(Entities.camera.builder.leftGrabbed | Entities.camera.builder.rightGrabbed)
+			GL11.glColor3f(grabbedCrosshairColor.x, grabbedCrosshairColor.y, grabbedCrosshairColor.z);
+		else if(Entities.camera.builder.lookingAt != null)
+			GL11.glColor3f(selectedCrosshairColor.x, selectedCrosshairColor.y, selectedCrosshairColor.z); 
+		else
+			GL11.glColor3f(defaultCrosshairColor.x, defaultCrosshairColor.y, defaultCrosshairColor.z);
 		
-		GL11.glColor3f(crosshairColor.x, crosshairColor.y, crosshairColor.z);
+		// draw the crosshair
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glTexCoord2f(0, 0);
 		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) - crosshairWidth, (DisplayHelper.windowHeight / 2.0f) + crosshairHeight);
@@ -158,9 +170,11 @@ public class Debug {
 		GL11.glEnd();
 		
 		GL11.glColor3f(1.0f, 1.0f, 1.0f);
-		//GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 
+	/**
+	 * Draws debug info to the screen
+	 */
 	public static void drawDebugInfo() {
 		// only draw if there's info to draw
 		if (Entities.entitiesExist()) {
@@ -249,6 +263,7 @@ public class Debug {
 			}
 		}
 
+		
 		drawVersion();
 
 		// draw the current fps
@@ -258,7 +273,7 @@ public class Debug {
 	}
 
 	/**
-	 * Draws what version the game is in the top left of the screen
+	 * Draws what version the game is in the top right of the screen
 	 */
 	public static void drawVersion() {
 		// draw what version of Spaceout this is
@@ -295,10 +310,16 @@ public class Debug {
 		updateFPS();
 	}
 
+	/**
+	 * For FPS
+	 */
 	public static long getTime() {
 		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
 	}
 
+	/**
+	 * Needs to be called every frame to update the FPS
+	 */
 	private static void updateFPS() {
 		if (getTime() - lastFPS > 1000) {
 			currentFPS = fpsCount;
@@ -308,6 +329,9 @@ public class Debug {
 		fpsCount++;
 	}
 
+	/**
+	 * @return How much time has passed since the last time getDelta() was called
+	 */
 	public static int getDelta() {
 		long time = getTime();
 		int delta = (int) (time - lastFrame);
@@ -317,7 +341,7 @@ public class Debug {
 	}
 
 	/**
-	 * This prints all the info about the system to System.out
+	 * Prints all the info about the system to System.out
 	 */
 	public static void printSysInfo() {
 		// print out which version of Spaceout this is
