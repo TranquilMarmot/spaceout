@@ -100,29 +100,39 @@ public class Builder {
 				} else {
 					leftGrabbed = false;
 				}
+				
+				if(MouseManager.button1){
+					lookingAt.rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
+					rightGrabbed = true;
+				}
 			}
 			
 			if(rightGrabbed){
-				if(MouseManager.button1){
-					if(MouseManager.dx != 0 || MouseManager.dy != 0 || MouseManager.wheel != 0){
-						Transform trans = new Transform();
-						lookingAt.rigidBody.getWorldTransform(trans);
-						
-						Quat4f rot = new Quat4f();
-						trans.getRotation(rot);
-						
-						Vector3f amount = new Vector3f(-MouseManager.dy * 10, MouseManager.dx * 10, MouseManager.wheel / 10);
-						
-						Vector3f impulse = QuaternionHelper.rotateVectorByQuaternion(amount, Entities.camera.rotation);
-						
-						Quaternion newRot = QuaternionHelper.rotate(new Quaternion(rot.x, rot.y, rot.z, rot.w), impulse);
-						
-						trans.setRotation(new Quat4f(newRot.x, newRot.y, newRot.z, newRot.w));
-						
-						lookingAt.rigidBody.setWorldTransform(trans);
+				if(MouseManager.dx != 0 || MouseManager.dy != 0 || MouseManager.wheel != 0){
+					if(MouseManager.button1){
+							Transform trans = new Transform();
+							lookingAt.rigidBody.getWorldTransform(trans);
+							
+							Quat4f rot = new Quat4f();
+							trans.getRotation(rot);
+							
+							Vector3f amount = new Vector3f(-MouseManager.dy * 10, MouseManager.dx * 10, MouseManager.wheel / 10);
+							
+							Vector3f impulse = QuaternionHelper.rotateVectorByQuaternion(amount, Entities.camera.rotation);
+							
+							Quaternion newRot = QuaternionHelper.rotate(new Quaternion(rot.x, rot.y, rot.z, rot.w), impulse);
+							
+							trans.setRotation(new Quat4f(newRot.x, newRot.y, newRot.z, newRot.w));
+							
+							lookingAt.rigidBody.setWorldTransform(trans);
+					} else {
+						rightGrabbed = false;
 					}
-				} else{
-					rightGrabbed = false;
+				}
+				
+				if(MouseManager.button0){
+					lookingAt.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
+					leftGrabbed = true;
 				}
 			}
 		}
