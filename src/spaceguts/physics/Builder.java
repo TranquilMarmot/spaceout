@@ -58,6 +58,11 @@ public class Builder {
 	 * rotates what's being looked at if the right mouse button is down
 	 */
 	private void whatsTheCameraLookingAt(){
+		if(!MouseManager.button0)
+			leftGrabbed = false;
+		if(!MouseManager.button1)
+			rightGrabbed = false;
+		
 		if(!leftGrabbed && !rightGrabbed){
 			// check if anything has been grabbed
 			ClosestRayResultCallback cameraRay = camera.rayTestAtCenter();

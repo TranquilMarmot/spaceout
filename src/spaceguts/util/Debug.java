@@ -147,12 +147,16 @@ public class Debug {
 		Textures.CROSSHAIR.texture().bind();
 		
 		// change crosshair color TODO the crosshair should have different images instead of just different colors
-		if(Entities.camera.builder.leftGrabbed | Entities.camera.builder.rightGrabbed)
-			GL11.glColor3f(grabbedCrosshairColor.x, grabbedCrosshairColor.y, grabbedCrosshairColor.z);
-		else if(Entities.camera.builder.lookingAt != null)
-			GL11.glColor3f(selectedCrosshairColor.x, selectedCrosshairColor.y, selectedCrosshairColor.z); 
-		else
+		if(!Entities.camera.buildMode)
 			GL11.glColor3f(defaultCrosshairColor.x, defaultCrosshairColor.y, defaultCrosshairColor.z);
+		else{
+			if(Entities.camera.builder.leftGrabbed || Entities.camera.builder.rightGrabbed)
+				GL11.glColor3f(grabbedCrosshairColor.x, grabbedCrosshairColor.y, grabbedCrosshairColor.z);
+			else if(Entities.camera.builder.lookingAt != null)
+				GL11.glColor3f(selectedCrosshairColor.x, selectedCrosshairColor.y, selectedCrosshairColor.z); 
+			else
+				GL11.glColor3f(defaultCrosshairColor.x, defaultCrosshairColor.y, defaultCrosshairColor.z);
+		}
 		
 		// draw the crosshair
 		GL11.glBegin(GL11.GL_QUADS);
