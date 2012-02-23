@@ -17,7 +17,6 @@ import spaceguts.graphics.gui.GUI;
 import spaceguts.input.KeyBindings;
 import spaceguts.util.console.Console;
 import spaceout.resources.Paths;
-import spaceout.resources.Textures;
 
 /**
  * Handles drawing all the debug info. This class also contains the console
@@ -46,12 +45,6 @@ public class Debug {
 	/** make it so backspace can be held down for the console */
 	private static int backspaceRepeatCounter = 0;
 	private static int backspaceRepeatWait = 30;
-	
-	// FIXME should the crosshair be its own class?
-	public static int crosshairWidth = 8, crosshairHeight = 8;
-	public static Vector3f defaultCrosshairColor = new Vector3f(1.0f, 1.0f, 1.0f),
-						   selectedCrosshairColor = new Vector3f(0.3f, 0.8f, 0.3f),
-						   grabbedCrosshairColor = new Vector3f(0.3f, 0.3f, 0.8f);
 	
 	/** String formatters */
 	private static Formatter cameraInfoFormatter, locationFormatter;
@@ -134,46 +127,12 @@ public class Debug {
 		Console.console.draw();
 		
 		if(Entities.camera != null)
-			drawCrosshair();
+			Entities.camera.drawCrosshair();
 		
 		// draw 'PAUSED' in the middle of the screen if the game is paused
 		if (Runner.paused && Entities.entitiesExist())
 			Debug.font.drawString((DisplayHelper.windowWidth / 2) - 25,
 					DisplayHelper.windowHeight / 2, "PAUSED");
-	}
-	
-	private static void drawCrosshair(){
-		// bind texture
-		Textures.CROSSHAIR.texture().bind();
-		
-		// change crosshair color TODO the crosshair should have different images instead of just different colors
-		if(!Entities.camera.buildMode)
-			GL11.glColor3f(defaultCrosshairColor.x, defaultCrosshairColor.y, defaultCrosshairColor.z);
-		else{
-			if(Entities.camera.builder.leftGrabbed || Entities.camera.builder.rightGrabbed)
-				GL11.glColor3f(grabbedCrosshairColor.x, grabbedCrosshairColor.y, grabbedCrosshairColor.z);
-			else if(Entities.camera.builder.lookingAt != null)
-				GL11.glColor3f(selectedCrosshairColor.x, selectedCrosshairColor.y, selectedCrosshairColor.z); 
-			else
-				GL11.glColor3f(defaultCrosshairColor.x, defaultCrosshairColor.y, defaultCrosshairColor.z);
-		}
-		
-		// draw the crosshair
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(0, 0);
-		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) - crosshairWidth, (DisplayHelper.windowHeight / 2.0f) + crosshairHeight);
-
-		GL11.glTexCoord2f(Textures.CROSSHAIR.texture().getWidth(), 0);
-		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) + crosshairWidth, (DisplayHelper.windowHeight / 2.0f) + crosshairHeight);
-
-		GL11.glTexCoord2f(Textures.CROSSHAIR.texture().getWidth(), Textures.CROSSHAIR.texture().getHeight());
-		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) + crosshairWidth, (DisplayHelper.windowHeight / 2.0f) - crosshairHeight);
-
-		GL11.glTexCoord2f(0, Textures.CROSSHAIR.texture().getHeight());
-		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) - crosshairWidth, (DisplayHelper.windowHeight / 2.0f) - crosshairHeight);
-		GL11.glEnd();
-		
-		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 	}
 
 	/**

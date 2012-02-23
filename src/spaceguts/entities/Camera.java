@@ -1,5 +1,6 @@
 package spaceguts.entities;
 
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -9,9 +10,11 @@ import spaceguts.input.MouseManager;
 import spaceguts.physics.Builder;
 import spaceguts.physics.Physics;
 import spaceguts.util.Debug;
+import spaceguts.util.DisplayHelper;
 import spaceguts.util.QuaternionHelper;
 import spaceguts.util.Runner;
 import spaceguts.util.console.Console;
+import spaceout.resources.Textures;
 
 import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback;
 
@@ -74,6 +77,13 @@ public class Camera extends Entity {
 	
 	/** how fast the camera rolls */
 	float rollSpeed = 13.0f;
+	
+	// FIXME should the crosshair be its own class?
+	public int crosshairWidth = 8, crosshairHeight = 8;
+	public int handWidth = 13, handHeight = 13;
+	public int currentCrosshairWidth = crosshairWidth, currentCrosshairHeight = crosshairHeight;
+	private Textures currentTexture = Textures.CROSSHAIR;
+	public Vector3f defaultCrosshairColor = new Vector3f(1.0f, 1.0f, 1.0f);
 
 	/**
 	 * Camera constructor
@@ -371,6 +381,50 @@ public class Camera extends Entity {
 		lastUpdate = time;
 
 		return delta;
+	}
+	
+	public void drawCrosshair(){
+		GL11.glColor3f(defaultCrosshairColor.x, defaultCrosshairColor.y, defaultCrosshairColor.z);
+		
+		// change crosshair color TODO the crosshair should have different images instead of just different colors
+		if(!buildMode){
+			currentCrosshairWidth = crosshairWidth;
+			currentCrosshairHeight = crosshairHeight;
+			currentTexture = Textures.CROSSHAIR;
+		}else{
+			if(Entities.camera.builder.leftGrabbed || Entities.camera.builder.rightGrabbed){
+				currentCrosshairWidth = handWidth;
+				currentCrosshairHeight = handHeight;
+				currentTexture = Textures.BUILDER_GRABBED;
+			}else if(Entities.camera.builder.lookingAt != null){
+				currentCrosshairWidth = handWidth;
+				currentCrosshairHeight = handHeight;
+				currentTexture = Textures.BUILDER_OPEN;
+			}else{
+				currentCrosshairWidth = crosshairWidth;
+				currentCrosshairHeight = crosshairHeight;
+				currentTexture = Textures.CROSSHAIR;
+			}
+		}
+		
+		currentTexture.texture().bind();
+		
+		// draw the crosshair
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0, 0);
+		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) - currentCrosshairWidth, (DisplayHelper.windowHeight / 2.0f) + currentCrosshairHeight);
+
+		GL11.glTexCoord2f(currentTexture.texture().getWidth(), 0);
+		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) + currentCrosshairWidth, (DisplayHelper.windowHeight / 2.0f) + currentCrosshairHeight);
+
+		GL11.glTexCoord2f(currentTexture.texture().getWidth(), currentTexture.texture().getHeight());
+		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) + currentCrosshairWidth, (DisplayHelper.windowHeight / 2.0f) - currentCrosshairHeight);
+
+		GL11.glTexCoord2f(0, currentTexture.texture().getHeight());
+		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) - currentCrosshairWidth, (DisplayHelper.windowHeight / 2.0f) - currentCrosshairHeight);
+		GL11.glEnd();
+		
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 	}
 
 	@Override

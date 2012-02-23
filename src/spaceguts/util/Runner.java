@@ -30,7 +30,7 @@ import spaceout.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.75.8";
+	public static final String VERSION = "0.0.75.9";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
@@ -114,6 +114,8 @@ public class Runner {
 		ResourceLoader.addJob(Textures.MENU_BUTTON_PRESSED);
 		ResourceLoader.addJob(Textures.MENU_SPACEOUT_TEXT);
 		ResourceLoader.addJob(Textures.CROSSHAIR);
+		ResourceLoader.addJob(Textures.BUILDER_GRABBED);
+		ResourceLoader.addJob(Textures.BUILDER_OPEN);
 		ResourceLoader.processJobs();
 		
 		Debug.printSysInfo();
