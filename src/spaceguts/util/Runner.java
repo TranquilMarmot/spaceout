@@ -144,11 +144,11 @@ public class Runner {
 			Physics.update();
 		
 		// update passive entities
-		for (Entity ent : Entities.passiveEntities.values())
+		for (Entity ent : Entities.passiveEntities)
 			ent.update();
 
 		// update lights
-		for (Light l : Entities.lights.values())
+		for (Light l : Entities.lights)
 			l.update();
 
 		// update camera

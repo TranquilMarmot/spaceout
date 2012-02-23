@@ -80,9 +80,9 @@ public class Camera extends Entity {
 	
 	// FIXME should the crosshair be its own class?
 	public int crosshairWidth = 8, crosshairHeight = 8;
-	public int handWidth = 13, handHeight = 13;
-	public int currentCrosshairWidth = crosshairWidth, currentCrosshairHeight = crosshairHeight;
-	private Textures currentTexture = Textures.CROSSHAIR;
+	public int handWidth = 15, handHeight = 17;
+	private int currentCrosshairWidth = crosshairWidth, currentCrosshairHeight = crosshairHeight;
+	private Textures currentCrosshair = Textures.CROSSHAIR;
 	public Vector3f defaultCrosshairColor = new Vector3f(1.0f, 1.0f, 1.0f);
 
 	/**
@@ -386,41 +386,44 @@ public class Camera extends Entity {
 	public void drawCrosshair(){
 		GL11.glColor3f(defaultCrosshairColor.x, defaultCrosshairColor.y, defaultCrosshairColor.z);
 		
-		// change crosshair color TODO the crosshair should have different images instead of just different colors
+		// if we're not in build mode, use the crosshair
 		if(!buildMode){
 			currentCrosshairWidth = crosshairWidth;
 			currentCrosshairHeight = crosshairHeight;
-			currentTexture = Textures.CROSSHAIR;
+			currentCrosshair = Textures.CROSSHAIR;
 		}else{
-			if(Entities.camera.builder.leftGrabbed || Entities.camera.builder.rightGrabbed){
+			// else if in build mode and grabbed, use grabbed image
+			if(builder.leftGrabbed || builder.rightGrabbed){
 				currentCrosshairWidth = handWidth;
 				currentCrosshairHeight = handHeight;
-				currentTexture = Textures.BUILDER_GRABBED;
-			}else if(Entities.camera.builder.lookingAt != null){
+				currentCrosshair = Textures.BUILDER_GRABBED;
+			// else if not grabbed and we're looking at something, use the open image
+			}else if(builder.lookingAt != null){
 				currentCrosshairWidth = handWidth;
 				currentCrosshairHeight = handHeight;
-				currentTexture = Textures.BUILDER_OPEN;
+				currentCrosshair = Textures.BUILDER_OPEN;
+			// else just the crosshair
 			}else{
 				currentCrosshairWidth = crosshairWidth;
 				currentCrosshairHeight = crosshairHeight;
-				currentTexture = Textures.CROSSHAIR;
+				currentCrosshair = Textures.CROSSHAIR;
 			}
 		}
 		
-		currentTexture.texture().bind();
+		currentCrosshair.texture().bind();
 		
 		// draw the crosshair
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glTexCoord2f(0, 0);
 		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) - currentCrosshairWidth, (DisplayHelper.windowHeight / 2.0f) + currentCrosshairHeight);
 
-		GL11.glTexCoord2f(currentTexture.texture().getWidth(), 0);
+		GL11.glTexCoord2f(currentCrosshair.texture().getWidth(), 0);
 		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) + currentCrosshairWidth, (DisplayHelper.windowHeight / 2.0f) + currentCrosshairHeight);
 
-		GL11.glTexCoord2f(currentTexture.texture().getWidth(), currentTexture.texture().getHeight());
+		GL11.glTexCoord2f(currentCrosshair.texture().getWidth(), currentCrosshair.texture().getHeight());
 		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) + currentCrosshairWidth, (DisplayHelper.windowHeight / 2.0f) - currentCrosshairHeight);
 
-		GL11.glTexCoord2f(0, currentTexture.texture().getHeight());
+		GL11.glTexCoord2f(0, currentCrosshair.texture().getHeight());
 		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) - currentCrosshairWidth, (DisplayHelper.windowHeight / 2.0f) - currentCrosshairHeight);
 		GL11.glEnd();
 		

@@ -44,11 +44,14 @@ public class Debug {
 	
 	/** make it so backspace can be held down for the console */
 	private static int backspaceRepeatCounter = 0;
-	private static int backspaceRepeatWait = 30;
+	public static int backspaceRepeatWait = 30;
 	
 	/** String formatters */
 	private static Formatter cameraInfoFormatter, locationFormatter;
 
+	/**
+	 * Updates the console and the FPS
+	 */
 	public static void update() {
 		// update keys
 		checkKeys();
@@ -58,6 +61,9 @@ public class Debug {
 		updateFPS();
 	}
 	
+	/**
+	 * Checks to see if any keys have been pressed and acts accordingly
+	 */
 	private static void checkKeys(){
 		// debug key
 		if(KeyBindings.SYS_DEBUG.pressedOnce())
@@ -118,7 +124,10 @@ public class Debug {
 			backspaceRepeatCounter = 0;
 		}
 	}
-
+ 
+	/**
+	 * Draws debug info, the console, the crosshair and the 'PAUSED' text
+	 */
 	public static void draw() {
 		if (displayDebug) {
 			drawDebugInfo();
@@ -141,7 +150,7 @@ public class Debug {
 	public static void drawDebugInfo() {
 		// only draw if there's info to draw
 		if (Entities.entitiesExist()) {
-			// change blending and draw the rectangle
+			// change blending and draw the rectangle in the top-left
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
 			GL11.glColor3f(0.07f, 0.07f, 0.07f);
 			GL11.glBegin(GL11.GL_QUADS);

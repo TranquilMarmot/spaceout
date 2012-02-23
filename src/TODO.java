@@ -7,16 +7,17 @@
  * 			TODO After the first time, the fullscreen key has to be pressed twice to have an effect
  * 			TODO Destroy the Java AWT window when going into fullscreen, then create it again on leaving fullscreen
  * JBullet
+ * 			TODO Update all non-dynamic entities by the amount of time passed in the physics sim (see DynamicEntityCallback.java)
  * 			TODO Fix physics debug drawing (might require fiddling with shaders)
  * 			TODO Add a thing to the Physics Debug that also draws an arrow representing the current speed (first point is entity origin, second is origin+linear velocity)
  * 			TODO Give things thrusters
  * 			TODO Figure out how to warp things
  * 			TODO Figure out how to get a ship to reorient itself to start going in a new direction when the direction it's facing is changed
  * 			TODO Third person ship controls like Halo- you look where you want to go and the ship turns towards it	
- * 			TODO Explosions! Use a sphere to see what objects are inside of the explosion and apply impulSe accordingly
+ * 			TODO Explosions! Use a sphere to see what objects are inside of the explosion and apply impulse accordingly
  * 			TODO Turrets (pivoting on joints)
- * 			TODO Maybe things shouldn't just float away forever (reduce linear velocity verrrrry slowly)
- * 			TODO Machine gun that just sends out ray tests for bullets
+ * 			TODO Maybe things shouldn't just float/spin forever (reduce velocities verrrrry slowly)
+ * 			TODO Machine gun that just sends out ray tests for bullets (end point for the ray tests should be randomly varied by small amounts based on how long the gun is being shot)
  * OpenAL
  * 			TODO Decide on a format for sound files (wav? ogg?)
  * 			TODO Figure out how to make noises
@@ -62,7 +63,7 @@
  * 			TODO Make ctrl+v work with the console
  * 			TODO Add tabs to the console (one for chat, one for commands, one for combat, etc.)
  * 			TODO System console! One that comes down from the top of the screen
- * 			TODO Use System.setOut(PrintStream out) to set System.out.println to print to the system console (might also be good to do System.setErr(PrintStream out) to do the same)
+ * 			TODO Use System.setOut(PrintStream out) to set System.out.println to print to the system console (might also be good to do System.setErr(PrintStream out) to print errors to the in-game console)
  * 		XML
  * 			TODO Figure out how to write to XML files
  * 			TODO Store all options in XML files

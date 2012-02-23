@@ -21,6 +21,7 @@ import com.bulletphysics.linearmath.Transform;
 public class DynamicEntityCallback extends InternalTickCallback {
 	@Override
 	public void internalTick(DynamicsWorld world, float timeStep) {
+		//TODO Make Entities.update(float timeStep) that goes through and updates all non-dynamic entities with the same amount of time
 		Iterator<CollisionObject> it = world.getCollisionObjectArray()
 				.iterator();
 		while (it.hasNext()) {
@@ -28,6 +29,8 @@ public class DynamicEntityCallback extends InternalTickCallback {
 			try {
 				c = it.next();
 			} catch (NoSuchElementException e) {
+				//FIXME dunno about this
+				System.out.println("No such element caught in DynamicEntityCallback (is this a bug?)");
 				it = world.getCollisionObjectArray().iterator();
 			}
 

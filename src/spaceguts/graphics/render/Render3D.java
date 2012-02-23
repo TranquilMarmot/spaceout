@@ -147,7 +147,7 @@ public class Render3D {
 		// FIXME only one light supported right now!
 		if(Entities.lights.size() > 1)
 			System.out.println("More than one light! Multiple lighting not yet implemented.");
-		Light l = Entities.lights.values().iterator().next();
+		Light l = Entities.lights.iterator().next();
 		float transX = Entities.camera.location.x - l.location.x;
 		float transY = Entities.camera.location.y - l.location.y;
 		float transZ = Entities.camera.location.z - l.location.z;
@@ -189,7 +189,7 @@ public class Render3D {
 	 */
 	private static void drawLights(){
 		program.setUniform("Light.LightEnabled", false);
-		Iterator<Light> lightIterator = Entities.lights.values().iterator();
+		Iterator<Light> lightIterator = Entities.lights.iterator();
 		while(lightIterator.hasNext()){
 			Light light = lightIterator.next();
 			
@@ -211,7 +211,7 @@ public class Render3D {
 	 * Draws any passive entities
 	 */
 	private static void drawPassiveEntities(){
-		Iterator<Entity> entityIterator = Entities.passiveEntities.values().iterator();
+		Iterator<Entity> entityIterator = Entities.passiveEntities.iterator();
 		while(entityIterator.hasNext()){
 			// FIXME might be a better spot to put this
 			useDefaultMaterial();
@@ -237,7 +237,7 @@ public class Render3D {
 	 * Draws any dynamic entities
 	 */
 	private static void drawDynamicEntities(){
-		Iterator<DynamicEntity> entityIterator = Entities.dynamicEntities.values().iterator();
+		Iterator<DynamicEntity> entityIterator = Entities.dynamicEntities.iterator();
 		while(entityIterator.hasNext()){
 			DynamicEntity ent = entityIterator.next();
 			
