@@ -1,23 +1,21 @@
 package spaceguts.util;
 
+import java.util.Random;
+
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
-import spaceguts.entities.Entities;
-import spaceguts.entities.Entity;
-import spaceguts.entities.Light;
-import spaceguts.graphics.Graphics;
 import spaceguts.graphics.gui.GUI;
 import spaceguts.graphics.gui.menu.MainMenu;
+import spaceguts.graphics.render.Graphics;
+import spaceguts.input.KeyBindings;
+import spaceguts.input.KeyboardManager;
+import spaceguts.input.MouseManager;
 import spaceguts.physics.Physics;
 import spaceguts.util.console.Console;
-import spaceguts.util.debug.Debug;
-import spaceguts.util.input.KeyBindings;
-import spaceguts.util.input.KeyboardManager;
-import spaceguts.util.input.MouseManager;
-import spaceguts.util.resources.Models;
-import spaceguts.util.resources.ResourceLoader;
-import spaceguts.util.resources.Textures;
+import spaceout.resources.Models;
+import spaceout.resources.ResourceLoader;
+import spaceout.resources.Textures;
 
 // Rule number 1: Tell everyone about Spaceout (ask them for ideas! We need ideas!).
 // Rule number 2: Comment everything motherfucker.
@@ -29,12 +27,10 @@ import spaceguts.util.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.73";
+	public static final String VERSION = "0.0.75.10";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
-	/** keeps the pause button from repeatedly pausing and unpausing */
-	private boolean pauseDown = false;
 
 	/** if this is true, it means it's time to shut down ASAP */
 	public static boolean done = false;
@@ -62,8 +58,6 @@ public class Runner {
 				// update everything
 				update();
 				// render the scene
-				//Graphics.render();
-				//GLSLRender.render();
 				Graphics.render();
 				// update the display (this swaps the buffers)
 				Display.update();
@@ -83,22 +77,21 @@ public class Runner {
 	private void init() {
 		DisplayHelper.createWindow();
 		
-		Debug.init();
-		//Graphics.initGL();		
+		Debug.init();		
 		
 		MainMenu mainMenu = new MainMenu();
 		GUI.addGUIObject(mainMenu);
 		
-		//GLSLRender.initGL();
 		Graphics.initGL();
 		
 		//initialize resources
+		// TODO loading screen!
 		ResourceLoader.addJob(Textures.MENU_BACKGROUND1);
 		ResourceLoader.addJob(Textures.MENU_BACKGROUND2);
-		ResourceLoader.addJob(Textures.STARS);
+		ResourceLoader.addJob(Textures.SKYBOX);
 		ResourceLoader.addJob(Textures.WHITE);
-		ResourceLoader.addJob(Textures.CHECKERS);
-		ResourceLoader.addJob(Textures.SHIP1);
+		//ResourceLoader.addJob(Textures.CHECKERS);
+		ResourceLoader.addJob(Textures.WING_X);
 		ResourceLoader.addJob(Textures.VENUS);
 		ResourceLoader.addJob(Textures.MARS);
 		ResourceLoader.addJob(Textures.MERCURY);
@@ -106,6 +99,8 @@ public class Runner {
 		ResourceLoader.addJob(Textures.LASERBULLET);
 		ResourceLoader.addJob(Models.LASERBULLET);
 		ResourceLoader.addJob(Models.WESCOTT);
+		ResourceLoader.addJob(Models.SAUCER);
+		ResourceLoader.addJob(Models.SKYBOX);
 		ResourceLoader.addJob(Textures.MENU_PICKER_ACTIVE);
 		ResourceLoader.addJob(Textures.MENU_PICKER_MOUSEOVER);
 		ResourceLoader.addJob(Textures.MENU_PICKER_SELECTED);
@@ -115,6 +110,9 @@ public class Runner {
 		ResourceLoader.addJob(Textures.MENU_BUTTON_MOUSEOVER);
 		ResourceLoader.addJob(Textures.MENU_BUTTON_PRESSED);
 		ResourceLoader.addJob(Textures.MENU_SPACEOUT_TEXT);
+		ResourceLoader.addJob(Textures.CROSSHAIR);
+		ResourceLoader.addJob(Textures.BUILDER_GRABBED);
+		ResourceLoader.addJob(Textures.BUILDER_OPEN);
 		ResourceLoader.processJobs();
 		
 		Debug.printSysInfo();
@@ -139,24 +137,8 @@ public class Runner {
 		GUI.update();
 		
 		// update the physics engine
-		if (!Runner.paused && Physics.dynamicsWorld != null)
+		if (!paused && Physics.dynamicsWorld != null)
 			Physics.update();
-		
-		// update passive entities
-		for (Entity ent : Entities.passiveEntities.values())
-			ent.update();
-
-		// update lights
-		for (Light l : Entities.lights.values())
-			l.update();
-
-		// update camera
-		if (Entities.camera != null)
-			Entities.camera.update();
-
-		// update skybox
-		if (Entities.skybox != null)
-			Entities.skybox.update();
 		
 		// check for any resources that need to be loaded
 		if(ResourceLoader.jobsExist())
@@ -170,13 +152,8 @@ public class Runner {
 		// if pauseDown is true, it means that the pause button is being
 		// held,
 		// so it avoids repeatedly flipping paused when the key is held
-		if (KeyBindings.SYS_PAUSE.isPressed() && !pauseDown) {
+		if (KeyBindings.SYS_PAUSE.pressedOnce()) {
 			paused = !paused;
-			pauseDown = true;
-		}
-
-		if (!KeyBindings.SYS_PAUSE.isPressed()) {
-			pauseDown = false;
 		}
 
 		// release the mouse if the game's paused or the console is on or the
@@ -193,5 +170,20 @@ public class Runner {
 	private void shutdown() {
 		Display.destroy();
 		DisplayHelper.frame.dispose();
+		System.out.println(goodbye());
+	}
+	
+	/**
+	 * This is a secret method that does secret things
+	 * @return None of your business
+	 */
+	private String goodbye(){
+		String[] shutdown = { "Goodbye, world...", "Goodbye, cruel world...", "See ya...", "Later...", "Buh-bye...", "Thank you, come again!...",
+				"Until Next Time...", "¡Adios, Amigo!...", "Game Over, Man! Game Over!!!...", "And So, I Bid You Adieu...", "So Long, And Thanks For All The Fish...",
+				"Ciao...", "Y'all Come Back Now, Ya Hear?...", "Catch You Later!...", "Mahalo And Aloha...", "Sayonara...", "Thanks For Playing!...",
+				"Auf Wiedersehen...", "Yo Homes, Smell Ya Later!... (Looked Up At My Kingdom, I Was Finally There, To Sit On My Throne As The Prince Of Bel-air)"};
+		// FIRST FRESH PRINCE REFERENCE FOR THIS GAME, TAKE NOTE THIS IS HISTORIC
+		
+		return shutdown[new Random().nextInt(shutdown.length)];
 	}
 }

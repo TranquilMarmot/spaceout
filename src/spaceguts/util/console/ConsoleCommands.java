@@ -211,15 +211,15 @@ class ListCommand implements Command{
 		
 		if(which.equals("dynamic")){
 			Console.console.print("Listing dynamic entities...");
-			for (DynamicEntity ent : Entities.dynamicEntities.values())
+			for (DynamicEntity ent : Entities.dynamicEntities)
 				Console.console.print(ent.type);
 		} else if(which.equals("static")){
 			Console.console.print("Listing static entities...");
-			for(Entity ent : Entities.passiveEntities.values())
+			for(Entity ent : Entities.passiveEntities)
 				Console.console.print(ent.type);
 		} else if(which.equals("lights") || which.equals("light")){
 			Console.console.print("Listing lights...");
-			for(Light l : Entities.lights.values())
+			for(Light l : Entities.lights)
 				Console.console.print(l.type + "; using light at " + l.location.x + " " + l.location.y + " " + l.location.z);
 		} else{
 			Console.console.print("List command not recognized! (" + which + ")");
@@ -326,7 +326,7 @@ class CameraCommand implements Command{
 				Entities.camera.following = Entities.player;
 				changed = true;
 			} else {
-				for (DynamicEntity ent : Entities.dynamicEntities.values()) {
+				for (DynamicEntity ent : Entities.dynamicEntities) {
 					if (ent.type.toLowerCase().equals(toFollow.toLowerCase())) {
 						Console.console.print("Camera now following " + toFollow);
 						Entities.camera.following = ent;
@@ -336,7 +336,7 @@ class CameraCommand implements Command{
 				}
 				
 				if(!changed){
-					for (Entity ent : Entities.passiveEntities.values()) {
+					for (Entity ent : Entities.passiveEntities) {
 						if (ent.type.toLowerCase().equals(toFollow.toLowerCase())) {
 							Console.console.print("Camera now following " + toFollow);
 							Entities.camera.following = ent;
@@ -393,7 +393,7 @@ class WarpCommand implements Command{
 	public void issue(StringTokenizer toker){
 		boolean hasWarped = false;
 		String warp = toker.nextToken();
-		for (Entity ent : Entities.dynamicEntities.values()){
+		for (Entity ent : Entities.dynamicEntities){
 			if (ent.type.toLowerCase().equals(warp.toLowerCase())) {
 				Console.console.print("Warping Player to " + ent.type + " ("
 						+ ent.location.x + "," + ent.location.y + ","

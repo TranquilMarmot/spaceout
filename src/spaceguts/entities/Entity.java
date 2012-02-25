@@ -31,7 +31,7 @@ public abstract class Entity {
 	/**
 	 * Updates this entity
 	 */
-	public abstract void update();
+	public abstract void update(float timeStep);
 
 	/**
 	 * Draws this entity
@@ -39,8 +39,7 @@ public abstract class Entity {
 	public abstract void draw();
 
 	/**
-	 * Have the entity provide any necessary clenup procedures, like gettting
-	 * rid of textures
+	 * Have the entity provide any necessary cleanup
 	 */
 	public abstract void cleanup();
 }

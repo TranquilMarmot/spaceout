@@ -2,7 +2,7 @@ package spaceout.ship;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import spaceguts.util.resources.Models;
+import spaceout.resources.Models;
 
 /*
  * TODO

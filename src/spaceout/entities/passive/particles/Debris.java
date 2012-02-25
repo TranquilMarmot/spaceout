@@ -1,18 +1,20 @@
 package spaceout.entities.passive.particles;
 
-import java.nio.FloatBuffer;
 import java.util.Random;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 import spaceguts.entities.Entities;
 import spaceguts.entities.Entity;
+import spaceguts.graphics.render.Render3D;
+import spaceguts.graphics.shapes.Circle2D;
 import spaceguts.util.Noise;
 import spaceguts.util.QuaternionHelper;
-import spaceguts.util.resources.Textures;
+import spaceout.resources.Textures;
 
 /**
  * Fancy-looking space debris effect using perlin noise.
@@ -22,7 +24,6 @@ import spaceguts.util.resources.Textures;
  * 
  */
 public class Debris extends Entity {
-	private FloatBuffer billboardBuffer;
 	/** array to hold all the stars */
 	public Particle[] particles;
 
@@ -37,13 +38,15 @@ public class Debris extends Entity {
 
 	/** how far to draw the stars */
 	public float distance;
+	
+	private static Circle2D circle = new Circle2D(0.85f, 1);
 
 	/**
 	 * The random floats between 1.0f and 0.0f are multiplied by this when added
 	 * to a random stars location. Making it a lot bigger makes the stars
 	 * generate farther apart
 	 */
-	private final float JUMP_AMOUNT = 150000.0f;
+	private final float JUMP_AMOUNT = 1500000.0f;
 
 	/**
 	 * Create some cool space debris so you know which way you're going
@@ -66,9 +69,6 @@ public class Debris extends Entity {
 		this.distance = distance;
 
 		rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-		// initialize the rotation buffer (this is used for billboarding the
-		// particles)
-		billboardBuffer = BufferUtils.createFloatBuffer(16);
 
 		// initialize random number generator
 		randy = new Random(seed);
@@ -106,7 +106,7 @@ public class Debris extends Entity {
 	 * particle has gone out of range, it is replaced with a new, randomly
 	 * generated one
 	 */
-	public void update() {
+	public void update(float timeStep) {
 		// update the location of the debris field
 		this.location.x = following.location.x;
 		this.location.y = following.location.y;
@@ -212,40 +212,37 @@ public class Debris extends Entity {
 	@Override
 	public void draw() {
 		// we don't want lighting for our particles
-		GL11.glDisable(GL11.GL_LIGHTING);
+		//Render3D.program.setUniform("Light.LightEnabled", false);
 
 		Quaternion revQuat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		Entities.camera.rotation.negate(revQuat);
 
-		// put the camera's rotation quaternion into the rotation buffer
-		QuaternionHelper.toFloatBuffer(revQuat, billboardBuffer);
-		// bind a white texture and color
+		// bind a white texture
 		Textures.WHITE.texture().bind();
-		GL11.glColor3f(0.9f, 0.9f, 0.9f);
+		GL30.glBindVertexArray(circle.getVaoHandle());
 
 		// loop through all the particles to draw them
 		for (Particle s : particles) {
-			// how to translate to the star
+			s.update();
+			// translate to the star
 			float transx = this.location.x - s.location.x;
 			float transy = this.location.y - s.location.y;
 			float transz = this.location.z - s.location.z;
-
-			GL11.glPushMatrix();
-			{
-				// translate to the star's location
-				GL11.glTranslatef(transx, transy, transz);
-
-				// apply the reverse rotation
-				GL11.glMultMatrix(billboardBuffer);
+			
+			Matrix4f oldModelview = new Matrix4f(Render3D.modelview);{
+				// translate and scale the modelview to match the star
+				Render3D.modelview.translate(new Vector3f(transx, transy, transz));
+				Matrix4f.mul(Render3D.modelview, QuaternionHelper.toMatrix(Entities.camera.rotation), Render3D.modelview);
+				Render3D.modelview.scale(new Vector3f(s.size, s.size, s.size));
+				Render3D.program.setUniform("ModelViewMatrix", Render3D.modelview);
 
 				// draw the star
-				s.draw();
-			}
-			GL11.glPopMatrix();
+				GL11.glDrawArrays(GL11.GL_TRIANGLE_FAN, 0, circle.getNumIndices());
+			}Render3D.modelview = oldModelview;
 		}
 
 		// don't forget to re-enable lighting!
-		GL11.glEnable(GL11.GL_LIGHTING);
+		//Render3D.program.setUniform("Light.LightEnabled", true);
 	}
 
 	/**
@@ -257,42 +254,36 @@ public class Debris extends Entity {
 		float size;
 		/** the location of the particle */
 		Vector3f location;
-		/** the call list for the particle to use when being drawn */
-		int callList;
 
 		public Particle(float x, float y, float z, float size) {
 			location = new Vector3f(x, y, z);
 			this.size = size;
-			initList();
 		}
-
-		/**
-		 * Initialize's the particles call list
-		 */
-		private void initList() {
-			callList = GL11.glGenLists(1);
-
-			// how smooth the circle is around the edges (smaller values =
-			// smoother)
-			float step = 0.85f;
-
-			GL11.glNewList(callList, GL11.GL_COMPILE);
-			{
-				GL11.glBegin(GL11.GL_TRIANGLE_FAN);
-				{
-					// tricky bit of code to make a perfect circle
-					GL11.glVertex2f(0, 0);
-					for (float angle = 0.0f; angle <= 360.0f; angle += step)
-						GL11.glVertex3f((float) Math.sin(angle) * size,
-								(float) Math.cos(angle) * size, 0.0f);
-				}
-				GL11.glEnd();
+		
+		public void update(){
+			/*
+			float scale = 10.0f;
+			if(randy.nextBoolean()){
+				if(randy.nextBoolean())
+					this.location.x += randy.nextFloat() * scale;
+				else
+					this.location.x -= randy.nextFloat() * scale;
 			}
-			GL11.glEndList();
-		}
-
-		public void draw() {
-			GL11.glCallList(callList);
+			
+			if(randy.nextBoolean()){
+				if(randy.nextBoolean())
+					this.location.y += randy.nextFloat() * scale;
+				else
+					this.location.y -= randy.nextFloat() * scale;
+			}
+			
+			if(randy.nextBoolean()){
+				if(randy.nextBoolean())
+					this.location.z += randy.nextFloat() * scale;
+				else
+					this.location.z -= randy.nextFloat() * scale;
+			}
+			*/
 		}
 	}
 

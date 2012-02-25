@@ -5,11 +5,13 @@ import javax.vecmath.Quat4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import spaceguts.graphics.model.Model;
 import spaceguts.physics.CollisionTypes;
 import spaceguts.physics.Physics;
-import spaceguts.util.model.Model;
-import spaceguts.util.resources.Models;
+import spaceguts.util.QuaternionHelper;
+import spaceout.resources.Models;
 
+import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback;
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
@@ -166,27 +168,6 @@ public class DynamicEntity extends Entity {
 			Physics.dynamicsWorld.addRigidBody(rigidBody);
 	}
 
-	/**
-	 * This update method is called at the end of every physics tick with the
-	 * amount of time passed since the previous tick
-	 * 
-	 * @param timeStep
-	 *            Amount of time passed since last tick (automatically passed by
-	 *            bullet)
-	 */
-	public void update(float timeStep) {
-	}
-
-	@Override
-	/**
-	 * This method never gets used for a dynamic entity, don't use it!!!
-	 */
-	public void update() {
-		System.out
-				.println("Don't use update() on dynamic entities! update(float timeStep) is called at the end of every physics tick, use that instead! ("
-						+ type + ")");
-	}
-
 	@Override
 	/**
 	 * Simple as possible drawing call. This assumes that it's called when the entity's location and rotation have already been applied to the modelview matrix.
@@ -207,7 +188,23 @@ public class DynamicEntity extends Entity {
 		CollisionShape shape = model.getCollisionShape();
 
 		Physics.dynamicsWorld.debugDrawObject(worldTransform, shape,
-				new javax.vecmath.Vector3f(0.0f, 0.0f, 1.0f));
+				new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
+	}
+	
+	public ClosestRayResultCallback rayTest(Vector3f direction){
+		// rotate the direction we want to test so that it's realtive to the entity's rotation
+		Vector3f endRotated = QuaternionHelper.rotateVectorByQuaternion(direction, rotation);
+		Vector3f endAdd = new Vector3f();
+		// add the rotated direction to the current location to get the end vector
+		Vector3f.add(location, endRotated, endAdd);
+		
+		javax.vecmath.Vector3f start = new javax.vecmath.Vector3f(location.x, location.y, location.z);
+		javax.vecmath.Vector3f end = new javax.vecmath.Vector3f(endAdd.x, endAdd.y, endAdd.z);
+		
+		ClosestRayResultCallback callback = new ClosestRayResultCallback(start, end);
+		Physics.dynamicsWorld.rayTest(start, end, callback);
+		
+		return callback;
 	}
 
 	@Override
@@ -217,4 +214,12 @@ public class DynamicEntity extends Entity {
 	public void cleanup() {
 		removeFlag = true;
 	}
+
+	@Override
+	/**
+	 * Update the dynamic entity
+	 * NOTE: If you're making your own class that extends DynamicEntity,
+	 * you need to override this method!
+	 */
+	public void update(float timeStep){};
 }

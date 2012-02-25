@@ -4,7 +4,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 
 import spaceguts.entities.Entity;
-import spaceguts.util.resources.Models;
+import spaceout.resources.Models;
 
 /**
  * Skybox to make it seem like there's stars everywhere. Follows an Entity
@@ -36,7 +36,7 @@ public class Skybox extends Entity {
 	}
 
 	@Override
-	public void update() {
+	public void update(float timeStep) {
 		// keep the skybox centered on what it's following
 		this.location.x = following.location.x;
 		this.location.y = following.location.y;
