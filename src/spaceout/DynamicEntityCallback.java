@@ -29,8 +29,7 @@ public class DynamicEntityCallback extends InternalTickCallback {
 			try {
 				c = it.next();
 			} catch (NoSuchElementException e) {
-				//FIXME dunno about this
-				System.out.println("No such element caught in DynamicEntityCallback (is this a bug?)");
+				//FIXME dunno about this, will it cause entities to be update twice?
 				it = world.getCollisionObjectArray().iterator();
 			}
 
@@ -55,7 +54,7 @@ public class DynamicEntityCallback extends InternalTickCallback {
 
 		if (ent.removeFlag) {
 			Physics.dynamicsWorld.removeCollisionObject(c);
-			Entities.dynamicEntities.remove(ent.hashCode());
+			Entities.dynamicEntities.remove(ent);
 		} else {
 			// get the rigid body's world transform
 			Transform trans = new Transform();

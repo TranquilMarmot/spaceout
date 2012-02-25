@@ -102,6 +102,9 @@ public class Builder {
 					trans.origin.add(new javax.vecmath.Vector3f(impulse.x, impulse.y, impulse.z));
 					
 					lookingAt.rigidBody.setWorldTransform(trans);
+					
+					// set the location so that it gets rendered properly (otherwise, the rendering location wouldn't be update until the end of the next physics world tick, which would be one frame too late)
+					lookingAt.location.set(trans.origin.x, trans.origin.y, trans.origin.z);
 				} else {
 					leftGrabbed = false;
 				}
@@ -130,6 +133,8 @@ public class Builder {
 							trans.setRotation(new Quat4f(newRot.x, newRot.y, newRot.z, newRot.w));
 							
 							lookingAt.rigidBody.setWorldTransform(trans);
+							
+							lookingAt.rotation.set(newRot.x, newRot.y, newRot.z, newRot.w);
 					} else {
 						rightGrabbed = false;
 					}
