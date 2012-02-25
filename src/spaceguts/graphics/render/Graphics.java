@@ -20,7 +20,7 @@ public class Graphics {
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		
 		// only render 3D stuff if 3D stuff exists
-		if (Entities.entitiesExist() && Entities.camera != null)
+		if (Entities.camera != null && Entities.entitiesExist())
 			Render3D.render3DScene();
 		
 		// draw the 2D scene

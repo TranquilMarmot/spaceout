@@ -47,6 +47,6 @@ public class Sun extends Light {
 	}
 
 	@Override
-	public void update() {
+	public void update(float timeStep) {
 	}
 }

@@ -7,16 +7,19 @@
  * 			TODO After the first time, the fullscreen key has to be pressed twice to have an effect
  * 			TODO Destroy the Java AWT window when going into fullscreen, then create it again on leaving fullscreen
  * JBullet
+ * 			TODO Fix physics debug drawing (might require fiddling with shaders)
+ * 			TODO Give the sun an immovable physics object
  * 			TODO Add a thing to the Physics Debug that also draws an arrow representing the current speed (first point is entity origin, second is origin+linear velocity)
  * 			TODO Give things thrusters
  * 			TODO Figure out how to warp things
  * 			TODO Figure out how to get a ship to reorient itself to start going in a new direction when the direction it's facing is changed
- * 			TODO Revamp controls! First person cockpit view- ship turns a different speed based on how far from the center the cursor would be
  * 			TODO Third person ship controls like Halo- you look where you want to go and the ship turns towards it	
- * 			TODO Explosions!
- * 			TODO Turrets
+ * 			TODO Explosions! Use a sphere to see what objects are inside of the explosion and apply impulse accordingly
+ * 			TODO Turrets (pivoting on joints)
+ * 			TODO Maybe things shouldn't just float/spin forever (reduce velocities verrrrry slowly)
+ * 			TODO Machine gun that just sends out ray tests for bullets (end point for the ray tests should be randomly varied by small amounts based on how long the gun is being shot)
  * OpenAL
- * 			TODO Decide on a format for sound files (ogg?)
+ * 			TODO Decide on a format for sound files (wav? ogg?)
  * 			TODO Figure out how to make noises
  * 			TODO Figure out how to make noises at a specific spot (doppler effect?)
  * 			TODO Create a nice interface for making noises when things happen
@@ -49,6 +52,7 @@
  * System
  * 		General
  * 			TODO Debug class shouldn't really be all static- variables are being hammered every update (in the init() method)
+ * 			TODO Make methods in the QuaternionHelper to take javax.vecmath.Vector3f and javax.vecmath.Quat4f objects (but still do the same math on them)
  * 			TODO Make a loading screen!
  * 			TODO Look into having ships stored as a zip file containing an obj, a png, and an xml file (is it too slow? easier if its uncompressed?)
  * 			TODO Add a "/save" command that saves the game and return to the main menu
@@ -59,7 +63,7 @@
  * 			TODO Make ctrl+v work with the console
  * 			TODO Add tabs to the console (one for chat, one for commands, one for combat, etc.)
  * 			TODO System console! One that comes down from the top of the screen
- * 			TODO Use System.setOut(PrintStream out) to set System.out.println to print to the system console (might also be good to do System.setErr(PrintStream out) to do the same)
+ * 			TODO Use System.setOut(PrintStream out) to set System.out.println to print to the system console (might also be good to do System.setErr(PrintStream out) to print errors to the in-game console)
  * 		XML
  * 			TODO Figure out how to write to XML files
  * 			TODO Store all options in XML files
@@ -67,15 +71,20 @@
  * 		Builder
  * 			TODO Make a CameraMode class that keeps track of things like max zoom, min zoom, offsets, etc (then it will just be set whenever the mode is switched! Make a CameraModes enum)
  * 			TODO Give the camera an object in the physics world so it bumps into things (figure out how to get it to collide, but not effect other things when it hits them) - might require a lot of fiddling with things!
- * 			TODO Make grabbed entititys gravitate to the cursor
+ * 			TODO Make the crosshair behave differently when it's grabbing things (i.e. make it an open hand and when you grab something it changes)
+ * 			TODO Make the item at the crosshair glow with an outline, like in Left 4 Dead (this will require writing a new shader)
+ * 			TODO Make grabbed entitities gravitate to the cursor
  * 			TODO Make a menu for placing new entities (SPACEBAR while in free mode)
- *			TODO Add a way to toggle rigidbody activation states
- *			TODO Right click to rotate, left click to move (mouse wheel while grabbed moves along Z)
  *			TODO Make a model importer that takes in an obj file and lets you edit the mtl file and see how it would look in-game (look into blender plugins)
  * Gameplay
  * 			TODO More weapons
  * 			TODO Story
  * 			TODO Multiplayer
+ * 		Control
+ * 			TODO Xbox 360 controller support
+ * 			TODO Make the mouse be represented by something that moves around the screen, and then turn the ship a different speed based on how far the mouse is from the middle of the screen.
+ * 				 Would work for controllers, too! When the right thumbstick is moved, the thing on screen moves with it and when the stick is released it goes back to the middle.
+ * 				 This could also be used for precision aiming, if un-projecting the mouse coordinates doesn't prove to be too hard
  * 		AI
  * 			TODO Make some basic AI routines- seek, etc.
  * 			TODO Make our own scripting language? Find an already created one? Possibilities are endless.
