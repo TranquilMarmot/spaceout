@@ -22,6 +22,7 @@ public enum KeyBindings {
 	CONTROL_STOP(new Button[]{Keys.F}),
 	
 	SYS_CAMERA_MODE(new Button[]{Keys.C}),
+	SYS_BUILD_MODE(new Button[]{Keys.B}),
 	SYS_CONSOLE(new Button[]{Keys.GRAVE}),
 	SYS_COMMAND(new Button[]{Keys.SLASH}),
 	SYS_CHAT(new Button[]{Keys.T}),

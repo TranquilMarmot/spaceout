@@ -13,6 +13,7 @@ import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
 import spaceguts.entities.Entities;
+import spaceguts.graphics.gui.GUI;
 import spaceguts.input.KeyBindings;
 import spaceguts.util.console.Console;
 import spaceout.resources.Paths;
@@ -39,9 +40,6 @@ public class Debug {
 	/** whether or not debug info is being displayed */
 	public static boolean displayDebug = true;
 
-	/** call list to draw a rectangle behind the debug info */
-	private static int rectangleCallList = 0;
-
 	/** font for printing stuff to the screen */
 	public static UnicodeFont font = null;
 	
@@ -51,6 +49,9 @@ public class Debug {
 	
 	public static int crosshairWidth = 8, crosshairHeight = 8;
 	public static Vector3f crosshairColor = new Vector3f(1.0f, 1.0f, 1.0f);
+	
+	/** String formatter */
+	private static Formatter cameraInfoFormatter, locationFormatter;
 
 	public static void update() {
 		// update keys
@@ -67,7 +68,7 @@ public class Debug {
 			displayDebug = !displayDebug;
 		
 		// console key
-		if(KeyBindings.SYS_CONSOLE.pressedOnce()){
+		if(KeyBindings.SYS_CONSOLE.pressedOnce() && !GUI.menuUp){
 			Console.consoleOn = !Console.consoleOn;
 			Console.console.autoClose = false;
 		}
@@ -123,10 +124,11 @@ public class Debug {
 	}
 
 	public static void draw() {
-		Console.console.draw();
 		if (displayDebug) {
 			drawDebugInfo();
 		}
+		
+		Console.console.draw();
 		
 		drawCrosshair();
 		
@@ -164,28 +166,36 @@ public class Debug {
 		if (Entities.entitiesExist()) {
 			// change blending and draw the rectangle
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
-			GL11.glCallList(rectangleCallList);
+			GL11.glColor3f(0.07f, 0.07f, 0.07f);
+			GL11.glBegin(GL11.GL_QUADS);
+			{
+				GL11.glVertex2f(0.0f, 0.0f);
+				GL11.glVertex2f(192.0f, 0.0f);
+				GL11.glVertex2f(192.0f, 155.0f);
+				GL11.glVertex2f(0.0f, 155.0f);
+			}
+			GL11.glEnd();
 
 			// change blending for font drawing
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 			// formats the coordinates
 			if (Entities.camera != null) {
-				Formatter coords = new Formatter();
+				locationFormatter = new Formatter();
 				if (!Entities.camera.freeMode) {
-					coords.format("x: %,09.3f%n" + "y: %,09.3f%n"
+					locationFormatter.format("x: %,09.3f%n" + "y: %,09.3f%n"
 							+ "z: %,09.3f%n", Entities.player.location.x,
 							Entities.player.location.y,
 							Entities.player.location.z);
 				} else {
-					coords.format("x: %,09.3f%n" + "y: %,09.3f%n"
+					locationFormatter.format("x: %,09.3f%n" + "y: %,09.3f%n"
 							+ "z: %,09.3f%n", Entities.camera.location.x,
 							Entities.camera.location.y,
 							Entities.camera.location.z);
 				}
 
 				// draw coordinates
-				font.drawString(3, 3, coords.toString(), Color.cyan);
+				font.drawString(3, 3, locationFormatter.toString(), Color.cyan);
 
 				Vector3f angles;
 				if (!Entities.camera.freeMode)
@@ -198,25 +208,31 @@ public class Debug {
 				font.drawString(3, 59, "roll: " + angles.x + "\npitch: "
 						+ angles.y + "\nyaw: " + angles.z, new Color(0, 123,
 						255));
+				
+				cameraInfoFormatter = new Formatter();
 
-				Formatter zoom = new Formatter();
-				zoom.format("zoom: %,04.2f", Entities.camera.zoom);
+				if(Entities.camera.buildMode)
+					cameraInfoFormatter.format("speed: %,04.2f", Entities.camera.speed);
+				else
+					cameraInfoFormatter.format("zoom: %,04.2f", Entities.camera.zoom);
 
 				// draw camera info
-				String cameraInfo = zoom.toString();
-				if (Entities.camera.vanityMode)
+				String cameraInfo = cameraInfoFormatter.toString();
+				if(Entities.camera.buildMode)
+					cameraInfo += "\n(build)";
+				else if (Entities.camera.vanityMode)
 					cameraInfo += "\n(vanity)";
 				else if (Entities.camera.freeMode)
 					cameraInfo += "\n(free)";
 				font.drawString(3, 114, cameraInfo, Color.blue);
 				
 				String look;
-				if(Entities.camera.entityGrabbed)
+				if(Entities.camera.builder.entityGrabbed)
 					look = "Grabbed:      ";
 				else
 					look = "At crosshair: ";
-				if(Entities.camera.lookingAt != null){
-					look += Entities.camera.lookingAt.hashCode() + " | " + Entities.camera.lookingAt.type + " | Mass: " + Entities.camera.lookingAt.rigidBody.getInvMass();
+				if(Entities.camera.builder.lookingAt != null){
+					look += Entities.camera.builder.lookingAt.hashCode() + " | " + Entities.camera.builder.lookingAt.type + " | Mass: " + Entities.camera.builder.lookingAt.rigidBody.getInvMass();
 				}
 				font.drawString(100, 3, look, Color.green);
 
@@ -275,24 +291,6 @@ public class Debug {
 		if (lastFPS == null)
 			lastFPS = getTime();
 		updateFPS();
-
-		if (rectangleCallList == 0) {
-			rectangleCallList = GL11.glGenLists(1);
-
-			GL11.glNewList(rectangleCallList, GL11.GL_COMPILE);
-			{
-				GL11.glColor3f(0.07f, 0.07f, 0.07f);
-				GL11.glBegin(GL11.GL_QUADS);
-				{
-					GL11.glVertex2f(0.0f, 0.0f);
-					GL11.glVertex2f(192.0f, 0.0f);
-					GL11.glVertex2f(192.0f, 155.0f);
-					GL11.glVertex2f(0.0f, 155.0f);
-				}
-				GL11.glEnd();
-			}
-			GL11.glEndList();
-		}
 	}
 
 	public static long getTime() {
@@ -316,9 +314,20 @@ public class Debug {
 		return delta;
 	}
 
+	/**
+	 * This prints all the info about the system to System.out
+	 */
 	public static void printSysInfo() {
 		// print out which version of Spaceout this is
 		System.out.println("Spaceout version " + Runner.VERSION);
+		
+		// print out JVM info
+		String vmName = System.getProperty("java.vm.name");
+		String vmVersion = System.getProperty("java.vm.version");
+		String vmVendor = System.getProperty("java.vm.vendor");
+		String jvm = vmName + " version " + vmVersion + " (" + vmVendor + ")";
+		
+		System.out.println(jvm);
 
 		// print out LWJGL version, followed by whether the system is 32 or 64
 		// bit
