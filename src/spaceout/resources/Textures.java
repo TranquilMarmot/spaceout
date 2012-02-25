@@ -7,7 +7,14 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
-
+/**
+ * This houses all of the possible textures for the game.
+ * To use a texture, just do
+ * <code>Textures.texture.texture.bind()</code>
+ *  and then do any rendering with the image needed. 
+ * @author TranquilMarmot
+ *
+ */
 public enum Textures {	
 	// Environment
 	SKYBOX("PNG", Paths.TEXTURE_PATH.path() + "skybox.png", true, GL11.GL_NEAREST),
@@ -28,7 +35,7 @@ public enum Textures {
 	SUN("JPG", Paths.TEXTURE_PATH.path() + "planets/sun.jpg", true, GL11.GL_LINEAR),
 	
 	// GUI
-	CROSSHAIR("PNG", Paths.CROSSHAIR_PATH.path(), false, GL11.GL_NEAREST),
+	CROSSHAIR("PNG", Paths.CROSSHAIR_PATH.path(), true, GL11.GL_NEAREST),
 	MENU_BACKGROUND1("JPG", Paths.BACKGROUND_IMAGE_PATH.path() + "apod1.jpg", false, GL11.GL_NEAREST),
 	MENU_BACKGROUND2("JPG", Paths.BACKGROUND_IMAGE_PATH.path() + "apod2.jpg", false, GL11.GL_NEAREST),
 	MENU_SPACEOUT_TEXT("PNG", Paths.MENU_IMAGE_PATH.path() + "spaceout.png", false, GL11.GL_NEAREST),
@@ -41,11 +48,21 @@ public enum Textures {
 	MENU_BUTTON_ACTIVE("PNG",Paths.MENUBUTTON_IMAGE_PATH.path()  + "active.png", false, GL11.GL_NEAREST),
 	MENU_BUTTON_MOUSEOVER("PNG",Paths.MENUBUTTON_IMAGE_PATH.path()  + "mouseover.png", false, GL11.GL_NEAREST),
 	MENU_BUTTON_PRESSED("PNG",Paths.MENUBUTTON_IMAGE_PATH.path()  + "pressed.png", false, GL11.GL_NEAREST),
-	MENU_BUTTON_INACTIVE("PNG",Paths.MENUBUTTON_IMAGE_PATH.path()  + "inactive.png", false, GL11.GL_NEAREST);
+	MENU_BUTTON_INACTIVE("PNG",Paths.MENUBUTTON_IMAGE_PATH.path()  + "inactive.png", false, GL11.GL_NEAREST),
 	
+	BUILDER_OPEN("PNG", Paths.BUILDER_IMAGE_PATH.path + "open.png", true, GL11.GL_NEAREST),
+	BUILDER_GRABBED("PNG", Paths.BUILDER_IMAGE_PATH.path + "grabbed.png", true, GL11.GL_NEAREST);
+	
+	/** the texture for the texture object */
 	private Texture texture;
+	
+	/** the format of the file and the actual file path */
 	private String format, file;
+	
+	/** whether or not the image is flipped */
 	private boolean flipped;
+	
+	/** the GL filter to use for the image */
 	private int filter;
 	private Textures(String format, String file,
 			boolean flipped, int filter){
@@ -55,12 +72,18 @@ public enum Textures {
 		this.filter = filter;
 	}
 	
+	/**
+	 * @return Texture object for this texture reference. If the texture isn't loaded yet, it will be (which can cause the game to stop for a second- try to load textures with initTexture before using them!)
+	 */
 	public Texture texture(){
 		if(!textureLoaded())
 			initTexture();
 		return texture; 
 	}
 	
+	/**
+	 * Initializes the texture object for this texture reference
+	 */
 	public void initTexture(){
 		if(!textureLoaded()){
 			try{
@@ -73,6 +96,9 @@ public enum Textures {
 		}
 	}
 	
+	/**
+	 * @return Whether or not the texture object for this texture object has been loaded
+	 */
 	public boolean textureLoaded(){
 		return texture != null;
 	}

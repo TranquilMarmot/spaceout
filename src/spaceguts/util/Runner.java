@@ -5,9 +5,6 @@ import java.util.Random;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
-import spaceguts.entities.Entities;
-import spaceguts.entities.Entity;
-import spaceguts.entities.Light;
 import spaceguts.graphics.gui.GUI;
 import spaceguts.graphics.gui.menu.MainMenu;
 import spaceguts.graphics.render.Graphics;
@@ -30,12 +27,10 @@ import spaceout.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.75.5";
+	public static final String VERSION = "0.0.75.10";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
-	/** keeps the pause button from repeatedly pausing and unpausing */
-	private boolean pauseDown = false;
 
 	/** if this is true, it means it's time to shut down ASAP */
 	public static boolean done = false;
@@ -116,6 +111,8 @@ public class Runner {
 		ResourceLoader.addJob(Textures.MENU_BUTTON_PRESSED);
 		ResourceLoader.addJob(Textures.MENU_SPACEOUT_TEXT);
 		ResourceLoader.addJob(Textures.CROSSHAIR);
+		ResourceLoader.addJob(Textures.BUILDER_GRABBED);
+		ResourceLoader.addJob(Textures.BUILDER_OPEN);
 		ResourceLoader.processJobs();
 		
 		Debug.printSysInfo();
@@ -140,24 +137,8 @@ public class Runner {
 		GUI.update();
 		
 		// update the physics engine
-		if (!Runner.paused && Physics.dynamicsWorld != null)
+		if (!paused && Physics.dynamicsWorld != null)
 			Physics.update();
-		
-		// update passive entities
-		for (Entity ent : Entities.passiveEntities.values())
-			ent.update();
-
-		// update lights
-		for (Light l : Entities.lights.values())
-			l.update();
-
-		// update camera
-		if (Entities.camera != null)
-			Entities.camera.update();
-
-		// update skybox
-		if (Entities.skybox != null)
-			Entities.skybox.update();
 		
 		// check for any resources that need to be loaded
 		if(ResourceLoader.jobsExist())
@@ -171,13 +152,8 @@ public class Runner {
 		// if pauseDown is true, it means that the pause button is being
 		// held,
 		// so it avoids repeatedly flipping paused when the key is held
-		if (KeyBindings.SYS_PAUSE.isPressed() && !pauseDown) {
+		if (KeyBindings.SYS_PAUSE.pressedOnce()) {
 			paused = !paused;
-			pauseDown = true;
-		}
-
-		if (!KeyBindings.SYS_PAUSE.isPressed()) {
-			pauseDown = false;
 		}
 
 		// release the mouse if the game's paused or the console is on or the
@@ -205,10 +181,9 @@ public class Runner {
 		String[] shutdown = { "Goodbye, world...", "Goodbye, cruel world...", "See ya...", "Later...", "Buh-bye...", "Thank you, come again!...",
 				"Until Next Time...", "¡Adios, Amigo!...", "Game Over, Man! Game Over!!!...", "And So, I Bid You Adieu...", "So Long, And Thanks For All The Fish...",
 				"Ciao...", "Y'all Come Back Now, Ya Hear?...", "Catch You Later!...", "Mahalo And Aloha...", "Sayonara...", "Thanks For Playing!...",
-				"Auf Wiedersehen..."};
+				"Auf Wiedersehen...", "Yo Homes, Smell Ya Later!... (Looked Up At My Kingdom, I Was Finally There, To Sit On My Throne As The Prince Of Bel-air)"};
+		// FIRST FRESH PRINCE REFERENCE FOR THIS GAME, TAKE NOTE THIS IS HISTORIC
 		
-		Random randy = new Random();
-		
-		return shutdown[randy.nextInt(shutdown.length)];
+		return shutdown[new Random().nextInt(shutdown.length)];
 	}
 }
