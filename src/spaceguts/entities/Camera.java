@@ -256,7 +256,7 @@ public class Camera extends Entity {
 		// controls console scrolling)
 		if (!Console.consoleOn) {
 			if (MouseManager.wheel != 0) {
-				if(buildMode && !builder.leftGrabbed){
+				if(buildMode && !builder.leftGrabbed && !builder.rightGrabbed){
 					speed += (speed * zoomSensitivity / MouseManager.wheel);
 					
 					// keep zoom in bounds
@@ -292,13 +292,11 @@ public class Camera extends Entity {
 			boolean backward = KeyBindings.CONTROL_BACKWARD.isPressed();
 
 			// control forward and backward movement
-			if (forward || backward) {
-				if (forward) {
-					this.location = QuaternionHelper.moveZ(this.rotation, this.location, speed * delta);
-				}
-				if (backward) {
-					this.location = QuaternionHelper.moveZ(this.rotation, this.location, -speed * delta);
-				}
+			if (forward) {
+				this.location = QuaternionHelper.moveZ(this.rotation, this.location, speed * delta);
+			}
+			if (backward) {
+				this.location = QuaternionHelper.moveZ(this.rotation, this.location, -speed * delta);
 			}
 
 			// check for left and right movement
@@ -306,24 +304,20 @@ public class Camera extends Entity {
 			boolean right = KeyBindings.CONTROL_RIGHT.isPressed();
 
 			// control strafing left and right
-			if (left || right) {
-				if (left) {
-					this.location = QuaternionHelper.moveX(this.rotation, this.location, speed * delta);
-				}
-				if (right) {
-					this.location = QuaternionHelper.moveX(this.rotation, this.location, -speed * delta);
-				}
+			if (left) {
+				this.location = QuaternionHelper.moveX(this.rotation, this.location, speed * delta);
+			}
+			if (right) {
+				this.location = QuaternionHelper.moveX(this.rotation, this.location, -speed * delta);
 			}
 
 			// handle going up/down
 			boolean up = KeyBindings.CONTROL_ASCEND.isPressed();
 			boolean down = KeyBindings.CONTROL_DESCEND.isPressed();
-			if (up || down) {
 				if (up)
 					this.location = QuaternionHelper.moveY(this.rotation, this.location, -speed * delta);
 				if (down)
 					this.location = QuaternionHelper.moveY(this.rotation, this.location, speed * delta);
-			}
 
 			// roll left/right
 			boolean rollRight = KeyBindings.CONTROL_ROLL_RIGHT.isPressed();
