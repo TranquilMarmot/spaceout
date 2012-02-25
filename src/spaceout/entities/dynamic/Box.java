@@ -5,10 +5,10 @@ import javax.vecmath.Vector3f;
 import org.lwjgl.util.vector.Quaternion;
 
 import spaceguts.entities.DynamicEntity;
+import spaceguts.graphics.model.Model;
+import spaceguts.graphics.model.ModelBuilder;
 import spaceguts.physics.CollisionTypes;
-import spaceguts.util.model.Model;
-import spaceguts.util.model.ModelBuilder;
-import spaceguts.util.resources.Textures;
+import spaceout.resources.Textures;
 
 public class Box extends DynamicEntity{
 	final static short COL_GROUP = CollisionTypes.WALL;

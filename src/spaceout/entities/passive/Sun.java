@@ -4,7 +4,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import spaceguts.entities.Light;
 import spaceguts.graphics.shapes.VBOQuadric;
-import spaceguts.util.resources.Textures;
+import spaceout.resources.Textures;
 
 /**
  * A sun that gives off light.
@@ -36,7 +36,7 @@ public class Sun extends Light {
 	public Sun(Vector3f location, float size,
 			Vector3f intensity) {
 		super(location, intensity);
-		sphere = new VBOQuadric(size, 15, 15);
+		sphere = new VBOQuadric(size, 25, 25);
 		this.type = "sun";
 	}
 

@@ -15,13 +15,13 @@ import spaceguts.entities.Camera;
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
 import spaceguts.util.console.Console;
-import spaceguts.util.resources.Models;
-import spaceguts.util.resources.Textures;
 import spaceout.entities.dynamic.Planet;
 import spaceout.entities.dynamic.Player;
 import spaceout.entities.passive.Skybox;
 import spaceout.entities.passive.Sun;
 import spaceout.entities.passive.particles.Debris;
+import spaceout.resources.Models;
+import spaceout.resources.Textures;
 import spaceout.ship.Ship;
 
 /**
@@ -141,7 +141,7 @@ public class XMLParser {
 		
 		/* TEMP SHIP INFO TODO make this load from XML */
 		String shipName = "WingX";
-		Models shipModel = Models.WESCOTT;
+		Models shipModel = Models.SAUCER;
 		int shipHealth = 100;
 		float shipMass = 50.0f;
 		float shipRestitution = 0.01f;
@@ -255,7 +255,8 @@ public class XMLParser {
 	 *            The tag to get the color from
 	 * @return A float array containing the color
 	 */
-	private static float[] getColor(Element ele, String tag) {
+	/*
+	private static Vector3f getColor(Element ele, String tag) {
 		String text = getString(ele, tag);
 		StringTokenizer toker = new StringTokenizer(text, ",");
 
@@ -263,8 +264,9 @@ public class XMLParser {
 		float g = Float.parseFloat(toker.nextToken());
 		float b = Float.parseFloat(toker.nextToken());
 
-		return new float[] { r, g, b };
+		return new Vector3f(r, g, b);
 	}
+	*/
 
 	/**
 	 * Gets a string from an element

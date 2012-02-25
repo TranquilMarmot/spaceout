@@ -2,7 +2,7 @@ package spaceguts.graphics.gui.button;
 
 import org.lwjgl.util.Rectangle;
 
-import spaceguts.util.input.MouseManager;
+import spaceguts.input.MouseManager;
 
 /**
  * A rectangular button! To use this class, create a class and have it extend

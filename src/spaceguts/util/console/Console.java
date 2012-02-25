@@ -8,10 +8,10 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.UnicodeFont;
 
+import spaceguts.input.MouseManager;
+import spaceguts.util.Debug;
 import spaceguts.util.DisplayHelper;
-import spaceguts.util.debug.Debug;
-import spaceguts.util.input.MouseManager;
-import spaceguts.util.resources.Textures;
+import spaceout.resources.Textures;
 
 /**
  * Console for printing text and interacting with the game. Note that there
@@ -139,29 +139,37 @@ public class Console {
 		// where to draw the console (x stays at 10)
 		y = DisplayHelper.windowHeight - advanceY - 10;
 
-		// figure out how many lines to print out
-		int stringsToPrint = text.size() - (numLines + 1);
-		// avoid any possibility of out of bounds (the for loop is kind of
-		// weird. if stringsToPrint == -1, then it doesn't print out any lines)
-		if (stringsToPrint < 0)
-			stringsToPrint = -1;
-
 		// If the console is enabled.
 		if (consoleEnabled) {
 			if (Console.consoleOn) {
 				// Draw the box
 				Textures.WHITE.texture().bind();
+				/* BEGIN CONSOLE BACKGROUND */ 
 				GL11.glColor4f(0.15f, 0.15f, 0.15f, 0.35f);
 				GL11.glBegin(GL11.GL_QUADS);
 				{
+					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight - Debug.font.getAscent() - 7);
+					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight - ((Console.console.numLines + 2) * Debug.font.getAscent()));
+					GL11.glVertex2f((consoleWidth * 9) + 10,
+							DisplayHelper.windowHeight - ((Console.console.numLines + 2) * Debug.font.getAscent()));
+					GL11.glVertex2f((consoleWidth * 9) + 10,
+							DisplayHelper.windowHeight - Debug.font.getAscent() - 7);
+				}
+				GL11.glEnd();
+				/* END CONSOLE BACKGROUND */ 
+				
+				/* BEGIN INPUT BOX */
+				GL11.glColor4f(0.20f, 0.20f, 0.20f, 0.35f);
+				GL11.glBegin(GL11.GL_QUADS);
+				{
 					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight);
-					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight - 225.0f);
-					GL11.glVertex2f((consoleWidth * 9) + 10,
-							DisplayHelper.windowHeight - 225.0f);
-					GL11.glVertex2f((consoleWidth * 9) + 10,
+					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight - Debug.font.getAscent() - 7);
+					GL11.glVertex2f(DisplayHelper.windowWidth, DisplayHelper.windowHeight - Debug.font.getAscent() - 7);
+					GL11.glVertex2f(DisplayHelper.windowWidth,
 							DisplayHelper.windowHeight);
 				}
 				GL11.glEnd();
+				/* END INPUT BOX */
 
 				// Draw the blinking cursor
 				String toPrint = "> " + input;
@@ -172,8 +180,16 @@ public class Console {
 			}
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
+			
+			// figure out how many lines to print out
+			int stringsToPrint = text.size() - (numLines + 1);
+			// avoid any possibility of out of bounds (the for loop is kind of
+			// weird. if stringsToPrint == -1, then it doesn't print out any lines)
+			if (stringsToPrint < 0)
+				stringsToPrint = -1;
+			
 			// print out however many strings, going backwards
-			// (we want the latest strings to be printed first)
+			// (we want the most recent strings to be printed first)
 			for (int i = text.size() - 1 - scroll; i > stringsToPrint - scroll
 					&& i >= 0; i--) {
 

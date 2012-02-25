@@ -6,9 +6,9 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 
 import spaceguts.graphics.gui.button.RectangleButton;
+import spaceguts.util.Debug;
 import spaceguts.util.DisplayHelper;
-import spaceguts.util.debug.Debug;
-import spaceguts.util.resources.Textures;
+import spaceout.resources.Textures;
 
 public class FilePickerListItem extends RectangleButton{	
 	public boolean selected = false;

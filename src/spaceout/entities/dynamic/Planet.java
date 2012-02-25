@@ -4,15 +4,15 @@ import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 import spaceguts.entities.DynamicEntity;
+import spaceguts.graphics.render.Render3D;
 import spaceguts.graphics.shapes.VBOQuadric;
-import spaceguts.interfaces.Health;
 import spaceguts.physics.CollisionTypes;
 import spaceguts.physics.Physics;
 import spaceguts.util.QuaternionHelper;
-import spaceguts.util.resources.Textures;
+import spaceout.interfaces.Health;
+import spaceout.resources.Textures;
 
 import com.bulletphysics.collision.dispatch.CollisionObject;
-import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.linearmath.Transform;
 
@@ -44,11 +44,12 @@ public class Planet extends DynamicEntity implements Health{
 		this.type = "Planet";
 		this.texture = texture;
 		
-		quadric = new VBOQuadric(size, 10, 10);
+		quadric = new VBOQuadric(size, 20, 20);
 	}
 	
 	@Override
 	public void draw(){
+		Render3D.useDefaultMaterial();
 		texture.texture().bind();
 		quadric.draw();
 	}
