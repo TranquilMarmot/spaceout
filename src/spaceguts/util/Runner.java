@@ -5,9 +5,6 @@ import java.util.Random;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
-import spaceguts.entities.Entities;
-import spaceguts.entities.Entity;
-import spaceguts.entities.Light;
 import spaceguts.graphics.gui.GUI;
 import spaceguts.graphics.gui.menu.MainMenu;
 import spaceguts.graphics.render.Graphics;
@@ -30,7 +27,7 @@ import spaceout.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.75.9.2";
+	public static final String VERSION = "0.0.75.10";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
@@ -140,24 +137,8 @@ public class Runner {
 		GUI.update();
 		
 		// update the physics engine
-		if (!Runner.paused && Physics.dynamicsWorld != null)
+		if (!paused && Physics.dynamicsWorld != null)
 			Physics.update();
-		
-		// update passive entities
-		for (Entity ent : Entities.passiveEntities)
-			ent.update();
-
-		// update lights
-		for (Light l : Entities.lights)
-			l.update();
-
-		// update camera
-		if (Entities.camera != null)
-			Entities.camera.update();
-
-		// update skybox
-		if (Entities.skybox != null)
-			Entities.skybox.update();
 		
 		// check for any resources that need to be loaded
 		if(ResourceLoader.jobsExist())

@@ -21,7 +21,6 @@ import com.bulletphysics.linearmath.Transform;
 public class DynamicEntityCallback extends InternalTickCallback {
 	@Override
 	public void internalTick(DynamicsWorld world, float timeStep) {
-		//TODO Make Entities.update(float timeStep) that goes through and updates all non-dynamic entities with the same amount of time
 		Iterator<CollisionObject> it = world.getCollisionObjectArray()
 				.iterator();
 		while (it.hasNext()) {
@@ -39,6 +38,9 @@ public class DynamicEntityCallback extends InternalTickCallback {
 		}
 		
 		checkForCollisions();
+		
+		// this is a very important call! Updates the camera, skybox, and any non-dynamic entities
+		Entities.updateAll(timeStep);
 	}
 
 	/**

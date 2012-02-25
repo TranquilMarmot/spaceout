@@ -28,6 +28,18 @@ public class Entities {
 	/** all the current lights */
 	public static ArrayList<Light> lights = new ArrayList<Light>();
 	
+	public static void updateAll(float timeStep){
+		camera.update(timeStep);
+		//player.update(timeStep);
+		skybox.update(timeStep);
+		
+		for(Entity ent : passiveEntities)
+			ent.update(timeStep);
+		
+		for(Light l : lights)
+			l.update(timeStep);
+	}
+	
 	public static void addDynamicEntity(DynamicEntity ent){
 		dynamicEntities.add(ent);
 	}

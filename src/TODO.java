@@ -7,7 +7,6 @@
  * 			TODO After the first time, the fullscreen key has to be pressed twice to have an effect
  * 			TODO Destroy the Java AWT window when going into fullscreen, then create it again on leaving fullscreen
  * JBullet
- * 			TODO Update all non-dynamic entities by the amount of time passed in the physics sim (see DynamicEntityCallback.java)
  * 			TODO Fix physics debug drawing (might require fiddling with shaders)
  * 			TODO Give the sun an immovable physics object
  * 			TODO Add a thing to the Physics Debug that also draws an arrow representing the current speed (first point is entity origin, second is origin+linear velocity)

@@ -9,7 +9,6 @@ import spaceguts.input.KeyBindings;
 import spaceguts.input.MouseManager;
 import spaceguts.physics.Builder;
 import spaceguts.physics.Physics;
-import spaceguts.util.Debug;
 import spaceguts.util.DisplayHelper;
 import spaceguts.util.QuaternionHelper;
 import spaceguts.util.Runner;
@@ -34,9 +33,6 @@ public class Camera extends Entity {
 	
 	/** handles special interactions with the game world */
 	public Builder builder;
-
-	/** the last time that this entity was updated */
-	protected long lastUpdate;
 
 	/** how fast the camera moves in free mode */
 	public float speed = 10.0f;
@@ -93,7 +89,6 @@ public class Camera extends Entity {
 		this.location = location;
 		rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		this.type = "camera";
-		lastUpdate = Debug.getTime();
 		builder = new Builder(this);
 	}
 
@@ -111,7 +106,7 @@ public class Camera extends Entity {
 	/**
 	 * Update the camera. Ths handles following other things, mode switches etc.
 	 */
-	public void update() {
+	public void update(float timeStep) {
 		if(buildMode)
 			builder.update();
 		
@@ -139,7 +134,7 @@ public class Camera extends Entity {
 		}
 
 		// to keep free mode movement framerate-independent
-		float delta = (float) getDelta() / 10.0f;
+		float delta = timeStep * 100.0f;
 
 		// if we're not in free mode, move the camera to be behind whatever it's
 		// following
@@ -149,9 +144,6 @@ public class Camera extends Entity {
 			// else do logic for moving around in free mode
 			freeMode(delta);
 		}
-
-		// to keep free mode framerate independent
-		lastUpdate = Debug.getTime();
 	}
 
 	/**
@@ -364,17 +356,6 @@ public class Camera extends Entity {
 		float y = location.y + yOffset;
 		float z = location.z - zoom;
 		return new Vector3f(x, y, z);
-	}
-
-	/**
-	 * @return Time passed since last update
-	 */
-	private int getDelta() {
-		long time = Debug.getTime();
-		int delta = (int) (time - lastUpdate);
-		lastUpdate = time;
-
-		return delta;
 	}
 	
 	public void drawCrosshair(){
