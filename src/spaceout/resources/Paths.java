@@ -1,5 +1,10 @@
 package spaceout.resources;
 
+/**
+ * This houses paths for resources, to make it easy to change them if need be
+ * @author TranquilMarmot
+ *
+ */
 public enum Paths {
 	// images
 	MENU_IMAGE_PATH("res/images/gui/Menu/"),
@@ -8,6 +13,7 @@ public enum Paths {
 	BACKGROUND_IMAGE_PATH("res/images/gui/Menu/Background/"),
 	
 	CROSSHAIR_PATH("res/images/gui/crosshair.png"),
+	BUILDER_IMAGE_PATH("res/images/gui/Builder/"),
 	
 	TEXTURE_PATH("res/images/textures/"),
 	

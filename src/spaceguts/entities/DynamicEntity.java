@@ -168,27 +168,6 @@ public class DynamicEntity extends Entity {
 			Physics.dynamicsWorld.addRigidBody(rigidBody);
 	}
 
-	/**
-	 * This update method is called at the end of every physics tick with the
-	 * amount of time passed since the previous tick
-	 * 
-	 * @param timeStep
-	 *            Amount of time passed since last tick (automatically passed by
-	 *            bullet)
-	 */
-	public void update(float timeStep) {
-	}
-
-	@Override
-	/**
-	 * This method never gets used for a dynamic entity, don't use it!!!
-	 */
-	public void update() {
-		System.out
-				.println("Don't use update() on dynamic entities! update(float timeStep) is called at the end of every physics tick, use that instead! ("
-						+ type + ")");
-	}
-
 	@Override
 	/**
 	 * Simple as possible drawing call. This assumes that it's called when the entity's location and rotation have already been applied to the modelview matrix.
@@ -226,7 +205,6 @@ public class DynamicEntity extends Entity {
 		Physics.dynamicsWorld.rayTest(start, end, callback);
 		
 		return callback;
-		
 	}
 
 	@Override
@@ -236,4 +214,12 @@ public class DynamicEntity extends Entity {
 	public void cleanup() {
 		removeFlag = true;
 	}
+
+	@Override
+	/**
+	 * Update the dynamic entity
+	 * NOTE: If you're making your own class that extends DynamicEntity,
+	 * you need to override this method!
+	 */
+	public void update(float timeStep){};
 }

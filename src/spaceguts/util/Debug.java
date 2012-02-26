@@ -17,7 +17,6 @@ import spaceguts.graphics.gui.GUI;
 import spaceguts.input.KeyBindings;
 import spaceguts.util.console.Console;
 import spaceout.resources.Paths;
-import spaceout.resources.Textures;
 
 /**
  * Handles drawing all the debug info. This class also contains the console
@@ -45,14 +44,14 @@ public class Debug {
 	
 	/** make it so backspace can be held down for the console */
 	private static int backspaceRepeatCounter = 0;
-	private static int backspaceRepeatWait = 30;
+	public static int backspaceRepeatWait = 30;
 	
-	public static int crosshairWidth = 8, crosshairHeight = 8;
-	public static Vector3f crosshairColor = new Vector3f(1.0f, 1.0f, 1.0f);
-	
-	/** String formatter */
+	/** String formatters */
 	private static Formatter cameraInfoFormatter, locationFormatter;
 
+	/**
+	 * Updates the console and the FPS
+	 */
 	public static void update() {
 		// update keys
 		checkKeys();
@@ -62,6 +61,9 @@ public class Debug {
 		updateFPS();
 	}
 	
+	/**
+	 * Checks to see if any keys have been pressed and acts accordingly
+	 */
 	private static void checkKeys(){
 		// debug key
 		if(KeyBindings.SYS_DEBUG.pressedOnce())
@@ -102,6 +104,14 @@ public class Debug {
 		if(KeyBindings.SYS_CONSOLE_SCROLL_DOWN.pressedOnce())
 			Console.console.scrollDown(1);
 		
+		// history scroll up
+		if (KeyBindings.SYS_CONSOLE_PREVIOUS_COMMAND.pressedOnce())
+			Console.console.commandHistory((byte)-1);
+		
+		// history scroll down
+		if (KeyBindings.SYS_CONSOLE_NEXT_COMMAND.pressedOnce())
+			Console.console.commandHistory((byte)1);
+		
 		// screenshot key
 		if(KeyBindings.SYS_SCREENSHOT.pressedOnce())
 			Screenshot.takeScreenshot(DisplayHelper.windowWidth,
@@ -122,7 +132,10 @@ public class Debug {
 			backspaceRepeatCounter = 0;
 		}
 	}
-
+ 
+	/**
+	 * Draws debug info, the console, the crosshair and the 'PAUSED' text
+	 */
 	public static void draw() {
 		if (displayDebug) {
 			drawDebugInfo();
@@ -130,41 +143,22 @@ public class Debug {
 		
 		Console.console.draw();
 		
-		drawCrosshair();
+		if(Entities.camera != null)
+			Entities.camera.drawCrosshair();
 		
 		// draw 'PAUSED' in the middle of the screen if the game is paused
 		if (Runner.paused && Entities.entitiesExist())
 			Debug.font.drawString((DisplayHelper.windowWidth / 2) - 25,
 					DisplayHelper.windowHeight / 2, "PAUSED");
 	}
-	
-	private static void drawCrosshair(){
-		Textures.CROSSHAIR.texture().bind();
-		
-		
-		GL11.glColor3f(crosshairColor.x, crosshairColor.y, crosshairColor.z);
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2f(0, 0);
-		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) - crosshairWidth, (DisplayHelper.windowHeight / 2.0f) + crosshairHeight);
 
-		GL11.glTexCoord2f(Textures.CROSSHAIR.texture().getWidth(), 0);
-		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) + crosshairWidth, (DisplayHelper.windowHeight / 2.0f) + crosshairHeight);
-
-		GL11.glTexCoord2f(Textures.CROSSHAIR.texture().getWidth(), Textures.CROSSHAIR.texture().getHeight());
-		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) + crosshairWidth, (DisplayHelper.windowHeight / 2.0f) - crosshairHeight);
-
-		GL11.glTexCoord2f(0, Textures.CROSSHAIR.texture().getHeight());
-		GL11.glVertex2f((DisplayHelper.windowWidth / 2.0f) - crosshairWidth, (DisplayHelper.windowHeight / 2.0f) - crosshairHeight);
-		GL11.glEnd();
-		
-		GL11.glColor3f(1.0f, 1.0f, 1.0f);
-		//GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-	}
-
+	/**
+	 * Draws debug info to the screen
+	 */
 	public static void drawDebugInfo() {
 		// only draw if there's info to draw
 		if (Entities.entitiesExist()) {
-			// change blending and draw the rectangle
+			// change blending and draw the rectangle in the top-left
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_DST_ALPHA);
 			GL11.glColor3f(0.07f, 0.07f, 0.07f);
 			GL11.glBegin(GL11.GL_QUADS);
@@ -226,15 +220,17 @@ public class Debug {
 					cameraInfo += "\n(free)";
 				font.drawString(3, 114, cameraInfo, Color.blue);
 				
-				String look;
-				if(Entities.camera.builder.entityGrabbed)
-					look = "Grabbed:      ";
-				else
-					look = "At crosshair: ";
-				if(Entities.camera.builder.lookingAt != null){
-					look += Entities.camera.builder.lookingAt.hashCode() + " | " + Entities.camera.builder.lookingAt.type + " | Mass: " + Entities.camera.builder.lookingAt.rigidBody.getInvMass();
+				if(Entities.camera.buildMode){
+					String look;
+					if(Entities.camera.builder.leftGrabbed || Entities.camera.builder.rightGrabbed)
+						look = "Grabbed:      ";
+					else
+						look = "At crosshair: ";
+					if(Entities.camera.builder.lookingAt != null){
+						look += Entities.camera.builder.lookingAt.hashCode() + " | " + Entities.camera.builder.lookingAt.type + " | Mass: " + Entities.camera.builder.lookingAt.rigidBody.getInvMass();
+					}
+					font.drawString(100, 3, look, Color.green);
 				}
-				font.drawString(100, 3, look, Color.green);
 
 				javax.vecmath.Vector3f linear = new javax.vecmath.Vector3f();
 				Entities.player.rigidBody.getLinearVelocity(linear);
@@ -247,6 +243,7 @@ public class Debug {
 			}
 		}
 
+		
 		drawVersion();
 
 		// draw the current fps
@@ -256,7 +253,7 @@ public class Debug {
 	}
 
 	/**
-	 * Draws what version the game is in the top left of the screen
+	 * Draws what version the game is in the top right of the screen
 	 */
 	public static void drawVersion() {
 		// draw what version of Spaceout this is
@@ -293,10 +290,16 @@ public class Debug {
 		updateFPS();
 	}
 
+	/**
+	 * For FPS
+	 */
 	public static long getTime() {
 		return (Sys.getTime() * 1000) / Sys.getTimerResolution();
 	}
 
+	/**
+	 * Needs to be called every frame to update the FPS
+	 */
 	private static void updateFPS() {
 		if (getTime() - lastFPS > 1000) {
 			currentFPS = fpsCount;
@@ -306,6 +309,9 @@ public class Debug {
 		fpsCount++;
 	}
 
+	/**
+	 * @return How much time has passed since the last time getDelta() was called
+	 */
 	public static int getDelta() {
 		long time = getTime();
 		int delta = (int) (time - lastFrame);
@@ -315,7 +321,7 @@ public class Debug {
 	}
 
 	/**
-	 * This prints all the info about the system to System.out
+	 * Prints all the info about the system to System.out
 	 */
 	public static void printSysInfo() {
 		// print out which version of Spaceout this is

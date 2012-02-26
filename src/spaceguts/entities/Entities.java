@@ -1,6 +1,6 @@
 package spaceguts.entities;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -22,59 +22,41 @@ public class Entities {
 	public static Skybox skybox;
 
 	/** all the current passive entities */
-	public static HashMap<Integer, Entity> passiveEntities = new HashMap<Integer, Entity>();
+	public static ArrayList<Entity> passiveEntities = new ArrayList<Entity>(100);
 	/** all the dynamic entities */
-	public static HashMap<Integer, DynamicEntity> dynamicEntities = new HashMap<Integer, DynamicEntity>();
+	public static ArrayList<DynamicEntity> dynamicEntities = new ArrayList<DynamicEntity>();
 	/** all the current lights */
-	public static HashMap<Integer, Light> lights = new HashMap<Integer, Light>();
+	public static ArrayList<Light> lights = new ArrayList<Light>();
+	
+	public static void updateAll(float timeStep){
+		camera.update(timeStep);
+		//player.update(timeStep);
+		skybox.update(timeStep);
+		
+		for(Entity ent : passiveEntities)
+			ent.update(timeStep);
+		
+		for(Light l : lights)
+			l.update(timeStep);
+	}
 	
 	public static void addDynamicEntity(DynamicEntity ent){
-		DynamicEntity test = dynamicEntities.put(ent.hashCode(), ent);
-		/*
-		 *  Check for any collisions
-		 *  If two objects use the same hash code, the hash table overwrites the value at the
-		 *  given key then returns the overwritten value
-		 *  TODO this loop might go for a looong time if it keeps running into collisions, 
-		 *  so it might be a good idea to change how this works 
-		 */
-		while(test != null){
-			test = dynamicEntities.put(test.hashCode() + 5, test);
-		}
+		dynamicEntities.add(ent);
 	}
 	
 	public static void addPassiveEntity(Entity ent){
-		Entity test = passiveEntities.put(ent.hashCode(), ent);
-		/*
-		 *  Check for any collisions
-		 *  If two objects use the same hash code, the hash table overwrites the value at the
-		 *  given key then returns the overwritten value
-		 *  TODO this loop might go for a looong time if it keeps running into collisions, 
-		 *  so it might be a good idea to change how this works 
-		 */
-		while(test != null){
-			test = passiveEntities.put(test.hashCode() + 5, test);
-		}
+		passiveEntities.add(ent);
 	}
 	
 	public static void addLight(Light light){
-		Light test = lights.put(light.hashCode(), light);
-		/*
-		 *  Check for any collisions
-		 *  If two objects use the same hash code, the hash table overwrites the value at the
-		 *  given key then returns the overwritten value
-		 *  TODO this loop might go for a looong time if it keeps running into collisions, 
-		 *  so it might be a good idea to change how this works 
-		 */
-		while(test != null){
-			test = lights.put(test.hashCode() + 5, test);
-		}
+		lights.add(light);
 	}
 
 	/**
 	 * @return Whether or not there are any entities at the moment
 	 */
 	public static boolean entitiesExist() {
-		return !passiveEntities.isEmpty() || !dynamicEntities.isEmpty();
+		return !passiveEntities.isEmpty() || !dynamicEntities.isEmpty() || player != null;
 	}
 
 	/**
@@ -104,11 +86,11 @@ public class Entities {
 	 * Delete all of the entities
 	 */
 	public static void cleanup() {
-		for(Entity ent : passiveEntities.values()){
+		for(Entity ent : passiveEntities){
 			ent.cleanup();
 		}
 		
-		for(DynamicEntity ent : dynamicEntities.values()){
+		for(DynamicEntity ent : dynamicEntities){
 			ent.cleanup();
 		}
 		player = null;

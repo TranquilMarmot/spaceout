@@ -28,6 +28,7 @@ public class DynamicEntityCallback extends InternalTickCallback {
 			try {
 				c = it.next();
 			} catch (NoSuchElementException e) {
+				//FIXME dunno about this, will it cause entities to be update twice?
 				it = world.getCollisionObjectArray().iterator();
 			}
 
@@ -37,6 +38,9 @@ public class DynamicEntityCallback extends InternalTickCallback {
 		}
 		
 		checkForCollisions();
+		
+		// this is a very important call! Updates the camera, skybox, and any non-dynamic entities
+		Entities.updateAll(timeStep);
 	}
 
 	/**
@@ -52,7 +56,7 @@ public class DynamicEntityCallback extends InternalTickCallback {
 
 		if (ent.removeFlag) {
 			Physics.dynamicsWorld.removeCollisionObject(c);
-			Entities.dynamicEntities.remove(ent.hashCode());
+			Entities.dynamicEntities.remove(ent);
 		} else {
 			// get the rigid body's world transform
 			Transform trans = new Transform();

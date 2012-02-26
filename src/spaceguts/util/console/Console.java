@@ -22,6 +22,15 @@ import spaceout.resources.Textures;
  * 
  */
 public class Console {
+	/**
+	 * TODO: Decide what needs to be static and what doesn't
+	 * - The input bar will remain static, while the command scrollback is per object. (this should work fine)
+	 * - The console fading should be per object, so that the consoles
+	 * 		can fade in and out individually based on focus.
+	 * TODO: Implement tabs
+	 */
+	
+	
 	/** the console */
 	public static Console console = new Console();
 
@@ -29,9 +38,6 @@ public class Console {
 	public static boolean consoleOn = false;
 	/** whether or not the console is up because the command key was pressed (closes the console on submission) */
 	public static boolean commandOn = false;
-
-	/** Width of the console in characters */
-	private int consoleWidth = 65;
 
 	/**
 	 * This is currently pointless, but it may come in handy in the future.
@@ -69,14 +75,17 @@ public class Console {
 	public static UnicodeFont font = null;
 
 	/** location to draw the console at */
-	private int x = 10;
-	private int y = 0;
+	private int x; 
+	private int y;
+	
+	/** Height of the console in characters */
+	private int consoleHeight;
+	
+	/** Width of the console in characters */
+	private int consoleWidth;
 
 	/** whether or not to close the console when line is submitted */
 	public boolean autoClose = false;
-
-	/** number of lines to print */
-	private int numLines = 14;
 
 	/** 
 	 * if scroll is 0, we're at the most recent line, 1 is one line up, 2 is two
@@ -89,123 +98,38 @@ public class Console {
 
 	/** all the text that the console contains and will print out */
 	private ArrayList<String> text = new ArrayList<String>();
-
-	/**
-	 * Update the console
-	 */
-	public void update() {
-		// check for command
-		if (Console.commandOn) {
-			input = "/";
-			Console.commandOn = false;
-		}
-		
-		// Logic for scrolling, cursor blinking, and console fading.
-		if (Console.consoleOn) {
-			// Brighten the console
-			this.wake();
-
-			// scroll with the mouse wheel
-			scroll += MouseManager.wheel / 100;
 	
-			// keep scroll from getting too big or too small
-			if (scroll < 0)
-				scroll = 0;
-			if (scroll > text.size() - numLines && text.size() > numLines)
-				scroll = text.size() - numLines;
-			
-			// do blinking effect
-			updateBlink();
-			
-		} else if (consoleTextAlpha > consoleTextMinAlpha
-				&& consoleTextFadeDelayCurrent >= consoleTextFadeDelay * 60) {
-			// Subtract the proper amount from the current console text
-			// alpha value
-			consoleTextAlpha -= consoleTextFadeValue;
-		} else {
-			// if statement to avoid overflow exception
-			if (consoleTextFadeDelayCurrent < consoleTextFadeDelay * 60) {
-				consoleTextFadeDelayCurrent++;
-			}
-		}
-	}
-
+	/** all the commands that are typed in */
+	private ArrayList<String> commandHistoryList;
+	private int chIndex;
+	
 	/**
-	 * Draws the console
+	 * Creates a new console with the specified parameters
+	 * @param x distance from the left side of the screen
+	 * @param y distance from the bottom of the screen
+	 * @param w window width expanding to the right
+	 * @param h window height expanding up
 	 */
-	public void draw() {
-		// how tall each line is
-		int advanceY = Debug.font.getAscent();
-		// where to draw the console (x stays at 10)
-		y = DisplayHelper.windowHeight - advanceY - 10;
-
-		// If the console is enabled.
-		if (consoleEnabled) {
-			if (Console.consoleOn) {
-				// Draw the box
-				Textures.WHITE.texture().bind();
-				/* BEGIN CONSOLE BACKGROUND */ 
-				GL11.glColor4f(0.15f, 0.15f, 0.15f, 0.35f);
-				GL11.glBegin(GL11.GL_QUADS);
-				{
-					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight - Debug.font.getAscent() - 7);
-					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight - ((Console.console.numLines + 2) * Debug.font.getAscent()));
-					GL11.glVertex2f((consoleWidth * 9) + 10,
-							DisplayHelper.windowHeight - ((Console.console.numLines + 2) * Debug.font.getAscent()));
-					GL11.glVertex2f((consoleWidth * 9) + 10,
-							DisplayHelper.windowHeight - Debug.font.getAscent() - 7);
-				}
-				GL11.glEnd();
-				/* END CONSOLE BACKGROUND */ 
-				
-				/* BEGIN INPUT BOX */
-				GL11.glColor4f(0.20f, 0.20f, 0.20f, 0.35f);
-				GL11.glBegin(GL11.GL_QUADS);
-				{
-					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight);
-					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight - Debug.font.getAscent() - 7);
-					GL11.glVertex2f(DisplayHelper.windowWidth, DisplayHelper.windowHeight - Debug.font.getAscent() - 7);
-					GL11.glVertex2f(DisplayHelper.windowWidth,
-							DisplayHelper.windowHeight);
-				}
-				GL11.glEnd();
-				/* END INPUT BOX */
-
-				// Draw the blinking cursor
-				String toPrint = "> " + input;
-				if (blink)
-					toPrint += "_";
-				Debug.font.drawString(x, y, toPrint, new Color(38, 255, 0));
-
-			}
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-			
-			// figure out how many lines to print out
-			int stringsToPrint = text.size() - (numLines + 1);
-			// avoid any possibility of out of bounds (the for loop is kind of
-			// weird. if stringsToPrint == -1, then it doesn't print out any lines)
-			if (stringsToPrint < 0)
-				stringsToPrint = -1;
-			
-			// print out however many strings, going backwards
-			// (we want the most recent strings to be printed first)
-			for (int i = text.size() - 1 - scroll; i > stringsToPrint - scroll
-					&& i >= 0; i--) {
-
-				// which line we're at in the console itself
-				int line = text.size() - (i + scroll);
-
-				// draw the string, going up on the y axis by how tall each line
-				// is
-				Debug.font.drawString(x, y - (advanceY * line), text.get(i),
-						new Color(0.15f, 1.0f, 0.0f, consoleTextAlpha));
-
-			}
-		}
-
+	public Console(int x, int y, int w, int h) {
+		
+		commandHistoryList = new ArrayList<String>();
+		commandHistoryList.add("");
+		chIndex = 0;
+		updateCommandHistory();
+		
+		this.x = x;
+		this.y = y;
+		consoleWidth = w;
+		consoleHeight = h;
 	}
-
+	
+	/**
+	 * new Console(0,10,65,14)
+	 */
+	public Console() {
+		this (0,10,65,14);
+	}
+	
 	/**
 	 * Puts a character into the input for the console
 	 * 
@@ -214,6 +138,21 @@ public class Console {
 	 */
 	public void putCharacter(Character c) {
 		input += c;
+		updateCommandHistory();
+	}
+	
+	/**
+	 * Goes back one space in the input string
+	 */
+	public void backspace() {
+		if (input.length() > 0)
+			input = input.substring(0, input.length() - 1);
+		updateCommandHistory();
+	}
+	
+	public void updateCommandHistory() {
+		// changes the value of the current spot in the command history
+		commandHistoryList.set(chIndex, input);
 	}
 
 	/**
@@ -233,7 +172,7 @@ public class Console {
 		// The current number of characters, and the iterator
 		int currentWidth = 0;
 
-		// If the next word is too big, just split it.
+		// If the next word is too big, time to split the line.
 		if (words[0].length() > consoleWidth) {
 			currentWidth = consoleWidth;
 		} else {
@@ -255,19 +194,13 @@ public class Console {
 	}
 
 	/**
-	 * Goes back one space in the input string
-	 */
-	public void backspace() {
-		if (input.length() > 0)
-			input = input.substring(0, input.length() - 1);
-	}
-
-	/**
 	 * Scroll up
 	 * @param amount Number of lines to scroll up
 	 */
 	public void scrollUp(int amount) {
-		scroll -= amount;
+		console.wake();
+		if (scroll-amount >= 0)
+			scroll -= amount;
 	}
 
 	/**
@@ -275,7 +208,29 @@ public class Console {
 	 * @param amount Number of lines to scroll down
 	 */
 	public void scrollDown(int amount) {
-		scroll += amount;
+		console.wake();
+		if (scroll+amount < text.size())
+			scroll += amount;
+	}
+	
+	/**
+	 * Scroll through console submission history
+	 * 1 is older, 0 is more recent
+	 */
+	public void commandHistory(int roll){
+		if (Console.consoleOn) {
+			if (roll == -1 && chIndex+1 < commandHistoryList.size())
+				chIndex++;
+			else if (roll == 1 && chIndex-1 >= 0)
+				chIndex--;
+			else if (roll == 0) {
+				chIndex = 0;
+			}
+		}
+		if (!commandHistoryList.get(chIndex).equals(""))
+			input = commandHistoryList.get(chIndex);
+		else 
+			input = "";
 	}
 
 	/**
@@ -284,6 +239,7 @@ public class Console {
 	 */
 	public void submit() {
 		if (input.length() > 0) {
+			
 			// trim off any whitespace
 			input.trim();
 			// do a command if the input starts with a /
@@ -294,6 +250,15 @@ public class Console {
 				// TODO give the player a name
 				print("<Player> " + input);
 
+			// adds the input to the command history
+			if (!commandHistoryList.get(0).equals(""))
+				commandHistoryList.add(0, "");
+			else 
+				commandHistoryList.add(1,input);
+
+			// rolls to the new empty spot in the commandHistory List
+			chIndex = 0;
+			
 			scroll = 0;
 		}
 		// clear the input string (this is important!)
@@ -303,6 +268,7 @@ public class Console {
 			autoClose = false;
 			Console.consoleOn = false;
 		}
+		
 	}
 	
 	/**
@@ -381,5 +347,116 @@ public class Console {
 	 */
 	public void clear() {
 		text.clear();
+	}
+	
+	/**
+	 * Update the console
+	 */
+	public void update() {
+		
+		// check for command
+		if (Console.commandOn) {
+			input = "/";
+			Console.commandOn = false;
+		}
+		
+		// Logic for scrolling, cursor blinking, and console fading.
+		if (Console.consoleOn) {
+			// Brighten the console
+			this.wake();
+
+			// scroll with the mouse wheel
+			scroll += MouseManager.wheel / 100;
+			
+			// do blinking effect
+			updateBlink();
+			
+		} else if (consoleTextAlpha > consoleTextMinAlpha
+				&& consoleTextFadeDelayCurrent >= consoleTextFadeDelay * 60) {
+			// Subtract the proper amount from the current console text
+			// alpha value
+			consoleTextAlpha -= consoleTextFadeValue;
+		} else {
+			// if statement to avoid overflow exception
+			if (consoleTextFadeDelayCurrent < consoleTextFadeDelay * 60) {
+				consoleTextFadeDelayCurrent++;
+			}
+		}
+	}
+
+	/**
+	 * Draws the console
+	 */
+	public void draw() {
+		// how tall each line is
+		int advanceY = Debug.font.getAscent();
+		// where to draw the console (x stays at 10)
+		y = DisplayHelper.windowHeight - advanceY - 10;
+
+		// If the console is enabled.
+		if (consoleEnabled) {
+			if (Console.consoleOn) {
+				// Draw the box
+				Textures.WHITE.texture().bind();
+				/* BEGIN CONSOLE BACKGROUND */ 
+				GL11.glColor4f(0.15f, 0.15f, 0.15f, 0.35f);
+				GL11.glBegin(GL11.GL_QUADS);
+				{
+					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight - Debug.font.getAscent() - 7);
+					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight - ((Console.console.consoleHeight + 2) * Debug.font.getAscent()));
+					GL11.glVertex2f((consoleWidth * 9) + 10,
+							DisplayHelper.windowHeight - ((Console.console.consoleHeight + 2) * Debug.font.getAscent()));
+					GL11.glVertex2f((consoleWidth * 9) + 10,
+							DisplayHelper.windowHeight - Debug.font.getAscent() - 7);
+				}
+				GL11.glEnd();
+				/* END CONSOLE BACKGROUND */ 
+				
+				/* BEGIN INPUT BOX */
+				GL11.glColor4f(0.20f, 0.20f, 0.20f, 0.35f);
+				GL11.glBegin(GL11.GL_QUADS);
+				{
+					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight);
+					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight - Debug.font.getAscent() - 7);
+					GL11.glVertex2f(DisplayHelper.windowWidth, DisplayHelper.windowHeight - Debug.font.getAscent() - 7);
+					GL11.glVertex2f(DisplayHelper.windowWidth,
+							DisplayHelper.windowHeight);
+				}
+				GL11.glEnd();
+				/* END INPUT BOX */
+
+				// Draw the blinking cursor
+				String toPrint = "> " + input;
+				if (blink)
+					toPrint += "_";
+				Debug.font.drawString(x, y, toPrint, new Color(38, 255, 0));
+
+			}
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+			
+			// figure out how many lines to print out
+			int stringsToPrint = text.size() - (consoleHeight + 1);
+			// avoid any possibility of out of bounds (the for loop is kind of
+			// weird. if stringsToPrint == -1, then it doesn't print out any lines)
+			if (stringsToPrint < 0)
+				stringsToPrint = -1;
+			
+			// print out however many strings, going backwards
+			// (we want the most recent strings to be printed first)
+			for (int i = text.size() - 1 - scroll; i > stringsToPrint - scroll
+					&& i >= 0; i--) {
+
+				// which line we're at in the console itself
+				int line = text.size() - (i + scroll);
+
+				// draw the string, going up on the y axis by how tall each line
+				// is
+				Debug.font.drawString(x, y - (advanceY * line), text.get(i),
+						new Color(0.15f, 1.0f, 0.0f, consoleTextAlpha));
+
+			}
+		}
+
 	}
 }

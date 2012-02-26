@@ -211,15 +211,15 @@ class ListCommand implements Command{
 		
 		if(which.equals("dynamic")){
 			Console.console.print("Listing dynamic entities...");
-			for (DynamicEntity ent : Entities.dynamicEntities.values())
+			for (DynamicEntity ent : Entities.dynamicEntities)
 				Console.console.print(ent.type);
 		} else if(which.equals("static")){
 			Console.console.print("Listing static entities...");
-			for(Entity ent : Entities.passiveEntities.values())
+			for(Entity ent : Entities.passiveEntities)
 				Console.console.print(ent.type);
 		} else if(which.equals("lights") || which.equals("light")){
 			Console.console.print("Listing lights...");
-			for(Light l : Entities.lights.values())
+			for(Light l : Entities.lights)
 				Console.console.print(l.type + "; using light at " + l.location.x + " " + l.location.y + " " + l.location.z);
 		} else{
 			Console.console.print("List command not recognized! (" + which + ")");
@@ -240,12 +240,12 @@ class ListCommand implements Command{
 class NumberCommand implements Command{
 	@Override
 	public void issue(StringTokenizer toker){
-        Console.console.print("Number of static entities: "
-                + Entities.passiveEntities.size());
-        Console.console.print("Number of dynamic entities: "
-                + Entities.dynamicEntities.size());
-        Console.console.print("Number of lights: "
-                + Entities.lights.size());
+		Console.console.print("Number of static entities: "
+				+ Entities.passiveEntities.size());
+		Console.console.print("Number of dynamic entities: "
+				+ Entities.dynamicEntities.size());
+		Console.console.print("Number of lights: "
+				+ Entities.lights.size());
 	}
 	
 	@Override
@@ -258,20 +258,13 @@ class BeerCommand implements Command{
 	@Override
 	public void issue(StringTokenizer toker){
 		 int i = 99;
-         //Timer beerTimer = new Timer();
-        do {
-                 //if (beerTimer.getTime() > 0.1f) {
-                         Console.console.print(i + " bottles of beer on the wall, " + i
-                                         + " bottles of beer");
-                         Console.console.print("Take one down, pass it around, "
-                                         + (i - 1) + " bottles of beer on the wall");
-                         i--;
-                         //beerTimer.reset();
-                 //}
-                 //Timer.tick();
-                 //System.out.println(beerTimer.getTime());
-                 //System.out.println(i);
-         } while(i > 0);
+		 do {
+			 Console.console.print(i + " bottles of beer on the wall, " + i
+					 + " bottles of beer");
+			 Console.console.print("Take one down, pass it around, "
+					 + (i - 1) + " bottles of beer on the wall");
+			 i--;
+		 } while(i > 0);
 	}
 	
 	@Override
@@ -326,7 +319,7 @@ class CameraCommand implements Command{
 				Entities.camera.following = Entities.player;
 				changed = true;
 			} else {
-				for (DynamicEntity ent : Entities.dynamicEntities.values()) {
+				for (DynamicEntity ent : Entities.dynamicEntities) {
 					if (ent.type.toLowerCase().equals(toFollow.toLowerCase())) {
 						Console.console.print("Camera now following " + toFollow);
 						Entities.camera.following = ent;
@@ -336,7 +329,7 @@ class CameraCommand implements Command{
 				}
 				
 				if(!changed){
-					for (Entity ent : Entities.passiveEntities.values()) {
+					for (Entity ent : Entities.passiveEntities) {
 						if (ent.type.toLowerCase().equals(toFollow.toLowerCase())) {
 							Console.console.print("Camera now following " + toFollow);
 							Entities.camera.following = ent;
@@ -393,7 +386,7 @@ class WarpCommand implements Command{
 	public void issue(StringTokenizer toker){
 		boolean hasWarped = false;
 		String warp = toker.nextToken();
-		for (Entity ent : Entities.dynamicEntities.values()){
+		for (Entity ent : Entities.dynamicEntities){
 			if (ent.type.toLowerCase().equals(warp.toLowerCase())) {
 				Console.console.print("Warping Player to " + ent.type + " ("
 						+ ent.location.x + "," + ent.location.y + ","

@@ -106,7 +106,7 @@ public class Debris extends Entity {
 	 * particle has gone out of range, it is replaced with a new, randomly
 	 * generated one
 	 */
-	public void update() {
+	public void update(float timeStep) {
 		// update the location of the debris field
 		this.location.x = following.location.x;
 		this.location.y = following.location.y;
