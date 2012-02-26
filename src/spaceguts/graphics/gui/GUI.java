@@ -1,6 +1,6 @@
 package spaceguts.graphics.gui;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import spaceguts.util.Debug;
 
@@ -15,7 +15,7 @@ public class GUI {
 	public static boolean menuUp = false;
 	
 	/** all the GUI objects to draw */
-	public static HashMap<Integer, GUIObject> guiObjects = new HashMap<Integer, GUIObject>();
+	public static ArrayList<GUIObject> guiObjects = new ArrayList<GUIObject>();
 	
 	/**
 	 * Updates the GUI
@@ -23,7 +23,7 @@ public class GUI {
 	public static void update(){
 		Debug.update();
 		
-		for(GUIObject obj : guiObjects.values()){
+		for(GUIObject obj : guiObjects){
 			obj.update();
 		}
 	}
@@ -34,16 +34,16 @@ public class GUI {
 	public static void draw(){
 		Debug.draw();
 		
-		for(GUIObject obj : guiObjects.values()){
+		for(GUIObject obj : guiObjects){
 			obj.draw();
 		}
 	}
 	
 	public static void addGUIObject(GUIObject obj){
-		GUIObject test = guiObjects.put(obj.hashCode(), obj);
-		
-		while(test != null){
-			test = guiObjects.put(test.hashCode() + 5, test);
-		}
+		guiObjects.add(obj);
+	}
+	
+	public static void removeGUIObject(GUIObject obj){
+		guiObjects.remove(obj);
 	}
 }
