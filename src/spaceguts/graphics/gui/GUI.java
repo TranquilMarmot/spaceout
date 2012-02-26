@@ -17,11 +17,29 @@ public class GUI {
 	/** all the GUI objects to draw */
 	public static ArrayList<GUIObject> guiObjects = new ArrayList<GUIObject>();
 	
+	public static ArrayList<GUIObject> guiObjectsToRemove = new ArrayList<GUIObject>();
+	public static ArrayList<GUIObject> guiObjectsToAdd = new ArrayList<GUIObject>();
+	
+	
 	/**
 	 * Updates the GUI
 	 */
 	public static void update(){
 		Debug.update();
+		
+		if(!guiObjectsToRemove.isEmpty()){
+			for(GUIObject obj : guiObjectsToRemove)
+				guiObjects.remove(obj);
+			
+			guiObjectsToRemove.clear();
+		}
+		
+		if(!guiObjectsToAdd.isEmpty()){
+			for(GUIObject obj : guiObjectsToAdd)
+				guiObjects.add(obj);
+			
+			guiObjectsToAdd.clear();
+		}
 		
 		for(GUIObject obj : guiObjects){
 			obj.update();
@@ -40,10 +58,10 @@ public class GUI {
 	}
 	
 	public static void addGUIObject(GUIObject obj){
-		guiObjects.add(obj);
+		guiObjectsToAdd.add(obj);
 	}
 	
 	public static void removeGUIObject(GUIObject obj){
-		guiObjects.remove(obj);
+		guiObjectsToRemove.add(obj);
 	}
 }

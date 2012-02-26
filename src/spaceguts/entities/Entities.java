@@ -22,11 +22,18 @@ public class Entities {
 	public static Skybox skybox;
 
 	/** all the current passive entities */
-	public static ArrayList<Entity> passiveEntities = new ArrayList<Entity>(100);
+	public static ArrayList<Entity> passiveEntities = new ArrayList<Entity>(10);
 	/** all the dynamic entities */
-	public static ArrayList<DynamicEntity> dynamicEntities = new ArrayList<DynamicEntity>();
+	public static ArrayList<DynamicEntity> dynamicEntities = new ArrayList<DynamicEntity>(100);
 	/** all the current lights */
-	public static ArrayList<Light> lights = new ArrayList<Light>();
+	public static ArrayList<Light> lights = new ArrayList<Light>(8);
+	
+	private static ArrayList<Entity> passiveEntitiesToAdd = new ArrayList<Entity>(10);
+	private static ArrayList<Entity> passiveEntitiesToRemove = new ArrayList<Entity>(10);
+	
+	private static ArrayList<Light> lightsToAdd = new ArrayList<Light>(8);
+	private static ArrayList<Light> lightsToRemove = new ArrayList<Light>(8);
+	
 	
 	public static void updateAll(float timeStep){
 		camera.update(timeStep);

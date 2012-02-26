@@ -135,9 +135,6 @@ public class Debug {
 		
 		Console.console.draw();
 		
-		if(Entities.camera != null)
-			Entities.camera.drawCrosshair();
-		
 		// draw 'PAUSED' in the middle of the screen if the game is paused
 		if (Runner.paused && Entities.entitiesExist())
 			Debug.font.drawString((DisplayHelper.windowWidth / 2) - 25,

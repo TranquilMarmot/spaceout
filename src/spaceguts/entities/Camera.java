@@ -348,7 +348,7 @@ public class Camera extends Entity {
 		return new Vector3f(x, y, z);
 	}
 	
-	public void drawCrosshair(){
+	public void draw2D(){
 		GL11.glColor3f(defaultCrosshairColor.x, defaultCrosshairColor.y, defaultCrosshairColor.z);
 		
 		// if we're not in build mode, use the crosshair

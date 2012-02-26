@@ -1,5 +1,7 @@
 package spaceguts.physics;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Random;
 
 import javax.vecmath.Quat4f;
@@ -10,11 +12,15 @@ import org.lwjgl.util.vector.Vector3f;
 import spaceguts.entities.Camera;
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
+import spaceguts.graphics.gui.GUI;
+import spaceguts.graphics.gui.button.MenuButton;
+import spaceguts.graphics.gui.menu.picker.Picker;
 import spaceguts.input.KeyBindings;
 import spaceguts.input.Keys;
 import spaceguts.input.MouseManager;
 import spaceguts.util.QuaternionHelper;
 import spaceout.entities.dynamic.Planet;
+import spaceout.resources.Models;
 import spaceout.resources.Textures;
 
 import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback;
@@ -33,6 +39,11 @@ public class Builder {
 	public DynamicEntity lookingAt;
 	/** whether or not what the builder is looking at has been grabbed */
 	public boolean leftGrabbed = false, rightGrabbed = false;
+	
+	Picker<Models> picker;
+	MenuButton addButton, cancelButton;
+	
+	boolean modelSelected = false;
 	
 	/**
 	 * Builder constructor
@@ -53,6 +64,48 @@ public class Builder {
 		
 		if(Keys.P.isPressed())
 			addRandomSphere();
+		
+		if(Keys.TAB.pressedOnce())
+			openPickerMenu();
+	}
+	
+	private void openPickerMenu(){
+		picker = new Picker<Models>(-50, -20, 20, 200, Models.values(), Textures.MENU_PICKER_ACTIVE, Textures.MENU_PICKER_MOUSEOVER, Textures.MENU_PICKER_PRESSED, Textures.MENU_PICKER_SELECTED);
+		
+		addButton = new MenuButton("Add", 119, 28, 115, -17);
+		addButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				if(picker.itemHasBeenSelected()){
+					addDynamicEntity(picker.getSelectedItem());
+				}
+			}
+		});
+		
+		
+		
+		cancelButton = new MenuButton("Cancel", 119, 28, 115, 17);
+		cancelButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				GUI.removeGUIObject(picker);
+				GUI.removeGUIObject(addButton);
+				GUI.removeGUIObject(cancelButton);
+				
+				GUI.menuUp = false;
+			}
+		});
+		
+		
+		GUI.addGUIObject(picker);
+		GUI.addGUIObject(addButton);
+		GUI.addGUIObject(cancelButton);
+		
+		GUI.menuUp = true;
+	}
+	
+	private void addDynamicEntity(Models model){
+		
 	}
 	
 	
