@@ -11,7 +11,6 @@ import spaceguts.physics.Builder;
 import spaceguts.physics.Physics;
 import spaceguts.util.DisplayHelper;
 import spaceguts.util.QuaternionHelper;
-import spaceguts.util.Runner;
 import spaceguts.util.console.Console;
 import spaceout.resources.Textures;
 
@@ -108,7 +107,7 @@ public class Camera extends Entity {
 	 */
 	public void update(float timeStep) {
 		if(buildMode)
-			builder.update();
+			builder.update(timeStep);
 		
 		// if we're not following anything, we're in free mode
 		if (following == null) {
@@ -133,16 +132,13 @@ public class Camera extends Entity {
 			this.rotation = QuaternionHelper.rotateY(this.rotation, MouseManager.dx);
 		}
 
-		// to keep free mode movement framerate-independent
-		float delta = timeStep * 100.0f;
-
 		// if we're not in free mode, move the camera to be behind whatever it's
 		// following
 		if (!freeMode) {
 			this.location.set(following.location);
 		} else if (freeMode && !vanityMode) {
 			// else do logic for moving around in free mode
-			freeMode(delta);
+			freeMode(timeStep);
 		}
 	}
 
@@ -273,52 +269,46 @@ public class Camera extends Entity {
 	/**
 	 * Performs any free mode movement
 	 * 
-	 * @param delta
+	 * @param timeStep
 	 *            Amount of time passed since last update
 	 */
-	private void freeMode(float delta) {
-		// only move if we're not paused
-		if (!Runner.paused && !Console.consoleOn) {
-			// check for forward and backward movement
-			boolean forward = KeyBindings.CONTROL_FORWARD.isPressed();
-			boolean backward = KeyBindings.CONTROL_BACKWARD.isPressed();
+	private void freeMode(float timeStep) {
+		timeStep *= 100;
+		// check for forward and backward movement
+		boolean forward = KeyBindings.CONTROL_FORWARD.isPressed();
+		boolean backward = KeyBindings.CONTROL_BACKWARD.isPressed();
 
-			// control forward and backward movement
-			if (forward) {
-				this.location = QuaternionHelper.moveZ(this.rotation, this.location, speed * delta);
-			}
-			if (backward) {
-				this.location = QuaternionHelper.moveZ(this.rotation, this.location, -speed * delta);
-			}
+		// control forward and backward movement
+		if (forward)
+			this.location = QuaternionHelper.moveZ(this.rotation, this.location, speed * timeStep);
+		if (backward)
+			this.location = QuaternionHelper.moveZ(this.rotation, this.location, -speed * timeStep);
 
-			// check for left and right movement
-			boolean left = KeyBindings.CONTROL_LEFT.isPressed();
-			boolean right = KeyBindings.CONTROL_RIGHT.isPressed();
+		// check for left and right movement
+		boolean left = KeyBindings.CONTROL_LEFT.isPressed();
+		boolean right = KeyBindings.CONTROL_RIGHT.isPressed();
 
-			// control strafing left and right
-			if (left) {
-				this.location = QuaternionHelper.moveX(this.rotation, this.location, speed * delta);
-			}
-			if (right) {
-				this.location = QuaternionHelper.moveX(this.rotation, this.location, -speed * delta);
-			}
+		// control strafing left and right
+		if (left)
+			this.location = QuaternionHelper.moveX(this.rotation, this.location, speed * timeStep);
+		if (right)
+			this.location = QuaternionHelper.moveX(this.rotation, this.location, -speed * timeStep);
 
-			// handle going up/down
-			boolean up = KeyBindings.CONTROL_ASCEND.isPressed();
-			boolean down = KeyBindings.CONTROL_DESCEND.isPressed();
-				if (up)
-					this.location = QuaternionHelper.moveY(this.rotation, this.location, -speed * delta);
-				if (down)
-					this.location = QuaternionHelper.moveY(this.rotation, this.location, speed * delta);
+		// handle going up/down
+		boolean up = KeyBindings.CONTROL_ASCEND.isPressed();
+		boolean down = KeyBindings.CONTROL_DESCEND.isPressed();
+		if (up)
+			this.location = QuaternionHelper.moveY(this.rotation, this.location, -speed * timeStep);
+		if (down)
+			this.location = QuaternionHelper.moveY(this.rotation, this.location, speed * timeStep);
 
-			// roll left/right
-			boolean rollRight = KeyBindings.CONTROL_ROLL_RIGHT.isPressed();
-			boolean rollLeft = KeyBindings.CONTROL_ROLL_LEFT.isPressed();
-			if (rollRight)
-				this.rotation = QuaternionHelper.rotateZ(this.rotation, -delta);
-			if (rollLeft)
-				this.rotation = QuaternionHelper.rotateZ(this.rotation, delta);
-		}
+		// roll left/right
+		boolean rollRight = KeyBindings.CONTROL_ROLL_RIGHT.isPressed();
+		boolean rollLeft = KeyBindings.CONTROL_ROLL_LEFT.isPressed();
+		if (rollRight)
+			this.rotation = QuaternionHelper.rotateZ(this.rotation, -timeStep);
+		if (rollLeft)
+			this.rotation = QuaternionHelper.rotateZ(this.rotation, timeStep);
 	}
 	
 	/**

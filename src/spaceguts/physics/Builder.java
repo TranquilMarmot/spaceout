@@ -10,6 +10,7 @@ import org.lwjgl.util.vector.Vector3f;
 import spaceguts.entities.Camera;
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
+import spaceguts.input.KeyBindings;
 import spaceguts.input.Keys;
 import spaceguts.input.MouseManager;
 import spaceguts.util.QuaternionHelper;
@@ -44,8 +45,11 @@ public class Builder {
 	/**
 	 * Updates the builder (called when the camera is in builder mode)
 	 */
-	public void update(){
+	public void update(float timeStep){
 		whatsTheCameraLookingAt();
+		
+		if(lookingAt != null && (leftGrabbed || rightGrabbed))
+			grabLogic(timeStep);
 		
 		if(Keys.P.isPressed())
 			addRandomSphere();
@@ -58,11 +62,6 @@ public class Builder {
 	 * rotates what's being looked at if the right mouse button is down
 	 */
 	private void whatsTheCameraLookingAt(){
-		if(!MouseManager.button0)
-			leftGrabbed = false;
-		if(!MouseManager.button1)
-			rightGrabbed = false;
-		
 		if(!leftGrabbed && !rightGrabbed){
 			// check if anything has been grabbed
 			ClosestRayResultCallback cameraRay = camera.rayTestAtCenter();
@@ -70,82 +69,147 @@ public class Builder {
 			if(cameraRay.hasHit()){
 				lookingAt = (DynamicEntity) cameraRay.collisionObject.getUserPointer();
 				
+				// grab the entity if the mouse button is down
 				if(!leftGrabbed && MouseManager.button0){
+						// stop any linear velocity
 						lookingAt.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
 						leftGrabbed = true;
 				}
 				
 				if(!rightGrabbed && MouseManager.button1){
+						// stop any angular velocity
 						lookingAt.rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
 						rightGrabbed = true;
 				}
 			} else {
+				// looking at nothing
 				lookingAt = null;
 			}
 		}
+	}
+	
+	private void grabLogic(float timeStep){
+		// activate the rigid body if it's not active (since we're directly modifying its world transform and not just it's velocities)
+		if(!lookingAt.rigidBody.isActive())
+			lookingAt.rigidBody.activate();
 		
-		if(lookingAt != null && (leftGrabbed || rightGrabbed)){
-			if(!lookingAt.rigidBody.isActive())
-				lookingAt.rigidBody.activate();
+		// move logic
+		if(leftGrabbed){
+			if(!MouseManager.button0){
+				leftGrabbed = false;
+			} else{
+				// how far to move what we're looking at
+				float dx = MouseManager.dx * 10;
+				float dy = -MouseManager.dy * 10;
+				float dz = MouseManager.wheel / 10;
+				
+				// rotate the distance by the camera's rotation
+				Vector3f impulse = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(dx, dy, dz), Entities.camera.rotation);
+				
+				// get the entity's transform
+				Transform trans = new Transform();
+				lookingAt.rigidBody.getWorldTransform(trans);
+				
+				trans.origin.add(new javax.vecmath.Vector3f(impulse.x, impulse.y, impulse.z));
+				
+				// set the transform to the new location
+				lookingAt.rigidBody.setWorldTransform(trans);
+				
+				// set the location so that it gets rendered properly (otherwise, the rendering location wouldn't be update until the end of the next physics world tick, which would be one frame too late)
+				lookingAt.location.set(trans.origin.x, trans.origin.y, trans.origin.z);
+			}
 			
-			if(leftGrabbed){
-				if(MouseManager.button0){
-					float dx = MouseManager.dx * 10;
-					float dy = -MouseManager.dy * 10;
-					float dz = MouseManager.wheel / 10;
-					
-					Vector3f impulse = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(dx, dy, dz), Entities.camera.rotation);
-					
+			// check for right grab
+			if(MouseManager.button1){
+				lookingAt.rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
+				rightGrabbed = true;
+			}
+		}
+		
+		// rotate logic
+		if(rightGrabbed){
+			if(!MouseManager.button1){
+				rightGrabbed = false;
+			} else if(MouseManager.dx != 0 || MouseManager.dy != 0 || MouseManager.wheel != 0){
 					Transform trans = new Transform();
 					lookingAt.rigidBody.getWorldTransform(trans);
 					
-					trans.origin.add(new javax.vecmath.Vector3f(impulse.x, impulse.y, impulse.z));
+					Quat4f rot = new Quat4f();
+					trans.getRotation(rot);
 					
+					// how much rotation to apply
+					Vector3f amount = new Vector3f(-MouseManager.dy * 10, MouseManager.dx * 10, MouseManager.wheel / 10);
+					
+					// rotate amount by the camera's rotation
+					Vector3f impulse = QuaternionHelper.rotateVectorByQuaternion(amount, Entities.camera.rotation);
+					
+					// rotate entity's rotation by our rotated amount
+					Quaternion newRot = QuaternionHelper.rotate(new Quaternion(rot.x, rot.y, rot.z, rot.w), impulse);
+					
+					// set the rotation to the new rotation
+					trans.setRotation(new Quat4f(newRot.x, newRot.y, newRot.z, newRot.w));
+					
+					// set the entity's world transform
 					lookingAt.rigidBody.setWorldTransform(trans);
 					
-					// set the location so that it gets rendered properly (otherwise, the rendering location wouldn't be update until the end of the next physics world tick, which would be one frame too late)
-					lookingAt.location.set(trans.origin.x, trans.origin.y, trans.origin.z);
-				} else {
-					leftGrabbed = false;
-				}
-				
-				if(MouseManager.button1){
-					lookingAt.rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
-					rightGrabbed = true;
-				}
+					// set the rotation so that it gets rendered properly (otherwise, the rendering rotation wouldn't be update until the end of the next physics world tick, which would be one frame too late)
+					lookingAt.rotation.set(newRot.x, newRot.y, newRot.z, newRot.w);
 			}
 			
-			if(rightGrabbed){
-				if(MouseManager.dx != 0 || MouseManager.dy != 0 || MouseManager.wheel != 0){
-					if(MouseManager.button1){
-							Transform trans = new Transform();
-							lookingAt.rigidBody.getWorldTransform(trans);
-							
-							Quat4f rot = new Quat4f();
-							trans.getRotation(rot);
-							
-							Vector3f amount = new Vector3f(-MouseManager.dy * 10, MouseManager.dx * 10, MouseManager.wheel / 10);
-							
-							Vector3f impulse = QuaternionHelper.rotateVectorByQuaternion(amount, Entities.camera.rotation);
-							
-							Quaternion newRot = QuaternionHelper.rotate(new Quaternion(rot.x, rot.y, rot.z, rot.w), impulse);
-							
-							trans.setRotation(new Quat4f(newRot.x, newRot.y, newRot.z, newRot.w));
-							
-							lookingAt.rigidBody.setWorldTransform(trans);
-							
-							lookingAt.rotation.set(newRot.x, newRot.y, newRot.z, newRot.w);
-					} else {
-						rightGrabbed = false;
-					}
-				}
-				
-				if(MouseManager.button0){
-					lookingAt.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
-					leftGrabbed = true;
-				}
+			// check for left grab
+			if(MouseManager.button0){
+				lookingAt.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
+				leftGrabbed = true;
 			}
+			
 		}
+		
+		// move the entity with the camera
+		moveEntityWithCamera(timeStep);
+	}
+	
+	/**
+	 * Moves the grabbed entity with the camera. Notice that this is nearly identical to the <code>freeMode(float timeStep)</code> method in the {@link Camera} class.
+	 * @param timeStep Amount of time passed (gotten from camera)
+	 */
+	private void moveEntityWithCamera(float timeStep){
+		timeStep *= 100;
+		Transform trans = new Transform();
+		lookingAt.rigidBody.getWorldTransform(trans);
+		
+		Vector3f location = new Vector3f(trans.origin.x, trans.origin.y, trans.origin.z);
+		
+		// check for forward and backward movement
+		boolean forward = KeyBindings.CONTROL_FORWARD.isPressed();
+		boolean backward = KeyBindings.CONTROL_BACKWARD.isPressed();
+
+		// control forward and backward movement
+		if (forward) 
+			location = QuaternionHelper.moveZ(camera.rotation, location, camera.speed * timeStep);
+		if (backward)
+			location = QuaternionHelper.moveZ(camera.rotation, location, -camera.speed * timeStep);
+
+		// check for left and right movement
+		boolean left = KeyBindings.CONTROL_LEFT.isPressed();
+		boolean right = KeyBindings.CONTROL_RIGHT.isPressed();
+
+		// control strafing left and right
+		if (left)
+			location = QuaternionHelper.moveX(camera.rotation, location, camera.speed * timeStep);
+		if (right)
+			location = QuaternionHelper.moveX(camera.rotation, location, -camera.speed * timeStep);
+
+		// handle going up/down
+		boolean up = KeyBindings.CONTROL_ASCEND.isPressed();
+		boolean down = KeyBindings.CONTROL_DESCEND.isPressed();
+		if (up)
+			location = QuaternionHelper.moveY(camera.rotation, location, -camera.speed * timeStep);
+		if (down)
+			location = QuaternionHelper.moveY(camera.rotation, location, camera.speed * timeStep);
+		
+		trans.origin.set(location.x, location.y, location.z);
+		
+		lookingAt.rigidBody.setWorldTransform(trans);
 	}
 	
 	/**
