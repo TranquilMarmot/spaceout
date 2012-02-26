@@ -88,6 +88,10 @@ public class Builder {
 		}
 	}
 	
+	/**
+	 * Moves or rotates what is grabbed
+	 * @param timeStep Amount of time passed (gotten from camera)
+	 */
 	private void grabLogic(float timeStep){
 		// activate the rigid body if it's not active (since we're directly modifying its world transform and not just it's velocities)
 		if(!lookingAt.rigidBody.isActive())
@@ -161,7 +165,6 @@ public class Builder {
 				lookingAt.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
 				leftGrabbed = true;
 			}
-			
 		}
 		
 		// move the entity with the camera
@@ -169,7 +172,7 @@ public class Builder {
 	}
 	
 	/**
-	 * Moves the grabbed entity with the camera. Notice that this is nearly identical to the <code>freeMode(float timeStep)</code> method in the {@link Camera} class.
+	 * Moves the grabbed entity with the camera. Note that this is nearly identical to the <code>freeMode(float timeStep)</code> method in the {@link Camera} class.
 	 * @param timeStep Amount of time passed (gotten from camera)
 	 */
 	private void moveEntityWithCamera(float timeStep){
@@ -182,7 +185,6 @@ public class Builder {
 		// check for forward and backward movement
 		boolean forward = KeyBindings.CONTROL_FORWARD.isPressed();
 		boolean backward = KeyBindings.CONTROL_BACKWARD.isPressed();
-
 		// control forward and backward movement
 		if (forward) 
 			location = QuaternionHelper.moveZ(camera.rotation, location, camera.speed * timeStep);
@@ -192,7 +194,6 @@ public class Builder {
 		// check for left and right movement
 		boolean left = KeyBindings.CONTROL_LEFT.isPressed();
 		boolean right = KeyBindings.CONTROL_RIGHT.isPressed();
-
 		// control strafing left and right
 		if (left)
 			location = QuaternionHelper.moveX(camera.rotation, location, camera.speed * timeStep);
@@ -208,6 +209,8 @@ public class Builder {
 			location = QuaternionHelper.moveY(camera.rotation, location, camera.speed * timeStep);
 		
 		trans.origin.set(location.x, location.y, location.z);
+		
+		lookingAt.location.set(location);
 		
 		lookingAt.rigidBody.setWorldTransform(trans);
 	}
