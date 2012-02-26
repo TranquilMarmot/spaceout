@@ -3,6 +3,7 @@ package spaceguts.graphics.gui.menu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FilenameFilter;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
@@ -27,7 +28,7 @@ public class LoadMenu extends GUIObject {
 	private Texture background;
 
 	/** The FilePicker to choose the file */
-	private Picker<File> picker;
+	private Picker<XMLFile> picker;
 
 	/** button to load the selected file */
 	private MenuButton loadButton;
@@ -61,7 +62,7 @@ public class LoadMenu extends GUIObject {
 		fileLoaded = false;
 
 		// create file picker
-		picker = new Picker<File>(-50, -20, 20, 200, new File(path).listFiles(), Textures.MENU_PICKER_ACTIVE, Textures.MENU_PICKER_MOUSEOVER, Textures.MENU_PICKER_PRESSED, Textures.MENU_PICKER_SELECTED);
+		picker = new Picker<XMLFile>(-50, -20, 20, 200, new XMLFile(path).listFiles(), Textures.MENU_PICKER_ACTIVE, Textures.MENU_PICKER_MOUSEOVER, Textures.MENU_PICKER_PRESSED, Textures.MENU_PICKER_SELECTED);
 
 		// create load button
 		loadButton = new MenuButton("Load", 119, 28, 115,
@@ -69,7 +70,7 @@ public class LoadMenu extends GUIObject {
 		loadButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
+				if(picker.itemHasBeenSelected()){
 					Physics.initPhysics();
 					
 					// load entities from XML
@@ -80,9 +81,6 @@ public class LoadMenu extends GUIObject {
 
 					// raise the file loaded flag
 					fileLoaded = true;
-				} catch (NullPointerException exc) {
-					// if there's a NullPointerException, it means nothing has
-					// been slected yet
 				}
 			}
 
@@ -159,5 +157,95 @@ public class LoadMenu extends GUIObject {
 		backButton.draw();
 
 		Debug.drawVersion();
+	}
+	
+	@SuppressWarnings("serial")
+	/**
+	 * Since the Picker class uses toString to decide what to print out on each ListItem,
+	 * but File's toString returns the whole path and not just the file name like we want.
+	 * This class extends File and basically just overrides its toString to return just the
+	 * name of the file.
+	 * 
+	 * For convenience, there's another inner class in this inner class that filters the files
+	 * so that only files with ".xml" are listed.
+	 * @author TranquilMarmot
+	 *
+	 */
+	class XMLFile extends File{
+		/**
+		 * @param pathname Path to file
+		 */
+		public XMLFile(String pathname) {
+			super(pathname);
+		}
+		
+		/**
+		 * @param file File to create XMLFile from
+		 */
+		public XMLFile(File file){
+			this(file.getAbsolutePath());
+		}
+		
+		@Override
+		/**
+		 * @return Just the file name! That is, everything between the last \ and the last .
+		 */
+		public String toString(){
+			String path = this.getPath();
+			
+			int lastSlash = 0, dotIndex = 0;
+			
+			char[] chars = path.toCharArray();
+			// find the last .
+			for(int i = chars.length - 1; i >= 0; i--){
+				if(chars[i] == '.'){
+					dotIndex = i;
+					break;
+				}
+			}
+			// find the last \
+			for(int i = chars.length - 1; i >= 0; i--){
+				if(chars[i] == '\\'){
+					lastSlash = i;
+					break;
+				}
+			}
+			
+			String fileName = path.substring(lastSlash + 1, dotIndex);
+			
+			return fileName;
+		}
+		
+		@Override
+		/**
+		 * Lists all files ending with ".xml"
+		 */
+		public XMLFile[] listFiles(){
+			File[] files = this.listFiles(new XMLFilter());
+			
+			XMLFile[] cast = new XMLFile[files.length];
+			
+			for(int i = 0; i < files.length; i++){
+				cast[i] = new XMLFile(files[i]);
+			}
+			
+			return cast;
+		}
+		
+		/**
+		 * Filters out classes not ending in ".xml"
+		 * @author TranquilMarmot
+		 *
+		 */
+		class XMLFilter implements FilenameFilter{
+	        @Override
+	        public boolean accept(File directory, String filename) {
+	                CharSequence xml = ".xml";
+	                if(filename.contains(xml))
+	                        return true;
+	                else
+	                        return false;
+	        }
+		}
 	}
 }

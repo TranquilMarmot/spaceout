@@ -27,10 +27,16 @@ public class Picker<T> extends GUIObject{
 				}
 			});
 		}
+		
+		selectedItem = null;
 	}
 	
 	public T getSelectedItem(){
 		return selectedItem.getValue();
+	}
+	
+	public boolean itemHasBeenSelected(){
+		return selectedItem != null;
 	}
 	
 	@Override
