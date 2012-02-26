@@ -1,4 +1,4 @@
-package spaceguts.graphics.gui.menu.filepicker;
+package spaceguts.graphics.gui.menu.picker;
 
 import java.awt.event.ActionEvent;
 
@@ -10,27 +10,35 @@ import spaceguts.util.Debug;
 import spaceguts.util.DisplayHelper;
 import spaceout.resources.Textures;
 
-public class FilePickerListItem extends RectangleButton{	
-	public boolean selected = false;
+public class ListItem<T> extends RectangleButton{
+	private T object;
+	public boolean selected;
 	
-	private Textures currentImage = Textures.MENU_PICKER_ACTIVE;
-	
-	private String file;
-	private String printString;
+	private Textures currentImage, activeImage, mouseOverImage, pressedImage, selectedImage;
 	
 	int xOffset, yOffset;
+	
 
-	public FilePickerListItem(String file, int xOffsetFromCenter, int yOffsetFromCenter, int height, int width) {
+	public ListItem(T object, int xOffsetFromCenter, int yOffsetFromCenter, int height, int width, Textures activeImage, Textures mouseOverImage, Textures pressedImage, Textures selectedImage) {
 		super(0, 0, height, width);
 		this.xOffset = xOffsetFromCenter;
 		this.yOffset = yOffsetFromCenter;
-		this.file = file;
-		printString = file.substring(0, file.indexOf("."));
+		this.activeImage = activeImage;
+		this.mouseOverImage = mouseOverImage;
+		this.pressedImage = pressedImage;
+		this.selectedImage = selectedImage;
+		this.object = object;
+		
+		currentImage = activeImage;
+	}
+	
+	public T getValue(){
+		return object;
 	}
 
 	@Override
 	public void activeEvent() {
-		currentImage = Textures.MENU_PICKER_ACTIVE;
+		currentImage = activeImage;
 	}
 
 	@Override
@@ -39,22 +47,17 @@ public class FilePickerListItem extends RectangleButton{
 
 	@Override
 	public void releasedEvent() {
-		buttonListener.actionPerformed(new ActionEvent(this, 1, file));
+		buttonListener.actionPerformed(new ActionEvent(this, 1, object.toString()));
 	}
 
 	@Override
 	public void mouseOverEvent() {
-		currentImage = Textures.MENU_PICKER_MOUSEOVER;
-		
+		currentImage = mouseOverImage;
 	}
 
 	@Override
 	public void pressedEvent() {
-		currentImage = Textures.MENU_PICKER_PRESSED;
-	}
-	
-	public String getFile(){
-		return file;
+		currentImage = pressedImage;
 	}
 	
 	@Override
@@ -62,7 +65,7 @@ public class FilePickerListItem extends RectangleButton{
 		super.update();
 		
 		if(this.selected)
-			currentImage = Textures.MENU_PICKER_SELECTED;
+			currentImage = selectedImage;
 		
 		// keep the button in the middle of the screen
 		this.x = (DisplayHelper.windowWidth / 2) - (this.width / 2) + xOffset;
@@ -98,13 +101,14 @@ public class FilePickerListItem extends RectangleButton{
 			}
 			GL11.glEnd();
 			
-			int textWidth = Debug.font.getWidth(file);
+			int textWidth = Debug.font.getWidth(object.toString());
 			int textHeight = Debug.font.getAscent();
 			
 			int textX = this.x + ((this.width - textWidth) / 2);
 			int textY = this.y + ((this.height - textHeight) / 2) - 2;
 			
-			Debug.font.drawString(textX, textY, printString, Color.white);
+			Debug.font.drawString(textX, textY, object.toString(), Color.white);
 		}
-	}	
+	}
+
 }

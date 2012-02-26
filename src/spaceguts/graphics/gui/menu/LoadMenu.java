@@ -2,6 +2,7 @@ package spaceguts.graphics.gui.menu;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.Texture;
@@ -9,7 +10,7 @@ import org.newdawn.slick.opengl.Texture;
 import spaceguts.graphics.gui.GUI;
 import spaceguts.graphics.gui.GUIObject;
 import spaceguts.graphics.gui.button.MenuButton;
-import spaceguts.graphics.gui.menu.filepicker.FilePicker;
+import spaceguts.graphics.gui.menu.picker.Picker;
 import spaceguts.physics.Physics;
 import spaceguts.util.Debug;
 import spaceguts.util.DisplayHelper;
@@ -26,7 +27,7 @@ public class LoadMenu extends GUIObject {
 	private Texture background;
 
 	/** The FilePicker to choose the file */
-	private FilePicker picker;
+	private Picker<File> picker;
 
 	/** button to load the selected file */
 	private MenuButton loadButton;
@@ -38,7 +39,7 @@ public class LoadMenu extends GUIObject {
 	private boolean backToMainMenu;
 
 	/**
-	 * whether or not a file has been laoded (if it has, get rid of this menu
+	 * whether or not a file has been loaded (if it has, get rid of this menu
 	 * and create the pause menu)
 	 */
 	private boolean fileLoaded;
@@ -60,7 +61,7 @@ public class LoadMenu extends GUIObject {
 		fileLoaded = false;
 
 		// create file picker
-		picker = new FilePicker(-50, -20, path);
+		picker = new Picker<File>(-50, -20, 20, 200, new File(path).listFiles(), Textures.MENU_PICKER_ACTIVE, Textures.MENU_PICKER_MOUSEOVER, Textures.MENU_PICKER_PRESSED, Textures.MENU_PICKER_SELECTED);
 
 		// create load button
 		loadButton = new MenuButton("Load", 119, 28, 115,
@@ -71,9 +72,9 @@ public class LoadMenu extends GUIObject {
 				try {
 					Physics.initPhysics();
 					
-					String selectedFile = picker.getSelected().getFile();
-						// load entities from XML
-						XMLParser.loadEntitiesFromXmlFile(path + selectedFile);
+					// load entities from XML
+					XMLParser.loadEntitiesFromXmlFile(picker.getSelectedItem().getPath());
+					
 					// create the pause menu
 					GUI.addGUIObject(new PauseMenu());
 
@@ -109,7 +110,7 @@ public class LoadMenu extends GUIObject {
 
 		if (backToMainMenu) {
 			// remove the load menu
-			GUI.guiObjects.remove(this.hashCode());
+			GUI.removeGUIObject(this);
 			
 			// add the main menu
 			GUI.addGUIObject(new MainMenu());
