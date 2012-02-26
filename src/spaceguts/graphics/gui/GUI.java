@@ -2,6 +2,7 @@ package spaceguts.graphics.gui;
 
 import java.util.ArrayList;
 
+import spaceguts.entities.Entities;
 import spaceguts.util.Debug;
 
 /**
@@ -55,6 +56,9 @@ public class GUI {
 		for(GUIObject obj : guiObjects){
 			obj.draw();
 		}
+		
+		if(Entities.camera != null && !menuUp)
+			Entities.camera.draw2D();
 	}
 	
 	public static void addGUIObject(GUIObject obj){
