@@ -22,6 +22,15 @@ import spaceout.resources.Textures;
  * 
  */
 public class Console {
+	/**
+	 * TODO: Decide what needs to be static and what doesn't
+	 * - The input bar will remain static, while the command scrollback is per object. (this should work fine)
+	 * - The console fading should be per object, so that the consoles
+	 * 		can fade in and out individually based on focus.
+	 * TODO: Implement tabs
+	 */
+	
+	
 	/** the console */
 	public static Console console = new Console();
 
@@ -66,7 +75,7 @@ public class Console {
 	public static UnicodeFont font = null;
 
 	/** location to draw the console at */
-	private int x;
+	private int x; 
 	private int y;
 	
 	/** Height of the console in characters */
@@ -144,7 +153,6 @@ public class Console {
 	public void updateCommandHistory() {
 		// changes the value of the current spot in the command history
 		commandHistoryList.set(chIndex, input);
-		//System.out.println(commandHistoryList.size() + " : " + input);
 	}
 
 	/**
@@ -164,7 +172,7 @@ public class Console {
 		// The current number of characters, and the iterator
 		int currentWidth = 0;
 
-		// If the next word is too big, just split it.
+		// If the next word is too big, time to split the line.
 		if (words[0].length() > consoleWidth) {
 			currentWidth = consoleWidth;
 		} else {
@@ -232,11 +240,6 @@ public class Console {
 	public void submit() {
 		if (input.length() > 0) {
 			
-			System.out.println(commandHistoryList.size());
-			for (String c : commandHistoryList) {
-				System.out.println(":" + c);
-			}
-			
 			// trim off any whitespace
 			input.trim();
 			// do a command if the input starts with a /
@@ -248,8 +251,10 @@ public class Console {
 				print("<Player> " + input);
 
 			// adds the input to the command history
-			if (!commandHistoryList.get(chIndex).equals(""))
+			if (!commandHistoryList.get(0).equals(""))
 				commandHistoryList.add(0, "");
+			else 
+				commandHistoryList.add(1,input);
 
 			// rolls to the new empty spot in the commandHistory List
 			chIndex = 0;
