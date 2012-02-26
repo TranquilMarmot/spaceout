@@ -240,12 +240,12 @@ class ListCommand implements Command{
 class NumberCommand implements Command{
 	@Override
 	public void issue(StringTokenizer toker){
-        Console.console.print("Number of static entities: "
-                + Entities.passiveEntities.size());
-        Console.console.print("Number of dynamic entities: "
-                + Entities.dynamicEntities.size());
-        Console.console.print("Number of lights: "
-                + Entities.lights.size());
+		Console.console.print("Number of static entities: "
+				+ Entities.passiveEntities.size());
+		Console.console.print("Number of dynamic entities: "
+				+ Entities.dynamicEntities.size());
+		Console.console.print("Number of lights: "
+				+ Entities.lights.size());
 	}
 	
 	@Override
@@ -258,20 +258,13 @@ class BeerCommand implements Command{
 	@Override
 	public void issue(StringTokenizer toker){
 		 int i = 99;
-         //Timer beerTimer = new Timer();
-        do {
-                 //if (beerTimer.getTime() > 0.1f) {
-                         Console.console.print(i + " bottles of beer on the wall, " + i
-                                         + " bottles of beer");
-                         Console.console.print("Take one down, pass it around, "
-                                         + (i - 1) + " bottles of beer on the wall");
-                         i--;
-                         //beerTimer.reset();
-                 //}
-                 //Timer.tick();
-                 //System.out.println(beerTimer.getTime());
-                 //System.out.println(i);
-         } while(i > 0);
+		 do {
+			 Console.console.print(i + " bottles of beer on the wall, " + i
+					 + " bottles of beer");
+			 Console.console.print("Take one down, pass it around, "
+					 + (i - 1) + " bottles of beer on the wall");
+			 i--;
+		 } while(i > 0);
 	}
 	
 	@Override
