@@ -55,7 +55,10 @@ public class Runner {
 	}
 	
 	/**
-	 * This tells LWJGL where to find the native libraries, based on the current OS
+	 * This tells LWJGL where to find the native libraries, based on the current OS.
+	 * This doesn't need to be called if the game is being launched from Eclipse as
+	 * long as the natives are set for lwjgl.jar in the project settings.
+	 * If the launcher is being used, this has to be one of the first things set.
 	 */
 	private static void setUpEnvironment(String homeDir){
 		String os = System.getProperty("os.name").toLowerCase();
