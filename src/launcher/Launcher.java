@@ -202,9 +202,14 @@ public class Launcher {
 		}
 	}
 	
+	/**
+	 * Extracts the natives zip to the right location
+	 * @param nativesFile zip file to extract
+	 */
 	private static void extractNatives(String nativesFile){
+		// TODO these extract methods should really be one method that take some parameters that tell them what to download/extract
 		try{
-			// create .spaceout
+			// create /lib/natives
 			File nativedir = new File(homeDir + getPath(".spaceout/lib/natives"));
 			if(!nativedir.exists()){
 				boolean success = nativedir.mkdir();
@@ -225,17 +230,7 @@ public class Launcher {
 				if(ent.isDirectory()){
 					System.out.println("There shouldn't be any directories inside of the natives zip!");
 				} else{
-					
 					System.out.println("Extracting " + ent.getName());
-					/*
-					File file = new File(homeDir + getPath("/.spaceout/lib/natives/" + ent.getName()));
-					
-					// create the file only if it doesn't exit
-					if(!file.exists()){
-						if(!file.createNewFile())
-							System.out.println("error creating new file!");
-					}
-					*/
 					
 					// stream to write file to
 					FileOutputStream fos = new FileOutputStream(homeDir + getPath("/.spaceout/lib/natives/" + ent.getName()));
@@ -254,15 +249,15 @@ public class Launcher {
 					dest.close();
 				}
 			}
+			
+			zin.close();
+			fis.close();
 		} catch (IOException e){
 			e.printStackTrace();
 		}
 		
 		// clean up after ourselves
-		File toDel = new File(homeDir + getPath("/" + nativesFile));
-		
-		System.out.println(homeDir + getPath("/" + nativesFile) + " " + toDel.canWrite());
-		
+		File toDel = new File(homeDir + getPath(nativesFile));
 		boolean succ = toDel.delete();
 		
 		if(succ)
@@ -306,15 +301,6 @@ public class Launcher {
 				// if it's not a directory, its a file
 				} else{
 					System.out.println("Extracting " + ent.getName());
-					/*
-					File file = new File(homeDir + getPath("/.spaceout/" + ent.getName()));
-					
-					// create the file only if it doesn't exit
-					if(!file.exists()){
-						if(!file.createNewFile())
-							System.out.println("error creating new file!");
-					}
-					*/
 					
 					// stream to write file to
 					FileOutputStream fos = new FileOutputStream(homeDir + getPath("/.spaceout/" + ent.getName()));
@@ -336,7 +322,6 @@ public class Launcher {
 			
 			zin.close();
 			fis.close();
-			
 		} catch(IOException e){
 			e.printStackTrace();
 		}
@@ -401,7 +386,7 @@ public class Launcher {
 	}
 	
 	/**
-	 * 
+	 * Converts all / in a string to \\ (for windows)
 	 * @param path Path to convert
 	 * @return Path corrected to work with current OS
 	 */
@@ -417,14 +402,7 @@ public class Launcher {
 	 * At this point, it's assumed that .spaceout exists.
 	 */
 	private static void launchGame(){
-		String directory = homeDir;
-		
-		// figure out what OS we're on and add to the directory accordingly
-		String os = System.getProperty("os.name").toLowerCase();
-		if(os.contains("windows"))
-			directory += "\\.spaceout\\";
-		else if(os.contains("linux") || os.contains("mac") || os.contains("solaris"))
-			directory += "/.spaceout/";
+		String directory = homeDir + getPath("/.spaceout/");
 		
 		// so we can execute the command in the right spot
 		File file = new File(directory);

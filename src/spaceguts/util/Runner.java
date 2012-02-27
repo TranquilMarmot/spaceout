@@ -39,15 +39,17 @@ public class Runner {
 	public static KeyboardManager keyboard = new KeyboardManager();
 	public static MouseManager mouse = new MouseManager();
 
+	/**
+	 * @param args Can be given a home directory to use to run the game instead of using the default System.getProperty("user.home")
+	 */
 	public static void main(String[] args) {
+		// figure out what home directory to use
 		String homeDir;
-		
 		if(args.length > 0)
 			homeDir = args[0];
 		else
 			homeDir = System.getProperty("user.home");
-		
-		setUpEnvironment(homeDir);
+		setLWJGLLibraryPath(homeDir);
 		
 		// Instantiate a runner, otherwise everything would have to be static
 		Runner run = new Runner();
@@ -60,7 +62,7 @@ public class Runner {
 	 * long as the natives are set for lwjgl.jar in the project settings.
 	 * If the launcher is being used, this has to be one of the first things set.
 	 */
-	private static void setUpEnvironment(String homeDir){
+	private static void setLWJGLLibraryPath(String homeDir){
 		String os = System.getProperty("os.name").toLowerCase();
 		
 		String nativeLoc = "";
@@ -69,19 +71,7 @@ public class Runner {
 			nativeLoc = "\\.spaceout\\lib\\natives";
 		else
 			nativeLoc = "/.spaceout/lib/natives";
-		
-		/*
-		if(os.contains("linux"))
-			nativeLoc = "/.spaceout/lib/natives/linux"; 
-		else if(os.contains("windows"))
-			nativeLoc = "\\.spaceout\\lib\\natives\\windows";
-		else if(os.contains("mac"))
-			nativeLoc = "/.spaceout/lib/natives/macosx";
-		else if(os.contains("solaris"))
-			nativeLoc = "/.spaceout/lib/natives/solaris";
-		else
-			System.out.println("Operating system not recognized!");
-		*/
+
 			
 		System.setProperty("org.lwjgl.librarypath", homeDir + nativeLoc);
 	}
