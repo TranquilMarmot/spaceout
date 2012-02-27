@@ -21,10 +21,19 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
 public class Launcher {
-	private static final String ICON_PATH = "res/images/";
+	private static String homeDir;
+	private static boolean homeDirSet = false;
 	
 	public static void main(String[] args){
 		createWindow();
+		
+		// TODO In my opinion, it should be an option to just choose where the game is saved and the launcher will save the configuration somehow
+		if(args.length > 0){
+			homeDir = args[0];
+			homeDirSet = true;
+		} else{
+			homeDir = System.getProperty("user.home");
+		}
 	}
 	
 	private static void createWindow(){
@@ -93,7 +102,7 @@ public class Launcher {
 			}
 		});
 		
-		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(ICON_PATH + "icon.png"));
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("res/images/icon.png"));
 		frame.setSize(750, 500);
 		frame.setVisible(true);
 	}
@@ -107,7 +116,7 @@ public class Launcher {
 			URL url = new URL("ftp://" + un + "@" + ftpServ + fileName + ";type=i");
 			URLConnection con = url.openConnection();
 			BufferedInputStream in = new BufferedInputStream(con.getInputStream());
-			FileOutputStream out = new FileOutputStream(System.getProperty("user.home") + fileName);
+			FileOutputStream out = new FileOutputStream(homeDir + fileName);
 			
 			int i = 0;
 			byte[] bytesIn = new byte[1024];
@@ -127,7 +136,7 @@ public class Launcher {
 	
 	private static void launchGame(){
 		String os = System.getProperty("os.name").toLowerCase();
-		String directory = System.getProperty("user.home");
+		String directory = homeDir;
 		
 		if(os.contains("windows"))
 			directory += "\\.spaceout\\";
@@ -137,7 +146,10 @@ public class Launcher {
 		File file = new File(directory);
 		
 		try {
-			Runtime.getRuntime().exec("java -jar spaceout.jar", null, file);
+			if(homeDirSet){
+				Runtime.getRuntime().exec("java -jar spaceout.jar " + homeDir, null, file);
+			}else
+				Runtime.getRuntime().exec("java -jar spaceout.jar", null, file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

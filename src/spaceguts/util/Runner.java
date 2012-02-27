@@ -40,7 +40,14 @@ public class Runner {
 	public static MouseManager mouse = new MouseManager();
 
 	public static void main(String[] args) {
-		setUpEnvironment();
+		String homeDir;
+		
+		if(args.length > 0)
+			homeDir = args[0];
+		else
+			homeDir = System.getProperty("user.home");
+		
+		setUpEnvironment(homeDir);
 		
 		// Instantiate a runner, otherwise everything would have to be static
 		Runner run = new Runner();
@@ -50,8 +57,7 @@ public class Runner {
 	/**
 	 * This tells LWJGL where to find the native libraries, based on the current OS
 	 */
-	private static void setUpEnvironment(){
-		String homeDir = System.getProperty("user.home");
+	private static void setUpEnvironment(String homeDir){
 		String os = System.getProperty("os.name").toLowerCase();
 		
 		String nativeLoc = "";
