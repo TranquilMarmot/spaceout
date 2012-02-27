@@ -2,6 +2,7 @@ package launcher;
 
 import java.awt.BorderLayout;
 import java.awt.Button;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.Panel;
@@ -22,6 +23,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 
 public class Launcher {
@@ -32,6 +34,9 @@ public class Launcher {
 	
 	/** Whether or not we're using the default home directory or one given in args */
 	private static boolean homeDirSet = false;
+	
+	static Frame frame;
+	static JTextArea info;
 	
 	public static void main(String[] args){
 		if(System.getProperty("os.name").toLowerCase().contains("windows"))
@@ -47,13 +52,15 @@ public class Launcher {
 		}
 		
 		createWindow();
+		
+		println("Using " + homeDir + " as home directory");
 	}
 	
 	/**
 	 * Creates an AWT window and fills it with things
 	 */
 	private static void createWindow(){
-		Frame frame = new Frame("Spaceout Launcher Pre-alpha");
+		frame = new Frame("Spaceout Launcher Pre-alpha");
 		frame.setLayout(new BorderLayout());
 		
 		Panel buttons = new Panel();
@@ -80,6 +87,7 @@ public class Launcher {
 		});
 		buttons.add(download);
 		
+		buttons.setBackground(Color.black);
 		frame.add(buttons, BorderLayout.PAGE_END);
 		
 		
@@ -87,8 +95,22 @@ public class Launcher {
 		
 		webPage.setLayout(new BorderLayout());
 		
+		info = new JTextArea();
+		info.setBackground(Color.black);
+		info.setEditable(false);
+		info.setForeground(Color.green);
+		
+		JScrollPane infoPane = new JScrollPane();
+		infoPane.getVerticalScrollBar().setBackground(Color.black);
+		infoPane.getHorizontalScrollBar().setBackground(Color.black);
+		infoPane.getViewport().add(info);
+		
+		webPage.add(infoPane, BorderLayout.WEST);
+		
 		JTextPane tp = new JTextPane();
 		JScrollPane js = new JScrollPane();
+		js.getVerticalScrollBar().setBackground(Color.black);
+		js.getHorizontalScrollBar().setBackground(Color.black);
 		
 		try{
 			/*
@@ -109,7 +131,6 @@ public class Launcher {
 		webPage.add(js, BorderLayout.CENTER);
 		
 		frame.add(webPage, BorderLayout.CENTER);
-		
 		
 		frame.addWindowListener(new WindowAdapter(){
 			@Override
@@ -133,6 +154,7 @@ public class Launcher {
 		
 		// get .spaceout.zip
 		try{
+			println("Downloading .spaceout.zip..");
 			String zipFile = "/.spaceout.zip";
 			
 			// Open up an input stream from the FTP server
@@ -153,7 +175,7 @@ public class Launcher {
 			out.close();
 			in.close();
 			
-			System.out.println(".spaceout downloaded, extracting...");
+			println(".spaceout downloaded, extracting...");
 			extractFiles();
 		} catch(Exception e){
 			e.printStackTrace();
@@ -173,7 +195,9 @@ public class Launcher {
 			else if(os.contains("solaris"))
 				nativesFile = "solaris.zip";
 			else
-				System.out.println("Error! OS not detected! Can't download natives!");
+				println("Error! OS not detected! Can't download natives!");
+			
+			println("Downloading natives (" + nativesFile + ")...");
 			
 			if(nativesFile != null){
 				// Open up an input stream from the FTP server
@@ -181,7 +205,7 @@ public class Launcher {
 				URLConnection con = url.openConnection();
 				BufferedInputStream in = new BufferedInputStream(con.getInputStream());
 				
-				FileOutputStream out = new FileOutputStream(homeDir + nativesFile);
+				FileOutputStream out = new FileOutputStream(homeDir + getPath("/" + nativesFile));
 				
 				// Fill file with bytes from server
 				int i = 0;
@@ -194,7 +218,7 @@ public class Launcher {
 				out.close();
 				in.close();
 				
-				System.out.println(nativesFile + " downloaded, extracting...");
+				println(nativesFile + " downloaded, extracting...");
 				extractNatives(nativesFile);
 			}
 		} catch(Exception e){
@@ -210,14 +234,15 @@ public class Launcher {
 		// TODO these extract methods should really be one method that take some parameters that tell them what to download/extract
 		try{
 			// create /lib/natives
-			File nativedir = new File(homeDir + getPath(".spaceout/lib/natives"));
+			File nativedir = new File(homeDir + getPath("/.spaceout/lib/natives"));
 			if(!nativedir.exists()){
 				boolean success = nativedir.mkdir();
 				
 				if(success)
-					System.out.println("Directory /lib/natives created");
+					println("Directory /lib/natives created");
 				else
-					System.out.println("Error creating directory!");
+					//System.out.println("Error creating directory!");
+					info.append("Error creating directory!");
 			}
 			
 			FileInputStream fis = new FileInputStream(homeDir + getPath("/" + nativesFile));
@@ -228,9 +253,9 @@ public class Launcher {
 			ZipEntry ent;
 			while((ent = zin.getNextEntry()) != null){
 				if(ent.isDirectory()){
-					System.out.println("There shouldn't be any directories inside of the natives zip!");
+					println("There shouldn't be any directories inside of the natives zip!");
 				} else{
-					System.out.println("Extracting " + ent.getName());
+					println("Extracting " + ent.getName());
 					
 					// stream to write file to
 					FileOutputStream fos = new FileOutputStream(homeDir + getPath("/.spaceout/lib/natives/" + ent.getName()));
@@ -257,13 +282,13 @@ public class Launcher {
 		}
 		
 		// clean up after ourselves
-		File toDel = new File(homeDir + getPath(nativesFile));
+		File toDel = new File(homeDir + getPath("/" + nativesFile));
 		boolean succ = toDel.delete();
 		
 		if(succ)
-			System.out.println("Deleted " + nativesFile);
+			println("Deleted " + nativesFile);
 		else
-			System.out.println("Couldn't delete " + nativesFile + "!");
+			println("Couldn't delete " + nativesFile + "!");
 	}
 	
 	/**
@@ -286,21 +311,21 @@ public class Launcher {
 			while((ent = zin.getNextEntry()) != null){
 				// create a directory if it's a directory
 				if(ent.isDirectory()){
-					File dir = new File(homeDir + getPath(".spaceout/" + ent.getName()));
+					File dir = new File(homeDir + getPath("/.spaceout/" + ent.getName()));
 					
 					// create the directory if it doesn't exist
 					if(!dir.exists()){
 						boolean succ = dir.mkdir();
 						
 						if(succ){
-							System.out.println("Directory " + ent.getName() + " created");
+							println("Directory " + ent.getName() + " created");
 							dir.setWritable(true);
 						}else
-							System.out.println("Error creating directory " + ent.getName() + "!!!");
+							println("Error creating directory " + ent.getName() + "!!!");
 					}
 				// if it's not a directory, its a file
 				} else{
-					System.out.println("Extracting " + ent.getName());
+					println("Extracting " + ent.getName());
 					
 					// stream to write file to
 					FileOutputStream fos = new FileOutputStream(homeDir + getPath("/.spaceout/" + ent.getName()));
@@ -331,9 +356,9 @@ public class Launcher {
 		boolean succ = toDel.delete();
 		
 		if(succ)
-			System.out.println("Deleted .spaceout.zip");
+			println("Deleted .spaceout.zip");
 		else
-			System.out.println("Couldn't delete spaceout.zip!");
+			println("Couldn't delete spaceout.zip!");
 	}
 	
 	/**
@@ -341,47 +366,47 @@ public class Launcher {
 	 */
 	private static void createDirectories(){
 		// create .spaceout
-		File dotsp = new File(homeDir + ".spaceout");
+		File dotsp = new File(homeDir + "/.spaceout");
 		if(!dotsp.exists()){
 			boolean success = dotsp.mkdir();
 			
 			if(success)
-				System.out.println("Directory .spaceout created");
+				println("Directory .spaceout created");
 			else
-				System.out.println("Error creating directory!");
+				println("Error creating directory!");
 		}
 		
 		// create lib
-		File lib = new File(homeDir + getPath(".spaceout/lib"));
+		File lib = new File(homeDir + getPath("/.spaceout/lib"));
 		if(!lib.exists()){
 			boolean success = lib.mkdir();
 			
 			if(success)
-				System.out.println("Directory lib created");
+				println("Directory lib created");
 			else
-				System.out.println("Error creating lib!");
+				println("Error creating lib!");
 		}
 		
 		// create res
-		File res = new File(homeDir + getPath(".spaceout/res"));
+		File res = new File(homeDir + getPath("/.spaceout/res"));
 		if(!res.exists()){
 			boolean success = res.mkdir();
 			
 			if(success)
-				System.out.println("Directory res created");
+				println("Directory res created");
 			else
-				System.out.println("Error creating res!");
+				println("Error creating res!");
 		}
 		
 		// create screenshot folder
-		File screeny = new File(homeDir + getPath(".spaceout/screenshots"));
+		File screeny = new File(homeDir + getPath("/.spaceout/screenshots"));
 		if(!screeny.exists()){
 			boolean success = screeny.mkdir();
 			
 			if(success)
-				System.out.println("Directory screenshots created");
+				println("Directory screenshots created");
 			else
-				System.out.println("Error creating screenshots!");
+				println("Error creating screenshots!");
 		}
 	}
 	
@@ -395,6 +420,11 @@ public class Launcher {
 			return path.replace('/', '\\');
 		else
 			return path;
+	}
+	
+	private static void println(String s){
+		info.append(s + "\n");
+		info.repaint();
 	}
 	
 	/**

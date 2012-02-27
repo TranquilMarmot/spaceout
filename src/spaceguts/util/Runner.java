@@ -71,7 +71,6 @@ public class Runner {
 			nativeLoc = "\\.spaceout\\lib\\natives";
 		else
 			nativeLoc = "/.spaceout/lib/natives";
-
 			
 		System.setProperty("org.lwjgl.librarypath", homeDir + nativeLoc);
 	}
