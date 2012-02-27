@@ -27,7 +27,7 @@ import spaceout.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.75.10";
+	public static final String VERSION = "0.0.76";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
@@ -40,9 +40,34 @@ public class Runner {
 	public static MouseManager mouse = new MouseManager();
 
 	public static void main(String[] args) {
+		setUpEnvironment();
+		
 		// Instantiate a runner, otherwise everything would have to be static
 		Runner run = new Runner();
 		run.run();
+	}
+	
+	/**
+	 * This tells LWJGL where to find the native libraries, based on the current OS
+	 */
+	private static void setUpEnvironment(){
+		String homeDir = System.getProperty("user.home");
+		String os = System.getProperty("os.name").toLowerCase();
+		
+		String nativeLoc = "";
+		
+		if(os.contains("linux"))
+			nativeLoc = "/.spaceout/lib/natives/linux"; 
+		else if(os.contains("windows"))
+			nativeLoc = "\\.spaceout\\lib\\natives\\windows";
+		else if(os.contains("mac"))
+			nativeLoc = "/.spaceout/lib/natives/macosx";
+		else if(os.contains("solaris"))
+			nativeLoc = "/.spaceout/lib/natives/solaris";
+		else
+			System.out.println("Operating system not recognized!");
+			
+		System.setProperty("org.lwjgl.librarypath", homeDir + nativeLoc);
 	}
 
 	/**

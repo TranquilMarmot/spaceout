@@ -71,7 +71,7 @@ public class Screenshot {
 		GL11.glReadPixels(0, 0, currentWindowWidth, currentWindowHeight,
 				GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
 
-		File file = new File("res/screenshots/" + format.toString() + ".png");
+		File file = new File("screenshots/" + format.toString() + ".png");
 		String fileFormat = "PNG";
 		BufferedImage image = new BufferedImage(currentWindowWidth,
 				currentWindowHeight, BufferedImage.TYPE_INT_RGB);
