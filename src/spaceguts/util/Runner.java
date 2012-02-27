@@ -65,6 +65,12 @@ public class Runner {
 		
 		String nativeLoc = "";
 		
+		if(os.contains("windows"))
+			nativeLoc = "\\.spaceout\\lib\\natives";
+		else
+			nativeLoc = "/.spaceout/lib/natives";
+		
+		/*
 		if(os.contains("linux"))
 			nativeLoc = "/.spaceout/lib/natives/linux"; 
 		else if(os.contains("windows"))
@@ -75,6 +81,7 @@ public class Runner {
 			nativeLoc = "/.spaceout/lib/natives/solaris";
 		else
 			System.out.println("Operating system not recognized!");
+		*/
 			
 		System.setProperty("org.lwjgl.librarypath", homeDir + nativeLoc);
 	}

@@ -127,17 +127,14 @@ public class Launcher {
 	 * Downloads .spaceout.zip from the FTP server and extracts it
 	 */
 	private static void downloadFiles(){
-		/*
-		 * TODO
-		 * This should only download the natives that the game needs, not all of them!
-		 */
-		
 		// spaceout@capitolhillmedia.com:apple007!
 		String un = "spaceout%40capitolhillmedia.com:apple007%21";
 		String ftpServ = "ftp.capitolhillmedia.com";
-		String zipFile = "/.spaceout.zip";
 		
+		// get .spaceout.zip
 		try{
+			String zipFile = "/.spaceout.zip";
+			
 			// Open up an input stream from the FTP server
 			URL url = new URL("ftp://" + un + "@" + ftpServ + zipFile + ";type=i");
 			URLConnection con = url.openConnection();
@@ -148,7 +145,6 @@ public class Launcher {
 			// Fill file with bytes from server
 			int i = 0;
 			byte[] bytesIn = new byte[1024];
-			System.out.println(in.available());
 			while((i = in.read(bytesIn)) >= 0){
 				out.write(bytesIn, 0, i);
 			}
@@ -157,10 +153,122 @@ public class Launcher {
 			out.close();
 			in.close();
 			
+			System.out.println(".spaceout downloaded, extracting...");
 			extractFiles();
 		} catch(Exception e){
 			e.printStackTrace();
 		}
+		
+		// get natives zip
+		try{
+			String nativesFile = null;
+			
+			String os = System.getProperty("os.name").toLowerCase();
+			if(os.contains("windows"))
+				nativesFile = "windows.zip";
+			else if(os.contains("linux"))
+				nativesFile = "linux.zip";
+			else if(os.contains("mac"))
+				nativesFile = "macosx.zip";
+			else if(os.contains("solaris"))
+				nativesFile = "solaris.zip";
+			else
+				System.out.println("Error! OS not detected! Can't download natives!");
+			
+			if(nativesFile != null){
+				// Open up an input stream from the FTP server
+				URL url = new URL("ftp://" + un + "@" + ftpServ + "/natives/" + nativesFile + ";type=i");
+				URLConnection con = url.openConnection();
+				BufferedInputStream in = new BufferedInputStream(con.getInputStream());
+				
+				FileOutputStream out = new FileOutputStream(homeDir + nativesFile);
+				
+				// Fill file with bytes from server
+				int i = 0;
+				byte[] bytesIn = new byte[1024];
+				while((i = in.read(bytesIn)) >= 0){
+					out.write(bytesIn, 0, i);
+				}
+				
+				// don't cross the streams!
+				out.close();
+				in.close();
+				
+				System.out.println(nativesFile + " downloaded, extracting...");
+				extractNatives(nativesFile);
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	private static void extractNatives(String nativesFile){
+		try{
+			// create .spaceout
+			File nativedir = new File(homeDir + getPath(".spaceout/lib/natives"));
+			if(!nativedir.exists()){
+				boolean success = nativedir.mkdir();
+				
+				if(success)
+					System.out.println("Directory /lib/natives created");
+				else
+					System.out.println("Error creating directory!");
+			}
+			
+			FileInputStream fis = new FileInputStream(homeDir + getPath("/" + nativesFile));
+			ZipInputStream zin = new ZipInputStream(new BufferedInputStream(fis));
+			
+			final int BUFFER = 512;
+			
+			ZipEntry ent;
+			while((ent = zin.getNextEntry()) != null){
+				if(ent.isDirectory()){
+					System.out.println("There shouldn't be any directories inside of the natives zip!");
+				} else{
+					
+					System.out.println("Extracting " + ent.getName());
+					/*
+					File file = new File(homeDir + getPath("/.spaceout/lib/natives/" + ent.getName()));
+					
+					// create the file only if it doesn't exit
+					if(!file.exists()){
+						if(!file.createNewFile())
+							System.out.println("error creating new file!");
+					}
+					*/
+					
+					// stream to write file to
+					FileOutputStream fos = new FileOutputStream(homeDir + getPath("/.spaceout/lib/natives/" + ent.getName()));
+					BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER); 
+					
+					// write the data
+					int count;
+					byte[] data = new byte[BUFFER];
+					
+					while((count = zin.read(data, 0, BUFFER)) != -1){
+						dest.write(data, 0, count);
+					}
+					
+					// shake the extra drops out and flush
+					dest.flush();
+					dest.close();
+				}
+			}
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+		
+		// clean up after ourselves
+		File toDel = new File(homeDir + getPath("/" + nativesFile));
+		
+		System.out.println(homeDir + getPath("/" + nativesFile) + " " + toDel.canWrite());
+		
+		boolean succ = toDel.delete();
+		
+		if(succ)
+			System.out.println("Deleted " + nativesFile);
+		else
+			System.out.println("Couldn't delete " + nativesFile + "!");
 	}
 	
 	/**
@@ -198,6 +306,7 @@ public class Launcher {
 				// if it's not a directory, its a file
 				} else{
 					System.out.println("Extracting " + ent.getName());
+					/*
 					File file = new File(homeDir + getPath("/.spaceout/" + ent.getName()));
 					
 					// create the file only if it doesn't exit
@@ -205,6 +314,7 @@ public class Launcher {
 						if(!file.createNewFile())
 							System.out.println("error creating new file!");
 					}
+					*/
 					
 					// stream to write file to
 					FileOutputStream fos = new FileOutputStream(homeDir + getPath("/.spaceout/" + ent.getName()));
@@ -230,6 +340,15 @@ public class Launcher {
 		} catch(IOException e){
 			e.printStackTrace();
 		}
+		
+		// clean up after ourselves
+		File toDel = new File(homeDir + getPath("/.spaceout.zip"));
+		boolean succ = toDel.delete();
+		
+		if(succ)
+			System.out.println("Deleted .spaceout.zip");
+		else
+			System.out.println("Couldn't delete spaceout.zip!");
 	}
 	
 	/**
