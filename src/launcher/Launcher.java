@@ -11,20 +11,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
+import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
+import javax.swing.text.DefaultCaret;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public class Launcher {
 	/** Directory to use for downloading and extracting file */
@@ -60,6 +63,8 @@ public class Launcher {
 	 * Creates an AWT window and fills it with things
 	 */
 	private static void createWindow(){
+		getRSSFeed();
+		
 		frame = new Frame("Spaceout Launcher Pre-alpha");
 		frame.setLayout(new BorderLayout());
 		
@@ -82,14 +87,20 @@ public class Launcher {
 		download.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				downloadFiles();
+				// download and extract the files in its own thread so that the frame can still update
+				Thread t = new Thread(){
+					@Override
+					public void run(){
+						downloadAndExtractFiles();
+					}
+				};
+				t.start();
 			}
 		});
 		buttons.add(download);
 		
 		buttons.setBackground(Color.black);
 		frame.add(buttons, BorderLayout.PAGE_END);
-		
 		
 		Panel webPage = new Panel();
 		
@@ -99,6 +110,9 @@ public class Launcher {
 		info.setBackground(Color.black);
 		info.setEditable(false);
 		info.setForeground(Color.green);
+		// set the info pane to always be at the bottom
+		DefaultCaret caret = (DefaultCaret) info.getCaret();
+		caret.setUpdatePolicy(DefaultCaret.OUT_BOTTOM);
 		
 		JScrollPane infoPane = new JScrollPane();
 		infoPane.getVerticalScrollBar().setBackground(Color.black);
@@ -120,7 +134,7 @@ public class Launcher {
 			 *  tons of little JTextPane/JEditorPane objects
 			 *  that will render the little bits.
 			 */
-			URL url = new URL("http://spaceoutgame.tumblr.com");
+			URL url = new URL("http://spoutupdate.tumblr.com");
 			tp.setPage(url);
 		} catch(Exception e){
 			e.printStackTrace();
@@ -144,270 +158,115 @@ public class Launcher {
 		frame.setVisible(true);
 	}
 	
-	/**
-	 * Downloads .spaceout.zip from the FTP server and extracts it
-	 */
-	private static void downloadFiles(){
-		// spaceout@capitolhillmedia.com:apple007!
-		String un = "spaceout%40capitolhillmedia.com:apple007%21";
-		String ftpServ = "ftp.capitolhillmedia.com";
+	private static Panel getRSSFeed(){
+		Panel p = new Panel();
 		
-		// get .spaceout.zip
+		p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
+		
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db;
+		Document doc;
+		NodeList nodes = null;
 		try{
-			println("Downloading .spaceout.zip..");
-			String zipFile = "/.spaceout.zip";
+			db = dbf.newDocumentBuilder();
 			
-			// Open up an input stream from the FTP server
-			URL url = new URL("ftp://" + un + "@" + ftpServ + zipFile + ";type=i");
+			URL url = new URL("http://spoutupdate.tumblr.com/rss");
 			URLConnection con = url.openConnection();
-			BufferedInputStream in = new BufferedInputStream(con.getInputStream());
 			
-			FileOutputStream out = new FileOutputStream(homeDir + zipFile);
+			InputStream stream = con.getInputStream();
+			doc = db.parse(stream);
+			stream.close();
 			
-			// Fill file with bytes from server
-			int i = 0;
-			byte[] bytesIn = new byte[1024];
-			while((i = in.read(bytesIn)) >= 0){
-				out.write(bytesIn, 0, i);
-			}
-			
-			// don't cross the streams!
-			out.close();
-			in.close();
-			
-			println(".spaceout downloaded, extracting...");
-			extractFiles();
+			Element docEle = doc.getDocumentElement();
+			nodes = docEle.getChildNodes();
 		} catch(Exception e){
 			e.printStackTrace();
 		}
 		
-		// get natives zip
-		try{
-			String nativesFile = null;
-			
-			String os = System.getProperty("os.name").toLowerCase();
-			if(os.contains("windows"))
-				nativesFile = "windows.zip";
-			else if(os.contains("linux"))
-				nativesFile = "linux.zip";
-			else if(os.contains("mac"))
-				nativesFile = "macosx.zip";
-			else if(os.contains("solaris"))
-				nativesFile = "solaris.zip";
-			else
-				println("Error! OS not detected! Can't download natives!");
-			
-			println("Downloading natives (" + nativesFile + ")...");
-			
-			if(nativesFile != null){
-				// Open up an input stream from the FTP server
-				URL url = new URL("ftp://" + un + "@" + ftpServ + "/natives/" + nativesFile + ";type=i");
-				URLConnection con = url.openConnection();
-				BufferedInputStream in = new BufferedInputStream(con.getInputStream());
-				
-				FileOutputStream out = new FileOutputStream(homeDir + getPath("/" + nativesFile));
-				
-				// Fill file with bytes from server
-				int i = 0;
-				byte[] bytesIn = new byte[1024];
-				while((i = in.read(bytesIn)) >= 0){
-					out.write(bytesIn, 0, i);
+		if(nodes != null && nodes.getLength() > 0){
+			for(int i = 0; i < nodes.getLength(); i++){
+				if(!nodes.item(i).getNodeName().equals("#text")){
+					Element ele = (Element) nodes.item(i);
+					if(ele.getNodeName().equals("channel"))
+						parseChannel(ele);
 				}
-				
-				// don't cross the streams!
-				out.close();
-				in.close();
-				
-				println(nativesFile + " downloaded, extracting...");
-				extractNatives(nativesFile);
 			}
-		} catch(Exception e){
-			e.printStackTrace();
 		}
+		
+		return p;
 	}
 	
+	private static Panel parseChannel(Element channel){
+		Panel p = new Panel();
+		
+		NodeList items = channel.getChildNodes();
+		
+		if(items != null && items.getLength() > 0){
+			for(int i = 0; i < items.getLength(); i++){
+				if(!items.item(i).getNodeName().equals("#text")){
+					Element ele = (Element) items.item(i);
+					
+					if(ele.getNodeName().equals("item"))
+						p.add(parseItem(ele));
+					System.out.println(ele.getNodeName());
+				}
+			}
+		}
+		
+		return p;
+	}
+	
+	private static Panel parseItem(Element ele){
+		Panel p = new Panel();
+		
+		
+		
+		return p;
+	}
+
+	
 	/**
-	 * Extracts the natives zip to the right location
-	 * @param nativesFile zip file to extract
+	 * Downloads .spaceout.zip and natives from the FTP server and extracts them
 	 */
-	private static void extractNatives(String nativesFile){
-		// TODO these extract methods should really be one method that take some parameters that tell them what to download/extract
-		try{
-			// create /lib/natives
-			File nativedir = new File(homeDir + getPath("/.spaceout/lib/natives"));
-			if(!nativedir.exists()){
-				boolean success = nativedir.mkdir();
-				
-				if(success)
-					println("Directory /lib/natives created");
-				else
-					//System.out.println("Error creating directory!");
-					info.append("Error creating directory!");
-			}
-			
-			FileInputStream fis = new FileInputStream(homeDir + getPath("/" + nativesFile));
-			ZipInputStream zin = new ZipInputStream(new BufferedInputStream(fis));
-			
-			final int BUFFER = 512;
-			
-			ZipEntry ent;
-			while((ent = zin.getNextEntry()) != null){
-				if(ent.isDirectory()){
-					println("There shouldn't be any directories inside of the natives zip!");
-				} else{
-					println("Extracting " + ent.getName());
-					
-					// stream to write file to
-					FileOutputStream fos = new FileOutputStream(homeDir + getPath("/.spaceout/lib/natives/" + ent.getName()));
-					BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER); 
-					
-					// write the data
-					int count;
-					byte[] data = new byte[BUFFER];
-					
-					while((count = zin.read(data, 0, BUFFER)) != -1){
-						dest.write(data, 0, count);
-					}
-					
-					// shake the extra drops out and flush
-					dest.flush();
-					dest.close();
-				}
-			}
-			
-			zin.close();
-			fis.close();
-		} catch (IOException e){
-			e.printStackTrace();
-		}
+	private static void downloadAndExtractFiles(){
+		String fileServ = "bitwaffle.com/spaceoutstuff";
 		
-		// clean up after ourselves
-		File toDel = new File(homeDir + getPath("/" + nativesFile));
-		boolean succ = toDel.delete();
+		String nativesFile = null;
 		
-		if(succ)
-			println("Deleted " + nativesFile);
+		String os = System.getProperty("os.name").toLowerCase();
+		if(os.contains("windows"))
+			nativesFile = "windows.zip";
+		else if(os.contains("linux"))
+			nativesFile = "linux.zip";
+		else if(os.contains("mac"))
+			nativesFile = "macosx.zip";
+		else if(os.contains("solaris"))
+			nativesFile = "solaris.zip";
 		else
-			println("Couldn't delete " + nativesFile + "!");
+			println("Error! OS not detected! Can't download natives!");
+		
+		createDirectories();
+		
+		// download, extract and delete .spaceout.zip
+		FileOps.downloadFile(fileServ, "/.spaceout.zip", homeDir + getPath("/.spaceout/.spaceout.zip"));
+		FileOps.extractZip(homeDir + getPath("/.spaceout/.spaceout.zip"), homeDir + getPath("/.spaceout"));
+		FileOps.deleteFile(homeDir + getPath("/.spaceout/.spaceout.zip"));
+		
+		// download, extract, and delete the native folder
+		FileOps.downloadFile(fileServ, "/natives/" + nativesFile, homeDir + getPath("/.spaceout/" + nativesFile));
+		FileOps.extractZip(homeDir + getPath("/.spaceout/" + nativesFile), homeDir + getPath("/.spaceout/lib/natives"));
+		FileOps.deleteFile(homeDir + getPath("/.spaceout/" + nativesFile));
 	}
 	
 	/**
-	 * Extracts .spaceout.zip
-	 */
-	private static void extractFiles(){
-		try{
-			// create directories
-			createDirectories();
-			
-			// input stream for zip file
-			FileInputStream fis = new FileInputStream(homeDir + getPath("/.spaceout.zip"));
-			ZipInputStream zin = new ZipInputStream(new BufferedInputStream(fis));
-			
-			// size to use for buffer for extracting
-			final int BUFFER = 512;
-			
-			//iterate through all the zip file entries
-			ZipEntry ent;
-			while((ent = zin.getNextEntry()) != null){
-				// create a directory if it's a directory
-				if(ent.isDirectory()){
-					File dir = new File(homeDir + getPath("/.spaceout/" + ent.getName()));
-					
-					// create the directory if it doesn't exist
-					if(!dir.exists()){
-						boolean succ = dir.mkdir();
-						
-						if(succ){
-							println("Directory " + ent.getName() + " created");
-							dir.setWritable(true);
-						}else
-							println("Error creating directory " + ent.getName() + "!!!");
-					}
-				// if it's not a directory, its a file
-				} else{
-					println("Extracting " + ent.getName());
-					
-					// stream to write file to
-					FileOutputStream fos = new FileOutputStream(homeDir + getPath("/.spaceout/" + ent.getName()));
-					BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER); 
-					
-					// write the data
-					int count;
-					byte[] data = new byte[BUFFER];
-					
-					while((count = zin.read(data, 0, BUFFER)) != -1){
-						dest.write(data, 0, count);
-					}
-					
-					// shake the extra drops out and flush
-					dest.flush();
-					dest.close();
-				}
-			}
-			
-			zin.close();
-			fis.close();
-		} catch(IOException e){
-			e.printStackTrace();
-		}
-		
-		// clean up after ourselves
-		File toDel = new File(homeDir + getPath("/.spaceout.zip"));
-		boolean succ = toDel.delete();
-		
-		if(succ)
-			println("Deleted .spaceout.zip");
-		else
-			println("Couldn't delete spaceout.zip!");
-	}
-	
-	/**
-	 * Creates the base directories for extracting the .zip to
+	 * Creates the base directories for extracting the .zip files to
 	 */
 	private static void createDirectories(){
-		// create .spaceout
-		File dotsp = new File(homeDir + "/.spaceout");
-		if(!dotsp.exists()){
-			boolean success = dotsp.mkdir();
-			
-			if(success)
-				println("Directory .spaceout created");
-			else
-				println("Error creating directory!");
-		}
-		
-		// create lib
-		File lib = new File(homeDir + getPath("/.spaceout/lib"));
-		if(!lib.exists()){
-			boolean success = lib.mkdir();
-			
-			if(success)
-				println("Directory lib created");
-			else
-				println("Error creating lib!");
-		}
-		
-		// create res
-		File res = new File(homeDir + getPath("/.spaceout/res"));
-		if(!res.exists()){
-			boolean success = res.mkdir();
-			
-			if(success)
-				println("Directory res created");
-			else
-				println("Error creating res!");
-		}
-		
-		// create screenshot folder
-		File screeny = new File(homeDir + getPath("/.spaceout/screenshots"));
-		if(!screeny.exists()){
-			boolean success = screeny.mkdir();
-			
-			if(success)
-				println("Directory screenshots created");
-			else
-				println("Error creating screenshots!");
-		}
+		FileOps.createDirectory(homeDir + getPath("/.spaceout"));
+		FileOps.createDirectory(homeDir + getPath("/.spaceout/lib"));
+		FileOps.createDirectory(homeDir + getPath("/.spaceout/res"));
+		FileOps.createDirectory(homeDir + getPath("/.spaceout/screenshots"));
+		FileOps.createDirectory(homeDir + getPath("/.spaceout/lib/natives"));
 	}
 	
 	/**
@@ -415,16 +274,15 @@ public class Launcher {
 	 * @param path Path to convert
 	 * @return Path corrected to work with current OS
 	 */
-	private static String getPath(String path){
+	public static String getPath(String path){
 		if(isWindows)
 			return path.replace('/', '\\');
 		else
 			return path;
 	}
 	
-	private static void println(String s){
+	public static void println(String s){
 		info.append(s + "\n");
-		info.repaint();
 	}
 	
 	/**
