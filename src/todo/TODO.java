@@ -45,7 +45,7 @@
  * 		Models
  * 			TODO Multiple objects in one file
  * 			TODO Right now, it assumes that the obj file has vertices, normals, and texture coordinates in it.
- * 			If any of those are not present, it will not work at all. Ideally, if normals aren't present they should be calculated
+ * 				 If any of those are not present, it will not work at all. Ideally, if normals aren't present they should be calculated.
  * 			TODO More powers! Things like initial rotation, center offset, etc. (keep in mind that these also have to be translated to bullet)
  * 			TODO Bump-maps, normal maps
  * 			TODO Create an AnimatedModel class that has a an addFrame(Frame frame) and int curFrame.
@@ -76,6 +76,18 @@
  * 			TODO Make grabbed entitities gravitate to the cursor
  * 			TODO Make a menu for placing new entities (SPACEBAR while in free mode)
  *			TODO Make a model importer that takes in an obj file and lets you edit the mtl file and see how it would look in-game (look into blender plugins)
+ *		Launcher
+ *			TODO Make it only download the file if they're needed
+ *			TODO Make it download files when play is clicked
+ *				 Might be a good idea to have a separate window pop up if the files aren't downloaded and ask where to download them to,
+ *				 with a confirm dialog asking the user if its okay to use X amount of space
+ *			TODO If the program can't get write access to the home directory, have it ask the user where to save the game to
+ *			TODO Give an option to un-install the game
+ *			TODO Make the web page display more prettyful
+ *			TODO Users should be able to start the game through the launcher or by just running spaceout.jar
+ *				 This means that signing in will have to occur in-game and if the user logs in from the launcher,
+ *				 it would start the game with args for the user. Maybe files should be downloaded in-game, too,
+ *				 so that if there's an update it would download when the game starts.
  * Gameplay
  * 			TODO More weapons
  * 			TODO Story

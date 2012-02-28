@@ -13,21 +13,21 @@ import java.util.zip.ZipInputStream;
 
 public class FileOps {
 	/**
-	 * Downloads a file over FTP
-	 * @param server The FTP server to connect to
-	 * @param userName Username to login with
-	 * @param pass Password to login with
+	 * Downloads a file over HTTP
+	 * @param server The server to connect to
 	 * @param filePath Path of file on server
 	 * @param destinationPath Where to download the file to
 	 */
 	public static void downloadFile(String server, String filePath, String destinationPath){
 		try{
-			println("Downloading " + filePath + " to " + destinationPath + "...");
-			
 			// Open up an input stream from the file server
 			URL url = new URL("http://" + server + filePath);
 			URLConnection con = url.openConnection();
 			BufferedInputStream in = new BufferedInputStream(con.getInputStream());
+			
+			println("Downloading " + filePath + " to " + destinationPath + "... (" + con.getContentLength() + " bytes)");
+			
+			// TODO have this print out dots every time it gets so far in downloading the file
 			
 			FileOutputStream out = new FileOutputStream(destinationPath);
 			
@@ -120,13 +120,13 @@ public class FileOps {
 		if(succ)
 			println("Deleted " + path);
 		else
-			println("Filed to delete " + path + "!");
+			println("Failed to delete " + path + "!");
 	}
 	
 	/**
 	 * @param s String to print to info console
 	 */
 	private static void println(String s){
-		Launcher.println(s);
+		Display.println(s);
 	}
 }

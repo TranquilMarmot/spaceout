@@ -118,21 +118,30 @@ public class RSS2AWT {
 		
 		String title = getString(item, "title");
 		String description = getString(item, "description");
-		// TODO couldn't find a clean looking way to include this
+		// FIXME couldn't find a clean looking way to include this (ideally it would open up the default browser)
 		//String link = getString(item, "link");
 		String pubDate = getString(item, "pubDate");
 		
 		p.setLayout(new BorderLayout());
 		
-		JLabel titleLabel = new JLabel(title);
-		titleLabel.setForeground(Color.green);
+		if(!title.equals("Photo")){
+			JLabel titleLabel = new JLabel(title);
+			titleLabel.setForeground(Color.green);
+			p.add(titleLabel, BorderLayout.NORTH);
+		}
+		
+	
+		/*
+		 * TODO
+		 * Since links don't work (yet) it might be a good idea to parse the description
+		 * string either get rid of every <a></a> and change the text color to just be blue 
+		 */
 		JLabel descLabel = new JLabel("<html>" + description + "</html>");
 		descLabel.setForeground(Color.white);
 		JLabel dateLabel = new JLabel(pubDate);
 		dateLabel.setForeground(Color.green);
 		
 		
-		p.add(titleLabel, BorderLayout.NORTH);
 		p.add(descLabel, BorderLayout.CENTER);
 		p.add(dateLabel, BorderLayout.SOUTH);
 		

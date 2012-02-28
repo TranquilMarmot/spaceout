@@ -9,22 +9,25 @@ public class Launcher {
 	
 	private static boolean isWindows = false;
 	
+	/**
+	 * @param args
+	 * 		If no args are given, then System.getProperty("user.home") is used as the spot to download/extract from.
+	 * 		Else one arg should be given with the home directory to use, trailing slash included ("/folder/", not "/folder")
+	 */
 	public static void main(String[] args){
 		if(System.getProperty("os.name").toLowerCase().contains("windows"))
 			isWindows = true;
 		
-		// TODO In my opinion, it should be an option to just choose where the game is saved and the launcher will save the configuration somehow
-		// set the home directory if we're given it, else default to user.home (wherever that may be)
 		if(args.length > 0){
 			homeDir = args[0];
 		} else{
-			homeDir = System.getProperty("user.home");
+			homeDir = System.getProperty("user.home") + getPath("/");
 		}
 		
 		Display.createWindow();
 		
-		println("Welcome to the Spaceout launcher!                            ");
-		println("Using " + homeDir + " as home directory");
+		Display.println("Welcome to the Spaceout launcher!                            ");
+		Display.println("Using " + homeDir + " as home directory");
 	}
 	
 	/**
@@ -45,33 +48,33 @@ public class Launcher {
 		else if(os.contains("solaris"))
 			nativesFile = "solaris.zip";
 		else
-			println("Error! OS not detected! Can't download natives!");
+			Display.println("Error! OS not detected! Can't download natives!");
 		
 		createDirectories();
 		
 		// download, extract and delete .spaceout.zip
-		FileOps.downloadFile(fileServ, "/.spaceout.zip", homeDir + getPath("/.spaceout/.spaceout.zip"));
-		FileOps.extractZip(homeDir + getPath("/.spaceout/.spaceout.zip"), homeDir + getPath("/.spaceout"));
-		FileOps.deleteFile(homeDir + getPath("/.spaceout/.spaceout.zip"));
+		FileOps.downloadFile(fileServ, "/.spaceout.zip", homeDir + getPath(".spaceout/.spaceout.zip"));
+		FileOps.extractZip(homeDir + getPath(".spaceout/.spaceout.zip"), homeDir + getPath(".spaceout"));
+		FileOps.deleteFile(homeDir + getPath(".spaceout/.spaceout.zip"));
 		
 		// download, extract, and delete the native folder
-		FileOps.downloadFile(fileServ, "/natives/" + nativesFile, homeDir + getPath("/.spaceout/" + nativesFile));
-		FileOps.extractZip(homeDir + getPath("/.spaceout/" + nativesFile), homeDir + getPath("/.spaceout/lib/natives"));
-		FileOps.deleteFile(homeDir + getPath("/.spaceout/" + nativesFile));
+		FileOps.downloadFile(fileServ, "/natives/" + nativesFile, homeDir + getPath(".spaceout/" + nativesFile));
+		FileOps.extractZip(homeDir + getPath(".spaceout/" + nativesFile), homeDir + getPath(".spaceout/lib/natives"));
+		FileOps.deleteFile(homeDir + getPath(".spaceout/" + nativesFile));
 		
-		println("Done");
-		println("Ready to play!");
+		Display.println("Done");
+		Display.println("Ready to play!");
 	}
 	
 	/**
 	 * Creates the base directories for extracting the .zip files to
 	 */
 	private static void createDirectories(){
-		FileOps.createDirectory(homeDir + getPath("/.spaceout"));
-		FileOps.createDirectory(homeDir + getPath("/.spaceout/lib"));
-		FileOps.createDirectory(homeDir + getPath("/.spaceout/res"));
-		FileOps.createDirectory(homeDir + getPath("/.spaceout/screenshots"));
-		FileOps.createDirectory(homeDir + getPath("/.spaceout/lib/natives"));
+		FileOps.createDirectory(homeDir + getPath(".spaceout"));
+		FileOps.createDirectory(homeDir + getPath(".spaceout/lib"));
+		FileOps.createDirectory(homeDir + getPath(".spaceout/res"));
+		FileOps.createDirectory(homeDir + getPath(".spaceout/screenshots"));
+		FileOps.createDirectory(homeDir + getPath(".spaceout/lib/natives"));
 	}
 	
 	/**
@@ -79,7 +82,7 @@ public class Launcher {
 	 * At this point, it's assumed that .spaceout exists.
 	 */
 	public static void launchGame(){
-		String directory = homeDir + getPath("/.spaceout/");
+		String directory = homeDir + getPath(".spaceout/");
 		
 		// so we can execute the command in the right spot
 		File file = new File(directory);
@@ -101,14 +104,5 @@ public class Launcher {
 			return path.replace('/', '\\');
 		else
 			return path;
-	}
-	
-	/**
-	 * Prints a string to the info console
-	 * @param s String to print
-	 */
-	public static void println(String s){
-		Display.info.append(s + "\n");
-		System.out.println(s);
 	}
 }

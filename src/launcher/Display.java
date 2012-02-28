@@ -11,6 +11,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -30,7 +31,7 @@ public class Display {
 	/** Our main frame*/
 	public static JFrame frame;
 	/** Info text area for printing to */
-	public static JTextArea info;
+	private static JTextArea info;
 	
 	/**
 	 * Creates the AWT window and fills it
@@ -39,7 +40,7 @@ public class Display {
 		frame = new JFrame("Spaceout Launcher Pre-alpha");
 		frame.setLayout(new BorderLayout());
 		
-		frame.add(createButtonPanel(), BorderLayout.PAGE_END);
+		frame.add(createSouthernPanel(), BorderLayout.PAGE_END);
 		frame.add(createCenterPane(), BorderLayout.CENTER);
 		
 		// close the frame when its close button is clicked
@@ -105,6 +106,26 @@ public class Display {
 	}
 	
 	/**
+	 * @return The southern panel
+	 */
+	private static JPanel createSouthernPanel(){
+		JPanel south = new JPanel();
+		south.setLayout(new BorderLayout());
+		south.setBackground(Color.black);
+		south.setForeground(Color.green);
+		
+		south.add(createButtonPanel(), BorderLayout.EAST);
+		
+		// TODO make this have some sort of logo
+		JLabel spout = new JLabel("     SPACEOUT");
+		spout.setBackground(Color.black);
+		spout.setForeground(Color.green);
+		south.add(spout, BorderLayout.WEST);
+		
+		return south;
+	}
+	
+	/**
 	 * @return A panel with some buttons on it
 	 */
 	private static JPanel createButtonPanel(){
@@ -160,5 +181,14 @@ public class Display {
 		download.setForeground(Color.green);
 		
 		return download;
+	}
+	
+	/**
+	 * Prints a string to the info console
+	 * @param s String to print
+	 */
+	public static void println(String s){
+		info.append(s + "\n");
+		System.out.println(s);
 	}
 }
