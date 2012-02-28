@@ -24,9 +24,6 @@ public class Launcher {
 	
 	private static boolean isWindows = false;
 	
-	/** Whether or not we're using the default home directory or one given in args */
-	private static boolean homeDirSet = false;
-	
 	static Frame frame;
 	static JTextArea info;
 	
@@ -40,7 +37,6 @@ public class Launcher {
 		// set the home directory if we're given it, else default to user.home (wherever that may be)
 		if(args.length > 0){
 			homeDir = args[0];
-			homeDirSet = true;
 		} else{
 			homeDir = System.getProperty("user.home");
 		}
@@ -213,10 +209,7 @@ public class Launcher {
 		File file = new File(directory);
 		
 		try {
-			if(homeDirSet){
-				Runtime.getRuntime().exec("java -jar spaceout.jar " + homeDir, null, file);
-			}else
-				Runtime.getRuntime().exec("java -jar spaceout.jar", null, file);
+			Runtime.getRuntime().exec("java -jar spaceout.jar", null, file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
