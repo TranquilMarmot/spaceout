@@ -43,7 +43,7 @@ public class Runner {
 	 * @param args Can be given a home directory to use to run the game instead of using the default System.getProperty("user.home")
 	 */
 	public static void main(String[] args) {
-		//setLWJGLLibraryPath();
+		setLWJGLLibraryPath();
 		
 		// Instantiate a runner, otherwise everything would have to be static
 		Runner run = new Runner();

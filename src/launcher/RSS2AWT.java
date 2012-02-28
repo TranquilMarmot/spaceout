@@ -18,7 +18,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
- * This class takes an RSS feed and returns a nice looking JPanel containing everything in the feed.
+ * This class takes an RSS feed and returns a nice looking JPanel containing a number of items in the feed.
  * Java's native XML parsing libraries are used to deal with the RSS feed.
  * @author TranquilMarmot
  *
@@ -27,9 +27,10 @@ public class RSS2AWT {
 	/**
 	 * Gets a JPanel with the RSS feed in it
 	 * @param rssUrl URL for RSS feed
+	 * @param numItems Number of items to grab from RSS feed
 	 * @return JPanel with every element from the RSS feed
 	 */
-	public static JPanel getRSSFeed(String rssUrl){
+	public static JPanel getRSSFeed(String rssUrl, int numItems){
 		JPanel p = new JPanel();
 		
 		p.setBackground(Color.black);
@@ -59,7 +60,7 @@ public class RSS2AWT {
 				if(!nodes.item(i).getNodeName().equals("#text")){
 					Element ele = (Element) nodes.item(i);
 					if(ele.getNodeName().equals("channel"))
-						p.add(parseChannel(ele));
+						p.add(parseChannel(ele, numItems));
 				}
 			}
 		}
@@ -70,14 +71,17 @@ public class RSS2AWT {
 	/**
 	 * Parses a 'channel' from an RSS feed
 	 * @param channel Channel to parse
+	 * @param numItems Number of items to grab from RSS feed
 	 * @return JPanel with all the elements from the channel
 	 */
-	private static JPanel parseChannel(Element channel){
+	private static JPanel parseChannel(Element channel, int numItems){
 		JPanel p = new JPanel();
 		
 		p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
 		
 		NodeList items = channel.getChildNodes();
+		
+		int itemsParsed = 0;
 		
 		if(items != null && items.getLength() > 0){
 			for(int i = 0; i < items.getLength(); i++){
@@ -91,8 +95,13 @@ public class RSS2AWT {
 						emptyPanel.setSize(100, 25);
 						emptyPanel.setBackground(Color.black);
 						p.add(emptyPanel);
+						
+						itemsParsed++;
 					}
 				}
+				
+				if(itemsParsed >= numItems)
+					break;
 			}
 		}
 		

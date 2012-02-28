@@ -22,7 +22,7 @@ public class FileOps {
 	 */
 	public static void downloadFile(String server, String filePath, String destinationPath){
 		try{
-			println("Downloading " + filePath + "...");
+			println("Downloading " + filePath + " to " + destinationPath + "...");
 			
 			// Open up an input stream from the file server
 			URL url = new URL("http://" + server + filePath);
