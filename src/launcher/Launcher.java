@@ -13,21 +13,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 
-import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 import javax.swing.text.DefaultCaret;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 public class Launcher {
 	/** Directory to use for downloading and extracting file */
@@ -40,6 +29,8 @@ public class Launcher {
 	
 	static Frame frame;
 	static JTextArea info;
+	
+	private static final String RSSFEED = "http://spoutupdate.tumblr.com/rss";
 	
 	public static void main(String[] args){
 		if(System.getProperty("os.name").toLowerCase().contains("windows"))
@@ -63,7 +54,6 @@ public class Launcher {
 	 * Creates an AWT window and fills it with things
 	 */
 	private static void createWindow(){
-		getRSSFeed();
 		
 		frame = new Frame("Spaceout Launcher Pre-alpha");
 		frame.setLayout(new BorderLayout());
@@ -80,6 +70,8 @@ public class Launcher {
 				System.exit(0);
 			}
 		});
+		start.setBackground(Color.black);
+		start.setForeground(Color.green);
 		buttons.add(start);
 		
 		// download button
@@ -97,14 +89,16 @@ public class Launcher {
 				t.start();
 			}
 		});
+		download.setBackground(Color.black);
+		download.setForeground(Color.green);
 		buttons.add(download);
 		
 		buttons.setBackground(Color.black);
 		frame.add(buttons, BorderLayout.PAGE_END);
 		
-		Panel webPage = new Panel();
+		Panel centerPane = new Panel();
 		
-		webPage.setLayout(new BorderLayout());
+		centerPane.setLayout(new BorderLayout());
 		
 		info = new JTextArea();
 		info.setBackground(Color.black);
@@ -119,32 +113,17 @@ public class Launcher {
 		infoPane.getHorizontalScrollBar().setBackground(Color.black);
 		infoPane.getViewport().add(info);
 		
-		webPage.add(infoPane, BorderLayout.WEST);
+		centerPane.add(infoPane, BorderLayout.WEST);
 		
-		JTextPane tp = new JTextPane();
 		JScrollPane js = new JScrollPane();
 		js.getVerticalScrollBar().setBackground(Color.black);
 		js.getHorizontalScrollBar().setBackground(Color.black);
 		
-		try{
-			/*
-			 *  FIXME This is very ugly and doesnt render well!!
-			 *  Either find a way to get a simple tumblr page or
-			 *  parse the RSS feed as an XML document and create
-			 *  tons of little JTextPane/JEditorPane objects
-			 *  that will render the little bits.
-			 */
-			URL url = new URL("http://spoutupdate.tumblr.com");
-			tp.setPage(url);
-		} catch(Exception e){
-			e.printStackTrace();
-		}
+		js.getViewport().add(RSS2AWT.getRSSFeed(RSSFEED));
 		
-		js.getViewport().add(tp);
+		centerPane.add(js, BorderLayout.CENTER);
 		
-		webPage.add(js, BorderLayout.CENTER);
-		
-		frame.add(webPage, BorderLayout.CENTER);
+		frame.add(centerPane, BorderLayout.CENTER);
 		
 		frame.addWindowListener(new WindowAdapter(){
 			@Override
@@ -156,72 +135,6 @@ public class Launcher {
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("res/images/icon.png"));
 		frame.setSize(750, 500);
 		frame.setVisible(true);
-	}
-	
-	private static Panel getRSSFeed(){
-		Panel p = new Panel();
-		
-		p.setLayout(new BoxLayout(p, BoxLayout.PAGE_AXIS));
-		
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db;
-		Document doc;
-		NodeList nodes = null;
-		try{
-			db = dbf.newDocumentBuilder();
-			
-			URL url = new URL("http://spoutupdate.tumblr.com/rss");
-			URLConnection con = url.openConnection();
-			
-			InputStream stream = con.getInputStream();
-			doc = db.parse(stream);
-			stream.close();
-			
-			Element docEle = doc.getDocumentElement();
-			nodes = docEle.getChildNodes();
-		} catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		if(nodes != null && nodes.getLength() > 0){
-			for(int i = 0; i < nodes.getLength(); i++){
-				if(!nodes.item(i).getNodeName().equals("#text")){
-					Element ele = (Element) nodes.item(i);
-					if(ele.getNodeName().equals("channel"))
-						parseChannel(ele);
-				}
-			}
-		}
-		
-		return p;
-	}
-	
-	private static Panel parseChannel(Element channel){
-		Panel p = new Panel();
-		
-		NodeList items = channel.getChildNodes();
-		
-		if(items != null && items.getLength() > 0){
-			for(int i = 0; i < items.getLength(); i++){
-				if(!items.item(i).getNodeName().equals("#text")){
-					Element ele = (Element) items.item(i);
-					
-					if(ele.getNodeName().equals("item"))
-						p.add(parseItem(ele));
-					System.out.println(ele.getNodeName());
-				}
-			}
-		}
-		
-		return p;
-	}
-	
-	private static Panel parseItem(Element ele){
-		Panel p = new Panel();
-		
-		
-		
-		return p;
 	}
 
 	
@@ -281,6 +194,10 @@ public class Launcher {
 			return path;
 	}
 	
+	/**
+	 * Prints a string to the info console
+	 * @param s String to print
+	 */
 	public static void println(String s){
 		info.append(s + "\n");
 	}
