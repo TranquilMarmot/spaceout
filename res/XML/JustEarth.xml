@@ -1,0 +1,33 @@
+<Entities>
+	<Player>
+		<location>00.0f,00.0f,-1550000.0f</location>
+		<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
+		<mass>50.0f</mass>
+		<restitution>0.01f</restitution>
+		<model>SHIP1</model>
+	</Player>
+	
+	<Sun>
+		<location>0.0f,0.0f,0.0f</location>
+		<size>1392.0f</size>
+		<color>1.0f,1.0f,0.3f</color>
+		<intensity>0.8f,0.8f,0.8f</intensity>
+	</Sun>
+	
+	<Saucer>
+    	<location>-569.06f,1898.569f,-1549890.625</location>
+    	<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
+    	<mass>1.0f</mass>
+    	<restitution>0.01f</restitution>
+    	<model>SAUCER</model>
+    </Saucer>
+
+	<Planet>
+		<name>Earth</name>
+		<location>0.0f,0.0f,-1495980.0f</location>
+		<rotation>0.0f,0.0f,0.0f,1.0f</rotation>
+		<restitution>0.0f</restitution>
+		<mass>5000.0f</mass>
+		<size>6371.0f</size>
+	</Planet>
+</Entities>
