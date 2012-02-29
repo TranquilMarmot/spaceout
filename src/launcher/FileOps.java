@@ -26,9 +26,7 @@ public class FileOps {
 			URLConnection con = url.openConnection();
 			BufferedInputStream in = new BufferedInputStream(con.getInputStream());
 			
-			println("Downloading " + filePath + " to " + destinationPath + "... (" + con.getContentLength() + " bytes)");
-			
-			// TODO have this print out dots every time it gets so far in downloading the file
+			System.out.println("Downloading " + filePath + " to " + destinationPath + "... (" + con.getContentLength() + " bytes)");
 			
 			FileOutputStream out = new FileOutputStream(destinationPath);
 			
@@ -49,7 +47,7 @@ public class FileOps {
 			out.close();
 			in.close();
 			
-			println(filePath + " downloaded to " + destinationPath);
+			System.out.println(filePath + " downloaded to " + destinationPath);
 			Display.info.setText("");
 		} catch(IOException e){
 			e.printStackTrace();
@@ -79,9 +77,9 @@ public class FileOps {
 			boolean succ = dir.mkdir();
 			
 			if(succ)
-				println("Created directory " + directoryPath);
+				System.out.println("Created directory " + directoryPath);
 			else
-				println("Error creating directory " + directoryPath + "!");
+				System.out.println("Error creating directory " + directoryPath + "!");
 		}
 	}
 	
@@ -146,15 +144,8 @@ public class FileOps {
 		boolean succ = toDel.delete();
 		
 		if(succ)
-			println("Deleted " + path);
+			System.out.println("Deleted " + path);
 		else
-			println("Failed to delete " + path + "!");
-	}
-	
-	/**
-	 * @param s String to print to info console
-	 */
-	private static void println(String s){
-		Display.println(s);
+			System.out.println("Failed to delete " + path + "!");
 	}
 }

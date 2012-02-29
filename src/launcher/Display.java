@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
+import javax.swing.plaf.basic.BasicProgressBarUI;
 
 /**
  * This class manages methods that create the frame and all the panels for the launcher
@@ -32,11 +33,14 @@ public class Display {
 	/** Our main frame*/
 	public static JFrame frame;
 	
-	public static JButton start, download;
+	/** All the better to start the game with */
+	public static JButton start;
 	
+	/** Our progress bar */
 	public static JProgressBar progBar;
 	
-	public static JLabel info;
+	/** Info string */
+	public static JLabel info = new JLabel("");
 	
 	/**
 	 * Creates the AWT window and fills it
@@ -101,7 +105,7 @@ public class Display {
 		
 		south.add(createButtonPanel(), BorderLayout.EAST);
 		
-		info = new JLabel("");
+		// add info label
 		info.setForeground(Color.green);
 		south.add(info, BorderLayout.CENTER);
 		
@@ -143,6 +147,7 @@ public class Display {
 	 */
 	private static JButton createStartButton(){
 		if(!Launcher.filesExist()){
+			info.setText("Using " + Launcher.getHomeDir() + " as home directory");
 			start = new JButton("Download Game (" + Launcher.totalFileSize() + " bytes)");
 			start.addActionListener(getDownloadListener());
 		}else{
@@ -207,16 +212,13 @@ public class Display {
 		progBar.setBackground(Color.black);
 		progBar.setForeground(Color.green);
 		
+		progBar.setUI(new BasicProgressBarUI() {
+		      protected Color getSelectionBackground() { return Color.green; }
+		      protected Color getSelectionForeground() { return Color.black; }
+		});
+		
 		progBar.setVisible(false);
 		
 		return progBar;
-	}
-	
-	/**
-	 * Prints a string to the info console
-	 * @param s String to print
-	 */
-	public static void println(String s){
-		System.out.println(s);
 	}
 }

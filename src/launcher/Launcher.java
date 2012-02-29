@@ -21,8 +21,8 @@ public class Launcher {
 		
 		Display.createWindow();
 		
-		Display.println("Welcome to the Spaceout launcher!                            ");
-		Display.println("Using " + homeDir + " as home directory");
+		System.out.println("Welcome to the Spaceout launcher!                            ");
+		System.out.println("Using " + homeDir + " as home directory");
 	}
 	
 	/**
@@ -53,7 +53,7 @@ public class Launcher {
 		else if(os.contains("solaris"))
 			nativesFile = "solaris.zip";
 		else
-			Display.println("Error! OS not detected! Can't download natives!");
+			System.out.println("Error! OS not detected! Can't download natives!");
 		
 		return FileOps.fileSizeOnServer(fileServ, "/.spaceout.zip") + FileOps.fileSizeOnServer(fileServ, "/natives/" + nativesFile);
 	}
@@ -76,7 +76,7 @@ public class Launcher {
 		else if(os.contains("solaris"))
 			nativesFile = "solaris.zip";
 		else
-			Display.println("Error! OS not detected! Can't download natives!");
+			System.out.println("Error! OS not detected! Can't download natives!");
 		
 		createDirectories();
 		
@@ -90,8 +90,8 @@ public class Launcher {
 		FileOps.extractZip(homeDir + ".spaceout/" + nativesFile, homeDir + ".spaceout/lib/natives");
 		FileOps.deleteFile(homeDir + ".spaceout/" + nativesFile);
 		
-		Display.println("Done");
-		Display.println("Ready to play!");
+		System.out.println("Done");
+		System.out.println("Ready to play!");
 	}
 	
 	/**
@@ -120,5 +120,9 @@ public class Launcher {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static String getHomeDir(){
+		return homeDir;
 	}
 }
