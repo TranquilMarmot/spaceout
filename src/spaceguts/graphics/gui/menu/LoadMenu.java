@@ -203,9 +203,19 @@ public class LoadMenu extends GUIObject {
 					break;
 				}
 			}
+			
+			// slash changes depending on operating system
+			char slash;
+			String opSys = System.getProperty("os.name").toLowerCase();
+			if(opSys.contains("windows"))
+				slash = '\\';
+			else
+				slash = '/';
+			
+			
 			// find the last \
 			for(int i = chars.length - 1; i >= 0; i--){
-				if(chars[i] == '\\'){
+				if(chars[i] == slash){
 					lastSlash = i;
 					break;
 				}
