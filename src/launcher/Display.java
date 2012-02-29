@@ -28,6 +28,8 @@ public class Display {
 	/** How many items from the feed to show */
 	private static final int NUMITEMS = 5;
 	
+	private static final int DEFAULT_WIDTH = 886, DEFAULT_HEIGHT = 710;
+	
 	/** Our main frame*/
 	public static JFrame frame;
 	/** Info text area for printing to */
@@ -53,7 +55,7 @@ public class Display {
 		
 		// set the icon and size
 		frame.setIconImage(Toolkit.getDefaultToolkit().getImage("res/images/icon.png"));
-		frame.setSize(750, 500);
+		frame.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		
 		frame.setVisible(true);
 	}

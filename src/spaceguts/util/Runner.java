@@ -42,31 +42,17 @@ public class Runner {
 	/**
 	 * @param args Can be given a home directory to use to run the game instead of using the default System.getProperty("user.home")
 	 */
-	public static void main(String[] args) {
-		setLWJGLLibraryPath();
+	public static void main(String[] args) {	
+		System.setProperty("org.lwjgl.librarypath", System.getProperty("user.dir") + "/lib/natives");
+		
+		for(Object o : System.getProperties().keySet()){
+			String s = (String)o;
+			System.out.println(s + " : " + System.getProperty(s));
+		}
 		
 		// Instantiate a runner, otherwise everything would have to be static
 		Runner run = new Runner();
 		run.run();
-	}
-	
-	/**
-	 * This tells LWJGL where to find the native libraries, based on the current working directory.
-	 * This doesn't need to be called if the game is being launched from Eclipse as
-	 * long as the natives are set for lwjgl.jar in the project settings.
-	 * If the launcher is being used, this has to be one of the first things set.
-	 */
-	private static void setLWJGLLibraryPath(){
-		String os = System.getProperty("os.name").toLowerCase();
-		
-		String nativeLoc = System.getProperty("user.dir");
-		
-		if(os.contains("windows"))
-			nativeLoc += "\\lib\\natives";
-		else
-			nativeLoc += "/lib/natives";
-			
-		System.setProperty("org.lwjgl.librarypath", nativeLoc);
 	}
 
 	/**
