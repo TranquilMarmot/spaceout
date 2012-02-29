@@ -7,27 +7,31 @@ public class Launcher {
 	/** Directory to use for downloading and extracting file */
 	private static String homeDir;
 	
-	private static boolean isWindows = false;
-	
 	/**
 	 * @param args
 	 * 		If no args are given, then System.getProperty("user.home") is used as the spot to download/extract from.
 	 * 		Else one arg should be given with the home directory to use, trailing slash included ("/folder/", not "/folder")
 	 */
 	public static void main(String[] args){
-		if(System.getProperty("os.name").toLowerCase().contains("windows"))
-			isWindows = true;
-		
 		if(args.length > 0){
 			homeDir = args[0];
 		} else{
-			homeDir = System.getProperty("user.home") + getPath("/");
+			homeDir = System.getProperty("user.home") + "/";
 		}
 		
 		Display.createWindow();
 		
+		if(!filesExist())
+			Display.download.setEnabled(true);
+		
 		Display.println("Welcome to the Spaceout launcher!                            ");
 		Display.println("Using " + homeDir + " as home directory");
+	}
+	
+	public static boolean filesExist(){
+		File spout = new File(homeDir + "/.spaceout");
+		
+		return spout.exists();
 	}
 	
 	/**
@@ -53,14 +57,14 @@ public class Launcher {
 		createDirectories();
 		
 		// download, extract and delete .spaceout.zip
-		FileOps.downloadFile(fileServ, "/.spaceout.zip", homeDir + getPath(".spaceout/.spaceout.zip"));
-		FileOps.extractZip(homeDir + getPath(".spaceout/.spaceout.zip"), homeDir + getPath(".spaceout"));
-		FileOps.deleteFile(homeDir + getPath(".spaceout/.spaceout.zip"));
+		FileOps.downloadFile(fileServ, "/.spaceout.zip", homeDir + ".spaceout/.spaceout.zip");
+		FileOps.extractZip(homeDir + ".spaceout/.spaceout.zip", homeDir + ".spaceout");
+		FileOps.deleteFile(homeDir + ".spaceout/.spaceout.zip");
 		
 		// download, extract, and delete the native folder
-		FileOps.downloadFile(fileServ, "/natives/" + nativesFile, homeDir + getPath(".spaceout/" + nativesFile));
-		FileOps.extractZip(homeDir + getPath(".spaceout/" + nativesFile), homeDir + getPath(".spaceout/lib/natives"));
-		FileOps.deleteFile(homeDir + getPath(".spaceout/" + nativesFile));
+		FileOps.downloadFile(fileServ, "/natives/" + nativesFile, homeDir + ".spaceout/" + nativesFile);
+		FileOps.extractZip(homeDir + ".spaceout/" + nativesFile, homeDir + ".spaceout/lib/natives");
+		FileOps.deleteFile(homeDir + ".spaceout/" + nativesFile);
 		
 		Display.println("Done");
 		Display.println("Ready to play!");
@@ -70,11 +74,11 @@ public class Launcher {
 	 * Creates the base directories for extracting the .zip files to
 	 */
 	private static void createDirectories(){
-		FileOps.createDirectory(homeDir + getPath(".spaceout"));
-		FileOps.createDirectory(homeDir + getPath(".spaceout/lib"));
-		FileOps.createDirectory(homeDir + getPath(".spaceout/res"));
-		FileOps.createDirectory(homeDir + getPath(".spaceout/screenshots"));
-		FileOps.createDirectory(homeDir + getPath(".spaceout/lib/natives"));
+		FileOps.createDirectory(homeDir + ".spaceout");
+		FileOps.createDirectory(homeDir + ".spaceout/lib");
+		FileOps.createDirectory(homeDir + ".spaceout/res");
+		FileOps.createDirectory(homeDir + ".spaceout/screenshots");
+		FileOps.createDirectory(homeDir + ".spaceout/lib/natives");
 	}
 	
 	/**
@@ -82,7 +86,7 @@ public class Launcher {
 	 * At this point, it's assumed that .spaceout exists.
 	 */
 	public static void launchGame(){
-		String directory = homeDir + getPath(".spaceout/");
+		String directory = homeDir + ".spaceout/";
 		
 		// so we can execute the command in the right spot
 		File file = new File(directory);
@@ -92,17 +96,5 @@ public class Launcher {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * Converts all / in a string to \\ (for windows)
-	 * @param path Path to convert
-	 * @return Path corrected to work with current OS
-	 */
-	public static String getPath(String path){
-		if(isWindows)
-			return path.replace('/', '\\');
-		else
-			return path;
 	}
 }

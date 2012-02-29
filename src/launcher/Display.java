@@ -32,7 +32,10 @@ public class Display {
 	
 	/** Our main frame*/
 	public static JFrame frame;
-	/** Info text area for printing to */
+	
+	public static JButton start, download;
+	
+	/** Info text area for printing to (use the println method) */
 	private static JTextArea info;
 	
 	/**
@@ -135,7 +138,7 @@ public class Display {
 		buttons.setLayout(new FlowLayout());
 		
 		buttons.add(createStartButton());
-		buttons.add(createDownloadButton());
+		//buttons.add(createDownloadButton());
 		
 		buttons.setBackground(Color.black);
 		
@@ -146,43 +149,33 @@ public class Display {
 	 * @return A button that starts the game
 	 */
 	private static JButton createStartButton(){
-		JButton start = new JButton("Start Game");
+		start = new JButton("Start Game");
 		start.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				Launcher.launchGame();
-				System.exit(0);
+				// if files dont exist, download them before launching
+				if(!Launcher.filesExist()){
+					Thread t = new Thread(){
+						@Override
+						public void run(){
+							Launcher.downloadAndExtractFiles();
+							
+							Launcher.launchGame();
+							System.exit(0);
+						}
+					};
+					t.start();
+				// else we're good, just launch
+				} else{
+					Launcher.launchGame();
+					System.exit(0);
+				}
 			}
 		});
 		start.setBackground(Color.black);
 		start.setForeground(Color.green);
 		
 		return start;
-	}
-	
-	/**
-	 * @return A button that downloads and extracts the game files
-	 */
-	private static JButton createDownloadButton(){
-		// download button
-		JButton download = new JButton("Download Files");
-		download.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e){
-				// download and extract the files in its own thread so that the frame can still update
-				Thread t = new Thread(){
-					@Override
-					public void run(){
-						Launcher.downloadAndExtractFiles();
-					}
-				};
-				t.start();
-			}
-		});
-		download.setBackground(Color.black);
-		download.setForeground(Color.green);
-		
-		return download;
 	}
 	
 	/**

@@ -79,12 +79,12 @@ public class FileOps {
 			ZipEntry ent;
 			while((ent = zis.getNextEntry()) != null){
 				if(ent.isDirectory()){
-					FileOps.createDirectory(Launcher.getPath(destinationPath + "/" + ent.getName()));
+					FileOps.createDirectory(destinationPath + "/" + ent.getName());
 				} else{
 					println("Extracting " + ent.getName() + " to " + destinationPath);
 					
 					// stream to write file to
-					FileOutputStream fos = new FileOutputStream(Launcher.getPath(destinationPath + "/" + ent.getName()));
+					FileOutputStream fos = new FileOutputStream(destinationPath + "/" + ent.getName());
 					BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER); 
 					
 					// write the data
