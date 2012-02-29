@@ -21,17 +21,41 @@ public class Launcher {
 		
 		Display.createWindow();
 		
-		if(!filesExist())
-			Display.download.setEnabled(true);
-		
 		Display.println("Welcome to the Spaceout launcher!                            ");
 		Display.println("Using " + homeDir + " as home directory");
 	}
 	
+	/**
+	 * @return Whether or not .spaceout and spaceout.jar exist
+	 */
 	public static boolean filesExist(){
-		File spout = new File(homeDir + "/.spaceout");
+		File dotspout = new File(homeDir + "/.spaceout");
+		File spout = new File(homeDir + "/.spaceout/spaceout.jar");
 		
-		return spout.exists();
+		return dotspout.exists() && spout.exists();
+	}
+	
+	/**
+	 * @return Total file size for everything that needs to be downloaded
+	 */
+	public static int totalFileSize(){
+		String fileServ = "bitwaffle.com/spaceoutstuff";
+		
+		String nativesFile = null;
+		
+		String os = System.getProperty("os.name").toLowerCase();
+		if(os.contains("windows"))
+			nativesFile = "windows.zip";
+		else if(os.contains("linux"))
+			nativesFile = "linux.zip";
+		else if(os.contains("mac"))
+			nativesFile = "macosx.zip";
+		else if(os.contains("solaris"))
+			nativesFile = "solaris.zip";
+		else
+			Display.println("Error! OS not detected! Can't download natives!");
+		
+		return FileOps.fileSizeOnServer(fileServ, "/.spaceout.zip") + FileOps.fileSizeOnServer(fileServ, "/natives/" + nativesFile);
 	}
 	
 	/**

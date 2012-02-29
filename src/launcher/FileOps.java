@@ -20,6 +20,7 @@ public class FileOps {
 	 */
 	public static void downloadFile(String server, String filePath, String destinationPath){
 		try{
+			Display.info.setText("Downloading " + filePath + "...");
 			// Open up an input stream from the file server
 			URL url = new URL("http://" + server + filePath);
 			URLConnection con = url.openConnection();
@@ -31,11 +32,17 @@ public class FileOps {
 			
 			FileOutputStream out = new FileOutputStream(destinationPath);
 			
+			int progress = 0;
+			Display.progBar.setMinimum(progress);
+			Display.progBar.setMaximum(con.getContentLength());
+			
 			// Fill file with bytes from server
 			int i = 0;
 			byte[] bytesIn = new byte[1024];
 			while((i = in.read(bytesIn)) >= 0){
 				out.write(bytesIn, 0, i);
+				progress += bytesIn.length;
+				Display.progBar.setValue(progress);
 			}
 			
 			// don't cross the streams!
@@ -43,9 +50,23 @@ public class FileOps {
 			in.close();
 			
 			println(filePath + " downloaded to " + destinationPath);
+			Display.info.setText("");
 		} catch(IOException e){
 			e.printStackTrace();
 		}
+	}
+	
+	public static int fileSizeOnServer(String server, String filePath){
+		try{
+			// Open up an input stream from the file server
+			URL url = new URL("http://" + server + filePath);
+			URLConnection con = url.openConnection();
+			return con.getContentLength();
+		} catch(IOException e){
+			e.printStackTrace();
+		}
+		
+		return 0;
 	}
 	
 	/**
@@ -71,17 +92,21 @@ public class FileOps {
 	 */
 	public static void extractZip(String zipPath, String destinationPath){
 		try{
+			Display.info.setText("Extracting " + zipPath + "...");
 			FileInputStream fis = new FileInputStream(zipPath);
 			ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
-			
 			final int BUFFER = 512;
 			
 			ZipEntry ent;
 			while((ent = zis.getNextEntry()) != null){
+				Display.info.setText("Extracting " + ent.getName() + "...");
 				if(ent.isDirectory()){
 					FileOps.createDirectory(destinationPath + "/" + ent.getName());
 				} else{
-					println("Extracting " + ent.getName() + " to " + destinationPath);
+					Display.progBar.setMaximum((int) ent.getSize());
+					
+					int prog = 0;
+					Display.progBar.setMinimum(prog);
 					
 					// stream to write file to
 					FileOutputStream fos = new FileOutputStream(destinationPath + "/" + ent.getName());
@@ -93,11 +118,14 @@ public class FileOps {
 					
 					while((count = zis.read(data, 0, BUFFER)) != -1){
 						dest.write(data, 0, count);
+						prog += data.length;
+						Display.progBar.setValue(prog);
 					}
 					
 					// shake the extra drops out and flush
 					dest.flush();
 					dest.close();
+					Display.info.setText("");
 				}
 			}
 			

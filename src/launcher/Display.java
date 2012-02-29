@@ -13,9 +13,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.text.DefaultCaret;
 
 /**
  * This class manages methods that create the frame and all the panels for the launcher
@@ -35,14 +34,15 @@ public class Display {
 	
 	public static JButton start, download;
 	
-	/** Info text area for printing to (use the println method) */
-	private static JTextArea info;
+	public static JProgressBar progBar;
+	
+	public static JLabel info;
 	
 	/**
 	 * Creates the AWT window and fills it
 	 */
 	public static void createWindow(){
-		frame = new JFrame("Spaceout Launcher Pre-alpha");
+		frame = new JFrame("Spaceout Pre-alpha Launcher");
 		frame.setLayout(new BorderLayout());
 		
 		frame.add(createSouthernPanel(), BorderLayout.PAGE_END);
@@ -71,7 +71,7 @@ public class Display {
 		
 		centerPane.setLayout(new BorderLayout());
 		
-		centerPane.add(createInfoPane(), BorderLayout.WEST);
+		//centerPane.add(createInfoPane(), BorderLayout.WEST);
 		centerPane.add(createRSSPane(), BorderLayout.CENTER);
 		
 		return centerPane;
@@ -91,26 +91,6 @@ public class Display {
 	}
 	
 	/**
-	 * @return A scroll pane containing the info text box
-	 */
-	private static JScrollPane createInfoPane(){
-		info = new JTextArea();
-		info.setBackground(Color.black);
-		info.setEditable(false);
-		info.setForeground(Color.green);
-		// set the info pane to always be at the bottom
-		DefaultCaret caret = (DefaultCaret) info.getCaret();
-		caret.setUpdatePolicy(DefaultCaret.OUT_BOTTOM);
-		
-		JScrollPane infoPane = new JScrollPane();
-		infoPane.getVerticalScrollBar().setBackground(Color.black);
-		infoPane.getHorizontalScrollBar().setBackground(Color.black);
-		infoPane.getViewport().add(info);
-		
-		return infoPane;
-	}
-	
-	/**
 	 * @return The southern panel
 	 */
 	private static JPanel createSouthernPanel(){
@@ -121,8 +101,12 @@ public class Display {
 		
 		south.add(createButtonPanel(), BorderLayout.EAST);
 		
-		// TODO make this have some sort of logo
-		JLabel spout = new JLabel("     SPACEOUT");
+		info = new JLabel("");
+		info.setForeground(Color.green);
+		south.add(info, BorderLayout.CENTER);
+		
+		// TODO make this have some sort of logo (might have to download it from the server)
+		JLabel spout = new JLabel("     SPACEOUT     ");
 		spout.setBackground(Color.black);
 		spout.setForeground(Color.green);
 		south.add(spout, BorderLayout.WEST);
@@ -137,8 +121,17 @@ public class Display {
 		JPanel buttons = new JPanel();
 		buttons.setLayout(new FlowLayout());
 		
+		JPanel sep = new JPanel();
+		sep.setBackground(Color.black);
+		
+		JPanel sep2 = new JPanel();
+		sep2.setBackground(Color.black);
+		
+		
+		buttons.add(createProgressBar());
+		buttons.add(sep);
+		buttons.add(sep2);
 		buttons.add(createStartButton());
-		//buttons.add(createDownloadButton());
 		
 		buttons.setBackground(Color.black);
 		
@@ -149,29 +142,14 @@ public class Display {
 	 * @return A button that starts the game
 	 */
 	private static JButton createStartButton(){
-		start = new JButton("Start Game");
-		start.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e){
-				// if files dont exist, download them before launching
-				if(!Launcher.filesExist()){
-					Thread t = new Thread(){
-						@Override
-						public void run(){
-							Launcher.downloadAndExtractFiles();
-							
-							Launcher.launchGame();
-							System.exit(0);
-						}
-					};
-					t.start();
-				// else we're good, just launch
-				} else{
-					Launcher.launchGame();
-					System.exit(0);
-				}
-			}
-		});
+		if(!Launcher.filesExist()){
+			start = new JButton("Download Game (" + Launcher.totalFileSize() + " bytes)");
+			start.addActionListener(getDownloadListener());
+		}else{
+			progBar.setVisible(false);
+			start = new JButton("Start Game");
+			start.addActionListener(getLaunchListener());
+		}
 		start.setBackground(Color.black);
 		start.setForeground(Color.green);
 		
@@ -179,11 +157,66 @@ public class Display {
 	}
 	
 	/**
+	 * @return An action listener that launches the game
+	 */
+	private static ActionListener getLaunchListener(){
+		return new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Launcher.launchGame();
+				System.exit(0);
+			}
+			
+		};
+	}
+	
+	/**
+	 * @return An action listener that downloads and extracts files
+	 */
+	private static ActionListener getDownloadListener(){
+		return new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				progBar.setVisible(true);
+				start.setText("Downloading...");
+				start.setEnabled(false);
+				Thread t = new Thread(){
+					@Override
+					public void run(){
+						Launcher.downloadAndExtractFiles();
+						progBar.setVisible(false);
+						start.setEnabled(true);
+						start.setText("Start Game");
+						start.removeActionListener(start.getActionListeners()[0]);
+						start.addActionListener(getLaunchListener());
+					}
+				};
+				t.start();
+			}
+		};
+	}
+	
+	/**
+	 * @return The progress bar
+	 */
+	private static JProgressBar createProgressBar(){
+		progBar = new JProgressBar();
+		progBar.setValue(0);
+		progBar.setStringPainted(true);
+		
+		progBar.setBackground(Color.black);
+		progBar.setForeground(Color.green);
+		
+		progBar.setVisible(false);
+		
+		return progBar;
+	}
+	
+	/**
 	 * Prints a string to the info console
 	 * @param s String to print
 	 */
 	public static void println(String s){
-		info.append(s + "\n");
 		System.out.println(s);
 	}
 }
