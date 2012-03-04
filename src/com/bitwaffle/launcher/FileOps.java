@@ -154,6 +154,29 @@ public class FileOps {
 	}
 	
 	/**
+	 * @param URL URL of file to grab first line from
+	 * @return The first line from the file at the URL
+	 */
+	public static String getFirstLineFromURL(String URL){
+		String vers = "0";
+		try{
+			URL url = new URL(URL);
+			URLConnection con = url.openConnection();
+			BufferedInputStream in = new BufferedInputStream(con.getInputStream());
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			
+			vers = br.readLine();
+			
+			br.close();
+			in.close();
+		} catch(IOException e){
+			e.printStackTrace();
+		}
+		
+		return vers;
+	}
+	
+	/**
 	 * @param file File to get line from
 	 * @return The first line in the file
 	 */

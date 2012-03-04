@@ -69,15 +69,15 @@ public class Launcher {
 	private static boolean downloadAndCompareVersions(){
 		File localversion = new File(homeDir + "/.spaceout/version");
 		localVersion = FileOps.getFirstLineFromFile(localversion);
+		System.out.println("Local version is " + localVersion);
 		 
 		 // nothing was in the file!
 		 if(localVersion == null && !localVersion.equals("0"))
 			 return true;
 		 else{
-			 FileOps.downloadFile(FILE_SERVER, "/version", homeDir + ".spaceout/servversion");
+			 serverVersion = FileOps.getFirstLineFromURL("http://" + FILE_SERVER + "/version");
+			 System.out.println("Server version is " + serverVersion);
 			 
-			 File servVersion = new File(homeDir + "/.spaceout/servversion");
-			 serverVersion = FileOps.getFirstLineFromFile(servVersion);
 			 FileOps.deleteFile(homeDir + ".spaceout/servversion");
 			 
 			 if(serverVersion == null)
