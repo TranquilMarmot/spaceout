@@ -37,7 +37,9 @@ public enum KeyBindings {
 	SYS_CONSOLE_SUBMIT(new Button[]{Keys.RETURN}),
 	SYS_CONSOLE_BACKSPACE(new Button[]{Keys.BACK}),
 	SYS_CONSOLE_SCROLL_UP(new Button[]{Keys.NEXT}),
-	SYS_CONSOLE_SCROLL_DOWN(new Button[]{Keys.PRIOR});
+	SYS_CONSOLE_SCROLL_DOWN(new Button[]{Keys.PRIOR}),
+	
+	BUILDER_OPEN_ADD_MENU(new Button[]{Keys.TAB});
 	
 	/** the buttons that activate this binding */
 	private Button[] buttons;

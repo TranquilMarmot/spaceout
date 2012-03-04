@@ -1,4 +1,4 @@
-package spaceout;
+package spaceguts.physics;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -7,7 +7,6 @@ import javax.vecmath.Quat4f;
 
 import spaceguts.entities.DynamicEntity;
 import spaceguts.entities.Entities;
-import spaceguts.physics.Physics;
 import spaceout.interfaces.Bullet;
 import spaceout.interfaces.Health;
 

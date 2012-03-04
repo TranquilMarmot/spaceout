@@ -116,7 +116,6 @@ public class DisplayHelper {
 			frame.pack();
 			frame.setVisible(true);
 			Display.create();
-
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}

@@ -27,7 +27,7 @@ import spaceout.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.75.10";
+	public static final String VERSION = "0.0.76.4";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
@@ -39,7 +39,26 @@ public class Runner {
 	public static KeyboardManager keyboard = new KeyboardManager();
 	public static MouseManager mouse = new MouseManager();
 
+	/**
+	 * @param args Can be given a home directory to use to look for natives in instead of using the default System.getProperty("user.home")
+	 */
 	public static void main(String[] args) {
+		/*
+		 *  NOTE
+		 *  If there're no args, the game looks for natives in the folder it is being run in.
+		 *  This doesn't work when running in eclipse, because the game gets run from your workspace
+		 *  
+		 *  To run the game in eclipse, click the little arrow next to the Run arrow and
+		 *  click "Run configurations..." then go to the "Arguments" tab
+		 *  In "Program arguments:" put "${workspace_loc:spaceout/lib/natives/*YOUROS*}"
+		 *  Then you should be able to run as usual.
+		 */
+		if(args.length == 0)
+			System.setProperty("org.lwjgl.librarypath", System.getProperty("user.dir") + "/lib/natives");
+		else{
+			System.setProperty("org.lwjgl.librarypath", args[0]);
+		}
+		
 		// Instantiate a runner, otherwise everything would have to be static
 		Runner run = new Runner();
 		run.run();
@@ -77,7 +96,8 @@ public class Runner {
 	private void init() {
 		DisplayHelper.createWindow();
 		
-		Debug.init();		
+		Debug.init();
+		Debug.printSysInfo();
 		
 		MainMenu mainMenu = new MainMenu();
 		GUI.addGUIObject(mainMenu);
@@ -115,7 +135,6 @@ public class Runner {
 		ResourceLoader.addJob(Textures.BUILDER_OPEN);
 		ResourceLoader.processJobs();
 		
-		Debug.printSysInfo();
 		System.out.println("-------------------------------");
 	}
 
@@ -179,7 +198,7 @@ public class Runner {
 	 */
 	private String goodbye(){
 		String[] shutdown = { "Goodbye, world...", "Goodbye, cruel world...", "See ya...", "Later...", "Buh-bye...", "Thank you, come again!...",
-				"Until Next Time...", "¡Adios, Amigo!...", "Game Over, Man! Game Over!!!...", "And So, I Bid You Adieu...", "So Long, And Thanks For All The Fish...",
+				"Until Next Time...", "ï¿½Adios, Amigo!...", "Game Over, Man! Game Over!!!...", "And So, I Bid You Adieu...", "So Long, And Thanks For All The Fish...",
 				"Ciao...", "Y'all Come Back Now, Ya Hear?...", "Catch You Later!...", "Mahalo And Aloha...", "Sayonara...", "Thanks For Playing!...",
 				"Auf Wiedersehen...", "Yo Homes, Smell Ya Later!... (Looked Up At My Kingdom, I Was Finally There, To Sit On My Throne As The Prince Of Bel-air)"};
 		// FIRST FRESH PRINCE REFERENCE FOR THIS GAME, TAKE NOTE THIS IS HISTORIC

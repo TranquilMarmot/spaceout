@@ -14,14 +14,8 @@ Quickly set up a Spaceout project with Git and Eclipse!
  
  - Type in 'spaceout' as the project name. Eclipse should say something about a wizard, just click next and let it do magicks.
  
- - You should now have a new project with your clone in it.
+ - Click the little arrow next to the Run arrow and click "Run configurations..." then go to the "Arguments" tab
  
- - Right click on the 'spaceout' project and click 'Properties' (or press Alt+Enter)
- 
- - Select 'Java Build Path' in the left pane, then select the 'Libraries' tab. There should already be the libraries there.
- 
- - Click on the little arrow next to 'lwjgl.jar'. Select 'Native library location'.
- 
- - Browse to your eclipse workspace, then go to 'spaceout/lib/native'. Select the folder that corresponds to your operating system.
+ - In "Program arguments:" put "${workspace_loc:spaceout/lib/natives/OS}" where OS is 'linux', 'windows', 'macosx', or 'solaris' (hahahah solaris)
  
  - Compile and run the game; if it works you're ready to get coding, monkey! If not, shoot me an email at nate272@gmail.com

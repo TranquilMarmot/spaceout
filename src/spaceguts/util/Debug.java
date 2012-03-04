@@ -104,6 +104,14 @@ public class Debug {
 		if(KeyBindings.SYS_CONSOLE_SCROLL_DOWN.pressedOnce())
 			Console.console.scrollDown(1);
 		
+		// history scroll up
+		if (KeyBindings.SYS_CONSOLE_PREVIOUS_COMMAND.pressedOnce())
+			Console.console.commandHistory((byte)-1);
+		
+		// history scroll down
+		if (KeyBindings.SYS_CONSOLE_NEXT_COMMAND.pressedOnce())
+			Console.console.commandHistory((byte)1);
+		
 		// screenshot key
 		if(KeyBindings.SYS_SCREENSHOT.pressedOnce())
 			Screenshot.takeScreenshot(DisplayHelper.windowWidth,
@@ -134,9 +142,6 @@ public class Debug {
 		}
 		
 		Console.console.draw();
-		
-		if(Entities.camera != null)
-			Entities.camera.drawCrosshair();
 		
 		// draw 'PAUSED' in the middle of the screen if the game is paused
 		if (Runner.paused && Entities.entitiesExist())
