@@ -2,10 +2,14 @@ package launcher;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.zip.ZipEntry;
@@ -147,5 +151,31 @@ public class FileOps {
 			System.out.println("Deleted " + path);
 		else
 			System.out.println("Failed to delete " + path + "!");
+	}
+	
+	/**
+	 * @param file File to get line from
+	 * @return The first line in the file
+	 */
+	public static String getFirstLineFromFile(File file){
+		String vers = "0";
+		
+		try{
+			FileInputStream fis = new FileInputStream(file);
+			DataInputStream in = new DataInputStream(fis);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			
+			vers = br.readLine();
+			
+			br.close();
+			in.close();
+			fis.close();
+		} catch(FileNotFoundException e){
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return vers;
 	}
 }

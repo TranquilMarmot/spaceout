@@ -27,7 +27,7 @@ import spaceout.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.76.3";
+	public static final String VERSION = "0.0.76.4";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
@@ -45,7 +45,7 @@ public class Runner {
 	public static void main(String[] args) {
 		/*
 		 *  NOTE
-		 *  If there're no args, the game looks for natives in the folder the game is being run in.
+		 *  If there're no args, the game looks for natives in the folder it is being run in.
 		 *  This doesn't work when running in eclipse, because the game gets run from your workspace
 		 *  
 		 *  To run the game in eclipse, click the little arrow next to the Run arrow and

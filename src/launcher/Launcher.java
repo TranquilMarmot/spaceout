@@ -7,6 +7,11 @@ public class Launcher {
 	/** Directory to use for downloading and extracting file */
 	private static String homeDir;
 	
+	public static final String FILE_SERVER = "bitwaffle.com/spaceoutstuff";
+	
+	/** version string in local directory, version string from server*/
+	public static String localVersion, serverVersion;
+	
 	/**
 	 * @param args
 	 * 		If no args are given, then System.getProperty("user.home") is used as the spot to download/extract from.
@@ -30,9 +35,60 @@ public class Launcher {
 	 */
 	public static boolean filesExist(){
 		File dotspout = new File(homeDir + "/.spaceout");
-		File spout = new File(homeDir + "/.spaceout/spaceout.jar");
+		File spoutjar = new File(homeDir + "/.spaceout/spaceout.jar");
 		
-		return dotspout.exists() && spout.exists();
+		return dotspout.exists() && spoutjar.exists();
+	}
+	
+	/**
+	 * @return Whether or not updated files need to be downloaded
+	 */
+	public static boolean updateRequired(){
+		// don't check if the checkbox is deselected
+		if(!Display.checkForUpdate.isSelected()){
+			return false;
+		} else{
+			// if we already have the version strings, just compare them
+			if(localVersion != null && serverVersion != null){
+				 if(!localVersion.equals(serverVersion))
+					 return true;
+				 else
+					 return false;
+			}
+			else{
+				return downloadAndCompareVersions();
+			}
+		}
+	}
+	
+	/**
+	 * Sets the localVersion to the string from the version file
+	 * Downloads the version file from the server and sets the serverVersion string
+	 * @return Whether or not the two version strings are the same
+	 */
+	private static boolean downloadAndCompareVersions(){
+		File localversion = new File(homeDir + "/.spaceout/version");
+		localVersion = FileOps.getFirstLineFromFile(localversion);
+		 
+		 // nothing was in the file!
+		 if(localVersion == null && !localVersion.equals("0"))
+			 return true;
+		 else{
+			 FileOps.downloadFile(FILE_SERVER, "/version", homeDir + ".spaceout/servversion");
+			 
+			 File servVersion = new File(homeDir + "/.spaceout/servversion");
+			 serverVersion = FileOps.getFirstLineFromFile(servVersion);
+			 FileOps.deleteFile(homeDir + ".spaceout/servversion");
+			 
+			 if(serverVersion == null)
+				 return false;
+			 else{
+				 if(!localVersion.equals(serverVersion))
+					 return true;
+				 else
+					 return false;
+			 }
+		}
 	}
 	
 	/**
@@ -62,8 +118,6 @@ public class Launcher {
 	 * Downloads .spaceout.zip and natives from the FTP server and extracts them
 	 */
 	public static void downloadAndExtractFiles(){
-		String fileServ = "bitwaffle.com/spaceoutstuff";
-		
 		String nativesFile = null;
 		
 		String os = System.getProperty("os.name").toLowerCase();
@@ -81,14 +135,16 @@ public class Launcher {
 		createDirectories();
 		
 		// download, extract and delete .spaceout.zip
-		FileOps.downloadFile(fileServ, "/.spaceout.zip", homeDir + ".spaceout/.spaceout.zip");
+		FileOps.downloadFile(FILE_SERVER, "/.spaceout.zip", homeDir + ".spaceout/.spaceout.zip");
 		FileOps.extractZip(homeDir + ".spaceout/.spaceout.zip", homeDir + ".spaceout");
 		FileOps.deleteFile(homeDir + ".spaceout/.spaceout.zip");
 		
 		// download, extract, and delete the native folder
-		FileOps.downloadFile(fileServ, "/natives/" + nativesFile, homeDir + ".spaceout/" + nativesFile);
+		FileOps.downloadFile(FILE_SERVER, "/natives/" + nativesFile, homeDir + ".spaceout/" + nativesFile);
 		FileOps.extractZip(homeDir + ".spaceout/" + nativesFile, homeDir + ".spaceout/lib/natives");
 		FileOps.deleteFile(homeDir + ".spaceout/" + nativesFile);
+		
+		FileOps.downloadFile(FILE_SERVER, "/version", homeDir + ".spaceout/version");
 		
 		System.out.println("Done");
 		System.out.println("Ready to play!");

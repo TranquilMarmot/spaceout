@@ -10,6 +10,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -38,6 +39,8 @@ public class Display {
 	
 	/** Our progress bar */
 	public static JProgressBar progBar;
+	
+	public static JCheckBox checkForUpdate;
 	
 	/** Info string */
 	public static JLabel info = new JLabel("");
@@ -103,19 +106,82 @@ public class Display {
 		south.setBackground(Color.black);
 		south.setForeground(Color.green);
 		
+		south.add(createLogoAndCheckBox(), BorderLayout.WEST);
+		
 		south.add(createButtonPanel(), BorderLayout.EAST);
 		
 		// add info label
 		info.setForeground(Color.green);
 		south.add(info, BorderLayout.CENTER);
 		
+		return south;
+	}
+	
+	private static JPanel createLogoAndCheckBox(){
+		JPanel panel = new JPanel();
+		panel.setLayout(new BorderLayout());
+		
+		panel.add(createLogo(), BorderLayout.WEST);
+		panel.add(createUpdateCheckBox(), BorderLayout.EAST);
+		
+		panel.setBackground(Color.black);
+		
+		return panel;
+	}
+	
+	private static JLabel createLogo(){
 		// TODO make this have some sort of logo (might have to download it from the server)
 		JLabel spout = new JLabel("     SPACEOUT     ");
 		spout.setBackground(Color.black);
 		spout.setForeground(Color.green);
-		south.add(spout, BorderLayout.WEST);
 		
-		return south;
+		return spout;
+	}
+	
+	private static JCheckBox createUpdateCheckBox(){
+		checkForUpdate = new JCheckBox("Check for updates");
+		checkForUpdate.setSelected(true);
+		checkForUpdate.addActionListener(getCheckBoxListener());
+		checkForUpdate.setBackground(Color.black);
+		checkForUpdate.setForeground(Color.green);
+		
+		return checkForUpdate;
+	}
+	
+	private static ActionListener getCheckBoxListener(){
+		return new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				JCheckBox boxxy = (JCheckBox) e.getSource();
+				
+				if(boxxy.isSelected()){
+					
+					if(!Launcher.filesExist()){ 
+						start.setText("Download Game (" + Launcher.totalFileSize() + " bytes)");
+						start.removeActionListener(start.getActionListeners()[0]);
+						start.addActionListener(getDownloadListener());
+					} else if(Launcher.updateRequired()){
+						start.setText("Update Game (from " + Launcher.localVersion + " to " + Launcher.serverVersion + ")");
+						start.removeActionListener(start.getActionListeners()[0]);
+						start.addActionListener(getDownloadListener());
+					} else{
+						start.setText("Start Game");
+						start.removeActionListener(start.getActionListeners()[0]);
+						start.addActionListener(getLaunchListener());
+					}
+				} else{
+					if(!Launcher.filesExist()){ 
+						start.setText("Download Game (" + Launcher.totalFileSize() + " bytes)");
+						start.removeActionListener(start.getActionListeners()[0]);
+						start.addActionListener(getDownloadListener());
+					}else{
+						start.setText("Start Game");
+						start.removeActionListener(start.getActionListeners()[0]);
+						start.addActionListener(getLaunchListener());
+					}
+				}
+			}
+		};
 	}
 	
 	/**
@@ -149,6 +215,9 @@ public class Display {
 		if(!Launcher.filesExist()){
 			info.setText("Using " + Launcher.getHomeDir() + " as home directory");
 			start = new JButton("Download Game (" + Launcher.totalFileSize() + " bytes)");
+			start.addActionListener(getDownloadListener());
+		}else if(Launcher.updateRequired()){
+			start = new JButton("Update Game (from " + Launcher.localVersion + " to " + Launcher.serverVersion + ")");
 			start.addActionListener(getDownloadListener());
 		}else{
 			progBar.setVisible(false);
