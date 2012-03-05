@@ -214,8 +214,13 @@ public class Console {
 			// console.
 		}
 
-		// Add the words to the screen.
-		text.add(s.substring(0, currentWidth - 1));
+		try{
+			// Add the words to the screen.
+			text.add(s.substring(0, currentWidth - 1));
+		} catch (StringIndexOutOfBoundsException e){
+			currentWidth++;
+			text.add(s.substring(0, currentWidth - 1));
+		}
 
 		// Recurse and print the remaining stuff.
 		if (s.length() > consoleWidth)
@@ -509,5 +514,6 @@ public class Console {
 			}
 		}
 
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
 	}
 }

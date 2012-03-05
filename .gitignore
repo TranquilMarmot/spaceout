@@ -6,7 +6,7 @@
 .project
 
 # screenshots
-res/screenshots
+screenshots/
 
 # javadocs
 doc/

@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class Launcher {
 	/** Directory to use for downloading and extracting file */
-	private static String homeDir;
+	public static String homeDir;
 	
 	public static final String FILE_SERVER = "bitwaffle.com/spaceoutstuff";
 	
@@ -72,13 +72,11 @@ public class Launcher {
 		System.out.println("Local version is " + localVersion);
 		 
 		 // nothing was in the file!
-		 if(localVersion == null && !localVersion.equals("0"))
+		 if(localVersion == null || localVersion.equals("0"))
 			 return true;
 		 else{
 			 serverVersion = FileOps.getFirstLineFromURL("http://" + FILE_SERVER + "/version");
 			 System.out.println("Server version is " + serverVersion);
-			 
-			 FileOps.deleteFile(homeDir + ".spaceout/servversion");
 			 
 			 if(serverVersion == null)
 				 return false;
