@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -157,7 +158,7 @@ public class FileOps {
 	 * @param URL URL of file to grab first line from
 	 * @return The first line from the file at the URL
 	 */
-	public static String getFirstLineFromURL(String URL){
+	public static String getFirstLineFromURL(String URL) throws UnknownHostException{
 		String vers = "0";
 		try{
 			URL url = new URL(URL);
@@ -169,6 +170,8 @@ public class FileOps {
 			
 			br.close();
 			in.close();
+		} catch(UnknownHostException e){
+			throw e;
 		} catch(IOException e){
 			e.printStackTrace();
 		}
@@ -180,7 +183,7 @@ public class FileOps {
 	 * @param file File to get line from
 	 * @return The first line in the file
 	 */
-	public static String getFirstLineFromFile(File file){
+	public static String getFirstLineFromFile(File file) throws FileNotFoundException{
 		String vers = "0";
 		
 		try{
@@ -194,7 +197,7 @@ public class FileOps {
 			in.close();
 			fis.close();
 		} catch(FileNotFoundException e){
-			e.printStackTrace();
+			throw e;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
