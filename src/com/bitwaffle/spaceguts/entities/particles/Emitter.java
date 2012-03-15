@@ -16,7 +16,7 @@ import com.bitwaffle.spaceout.resources.Textures;
  * A class for shooting particles out
  * @author TranquilMarmot
  */
-public class Emitter<T extends Particle> extends Entity{
+public abstract class Emitter<T extends Particle> extends Entity{
 	private ArrayList<T> particles;
 	private Textures particleTex;
 	private static Matrix4f oldModelView = new Matrix4f();
@@ -29,8 +29,11 @@ public class Emitter<T extends Particle> extends Entity{
 
 	@Override
 	public void update(float timeStep) {
-		for(Particle p : particles)
+		for(T p : particles){
 			p.update(timeStep);
+			if(p.removeFlag)
+				this.removeParticle(p);
+		}
 	}
 	
 	public void addParticle(T p){
@@ -66,7 +69,7 @@ public class Emitter<T extends Particle> extends Entity{
 		
 		particleTex.texture().bind();
 		
-		for(Particle p : particles){
+		for(T p : particles){
 			float transx = this.location.x - p.location.x;
 			float transy = this.location.y - p.location.y;
 			float transz = this.location.z - p.location.z;
@@ -78,6 +81,7 @@ public class Emitter<T extends Particle> extends Entity{
 				//Render3D.modelview.scale(new Vector3f(s.size, s.size, s.size));
 				Render3D.program.setUniform("ModelViewMatrix", Render3D.modelview);
 
+				//FIXME write a minimalistic shader for particles
 				// draw the particle
 				GL11.glBegin(GL11.GL_QUADS);{
 					GL11.glTexCoord2f(0, 0);
@@ -102,5 +106,4 @@ public class Emitter<T extends Particle> extends Entity{
 	public void cleanup() {
 		
 	}
-
 }

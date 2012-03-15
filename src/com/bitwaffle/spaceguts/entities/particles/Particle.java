@@ -2,9 +2,15 @@ package com.bitwaffle.spaceguts.entities.particles;
 
 import org.lwjgl.util.vector.Vector3f;
 
-public class Particle{
+public abstract class Particle{
+	/** particle's location */
 	public Vector3f location;
+	
+	/** size of the particle */
 	public float width, height;
+	
+	/** if this is true, remove the particle on the next update */
+	public boolean removeFlag;
 	
 	public Particle(Vector3f location, float width, float height){
 		this.location = location;
@@ -12,6 +18,5 @@ public class Particle{
 		this.height = height;
 	}
 
-	public void update(float timeStep) {
-	}
+	public abstract void update(float timeStep);
 }
