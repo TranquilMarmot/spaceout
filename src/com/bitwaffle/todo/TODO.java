@@ -1,8 +1,6 @@
 /*
  *	TODO, I've a feeling we're not in Kansas any more!
  *
- * Temp
- * 			TODO Do at least one homework assignment today
  * Bugs
  * 			TODO After the first time, the fullscreen key has to be pressed twice to have an effect
  * 			TODO Destroy the Java AWT window when going into fullscreen, then create it again on leaving fullscreen
@@ -57,7 +55,6 @@
  * 			TODO Look into having ships stored as a zip file containing an obj, a png, and an xml file (is it too slow? easier if its uncompressed?)
  * 			TODO Add a "/save" command that saves the game and return to the main menu
  * 		Console
- * 			TODO Make up/down keys control chat history
  * 			TODO Save chat/console history to text file
  * 			TODO Chat color parsing
  * 			TODO Make ctrl+v work with the console

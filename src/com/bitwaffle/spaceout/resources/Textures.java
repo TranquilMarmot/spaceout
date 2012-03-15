@@ -34,6 +34,9 @@ public enum Textures {
 	MARS("JPG", Paths.TEXTURE_PATH.path() + "planets/mars.jpg", true, GL11.GL_LINEAR),
 	SUN("JPG", Paths.TEXTURE_PATH.path() + "planets/sun.jpg", true, GL11.GL_LINEAR),
 	
+	// Particles
+	PARTICLE("PNG", Paths.PARTICLE_IMAGE_PATH.path() + "particle.png", false, GL11.GL_NEAREST),
+	
 	// GUI
 	CROSSHAIR("PNG", Paths.CROSSHAIR_PATH.path(), true, GL11.GL_NEAREST),
 	MENU_BACKGROUND1("JPG", Paths.BACKGROUND_IMAGE_PATH.path() + "apod1.jpg", false, GL11.GL_NEAREST),

@@ -11,6 +11,7 @@ public enum Paths {
 	MENUBUTTON_IMAGE_PATH(MENU_IMAGE_PATH.path() + "Button/"),
 	FILEPICKER_IMAGE_PATH("res/images/gui/FilePicker/"),
 	BACKGROUND_IMAGE_PATH("res/images/gui/Menu/Background/"),
+	PARTICLE_IMAGE_PATH("res/images/particles/"),
 	
 	CROSSHAIR_PATH("res/images/gui/crosshair.png"),
 	BUILDER_IMAGE_PATH("res/images/gui/Builder/"),
