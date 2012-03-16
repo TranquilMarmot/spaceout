@@ -9,8 +9,8 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
-import com.bitwaffle.spaceguts.entities.Entity;
 import com.bitwaffle.spaceguts.graphics.render.Render3D;
 import com.bitwaffle.spaceguts.graphics.shapes.Box2D;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
@@ -34,10 +34,13 @@ public class Emitter{
 	private static Box2D box = new Box2D(1.0f, 1.0f, Textures.PARTICLE.texture());
 	
 	/** The Entity that the particles are coming from */
-	private Entity following;
+	private DynamicEntity following;
 	
 	/** Offset from the center of the Entity being followed */
 	private Vector3f offset;
+	
+	/** How much to vary the particle generation on each axis */
+	private Vector3f locationVariance, velocityVariance;
 	
 	/** For generating random position offsets */
 	private Random randy;
@@ -59,10 +62,12 @@ public class Emitter{
 	 * @param emitSpeed How often to emit particles
 	 * @param particlesPerEmission Particles to emit per emission
 	 */
-	public Emitter(Entity following, Textures particleTex, Vector3f offset, float emitSpeed, int particlesPerEmission){
+	public Emitter(DynamicEntity following, Textures particleTex, Vector3f offset, Vector3f locationVariance, Vector3f velocityVariance, float emitSpeed, int particlesPerEmission){
 		this.following = following;
 		this.particleTex = particleTex;
 		this.offset = offset;
+		this.locationVariance = locationVariance;
+		this.velocityVariance = velocityVariance;
 		this.emitSpeed = emitSpeed;
 		this.particlesPerEmission = particlesPerEmission;
 		particles = new ArrayList<Particle>();
@@ -197,27 +202,36 @@ public class Emitter{
 		float randXOffset, randYOffset, randZOffset;
 		
 		if(randy.nextBoolean()) 
-			randXOffset = randy.nextFloat() * 0.15f;
+			randXOffset = randy.nextFloat() * locationVariance.x;
 		else
-			randXOffset = randy.nextFloat() * -0.15f;
+			randXOffset = randy.nextFloat() * -locationVariance.x;
 		
 		if(randy.nextBoolean()) 
-			randYOffset = randy.nextFloat() * 0.15f;
+			randYOffset = randy.nextFloat() * locationVariance.y;
 		else
-			randYOffset = randy.nextFloat() * -0.15f;
+			randYOffset = randy.nextFloat() * -locationVariance.y;
 		
 		if(randy.nextBoolean()) 
-			randZOffset = randy.nextFloat() * 0.15f;
+			randZOffset = randy.nextFloat() * locationVariance.z;
 		else
-			randZOffset = randy.nextFloat() * -0.15f;
+			randZOffset = randy.nextFloat() * -locationVariance.z;
 		
+		// place the particle at the offset for the emitter and rotate the location
 		Vector3f behind = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(randXOffset + offset.x, randYOffset + offset.y, randZOffset + offset.z), this.following.rotation);
 		
+		// add the rotated vector to the location
 		Vector3f loc = new Vector3f(this.following.location.x + behind.x, this.following.location.y + behind.y, this.following.location.z + behind.z);
 		
-		Vector3f veloc = new Vector3f(0.0f, 0.0f, -randy.nextFloat() * 2.5f);
+		// figure out how much this particle's going to move
+		Vector3f veloc = new Vector3f(randy.nextFloat() * velocityVariance.x, randy.nextFloat() * velocityVariance.y, randy.nextFloat() * velocityVariance.z);
 		
+		// rotate the velocity
 		Vector3f rotVeloc = QuaternionHelper.rotateVectorByQuaternion(veloc, this.following.rotation);
+		
+		// get angular velocity and add it
+		javax.vecmath.Vector3f angvel = new javax.vecmath.Vector3f();
+		following.rigidBody.getAngularVelocity(angvel);
+		rotVeloc.set(rotVeloc.x + angvel.x, rotVeloc.y + angvel.y, rotVeloc.z + angvel.z);
 		
 		this.addParticle(new Particle(loc, 0.4f, 0.4f, randy.nextFloat() * 0.5f, rotVeloc));
 	}

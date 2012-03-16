@@ -47,6 +47,10 @@
  * 			TODO More powers! Things like initial rotation, center offset, etc. (keep in mind that these also have to be translated to bullet)
  * 			TODO Bump-maps, normal maps
  * 			TODO Create an AnimatedModel class that has a an addFrame(Frame frame) and int curFrame.
+ * 		Particles
+ * 			TODO Make maybe a line and each particle is a point in the chain and the connects them all when drawing
+ * 			TODO More plasma-looking thruster particles
+ * 			TODO Make particles look less spaced outs
  * System
  * 		General
  * 			TODO Debug class shouldn't really be all static- variables are being hammered every update (in the init() method)

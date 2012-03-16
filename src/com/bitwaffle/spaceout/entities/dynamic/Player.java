@@ -44,8 +44,10 @@ public class Player extends DynamicEntity implements Health {
 		this.type = "Player";
 
 		// FIXME temp code
-		thrusterEmitter1 = new Emitter(this, Textures.PARTICLE, new Vector3f(0.9f, 0.2f, -2.32f), 0.0f, 5);
-		thrusterEmitter2 = new Emitter(this, Textures.PARTICLE, new Vector3f(-0.40f, 0.2f, -2.32f), 0.0f, 5);
+		Vector3f locVariance = new Vector3f(0.15f, 0.15f, 0.15f);
+		Vector3f velVariance = new Vector3f(0.0f, 0.0f, -2.5f);
+		thrusterEmitter1 = new Emitter(this, Textures.PARTICLE, new Vector3f(0.9f, 0.13f, -2.34f), locVariance, velVariance, 0.0f, 5);
+		thrusterEmitter2 = new Emitter(this, Textures.PARTICLE, new Vector3f(-0.40f, 0.13f, -2.34f), locVariance, velVariance, 0.0f, 5);
 	}
 
 	@Override
@@ -58,12 +60,7 @@ public class Player extends DynamicEntity implements Health {
 		if(!Runner.paused){
 			//FIXME temp code
 			thrusterEmitter1.update(timeStep);
-			//thrusterEmitter1.location.set(this.location);
-			//thrusterEmitter1.rotation.set(this.rotation);
-			
 			thrusterEmitter2.update(timeStep);
-			//thrusterEmitter2.location.set(this.location);
-			//thrusterEmitter2.rotation.set(this.rotation);
 			
 			if(!GUI.menuUp && !Entities.camera.freeMode){
 				// check to make sure the rigid body is active
@@ -307,19 +304,16 @@ public class Player extends DynamicEntity implements Health {
 
 	@Override
 	public int getCurrentHealth() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void hurt(int amount) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void heal(int amount) {
-		// TODO Auto-generated method stub
 		
 	}
 }
