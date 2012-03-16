@@ -39,11 +39,20 @@ void phongModel( vec3 pos, vec3 norm, out vec3 ambAndDiff, out vec3 spec ) {
 
 void main() {
     vec4 texColor = texture( Tex1, TexCoord );
+    	
     if(Light.LightEnabled){
 	    vec3 ambAndDiff, spec;
 	    phongModel( Position, Normal, ambAndDiff, spec );
 	    FragColor = (vec4( ambAndDiff, 1.0 ) * texColor) + vec4(spec,1.0);
     } else{
+    	/*
+    	 * For efficiency, only check for alpha discards
+    	 * when lighitng is turned off
+    	 * (otherwise we just assume we don't want
+    	 * transparency)
+    	 */
+        if(texColor.w == 0)
+    		discard;
     	FragColor = (vec4(texColor));
     }
 }

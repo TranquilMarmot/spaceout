@@ -56,9 +56,8 @@ public class Runner {
 		 */
 		if(args.length == 0)
 			System.setProperty("org.lwjgl.librarypath", System.getProperty("user.dir") + "/lib/natives");
-		else{
+		else
 			System.setProperty("org.lwjgl.librarypath", args[0]);
-		}
 		
 		// Instantiate a runner, otherwise everything would have to be static
 		Runner run = new Runner();

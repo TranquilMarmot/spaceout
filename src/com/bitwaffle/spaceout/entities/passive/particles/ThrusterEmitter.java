@@ -31,14 +31,6 @@ public class ThrusterEmitter extends Emitter<ThrusterParticle>{
 	}
 	
 	public void emitParticle(){
-		/*
-		 * Create a new particle and add it
-		 * Set the velocity to some initial speed,
-		 * rotate it by the thruster's rotation
-		 * The Thruster object will rotate the emitter
-		 * whenever it is moved (which is whenever the ship is
-		 * moved)
-		 */
 		Vector3f loc = new Vector3f(this.location);
 		
 		// TODO have this be sort of random
@@ -46,6 +38,6 @@ public class ThrusterEmitter extends Emitter<ThrusterParticle>{
 		
 		Vector3f rotVeloc = QuaternionHelper.rotateVectorByQuaternion(veloc, this.rotation);
 		
-		this.addParticle(new ThrusterParticle(loc, 3.0f, 3.0f, 0.3f, rotVeloc));
+		this.addParticle(new ThrusterParticle(loc, 1.0f, 1.0f, 0.3f, rotVeloc));
 	}
 }

@@ -13,8 +13,6 @@ import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.opengl.Texture;
 
-import com.bitwaffle.spaceout.resources.Textures;
-
 public class Box2D {
 	private int vaoHandle;
 	
