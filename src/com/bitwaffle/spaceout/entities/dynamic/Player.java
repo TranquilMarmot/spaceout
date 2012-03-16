@@ -13,8 +13,10 @@ import com.bitwaffle.spaceguts.physics.CollisionTypes;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceguts.util.Runner;
 import com.bitwaffle.spaceguts.util.console.Console;
+import com.bitwaffle.spaceout.entities.passive.particles.ThrusterEmitter;
 import com.bitwaffle.spaceout.interfaces.Health;
 import com.bitwaffle.spaceout.resources.Models;
+import com.bitwaffle.spaceout.resources.Textures;
 import com.bitwaffle.spaceout.ship.Ship;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 
@@ -28,6 +30,8 @@ public class Player extends DynamicEntity implements Health {
 	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET);
 	
 	private Ship ship;
+	// FIXME temp!!!
+	private ThrusterEmitter thrusterEmitter;
 
 	/** to keep the button from being held down */
 	private boolean button0Down = false;
@@ -39,6 +43,8 @@ public class Player extends DynamicEntity implements Health {
 		rigidBody.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 		this.ship = ship;
 		this.type = "Player";
+		
+		thrusterEmitter = new ThrusterEmitter(this.location, this.rotation, Textures.PARTICLE, 0.0f);
 	}
 
 	@Override
@@ -48,44 +54,48 @@ public class Player extends DynamicEntity implements Health {
 	public void update(float timeStep) {
 		// only update if we're not paused, a menu isn't up and the camera's not
 		// in free mode
-		if (!Runner.paused && !GUI.menuUp && !Entities.camera.freeMode) {
-			// check to make sure the rigid body is active
-			if (!rigidBody.isActive())
-				rigidBody.activate();
-
-			javax.vecmath.Vector3f speed = new javax.vecmath.Vector3f();
-			rigidBody.getLinearVelocity(speed);
+		if(!Runner.paused){
+			thrusterEmitter.update(timeStep);
+			thrusterEmitter.location.set(this.location);
+			thrusterEmitter.rotation.set(this.rotation);
 			
-			//FIXME this if statement necessary?
+			if(!GUI.menuUp && !Entities.camera.freeMode){
+				// check to make sure the rigid body is active
+				if (!rigidBody.isActive())
+					rigidBody.activate();
 
-			// perform acceleration
-			zLogic(timeStep);
-			xLogic(timeStep);
-			yLogic(timeStep);
-			
-			
-			// cap the players' speed
-			checkSpeed();
+				//javax.vecmath.Vector3f speed = new javax.vecmath.Vector3f();
+				//rigidBody.getLinearVelocity(speed);
 
-			// perform rotation
-			if(!Entities.camera.vanityMode)
-				rotationLogic(timeStep);
+				// perform acceleration
+				zLogic(timeStep);
+				xLogic(timeStep);
+				yLogic(timeStep);
+				
+				
+				// cap the players' speed
+				checkSpeed();
 
-			// handle bullet shooting
-			if (MouseManager.button0 && !button0Down && !Console.consoleOn) {
-				button0Down = true;
-				shootBullet();
+				// perform rotation
+				if(!Entities.camera.vanityMode)
+					rotationLogic(timeStep);
+
+				// handle bullet shooting
+				if (MouseManager.button0 && !button0Down && !Console.consoleOn) {
+					button0Down = true;
+					shootBullet();
+				}
+				if (!MouseManager.button0)
+					button0Down = false;
+
+				// handle stabilization
+				if (KeyBindings.CONTROL_STABILIZE.isPressed())
+					stabilize(timeStep);
+
+				// handle stopping
+				if (KeyBindings.CONTROL_STOP.isPressed())
+					stop(timeStep);
 			}
-			if (!MouseManager.button0)
-				button0Down = false;
-
-			// handle stabilization
-			if (KeyBindings.CONTROL_STABILIZE.isPressed())
-				stabilize(timeStep);
-
-			// handle stopping
-			if (KeyBindings.CONTROL_STOP.isPressed())
-				stop(timeStep);
 		}
 	}
 
@@ -234,6 +244,10 @@ public class Player extends DynamicEntity implements Health {
 	    javax.vecmath.Vector3f velocity = new javax.vecmath.Vector3f();
 		rigidBody.getLinearVelocity(velocity);
 		float speed = velocity.length();
+		if(speed > 10)
+			thrusterEmitter.active = true;
+		else
+			thrusterEmitter.active = false;
 		if(speed > ship.getTopSpeed()){
 			velocity.x *= ship.getTopSpeed() / speed;
 			velocity.y *= ship.getTopSpeed() / speed;
@@ -270,6 +284,12 @@ public class Player extends DynamicEntity implements Health {
 		angularVelocity.add(new javax.vecmath.Vector3f(torque.x, torque.y, torque.z));
 		
 		rigidBody.setAngularVelocity(angularVelocity);
+	}
+	
+	@Override
+	public void draw(){
+		super.draw();
+		thrusterEmitter.draw();
 	}
 
 	@Override

@@ -3,12 +3,15 @@ package com.bitwaffle.spaceguts.entities.particles;
 import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.entities.Entity;
 import com.bitwaffle.spaceguts.graphics.render.Render3D;
+import com.bitwaffle.spaceguts.graphics.shapes.Box2D;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceout.resources.Textures;
 
@@ -20,6 +23,7 @@ public abstract class Emitter<T extends Particle> extends Entity{
 	private ArrayList<T> particles;
 	private Textures particleTex;
 	private static Matrix4f oldModelView = new Matrix4f();
+	private static Box2D box = new Box2D(1.0f, 1.0f, Textures.PARTICLE.texture());
 	
 	public Emitter(Vector3f location, Textures particleTex){
 		this.location = location;
@@ -29,9 +33,15 @@ public abstract class Emitter<T extends Particle> extends Entity{
 
 	@Override
 	public void update(float timeStep) {
+		ArrayList<T> deleteList = new ArrayList<T>();
 		for(T p : particles){
 			p.update(timeStep);
 			if(p.removeFlag)
+				deleteList.add(p);
+		}
+		
+		if(!deleteList.isEmpty()){
+			for(T p : deleteList)
 				this.removeParticle(p);
 		}
 	}
@@ -64,10 +74,11 @@ public abstract class Emitter<T extends Particle> extends Entity{
 	public void draw() {
 		Render3D.program.setUniform("Light.LightEnabled", false);
 		
-		//Quaternion revQuat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-		//Entities.camera.rotation.negate(revQuat);
+		Quaternion revQuat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		this.rotation.negate(revQuat);
 		
 		particleTex.texture().bind();
+		GL30.glBindVertexArray(box.getVAOHandle());
 		
 		for(T p : particles){
 			float transx = this.location.x - p.location.x;
@@ -75,27 +86,15 @@ public abstract class Emitter<T extends Particle> extends Entity{
 			float transz = this.location.z - p.location.z;
 			
 			oldModelView.load(Render3D.modelview);{
+				Matrix4f.mul(Render3D.modelview, QuaternionHelper.toMatrix(revQuat), Render3D.modelview);
 				// translate and scale the modelview
 				Render3D.modelview.translate(new Vector3f(transx, transy, transz));
 				Matrix4f.mul(Render3D.modelview, QuaternionHelper.toMatrix(Entities.camera.rotation), Render3D.modelview);
-				//Render3D.modelview.scale(new Vector3f(s.size, s.size, s.size));
+				Render3D.modelview.scale(new Vector3f(p.width, p.height, 1.0f));
 				Render3D.program.setUniform("ModelViewMatrix", Render3D.modelview);
 
-				//FIXME write a minimalistic shader for particles
 				// draw the particle
-				GL11.glBegin(GL11.GL_QUADS);{
-					GL11.glTexCoord2f(0, 0);
-					GL11.glVertex2f(0, 0);
-
-					GL11.glTexCoord2f(particleTex.texture().getWidth(), 0);
-					GL11.glVertex2f(p.width, 0);
-					
-					GL11.glTexCoord2f(particleTex.texture().getWidth(), particleTex.texture().getHeight());
-					GL11.glVertex2f(p.width, p.height);
-
-					GL11.glTexCoord2f(0, particleTex.texture().getHeight());
-					GL11.glVertex2f(0, p.height);
-				}GL11.glEnd();
+				GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
 			}Render3D.modelview.load(oldModelView);
 		}
 		

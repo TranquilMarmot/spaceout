@@ -16,9 +16,10 @@ public class ThrusterParticle extends Particle{
 	
 	//TODO implement fading
 	
-	public ThrusterParticle(Vector3f location, float width, float height, Vector3f velocity) {
+	public ThrusterParticle(Vector3f location, float width, float height, float ttl, Vector3f velocity) {
 		super(location, width, height);
 		this.velocity = velocity;
+		this.ttl = ttl;
 	}
 	
 	@Override
