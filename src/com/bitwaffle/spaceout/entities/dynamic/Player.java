@@ -3,9 +3,9 @@ package com.bitwaffle.spaceout.entities.dynamic;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
+import com.bitwaffle.spaceguts.entities.particles.Emitter;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.input.KeyBindings;
 import com.bitwaffle.spaceguts.input.MouseManager;
@@ -13,7 +13,6 @@ import com.bitwaffle.spaceguts.physics.CollisionTypes;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceguts.util.Runner;
 import com.bitwaffle.spaceguts.util.console.Console;
-import com.bitwaffle.spaceout.entities.passive.particles.ThrusterEmitter;
 import com.bitwaffle.spaceout.interfaces.Health;
 import com.bitwaffle.spaceout.resources.Models;
 import com.bitwaffle.spaceout.resources.Textures;
@@ -31,7 +30,7 @@ public class Player extends DynamicEntity implements Health {
 	
 	private Ship ship;
 	// FIXME temp!!!
-	private ThrusterEmitter thrusterEmitter1, thrusterEmitter2;
+	private Emitter thrusterEmitter1, thrusterEmitter2;
 
 	/** to keep the button from being held down */
 	private boolean button0Down = false;
@@ -45,8 +44,8 @@ public class Player extends DynamicEntity implements Health {
 		this.type = "Player";
 
 		// FIXME temp code
-		thrusterEmitter1 = new ThrusterEmitter(this.location, this.rotation, Textures.PARTICLE, 0.0f, 2, 1.0f, 0.2f, -2.3f);
-		thrusterEmitter2 = new ThrusterEmitter(this.location, this.rotation, Textures.PARTICLE, 0.0f, 2, -0.46f, 0.2f, -2.3f);
+		thrusterEmitter1 = new Emitter(this, Textures.PARTICLE, new Vector3f(0.9f, 0.2f, -2.32f), 0.0f, 5);
+		thrusterEmitter2 = new Emitter(this, Textures.PARTICLE, new Vector3f(-0.40f, 0.2f, -2.32f), 0.0f, 5);
 	}
 
 	@Override
@@ -59,12 +58,12 @@ public class Player extends DynamicEntity implements Health {
 		if(!Runner.paused){
 			//FIXME temp code
 			thrusterEmitter1.update(timeStep);
-			thrusterEmitter1.location.set(this.location);
-			thrusterEmitter1.rotation.set(this.rotation);
+			//thrusterEmitter1.location.set(this.location);
+			//thrusterEmitter1.rotation.set(this.rotation);
 			
 			thrusterEmitter2.update(timeStep);
-			thrusterEmitter2.location.set(this.location);
-			thrusterEmitter2.rotation.set(this.rotation);
+			//thrusterEmitter2.location.set(this.location);
+			//thrusterEmitter2.rotation.set(this.rotation);
 			
 			if(!GUI.menuUp && !Entities.camera.freeMode){
 				// check to make sure the rigid body is active
