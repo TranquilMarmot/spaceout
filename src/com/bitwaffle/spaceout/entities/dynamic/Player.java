@@ -31,7 +31,7 @@ public class Player extends DynamicEntity implements Health {
 	
 	private Ship ship;
 	// FIXME temp!!!
-	private ThrusterEmitter thrusterEmitter;
+	private ThrusterEmitter thrusterEmitter1, thrusterEmitter2;
 
 	/** to keep the button from being held down */
 	private boolean button0Down = false;
@@ -43,8 +43,10 @@ public class Player extends DynamicEntity implements Health {
 		rigidBody.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 		this.ship = ship;
 		this.type = "Player";
-		
-		thrusterEmitter = new ThrusterEmitter(this.location, this.rotation, Textures.PARTICLE, 0.0f);
+
+		// FIXME temp code
+		thrusterEmitter1 = new ThrusterEmitter(this.location, this.rotation, Textures.PARTICLE, 0.0f, 2, 1.0f, 0.2f, -2.3f);
+		thrusterEmitter2 = new ThrusterEmitter(this.location, this.rotation, Textures.PARTICLE, 0.0f, 2, -0.46f, 0.2f, -2.3f);
 	}
 
 	@Override
@@ -55,9 +57,14 @@ public class Player extends DynamicEntity implements Health {
 		// only update if we're not paused, a menu isn't up and the camera's not
 		// in free mode
 		if(!Runner.paused){
-			thrusterEmitter.update(timeStep);
-			thrusterEmitter.location.set(this.location);
-			thrusterEmitter.rotation.set(this.rotation);
+			//FIXME temp code
+			thrusterEmitter1.update(timeStep);
+			thrusterEmitter1.location.set(this.location);
+			thrusterEmitter1.rotation.set(this.rotation);
+			
+			thrusterEmitter2.update(timeStep);
+			thrusterEmitter2.location.set(this.location);
+			thrusterEmitter2.rotation.set(this.rotation);
 			
 			if(!GUI.menuUp && !Entities.camera.freeMode){
 				// check to make sure the rigid body is active
@@ -244,15 +251,20 @@ public class Player extends DynamicEntity implements Health {
 	    javax.vecmath.Vector3f velocity = new javax.vecmath.Vector3f();
 		rigidBody.getLinearVelocity(velocity);
 		float speed = velocity.length();
-		if(speed > 10)
-			thrusterEmitter.active = true;
-		else
-			thrusterEmitter.active = false;
 		if(speed > ship.getTopSpeed()){
 			velocity.x *= ship.getTopSpeed() / speed;
 			velocity.y *= ship.getTopSpeed() / speed;
 			velocity.z *= ship.getTopSpeed() / speed;
 			rigidBody.setLinearVelocity(velocity);
+		}
+		
+		// FIXME temp code
+		if(speed > 2){
+			thrusterEmitter1.active = true;
+			thrusterEmitter2.active = true;
+		}else{
+			thrusterEmitter1.active = false;
+			thrusterEmitter2.active = false;
 		}
 	}
 	
@@ -289,7 +301,9 @@ public class Player extends DynamicEntity implements Health {
 	@Override
 	public void draw(){
 		super.draw();
-		thrusterEmitter.draw();
+		//FIXME temp code
+		thrusterEmitter1.draw();
+		thrusterEmitter2.draw();
 	}
 
 	@Override
