@@ -46,8 +46,8 @@ public class Player extends DynamicEntity implements Health {
 		// FIXME temp code
 		Vector3f locVariance = new Vector3f(0.15f, 0.15f, 0.15f);
 		Vector3f velVariance = new Vector3f(0.0f, 0.0f, -2.5f);
-		thrusterEmitter1 = new Emitter(this, Textures.PARTICLE, new Vector3f(0.9f, 0.13f, -2.34f), locVariance, velVariance, 0.0f, 5);
-		thrusterEmitter2 = new Emitter(this, Textures.PARTICLE, new Vector3f(-0.40f, 0.13f, -2.34f), locVariance, velVariance, 0.0f, 5);
+		thrusterEmitter1 = new Emitter(this, Textures.PARTICLE, new Vector3f(0.9f, 0.13f, -2.34f), locVariance, velVariance, 0.0f, 3);
+		thrusterEmitter2 = new Emitter(this, Textures.PARTICLE, new Vector3f(-0.40f, 0.13f, -2.34f), locVariance, velVariance, 0.0f, 3);
 	}
 
 	@Override

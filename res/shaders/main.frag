@@ -38,7 +38,7 @@ void phongModel( vec3 pos, vec3 norm, out vec3 ambAndDiff, out vec3 spec ) {
 }
 
 void main() {
-    vec4 texColor = texture( Tex1, TexCoord );
+    vec4 texColor = texture(Tex1, TexCoord);
     	
     if(Light.LightEnabled){
 	    vec3 ambAndDiff, spec;
@@ -53,6 +53,6 @@ void main() {
     	 */
         if(texColor.w == 0)
     		discard;
-    	FragColor = (vec4(texColor));
+    	FragColor = (texColor);
     }
 }

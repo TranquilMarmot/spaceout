@@ -160,6 +160,8 @@ public class Emitter{
 	public void draw() {
 		// disable lighting
 		Render3D.program.setUniform("Light.LightEnabled", false);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
 		// get the revese rotation of what we're following
 		Quaternion revQuat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
@@ -192,6 +194,7 @@ public class Emitter{
 		
 		// re-enable lighting
 		Render3D.program.setUniform("Light.LightEnabled", true);
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 	
 	/**
