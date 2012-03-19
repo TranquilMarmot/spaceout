@@ -35,7 +35,8 @@ public enum Textures {
 	SUN("JPG", Paths.TEXTURE_PATH.path() + "planets/sun.jpg", true, GL11.GL_LINEAR),
 	
 	// Particles
-	PARTICLE("PNG", Paths.PARTICLE_IMAGE_PATH.path() + "particle.png", false, GL11.GL_NEAREST),
+	FIRE("PNG", Paths.PARTICLE_IMAGE_PATH.path() + "fire.png", false, GL11.GL_NEAREST),
+	TRAIL("PNG", Paths.PARTICLE_IMAGE_PATH.path() + "trail.png", false, GL11.GL_NEAREST),
 	
 	// GUI
 	CROSSHAIR("PNG", Paths.CROSSHAIR_PATH.path(), true, GL11.GL_NEAREST),

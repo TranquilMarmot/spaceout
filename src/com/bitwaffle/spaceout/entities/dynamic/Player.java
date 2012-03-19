@@ -6,6 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.entities.particles.Emitter;
+import com.bitwaffle.spaceguts.entities.particles.Trail;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.input.KeyBindings;
 import com.bitwaffle.spaceguts.input.MouseManager;
@@ -31,6 +32,7 @@ public class Player extends DynamicEntity implements Health {
 	private Ship ship;
 	// FIXME temp!!!
 	private Emitter thrusterEmitter1, thrusterEmitter2;
+	private Trail trail1, trail2;
 
 	/** to keep the button from being held down */
 	private boolean button0Down = false;
@@ -46,8 +48,11 @@ public class Player extends DynamicEntity implements Health {
 		// FIXME temp code
 		Vector3f locVariance = new Vector3f(0.15f, 0.15f, 0.15f);
 		Vector3f velVariance = new Vector3f(0.0f, 0.0f, -2.5f);
-		thrusterEmitter1 = new Emitter(this, Textures.PARTICLE, new Vector3f(0.9f, 0.13f, -2.34f), locVariance, velVariance, 0.0f, 3);
-		thrusterEmitter2 = new Emitter(this, Textures.PARTICLE, new Vector3f(-0.40f, 0.13f, -2.34f), locVariance, velVariance, 0.0f, 3);
+		//thrusterEmitter1 = new Emitter(this, Textures.FIRE, new Vector3f(0.9f, 0.13f, -2.34f), locVariance, velVariance, 0.0f, 1);
+		//thrusterEmitter2 = new Emitter(this, Textures.FIRE, new Vector3f(-0.40f, 0.13f, -2.34f), locVariance, velVariance, 0.0f, 1);
+		trail1 = new Trail(this, 10, Textures.TRAIL, new Vector3f(0.9f, 0.13f, -2.34f));
+		trail2 = new Trail(this, 10, Textures.TRAIL, new Vector3f(-0.9f, 0.13f, -2.34f));
+		
 	}
 
 	@Override
@@ -59,8 +64,10 @@ public class Player extends DynamicEntity implements Health {
 		// in free mode
 		if(!Runner.paused){
 			//FIXME temp code
-			thrusterEmitter1.update(timeStep);
-			thrusterEmitter2.update(timeStep);
+			//thrusterEmitter1.update(timeStep);
+			//thrusterEmitter2.update(timeStep);
+			trail1.update(timeStep);
+			trail2.update(timeStep);
 			
 			if(!GUI.menuUp && !Entities.camera.freeMode){
 				// check to make sure the rigid body is active
@@ -255,12 +262,21 @@ public class Player extends DynamicEntity implements Health {
 		}
 		
 		// FIXME temp code
+		/*
 		if(speed > 2){
 			thrusterEmitter1.active = true;
 			thrusterEmitter2.active = true;
 		}else{
 			thrusterEmitter1.active = false;
 			thrusterEmitter2.active = false;
+		}
+		*/
+		if(speed > 2){
+			trail1.active = true;
+			trail2.active = true;
+		}else{
+			trail1.active = false;
+			trail2.active = false;
 		}
 	}
 	
@@ -298,8 +314,10 @@ public class Player extends DynamicEntity implements Health {
 	public void draw(){
 		super.draw();
 		//FIXME temp code
-		thrusterEmitter1.draw();
-		thrusterEmitter2.draw();
+		//thrusterEmitter1.draw();
+		//thrusterEmitter2.draw();
+		trail1.draw();
+		trail2.draw();
 	}
 
 	@Override

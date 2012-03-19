@@ -31,7 +31,7 @@ public class Emitter{
 	private static Matrix4f oldModelView = new Matrix4f();
 	
 	/** Box, for drawing particle */
-	private static Box2D box = new Box2D(1.0f, 1.0f, Textures.PARTICLE.texture());
+	private static Box2D box = new Box2D(1.0f, 1.0f, Textures.FIRE.texture());
 	
 	/** The Entity that the particles are coming from */
 	private DynamicEntity following;
@@ -158,7 +158,7 @@ public class Emitter{
 	 * Draws all the particles associated with this Emitter
 	 */
 	public void draw() {
-		// disable lighting
+		// disable lighting and enable blending
 		Render3D.program.setUniform("Light.LightEnabled", false);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

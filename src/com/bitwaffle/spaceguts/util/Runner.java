@@ -24,6 +24,15 @@ import com.bitwaffle.spaceout.resources.Textures;
 /**
  * Initializes and runs the game.
  * 
+ * NOTE
+ * If there're no args, the game looks for natives in the folder it is being run in.
+ * This doesn't work when running in eclipse, because the game gets run from your workspace
+ *  
+ * To run the game in eclipse, click the little arrow next to the Run arrow and
+ * click "Run configurations..." then go to the "Arguments" tab
+ * In "Program arguments:" put "${workspace_loc:spaceout/lib/natives/*YOUROS*}"
+ * Then you should be able to run as usual.
+ * 
  * @author TranquilMarmot
  */
 public class Runner {
@@ -44,16 +53,6 @@ public class Runner {
 	 * @param args Can be given a home directory to use to look for natives in instead of using the default System.getProperty("user.home")
 	 */
 	public static void main(String[] args) {
-		/*
-		 *  NOTE
-		 *  If there're no args, the game looks for natives in the folder it is being run in.
-		 *  This doesn't work when running in eclipse, because the game gets run from your workspace
-		 *  
-		 *  To run the game in eclipse, click the little arrow next to the Run arrow and
-		 *  click "Run configurations..." then go to the "Arguments" tab
-		 *  In "Program arguments:" put "${workspace_loc:spaceout/lib/natives/*YOUROS*}"
-		 *  Then you should be able to run as usual.
-		 */
 		if(args.length == 0)
 			System.setProperty("org.lwjgl.librarypath", System.getProperty("user.dir") + "/lib/natives");
 		else
