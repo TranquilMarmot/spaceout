@@ -34,6 +34,9 @@ public class Trail {
 	
 	public boolean active;
 	
+	private float updateSpeed = 0.1f;
+	private float timeSinceUpdate = 0.0f;
+	
 	public Trail(DynamicEntity following, int length, Textures linkTexture, Vector3f offset){
 		this.linkTex = linkTexture;
 		box = new Box2D(1.0f, 1.0f, linkTex.texture());
@@ -42,23 +45,28 @@ public class Trail {
 		this.length = length;
 		this.offset = offset;
 		chain = new LinkedList<TrailLink>();
-		
 		renderer = new TrailRenderer(this);
 	}
 	
 	public void update(float timeStep){
-		if(active){
-			if(chain.size() < length){
-				addLink();
-			} else{
-				chain.removeLast();
-				addLink();
-			}
+		//if(active){
+			timeSinceUpdate += timeStep;
 			
-			renderer.updateVBO();
-		} else{
-			chain.clear();
-		}
+			if(timeSinceUpdate >= updateSpeed){
+				timeSinceUpdate = 0.0f;
+				if(chain.size() < length){
+					addLink();
+				} else{
+					chain.removeFirst();
+					addLink();
+				}
+				
+				renderer.updateVBO();
+			}
+		//} else{
+		//	if(!chain.isEmpty())
+		///		chain.clear();
+		//}
 	}
 	
 	private void addLink(){
@@ -66,28 +74,18 @@ public class Trail {
 		Vector3f start = new Vector3f();
 		Vector3f.add(following.location, offsetRot, start);
 		
-		float width = 0.5f;
+		float width = 3.0f;
+		float distBehind = 10.0f;
 		
-		Vector3f posWidthOffset = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, width), following.rotation);
-		Vector3f negWidthOffset = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, width), following.rotation);
-		Vector3f start1 = new Vector3f(), start2 = new Vector3f();
-		Vector3f.add(start, posWidthOffset, start1);
-		Vector3f.add(start, negWidthOffset, start2);
+		Vector3f top = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(width, 0.0f, 0.0f), this.following.rotation);
+		Vector3f bottom = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(-width, 0.0f, 0.0f), this.following.rotation);
 		
-		Vector3f end1 = new Vector3f(), end2 = new Vector3f();
-		if(!chain.isEmpty()){
-			TrailLink first = chain.getFirst();
-			end1 = first.start1;
-			end2 = first.start2;
-		}else{
-			Vector3f behind = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, 0.5f), following.rotation);
-			Vector3f.add(start1, behind, end1);
-			Vector3f.add(start2, behind, end2);
-		}
+		Vector3f.add(start, top, top);
+		Vector3f.add(start, bottom, bottom);
 		
-		TrailLink link = new TrailLink(start1, start2, end1, end2, 0.5f, 0.5f);
+		TrailLink link = new TrailLink(top, bottom);
 		
-		chain.addFirst(link);
+		chain.addLast(link);
 	}
 	
 	public void draw(){
@@ -96,28 +94,15 @@ public class Trail {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
-		// get the revese rotation of what we're following
 		Quaternion revQuat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-		this.following.rotation.negate(revQuat);
+		Quaternion.negate(this.following.rotation, revQuat);
 		
-		// amount to translate
-		float transx = this.following.location.x - this.offset.x;
-		float transy = this.following.location.y - this.offset.y;
-		float transz = this.following.location.z - this.offset.z;
-		
-		// save the modelview before we manipulate it
 		oldModelView.load(Render3D.modelview);{
+		
 			Matrix4f.mul(Render3D.modelview, QuaternionHelper.toMatrix(revQuat), Render3D.modelview);
-			// translate and scale the modelview
-			Render3D.modelview.translate(new Vector3f(transx, transy, transz));
-			Matrix4f.mul(Render3D.modelview, QuaternionHelper.toMatrix(Entities.camera.rotation), Render3D.modelview);
 			
-			//Render3D.modelview.scale(new Vector3f(l.width, l.height, 1.0f));
 			Render3D.program.setUniform("ModelViewMatrix", Render3D.modelview);
-
-			// draw the particle
-			//GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
-			this.renderer.draw();
+			renderer.draw();
 		}Render3D.modelview.load(oldModelView);
 		
 		GL11.glDisable(GL11.GL_BLEND);
