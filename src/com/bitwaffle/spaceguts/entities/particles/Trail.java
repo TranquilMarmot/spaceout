@@ -54,6 +54,8 @@ public class Trail {
 				chain.removeLast();
 				addLink();
 			}
+			
+			renderer.updateVBO();
 		} else{
 			chain.clear();
 		}
@@ -98,7 +100,32 @@ public class Trail {
 		Quaternion revQuat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		this.following.rotation.negate(revQuat);
 		
+		// amount to translate
+		float transx = this.following.location.x - this.offset.x;
+		float transy = this.following.location.y - this.offset.y;
+		float transz = this.following.location.z - this.offset.z;
+		
+		// save the modelview before we manipulate it
+		oldModelView.load(Render3D.modelview);{
+			Matrix4f.mul(Render3D.modelview, QuaternionHelper.toMatrix(revQuat), Render3D.modelview);
+			// translate and scale the modelview
+			Render3D.modelview.translate(new Vector3f(transx, transy, transz));
+			Matrix4f.mul(Render3D.modelview, QuaternionHelper.toMatrix(Entities.camera.rotation), Render3D.modelview);
+			
+			//Render3D.modelview.scale(new Vector3f(l.width, l.height, 1.0f));
+			Render3D.program.setUniform("ModelViewMatrix", Render3D.modelview);
+
+			// draw the particle
+			//GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
+			this.renderer.draw();
+		}Render3D.modelview.load(oldModelView);
+		
+		GL11.glDisable(GL11.GL_BLEND);
+		Render3D.program.setUniform("Light.LightEnabled", true);
+
+		
 		// bind texture and array handle
+		/*
 		linkTex.texture().bind();
 		GL30.glBindVertexArray(box.getVAOHandle());
 		
@@ -126,5 +153,6 @@ public class Trail {
 				GL11.glDrawArrays(GL11.GL_QUADS, 0, 4);
 			}Render3D.modelview.load(oldModelView);
 		}
+		*/
 	}
 }
