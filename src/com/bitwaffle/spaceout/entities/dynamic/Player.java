@@ -5,7 +5,6 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
-import com.bitwaffle.spaceguts.entities.particles.Emitter;
 import com.bitwaffle.spaceguts.entities.particles.trail.Trail;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.input.KeyBindings;
@@ -30,8 +29,8 @@ public class Player extends DynamicEntity implements Health {
 	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET);
 	
 	private Ship ship;
-	// FIXME temp!!!
-	private Emitter thrusterEmitter1, thrusterEmitter2;
+	
+	// FIXME temp code
 	private Trail trail1, trail2;
 
 	/** to keep the button from being held down */
@@ -46,12 +45,8 @@ public class Player extends DynamicEntity implements Health {
 		this.type = "Player";
 
 		// FIXME temp code
-		Vector3f locVariance = new Vector3f(0.15f, 0.15f, 0.15f);
-		Vector3f velVariance = new Vector3f(0.0f, 0.0f, -2.5f);
-		//thrusterEmitter1 = new Emitter(this, Textures.FIRE, new Vector3f(0.9f, 0.13f, -2.34f), locVariance, velVariance, 0.0f, 1);
-		//thrusterEmitter2 = new Emitter(this, Textures.FIRE, new Vector3f(-0.40f, 0.13f, -2.34f), locVariance, velVariance, 0.0f, 1);
-		trail1 = new Trail(this, 10, 0.5f, Textures.TRAIL, new Vector3f(0.9f, 0.13f, 2.34f));
-		trail2 = new Trail(this, 10, 0.5f, Textures.TRAIL, new Vector3f(-0.8f, 0.13f, 2.34f));
+		trail1 = new Trail(this, 5, 0.6f, Textures.TRAIL, new Vector3f(0.9f, 0.13f, 2.34f));
+		trail2 = new Trail(this, 5, 0.6f, Textures.TRAIL, new Vector3f(-0.8f, 0.13f, 2.34f));
 	}
 
 	@Override
@@ -63,8 +58,6 @@ public class Player extends DynamicEntity implements Health {
 		// in free mode
 		if(!Runner.paused){
 			//FIXME temp code
-			//thrusterEmitter1.update(timeStep);
-			//thrusterEmitter2.update(timeStep);
 			trail1.update(timeStep);
 			trail2.update(timeStep);
 			
@@ -131,7 +124,7 @@ public class Player extends DynamicEntity implements Health {
 		javax.vecmath.Vector3f angularVelocity = new javax.vecmath.Vector3f(
 				0.0f, 0.0f, 0.0f);
 		rigidBody.getAngularVelocity(angularVelocity);
-		// TODO make this framerate independent
+		
 		float stableZ = angularVelocity.z
 				- ((angularVelocity.z / ship.getStabilizationSpeed()) * timeStep);
 		float stableX = angularVelocity.x
@@ -259,24 +252,6 @@ public class Player extends DynamicEntity implements Health {
 			velocity.z *= ship.getTopSpeed() / speed;
 			rigidBody.setLinearVelocity(velocity);
 		}
-		
-		// FIXME temp code
-		/*
-		if(speed > 2){
-			thrusterEmitter1.active = true;
-			thrusterEmitter2.active = true;
-		}else{
-			thrusterEmitter1.active = false;
-			thrusterEmitter2.active = false;
-		}
-		*/
-		if(speed > 2){
-			trail1.active = true;
-			trail2.active = true;
-		}else{
-			trail1.active = false;
-			trail2.active = false;
-		}
 	}
 	
 	private void rotationLogic(float timeStep){
@@ -313,8 +288,6 @@ public class Player extends DynamicEntity implements Health {
 	public void draw(){
 		super.draw();
 		//FIXME temp code
-		//thrusterEmitter1.draw();
-		//thrusterEmitter2.draw();
 		trail1.draw();
 		trail2.draw();
 	}

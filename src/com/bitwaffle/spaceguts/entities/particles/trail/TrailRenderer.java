@@ -9,26 +9,43 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
+/**
+ * Handles creating and updating the vertex arrays for the trail
+ * @author TranquilMarmot
+ *
+ */
 public class TrailRenderer {
+	/** Info for rendering */
 	private int vaoHandle, numIndices;
+	
+	/** The trail we're rendering */
 	private Trail trail;
 	
+	/** Handles for vertex buffer objects */
 	IntBuffer vboHandles;
 	
+	/**
+	 * @param trail Trail to render with this renderer
+	 */
 	public TrailRenderer(Trail trail){
 		this.trail = trail;
 		initVBO();
 	}
 	
-	
+	/**
+	 * Updates the vertex arrays to contain the most recent trail data
+	 */
 	public void updateVBO(){
+		// set number of links/indices
 		int numLinks = trail.chain.size();
 		numIndices = (numLinks * 2) + 2;
 		
+		// buffers for sending data
 		FloatBuffer vertBuf = BufferUtils.createFloatBuffer(numIndices * 3);
 		FloatBuffer normBuf = BufferUtils.createFloatBuffer(numIndices * 3);
 		FloatBuffer texBuf = BufferUtils.createFloatBuffer(numIndices * 2);
 		
+		// iterate through every link
 		for(int i = 0; i < numLinks; i++){
 			TrailLink link = trail.chain.get(i);
 			
@@ -36,6 +53,7 @@ public class TrailRenderer {
 			vertBuf.put(link.top.y);
 			vertBuf.put(link.top.z);
 			
+			// see the initVBO() method for an explanation of this
 			texBuf.put((float)i);
 			texBuf.put(1.0f);
 			
@@ -59,6 +77,7 @@ public class TrailRenderer {
 		
 		GL30.glBindVertexArray(vaoHandle);
 		
+		// send data to buffers
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboHandles.get(0));
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertBuf, GL15.GL_STREAM_DRAW);
 		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0L);
@@ -74,12 +93,16 @@ public class TrailRenderer {
 	
 	public void initVBO(){
 		int numLinks = trail.chain.size();
+		
+		// 2 indices for the first link, and 2 for every link after
 		numIndices = (numLinks * 2) + 2;
 		
+		// 3 vertices per index, unless it's a texture coordinate
 		FloatBuffer vertBuf = BufferUtils.createFloatBuffer(numIndices * 3);
 		FloatBuffer normBuf = BufferUtils.createFloatBuffer(numIndices * 3);
 		FloatBuffer texBuf = BufferUtils.createFloatBuffer(numIndices * 2);
 		
+		// iterate through every link
 		for(int i = 0; i < numLinks; i++){
 			TrailLink link = trail.chain.get(i);
 			
@@ -87,6 +110,17 @@ public class TrailRenderer {
 			vertBuf.put(link.top.y);
 			vertBuf.put(link.top.z);
 			
+			/*
+			 * In OpenGL, texture coordinates are supposed to be specified as
+			 * between 0.0f and 1.0f. If the coordinates are specified as beyond
+			 * 1.0f, then the textured is sampled as a loop. That is to say
+			 * giving OpenGL a texture coordinate of 1.3f or 2.3f is exactly
+			 * the same as specifying 0.3f.
+			 * Since the trail is being rendered as a quad strip,
+			 * we just give it the index of the link in the chain.
+			 * So the top of the first link goes from 0.0f to 1.0f,
+			 * and the second link goes from 1.0f to 2.0f and so on.
+			 */
 			texBuf.put((float)i);
 			texBuf.put(1.0f);
 			
@@ -108,6 +142,7 @@ public class TrailRenderer {
 		texBuf.rewind();
 		normBuf.rewind();
 		
+		// Send the data to the buffers
 		vaoHandle = GL30.glGenVertexArrays();
 		GL30.glBindVertexArray(vaoHandle);
 		
@@ -130,9 +165,13 @@ public class TrailRenderer {
 		GL20.glEnableVertexAttribArray(2);
 	}
 	
+	/**
+	 * Draws the trail
+	 */
 	public void draw(){
 		trail.linkTex.texture().bind();
 		GL30.glBindVertexArray(vaoHandle);
+		// Don't know why it be like it does, but it do
 		GL11.glDrawArrays(GL11.GL_QUAD_STRIP, 0, numIndices - 1);
 	}
 }

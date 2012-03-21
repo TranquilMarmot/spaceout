@@ -48,9 +48,8 @@
  * 			TODO Bump-maps, normal maps
  * 			TODO Create an AnimatedModel class that has a an addFrame(Frame frame) and int curFrame.
  * 		Particles
- * 			TODO Make maybe a line and each particle is a point in the chain and the connects them all when drawing
  * 			TODO More plasma-looking thruster particles
- * 			TODO Make particles look less spaced outs
+ * 			TODO Make particles look less spaced out
  * System
  * 		General
  * 			TODO Debug class shouldn't really be all static- variables are being hammered every update (in the init() method)

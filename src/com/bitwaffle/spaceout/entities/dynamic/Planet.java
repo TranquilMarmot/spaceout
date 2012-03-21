@@ -5,6 +5,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
+import com.bitwaffle.spaceguts.entities.particles.trail.Trail;
 import com.bitwaffle.spaceguts.graphics.render.Render3D;
 import com.bitwaffle.spaceguts.graphics.shapes.VBOQuadric;
 import com.bitwaffle.spaceguts.physics.CollisionTypes;
@@ -27,6 +28,8 @@ public class Planet extends DynamicEntity implements Health{
 	
 	private static SphereShape shape;
 	
+	private Trail trail;
+	
 	//FIXME planets shouldnt really have health this is for shits and giggles
 	int health = 100;
 	
@@ -45,6 +48,8 @@ public class Planet extends DynamicEntity implements Health{
 		this.texture = texture;
 		
 		quadric = new VBOQuadric(size, 20, 20);
+		
+		trail = new Trail(this, 20, 1.0f, Textures.TRAIL, new Vector3f(0.0f, 0.0f, 0.0f));
 	}
 	
 	@Override
@@ -52,6 +57,7 @@ public class Planet extends DynamicEntity implements Health{
 		Render3D.useDefaultMaterial();
 		texture.texture().bind();
 		quadric.draw();
+		trail.draw();
 	}
 	
 	private static SphereShape getShape(float size){
@@ -70,6 +76,12 @@ public class Planet extends DynamicEntity implements Health{
 
 		Physics.dynamicsWorld.debugDrawObject(worldTransform, shape,
 				new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
+	}
+	
+	@Override
+	public void update(float timeStep){
+		super.update(timeStep);
+		trail.update(timeStep);
 	}
 
 	@Override
