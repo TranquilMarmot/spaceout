@@ -1,17 +1,13 @@
-package com.bitwaffle.spaceguts.entities.particles;
+package com.bitwaffle.spaceguts.entities.particles.trail;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-
-import javax.vecmath.Point2f;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.util.vector.Vector3f;
-import org.newdawn.slick.opengl.Texture;
 
 public class TrailRenderer {
 	private int vaoHandle, numIndices;
@@ -26,8 +22,6 @@ public class TrailRenderer {
 	
 	
 	public void updateVBO(){
-		Texture texture = trail.linkTex.texture();
-		
 		int numLinks = trail.chain.size();
 		numIndices = (numLinks * 2) + 2;
 		
@@ -57,10 +51,7 @@ public class TrailRenderer {
 			
 			normBuf.put((float)i);
 			normBuf.put(0.0f);
-			
-			System.out.println(i + ": " + link.top + " | " + link.bottom);
 		}
-		System.out.println("--------------");
 		
 		vertBuf.rewind();
 		texBuf.rewind();
@@ -82,8 +73,6 @@ public class TrailRenderer {
 	}
 	
 	public void initVBO(){
-		Texture texture = trail.linkTex.texture();
-		
 		int numLinks = trail.chain.size();
 		numIndices = (numLinks * 2) + 2;
 		
@@ -144,6 +133,6 @@ public class TrailRenderer {
 	public void draw(){
 		trail.linkTex.texture().bind();
 		GL30.glBindVertexArray(vaoHandle);
-		GL11.glDrawArrays(GL11.GL_QUAD_STRIP, 0, numIndices);
+		GL11.glDrawArrays(GL11.GL_QUAD_STRIP, 0, numIndices - 1);
 	}
 }

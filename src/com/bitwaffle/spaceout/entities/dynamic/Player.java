@@ -6,7 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.entities.particles.Emitter;
-import com.bitwaffle.spaceguts.entities.particles.Trail;
+import com.bitwaffle.spaceguts.entities.particles.trail.Trail;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.input.KeyBindings;
 import com.bitwaffle.spaceguts.input.MouseManager;
@@ -50,9 +50,8 @@ public class Player extends DynamicEntity implements Health {
 		Vector3f velVariance = new Vector3f(0.0f, 0.0f, -2.5f);
 		//thrusterEmitter1 = new Emitter(this, Textures.FIRE, new Vector3f(0.9f, 0.13f, -2.34f), locVariance, velVariance, 0.0f, 1);
 		//thrusterEmitter2 = new Emitter(this, Textures.FIRE, new Vector3f(-0.40f, 0.13f, -2.34f), locVariance, velVariance, 0.0f, 1);
-		trail1 = new Trail(this, 10, Textures.TRAIL, new Vector3f(0.0f, 0.0f, 0.0f));
-		trail2 = new Trail(this, 5, Textures.TRAIL, new Vector3f(0.0f, 0.0f, 0.0f));
-		
+		trail1 = new Trail(this, 10, 0.5f, Textures.TRAIL, new Vector3f(0.9f, 0.13f, 2.34f));
+		trail2 = new Trail(this, 10, 0.5f, Textures.TRAIL, new Vector3f(-0.8f, 0.13f, 2.34f));
 	}
 
 	@Override
@@ -317,7 +316,7 @@ public class Player extends DynamicEntity implements Health {
 		//thrusterEmitter1.draw();
 		//thrusterEmitter2.draw();
 		trail1.draw();
-		//trail2.draw();
+		trail2.draw();
 	}
 
 	@Override

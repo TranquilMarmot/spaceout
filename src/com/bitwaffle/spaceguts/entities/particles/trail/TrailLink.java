@@ -1,4 +1,4 @@
-package com.bitwaffle.spaceguts.entities.particles;
+package com.bitwaffle.spaceguts.entities.particles.trail;
 
 import org.lwjgl.util.vector.Vector3f;
 
