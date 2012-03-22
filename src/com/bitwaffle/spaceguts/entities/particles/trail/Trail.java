@@ -22,9 +22,15 @@ import com.bitwaffle.spaceout.resources.Textures;
 public class Trail {
 	/** All the actual links */
 	protected LinkedList<TrailLink> chain;
+	protected LinkedList<TrailLink> chain2;
+	protected LinkedList<TrailLink> chain3;
+	protected LinkedList<TrailLink> chain4;
 	
 	/** Handles the vertex array object for this trail */
 	private TrailRenderer renderer;
+	private TrailRenderer renderer2;
+	private TrailRenderer renderer3;
+	private TrailRenderer renderer4;
 	
 	/** Texture to use for each link */
 	protected Textures linkTex;
@@ -66,7 +72,13 @@ public class Trail {
 		this.width = width;
 		
 		chain = new LinkedList<TrailLink>();
-		renderer = new TrailRenderer(this);
+		chain2 = new LinkedList<TrailLink>();
+		chain3 = new LinkedList<TrailLink>();
+		chain4 = new LinkedList<TrailLink>();
+		renderer = new TrailRenderer(chain, linkTex);
+		renderer2 = new TrailRenderer(chain2, linkTex);
+		renderer3 = new TrailRenderer(chain3, linkTex);
+		renderer4 = new TrailRenderer(chain4, linkTex);
 	}
 	
 	/**
@@ -88,11 +100,17 @@ public class Trail {
 			} else{
 				// remove the last link (addLink() adds to the front of the list)
 				chain.removeLast();
+				chain2.removeLast();
+				chain3.removeLast();
+				chain4.removeLast();
 				addLink();
 			}
 			
 			// let the renderer know that it needs to update the vertex buffers
 			renderer.updateVBO();
+			renderer2.updateVBO();
+			renderer3.updateVBO();
+			renderer4.updateVBO();
 		}
 	}
 	
@@ -118,6 +136,37 @@ public class Trail {
 		
 		// add new link to chain
 		chain.addFirst(new TrailLink(top, bottom));
+		
+	
+		Quaternion by90 = QuaternionHelper.rotate(this.following.rotation, new Vector3f(0.0f, 0.0f, 90.0f));
+		Vector3f top2 = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(width / 2, 0.0f, 0.0f), by90);
+		Vector3f bottom2 = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(-width / 2, 0.0f, 0.0f), by90);
+		Vector3f.add(start, top2, top2);
+		Vector3f.add(start, bottom2, bottom2);
+	
+		
+		// add new link to chain
+		chain2.addFirst(new TrailLink(top2, bottom2));
+		
+		Quaternion by180 = QuaternionHelper.rotate(this.following.rotation, new Vector3f(0.0f, 0.0f, 135.0f));
+		Vector3f top3 = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(width / 2, 0.0f, 0.0f), by180);
+		Vector3f bottom3 = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(-width / 2, 0.0f, 0.0f), by180);
+		Vector3f.add(start, top3, top3);
+		Vector3f.add(start, bottom3, bottom3);
+	
+		
+		// add new link to chain
+		chain3.addFirst(new TrailLink(top3, bottom3));
+		
+		Quaternion by270 = QuaternionHelper.rotate(this.following.rotation, new Vector3f(0.0f, 0.0f, 225.0f));
+		Vector3f top4 = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(width / 2, 0.0f, 0.0f), by270);
+		Vector3f bottom4 = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(-width / 2, 0.0f, 0.0f), by270);
+		Vector3f.add(start, top4, top4);
+		Vector3f.add(start, bottom4, bottom4);
+	
+		
+		// add new link to chain
+		chain4.addFirst(new TrailLink(top4, bottom4));
 	}
 	
 	/**
@@ -129,6 +178,8 @@ public class Trail {
 			Render3D.program.setUniform("Light.LightEnabled", false);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			
+			linkTex.texture().bind();
 			
 			oldModelView.load(Render3D.modelview);{
 				/*
@@ -168,6 +219,9 @@ public class Trail {
 				Render3D.program.setUniform("ModelViewMatrix", Render3D.modelview);
 				
 				renderer.draw();
+				renderer2.draw();
+				renderer3.draw();
+				renderer4.draw();
 			}Render3D.modelview.load(oldModelView);
 			
 			// Don't forget to re-disable blending and re-enable lighting!

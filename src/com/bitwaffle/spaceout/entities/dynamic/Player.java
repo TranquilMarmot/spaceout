@@ -45,8 +45,8 @@ public class Player extends DynamicEntity implements Health {
 		this.type = "Player";
 
 		// FIXME temp code
-		trail1 = new Trail(this, 5, 0.6f, Textures.TRAIL, new Vector3f(0.9f, 0.13f, 2.34f));
-		trail2 = new Trail(this, 5, 0.6f, Textures.TRAIL, new Vector3f(-0.8f, 0.13f, 2.34f));
+		trail1 = new Trail(this, 15, 0.6f, Textures.TRAIL, new Vector3f(0.9f, 0.13f, 2.34f));
+		trail2 = new Trail(this, 15, 0.6f, Textures.TRAIL, new Vector3f(-0.8f, 0.13f, 2.34f));
 	}
 
 	@Override

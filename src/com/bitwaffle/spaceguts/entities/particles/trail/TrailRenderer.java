@@ -2,12 +2,15 @@ package com.bitwaffle.spaceguts.entities.particles.trail;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.LinkedList;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+
+import com.bitwaffle.spaceout.resources.Textures;
 
 /**
  * Handles creating and updating the vertex arrays for the trail
@@ -19,16 +22,19 @@ public class TrailRenderer {
 	private int vaoHandle, numIndices;
 	
 	/** The trail we're rendering */
-	private Trail trail;
+	private LinkedList<TrailLink> chain;
 	
 	/** Handles for vertex buffer objects */
 	IntBuffer vboHandles;
 	
+	private Textures texture;
+	
 	/**
 	 * @param trail Trail to render with this renderer
 	 */
-	public TrailRenderer(Trail trail){
-		this.trail = trail;
+	public TrailRenderer(LinkedList<TrailLink> chain, Textures texture){
+		this.chain = chain;
+		this.texture = texture;
 		initVBO();
 	}
 	
@@ -37,7 +43,7 @@ public class TrailRenderer {
 	 */
 	public void updateVBO(){
 		// set number of links/indices
-		int numLinks = trail.chain.size();
+		int numLinks = chain.size();
 		numIndices = (numLinks * 2) + 2;
 		
 		// buffers for sending data
@@ -47,27 +53,27 @@ public class TrailRenderer {
 		
 		// iterate through every link
 		for(int i = 0; i < numLinks; i++){
-			TrailLink link = trail.chain.get(i);
+			TrailLink link = chain.get(i);
 			
 			vertBuf.put(link.top.x);
 			vertBuf.put(link.top.y);
 			vertBuf.put(link.top.z);
 			
 			// see the initVBO() method for an explanation of this
-			texBuf.put((float)i);
-			texBuf.put(1.0f);
+			texBuf.put((float)i * texture.texture().getWidth());
+			texBuf.put(texture.texture().getHeight());
 			
-			normBuf.put((float)i);
-			normBuf.put(1.0f);
+			normBuf.put((float)i * texture.texture().getWidth());
+			normBuf.put(texture.texture().getHeight());
 			
 			vertBuf.put(link.bottom.x);
 			vertBuf.put(link.bottom.y);
 			vertBuf.put(link.bottom.z);
 			
-			texBuf.put((float)i);
+			texBuf.put((float)i * texture.texture().getWidth());
 			texBuf.put(0.0f);
 			
-			normBuf.put((float)i);
+			normBuf.put((float)i * texture.texture().getWidth());
 			normBuf.put(0.0f);
 		}
 		
@@ -92,7 +98,7 @@ public class TrailRenderer {
 	}
 	
 	public void initVBO(){
-		int numLinks = trail.chain.size();
+		int numLinks = chain.size();
 		
 		// 2 indices for the first link, and 2 for every link after
 		numIndices = (numLinks * 2) + 2;
@@ -104,7 +110,7 @@ public class TrailRenderer {
 		
 		// iterate through every link
 		for(int i = 0; i < numLinks; i++){
-			TrailLink link = trail.chain.get(i);
+			TrailLink link = chain.get(i);
 			
 			vertBuf.put(link.top.x);
 			vertBuf.put(link.top.y);
@@ -121,20 +127,20 @@ public class TrailRenderer {
 			 * So the top of the first link goes from 0.0f to 1.0f,
 			 * and the second link goes from 1.0f to 2.0f and so on.
 			 */
-			texBuf.put((float)i);
+			texBuf.put((float)i * texture.texture().getWidth());
 			texBuf.put(1.0f);
 			
-			normBuf.put((float)i);
+			normBuf.put((float)i * texture.texture().getWidth());
 			normBuf.put(1.0f);
 			
 			vertBuf.put(link.bottom.x);
 			vertBuf.put(link.bottom.y);
 			vertBuf.put(link.bottom.z);
 			
-			texBuf.put((float)i);
+			texBuf.put((float)i * texture.texture().getWidth());
 			texBuf.put(0.0f);
 			
-			normBuf.put((float)i);
+			normBuf.put((float)i * texture.texture().getWidth());
 			normBuf.put(0.0f);
 		}
 		
@@ -169,7 +175,6 @@ public class TrailRenderer {
 	 * Draws the trail
 	 */
 	public void draw(){
-		trail.linkTex.texture().bind();
 		GL30.glBindVertexArray(vaoHandle);
 		// Don't know why it be like it does, but it do
 		GL11.glDrawArrays(GL11.GL_QUAD_STRIP, 0, numIndices - 1);
