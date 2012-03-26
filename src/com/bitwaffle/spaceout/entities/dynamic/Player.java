@@ -1,5 +1,7 @@
 package com.bitwaffle.spaceout.entities.dynamic;
 
+import javax.vecmath.Quat4f;
+
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -8,6 +10,7 @@ import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.entities.particles.trail.Trail;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.input.KeyBindings;
+import com.bitwaffle.spaceguts.input.Keys;
 import com.bitwaffle.spaceguts.input.MouseManager;
 import com.bitwaffle.spaceguts.physics.CollisionTypes;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
@@ -18,6 +21,7 @@ import com.bitwaffle.spaceout.resources.Models;
 import com.bitwaffle.spaceout.resources.Textures;
 import com.bitwaffle.spaceout.ship.Ship;
 import com.bulletphysics.collision.dispatch.CollisionObject;
+import com.bulletphysics.linearmath.Transform;
 
 /**
  * The player!
@@ -34,7 +38,7 @@ public class Player extends DynamicEntity implements Health {
 	private Trail trail1, trail2;
 
 	/** to keep the button from being held down */
-	private boolean button0Down = false;
+	private boolean button0Down = false, boosting = false;
 
 	public Player(Vector3f location, Quaternion rotation, Ship ship,
 			float mass, float restitution) {
@@ -68,6 +72,11 @@ public class Player extends DynamicEntity implements Health {
 
 				//javax.vecmath.Vector3f speed = new javax.vecmath.Vector3f();
 				//rigidBody.getLinearVelocity(speed);
+				
+				if(Keys.LSHIFT.isPressed())
+					boosting = true;
+				else
+					boosting = false;
 
 				// perform acceleration
 				zLogic(timeStep);
@@ -91,8 +100,8 @@ public class Player extends DynamicEntity implements Health {
 					button0Down = false;
 
 				// handle stabilization
-				if (KeyBindings.CONTROL_STABILIZE.isPressed())
-					stabilize(timeStep);
+				//if (KeyBindings.CONTROL_STABILIZE.isPressed())
+				//	stabilize(timeStep);
 
 				// handle stopping
 				if (KeyBindings.CONTROL_STOP.isPressed())
@@ -169,7 +178,7 @@ public class Player extends DynamicEntity implements Health {
 		bullet.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(vec.x,
 				vec.y, vec.z));
 	}
-
+	
 	/**
 	 * Accelerate/decelerate along the Z axis
 	 */
@@ -179,13 +188,24 @@ public class Player extends DynamicEntity implements Health {
 
 		if (forward || backward) {
 			if (forward) {
-				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
+				Vector3f vec;
+				if(boosting)
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+							new Vector3f(0.0f, 0.0f, ship.getBoostSpeed().z * timeStep), rotation);
+				else
+					vec = QuaternionHelper.rotateVectorByQuaternion(
 						new Vector3f(0.0f, 0.0f, ship.getAccelerationSpeed().z * timeStep), rotation);
+				
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
 			if (backward) {
-				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
+				Vector3f vec;
+				if(boosting)
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+							new Vector3f(0.0f, 0.0f, -ship.getBoostSpeed().z * timeStep), rotation);
+				else
+					vec = QuaternionHelper.rotateVectorByQuaternion(
 						new Vector3f(0.0f, 0.0f, -ship.getAccelerationSpeed().z * timeStep), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
@@ -202,14 +222,24 @@ public class Player extends DynamicEntity implements Health {
 
 		if (left || right) {
 			if (left) {
-				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(ship.getAccelerationSpeed().x * timeStep, 0.0f, 0.0f), rotation);
+				Vector3f vec;
+				if(boosting)
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+						new Vector3f(ship.getBoostSpeed().x * timeStep, 0.0f, 0.0f), rotation);
+				else
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+							new Vector3f(ship.getAccelerationSpeed().x * timeStep, 0.0f, 0.0f), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
 			if (right) {
-				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(-ship.getAccelerationSpeed().x * timeStep, 0.0f, 0.0f), rotation);
+				Vector3f vec;
+				if(boosting)
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+							new Vector3f(-ship.getBoostSpeed().x * timeStep, 0.0f, 0.0f), rotation);
+				else
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+							new Vector3f(-ship.getAccelerationSpeed().x * timeStep, 0.0f, 0.0f), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
@@ -225,14 +255,24 @@ public class Player extends DynamicEntity implements Health {
 
 		if (ascend || descend) {
 			if (ascend) {
-				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(0.0f, -ship.getAccelerationSpeed().y * timeStep, 0.0f), rotation);
+				Vector3f vec;
+				if(boosting)
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+						new Vector3f(0.0f, -ship.getBoostSpeed().y * timeStep, 0.0f), rotation);
+				else
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+							new Vector3f(0.0f, -ship.getAccelerationSpeed().y * timeStep, 0.0f), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
 			if (descend) {
-				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(0.0f, ship.getAccelerationSpeed().y * timeStep, 0.0f), rotation);
+				Vector3f vec;
+				if(boosting)
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+						new Vector3f(0.0f, ship.getBoostSpeed().y * timeStep, 0.0f), rotation);
+				else
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+							new Vector3f(0.0f, ship.getAccelerationSpeed().y * timeStep, 0.0f), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
@@ -255,6 +295,39 @@ public class Player extends DynamicEntity implements Health {
 	}
 	
 	private void rotationLogic(float timeStep){
+		float xRot = MouseManager.dy * ship.getXTurnSpeed() * timeStep;
+		float yRot = MouseManager.dx * ship.getYTurnSpeed() * timeStep;
+		
+		float zRot = 0.0f;
+		// check if we need to apply torque on the Z axis
+		boolean rollRight = KeyBindings.CONTROL_ROLL_RIGHT.isPressed();
+		boolean rollLeft = KeyBindings.CONTROL_ROLL_LEFT.isPressed();
+
+		// handle applying torque on the Z axis
+		if (rollRight || rollLeft) {
+			if (rollRight)
+				zRot = -ship.getRollSpeed() * timeStep;
+			else
+				zRot = ship.getRollSpeed() * timeStep;
+		}
+		
+		if(xRot != 0.0f || yRot != 0.0f || zRot != 0.0f){
+			rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
+			
+			Transform trans = new Transform();
+			
+			rigidBody.getWorldTransform(trans);
+			Quat4f rot = new Quat4f();
+			trans.getRotation(rot);
+			Quaternion rota = QuaternionHelper.rotate(new Quaternion(rot.x, rot.y, rot.z, rot.w), new Vector3f(xRot, yRot, zRot));
+			trans.setRotation(new Quat4f(rota.x, rota.y, rota.z, rota.w));
+			rotation.set(rota);
+			rigidBody.setWorldTransform(trans);
+		}
+	}
+	
+	
+	private void rotationLogicOld(float timeStep){
 		// TODO very impotant!!! make this framerate independent
 		javax.vecmath.Vector3f angularVelocity = new javax.vecmath.Vector3f();
 		rigidBody.getAngularVelocity(angularVelocity);

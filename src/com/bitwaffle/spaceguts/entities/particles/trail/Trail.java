@@ -22,15 +22,15 @@ import com.bitwaffle.spaceout.resources.Textures;
 public class Trail {
 	/** All the actual links */
 	protected LinkedList<TrailLink> chain;
-	protected LinkedList<TrailLink> chain2;
-	protected LinkedList<TrailLink> chain3;
-	protected LinkedList<TrailLink> chain4;
+	//protected LinkedList<TrailLink> chain2;
+	//protected LinkedList<TrailLink> chain3;
+	//protected LinkedList<TrailLink> chain4;
 	
 	/** Handles the vertex array object for this trail */
 	private TrailRenderer renderer;
-	private TrailRenderer renderer2;
-	private TrailRenderer renderer3;
-	private TrailRenderer renderer4;
+	//private TrailRenderer renderer2;
+	//private TrailRenderer renderer3;
+	//private TrailRenderer renderer4;
 	
 	/** Texture to use for each link */
 	protected Textures linkTex;
@@ -72,13 +72,13 @@ public class Trail {
 		this.width = width;
 		
 		chain = new LinkedList<TrailLink>();
-		chain2 = new LinkedList<TrailLink>();
-		chain3 = new LinkedList<TrailLink>();
-		chain4 = new LinkedList<TrailLink>();
+		//chain2 = new LinkedList<TrailLink>();
+		//chain3 = new LinkedList<TrailLink>();
+		//chain4 = new LinkedList<TrailLink>();
 		renderer = new TrailRenderer(chain, linkTex);
-		renderer2 = new TrailRenderer(chain2, linkTex);
-		renderer3 = new TrailRenderer(chain3, linkTex);
-		renderer4 = new TrailRenderer(chain4, linkTex);
+		//renderer2 = new TrailRenderer(chain2, linkTex);
+		//renderer3 = new TrailRenderer(chain3, linkTex);
+		//renderer4 = new TrailRenderer(chain4, linkTex);
 	}
 	
 	/**
@@ -100,17 +100,17 @@ public class Trail {
 			} else{
 				// remove the last link (addLink() adds to the front of the list)
 				chain.removeLast();
-				chain2.removeLast();
-				chain3.removeLast();
-				chain4.removeLast();
+				//chain2.removeLast();
+				//chain3.removeLast();
+				//chain4.removeLast();
 				addLink();
 			}
 			
 			// let the renderer know that it needs to update the vertex buffers
 			renderer.updateVBO();
-			renderer2.updateVBO();
-			renderer3.updateVBO();
-			renderer4.updateVBO();
+			//renderer2.updateVBO();
+			//renderer3.updateVBO();
+			//renderer4.updateVBO();
 		}
 	}
 	
@@ -137,7 +137,7 @@ public class Trail {
 		// add new link to chain
 		chain.addFirst(new TrailLink(top, bottom));
 		
-	
+		/*
 		Quaternion by90 = QuaternionHelper.rotate(this.following.rotation, new Vector3f(0.0f, 0.0f, 90.0f));
 		Vector3f top2 = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(width / 2, 0.0f, 0.0f), by90);
 		Vector3f bottom2 = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(-width / 2, 0.0f, 0.0f), by90);
@@ -167,6 +167,7 @@ public class Trail {
 		
 		// add new link to chain
 		chain4.addFirst(new TrailLink(top4, bottom4));
+		*/
 	}
 	
 	/**
@@ -219,9 +220,9 @@ public class Trail {
 				Render3D.program.setUniform("ModelViewMatrix", Render3D.modelview);
 				
 				renderer.draw();
-				renderer2.draw();
-				renderer3.draw();
-				renderer4.draw();
+				//renderer2.draw();
+				//renderer3.draw();
+				//renderer4.draw();
 			}Render3D.modelview.load(oldModelView);
 			
 			// Don't forget to re-disable blending and re-enable lighting!

@@ -14,7 +14,7 @@ public enum KeyBindings {
 	CONTROL_BACKWARD(new Button[]{Keys.S}),
 	CONTROL_LEFT(new Button[]{Keys.A}),
 	CONTROL_RIGHT(new Button[]{Keys.D}),
-	CONTROL_DESCEND(new Button[]{Keys.LSHIFT}),
+	CONTROL_DESCEND(new Button[]{Keys.Z}),
 	CONTROL_ASCEND(new Button[]{Keys.SPACE}),
 	CONTROL_ROLL_LEFT(new Button[]{Keys.Q}),
 	CONTROL_ROLL_RIGHT(new Button[]{Keys.E}),
