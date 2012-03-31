@@ -157,6 +157,13 @@ public class Emitter{
 	public void removeParticles(ArrayList<Particle> p){
 		particles.removeAll(p);
 	}
+	
+	/**
+	 * @return Whether or not this emitter has any particles
+	 */
+	public boolean hasParticles(){
+		return !this.particles.isEmpty();
+	}
 
 	/**
 	 * Draws all the particles associated with this Emitter
@@ -231,7 +238,25 @@ public class Emitter{
 		Vector3f loc = new Vector3f(this.following.location.x + behind.x, this.following.location.y + behind.y, this.following.location.z + behind.z);
 		
 		// figure out how much this particle's going to move
-		Vector3f veloc = new Vector3f(randy.nextFloat() * velocityVariance.x, randy.nextFloat() * velocityVariance.y, randy.nextFloat() * velocityVariance.z);
+		
+		float velocX, velocY, velocZ;
+		
+		if(randy.nextBoolean())
+			velocX = randy.nextFloat() * velocityVariance.x;
+		else
+			velocX = randy.nextFloat() * -velocityVariance.x;
+		
+		if(randy.nextBoolean())
+			velocY = randy.nextFloat() * velocityVariance.y;
+		else
+			velocY = randy.nextFloat() * -velocityVariance.y;
+		
+		if(randy.nextBoolean())
+			velocZ = randy.nextFloat() * velocityVariance.z;
+		else
+			velocZ = randy.nextFloat() * -velocityVariance.z;
+		
+		Vector3f veloc = new Vector3f(velocX, velocY, velocZ);
 		
 		// rotate the velocity
 		Vector3f rotVeloc = QuaternionHelper.rotateVectorByQuaternion(veloc, this.following.rotation);
@@ -241,6 +266,6 @@ public class Emitter{
 		//following.rigidBody.getAngularVelocity(angvel);
 		//rotVeloc.set(rotVeloc.x + angvel.x, rotVeloc.y + angvel.y, rotVeloc.z + angvel.z);
 		
-		this.addParticle(new Particle(loc, 0.6f, 0.6f, randy.nextFloat() * particleTTLVariance, rotVeloc));
+		this.addParticle(new Particle(loc, 1.0f, 1.0f, randy.nextFloat() * particleTTLVariance, rotVeloc));
 	}
 }

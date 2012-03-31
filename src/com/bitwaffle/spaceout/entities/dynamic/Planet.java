@@ -95,7 +95,7 @@ public class Planet extends DynamicEntity implements Health{
 	public void hurt(int amount) {
 		health -= amount;
 		if(health <= 0){
-			Explosion splode = new Explosion(this.location, this.rotation, 0.5f);
+			Explosion splode = new Explosion(this.location, this.rotation, 1.0f);
 			Entities.addPassiveEntity(splode);
 			removeFlag = true;
 		}

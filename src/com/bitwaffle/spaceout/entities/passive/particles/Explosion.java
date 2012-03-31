@@ -23,11 +23,11 @@ public class Explosion extends Entity{
 	float lived;
 	
 	// info for particle emitter
-	final static Vector3f LOCATION_VARIANCE = new Vector3f(25.0f, 25.0f, 25.0f);
-	final static Vector3f VELOCITY_VARIANCE = new Vector3f(0.0f, 0.0f, 10.0f);
-	final static float EMIT_SPEED = 0.02f;
-	final static int PARTICLES_PER_EMISSION = 10;
-	final static float PARTICLE_TTL_VARIANCE = 20.0f;
+	final static Vector3f LOCATION_VARIANCE = new Vector3f(5.0f, 5.0f, 5.0f);
+	final static Vector3f VELOCITY_VARIANCE = new Vector3f(10.0f, 10.0f, 10.0f);
+	final static float EMIT_SPEED = 0.05f;
+	final static int PARTICLES_PER_EMISSION = 20;
+	final static float PARTICLE_TTL_VARIANCE = 2.5f;
 	
 	/**
 	 * Boom!
@@ -53,13 +53,15 @@ public class Explosion extends Entity{
 	}
 
 	@Override
-	public void update(float timeStep) {
+	public void update(float timeStep){
 		emitter.update(timeStep);
 		
 		lived += timeStep;
 		if(lived >= ttl){
 			emitter.active = false;
-			Entities.removePassiveEntity(this);
+			
+			if(!emitter.hasParticles())
+				Entities.removePassiveEntity(this);
 		}
 	}
 
@@ -70,7 +72,7 @@ public class Explosion extends Entity{
 	}
 
 	@Override
-	public void cleanup() {
+	public void cleanup(){
 		
 	}
 }
