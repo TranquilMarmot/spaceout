@@ -9,8 +9,8 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
+import com.bitwaffle.spaceguts.entities.Entity;
 import com.bitwaffle.spaceguts.graphics.render.Render3D;
 import com.bitwaffle.spaceguts.graphics.shapes.Box2D;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
@@ -34,7 +34,7 @@ public class Emitter{
 	private static Box2D box = new Box2D(1.0f, 1.0f, Textures.FIRE.texture());
 	
 	/** The Entity that the particles are coming from */
-	private DynamicEntity following;
+	private Entity following;
 	
 	/** Offset from the center of the Entity being followed */
 	private Vector3f offset;
@@ -54,6 +54,9 @@ public class Emitter{
 	/** How many particles to emit per emission */
 	private int particlesPerEmission;
 	
+	/** How long each particle lives for */
+	private float particleTTLVariance;
+	
 	/**
 	 * An object for emitting particles!
 	 * @param following Entity to emit particles from
@@ -62,7 +65,7 @@ public class Emitter{
 	 * @param emitSpeed How often to emit particles
 	 * @param particlesPerEmission Particles to emit per emission
 	 */
-	public Emitter(DynamicEntity following, Textures particleTex, Vector3f offset, Vector3f locationVariance, Vector3f velocityVariance, float emitSpeed, int particlesPerEmission){
+	public Emitter(Entity following, Textures particleTex, Vector3f offset, Vector3f locationVariance, Vector3f velocityVariance, float emitSpeed, int particlesPerEmission, float particleTTLVariance){
 		this.following = following;
 		this.particleTex = particleTex;
 		this.offset = offset;
@@ -70,6 +73,7 @@ public class Emitter{
 		this.velocityVariance = velocityVariance;
 		this.emitSpeed = emitSpeed;
 		this.particlesPerEmission = particlesPerEmission;
+		this.particleTTLVariance = particleTTLVariance;
 		particles = new ArrayList<Particle>();
 		
 		// seed with the time
@@ -183,6 +187,7 @@ public class Emitter{
 				Matrix4f.mul(Render3D.modelview, QuaternionHelper.toMatrix(revQuat), Render3D.modelview);
 				// translate and scale the modelview
 				Render3D.modelview.translate(new Vector3f(transx, transy, transz));
+				// billboard the particle
 				Matrix4f.mul(Render3D.modelview, QuaternionHelper.toMatrix(Entities.camera.rotation), Render3D.modelview);
 				Render3D.modelview.scale(new Vector3f(p.width, p.height, 1.0f));
 				Render3D.program.setUniform("ModelViewMatrix", Render3D.modelview);
@@ -232,10 +237,10 @@ public class Emitter{
 		Vector3f rotVeloc = QuaternionHelper.rotateVectorByQuaternion(veloc, this.following.rotation);
 		
 		// get angular velocity and add it
-		javax.vecmath.Vector3f angvel = new javax.vecmath.Vector3f();
-		following.rigidBody.getAngularVelocity(angvel);
-		rotVeloc.set(rotVeloc.x + angvel.x, rotVeloc.y + angvel.y, rotVeloc.z + angvel.z);
+		//javax.vecmath.Vector3f angvel = new javax.vecmath.Vector3f();
+		//following.rigidBody.getAngularVelocity(angvel);
+		//rotVeloc.set(rotVeloc.x + angvel.x, rotVeloc.y + angvel.y, rotVeloc.z + angvel.z);
 		
-		this.addParticle(new Particle(loc, 0.4f, 0.4f, randy.nextFloat() * 0.5f, rotVeloc));
+		this.addParticle(new Particle(loc, 0.6f, 0.6f, randy.nextFloat() * particleTTLVariance, rotVeloc));
 	}
 }
