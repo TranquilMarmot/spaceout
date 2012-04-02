@@ -1,5 +1,7 @@
 package com.bitwaffle.spaceguts.entities;
 
+import javax.vecmath.Quat4f;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
@@ -9,19 +11,22 @@ import com.bitwaffle.spaceguts.graphics.render.Render3D;
 import com.bitwaffle.spaceguts.input.KeyBindings;
 import com.bitwaffle.spaceguts.input.MouseManager;
 import com.bitwaffle.spaceguts.physics.Builder;
+import com.bitwaffle.spaceguts.physics.CollisionTypes;
 import com.bitwaffle.spaceguts.physics.Physics;
 import com.bitwaffle.spaceguts.util.DisplayHelper;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.resources.Textures;
 import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback;
+import com.bulletphysics.collision.shapes.SphereShape;
+import com.bulletphysics.linearmath.Transform;
 
 /**
  * A camera that tells how the scene is being looked at
  * 
  * @author TranquilMarmot
  */
-public class Camera extends Entity {
+public class Camera extends DynamicEntity {
 	/** initial values for when the camera is created */
 	private static final float INIT_ZOOM = 12.0f;
 	private static final float INIT_XOFFSET = 0.0f;
@@ -34,7 +39,7 @@ public class Camera extends Entity {
 	public Builder builder;
 
 	/** how fast the camera moves in free mode */
-	public float speed = 10.0f;
+	public float speed = 200.0f;
 	private float maxSpeed = 10000.0f, minSpeed = 0.01f;
 
 	/** Offset along Y axis */
@@ -83,29 +88,37 @@ public class Camera extends Entity {
 	/**
 	 * Camera constructor
 	 */
-	public Camera(Vector3f location) {
-		super();
-		this.location = location;
+	public Camera() {
+		// FIXME The camera can interfere with stuff, which shouldn't be the case (ideally, it would ignore everything except what it's bumping into)
+		super(new Vector3f(0.0f, 0.0f, 0.0f), new Quaternion(0.0f, 0.0f, 0.0f, 1.0f), new SphereShape(10.0f), 0.0001f, 0.01f, CollisionTypes.NOTHING, (short)-1);
+		this.zoom = INIT_ZOOM;
+		this.yOffset = INIT_YOFFSET;
+		this.xOffset = INIT_XOFFSET;
 		rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		this.type = "camera";
 		builder = new Builder(this);
 	}
 
 	/**
-	 * Creates a new camera in the right spot
-	 */
-	public static void createCamera() {
-		// initialize the camera
-		Entities.camera = new Camera(new Vector3f(0.0f, 0.0f, 0.0f));
-		Entities.camera.zoom = INIT_ZOOM;
-		Entities.camera.yOffset = INIT_YOFFSET;
-		Entities.camera.xOffset = INIT_XOFFSET;
-	}
-
-	/**
-	 * Update the camera. Ths handles following other things, mode switches etc.
+	 * Update the camera. This handles following other things, mode switches etc.
 	 */
 	public void update(float timeStep) {
+		// make sure the rigid body is active
+		if(!this.rigidBody.isActive())
+			this.rigidBody.activate();
+		
+		// get the rigid body's tranform
+		Transform trans = new Transform();
+		this.rigidBody.getWorldTransform(trans);
+		
+		// set location to be with rigid body
+		this.location.set(trans.origin.x, trans.origin.y, trans.origin.z);
+		
+		// set rotation to be with rigid body
+		Quat4f rot = new Quat4f();
+		trans.getRotation(rot);
+		this.rotation.set(rot.x, rot.y, rot.z, rot.w);
+		
 		if(buildMode)
 			builder.update(timeStep);
 		
@@ -121,25 +134,29 @@ public class Camera extends Entity {
 		// check for any key presses
 		checkForModeSwitch();
 
-		// If we're not in freeMode and not in vanityMode, we're rotating with
-		// an
-		// entity
+		// If we're not in freeMode and not in vanityMode, we're rotating with an entity
 		if (!freeMode && !vanityMode) {
 			this.rotation.set(following.rotation);
 		} else if ((vanityMode || freeMode) && !builder.rightGrabbed) {
 			// if we're in vanity or free mode, apply any rotation changes
 			this.rotation = QuaternionHelper.rotateX(this.rotation, MouseManager.dy);
 			this.rotation = QuaternionHelper.rotateY(this.rotation, MouseManager.dx);
+			// update rigid body transform
+			trans.setRotation(new Quat4f(rotation.x, rotation.y, rotation.z, rotation.w));
 		}
 
 		// if we're not in free mode, move the camera to be behind whatever it's
 		// following
 		if (!freeMode) {
 			this.location.set(following.location);
+			
+			trans.origin.set(location.x, location.y, location.z);
 		} else if (freeMode && !vanityMode) {
 			// else do logic for moving around in free mode
-			freeMode(timeStep);
+			freeMode(timeStep, trans);
 		}
+		
+		this.rigidBody.setWorldTransform(trans);
 	}
 
 	/**
@@ -152,7 +169,7 @@ public class Camera extends Entity {
 			if(!buildMode){
 				// swap the camera mode
 				if (KeyBindings.SYS_CAMERA_MODE.pressedOnce()) {
-					// three states: normal (vanity and free false), vanity (vanity true
+					// three states: normal (vanity false free false), vanity (vanity true
 					// free false), free (vanity false free true)
 					if (!vanityMode && !freeMode) {
 						vanityMode = true;
@@ -210,6 +227,11 @@ public class Camera extends Entity {
 					// save the camera's location and move it back a bit
 					oldLocation.set(location);
 					Vector3f.add(this.location, QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, -25.0f), this.rotation), this.location);
+					
+					Transform trans = new Transform();
+					this.rigidBody.getWorldTransform(trans);
+					trans.origin.set(location.x, location.y, location.z);
+					this.rigidBody.setWorldTransform(trans);
 				} else{
 					// re-enter normal mode
 					vanityMode = false;
@@ -265,42 +287,52 @@ public class Camera extends Entity {
 			}
 		}
 	}
-
+	
 	/**
 	 * Performs any free mode movement
 	 * 
 	 * @param timeStep
 	 *            Amount of time passed since last update
 	 */
-	private void freeMode(float timeStep) {
+	private void freeMode(float timeStep, Transform trans) {
 		timeStep *= 100;
 		// check for forward and backward movement
 		boolean forward = KeyBindings.CONTROL_FORWARD.isPressed();
 		boolean backward = KeyBindings.CONTROL_BACKWARD.isPressed();
+		
+		float dx = 0, dy = 0, dz = 0;
 
 		// control forward and backward movement
-		if (forward)
-			this.location = QuaternionHelper.moveZ(this.rotation, this.location, speed * timeStep);
-		if (backward)
-			this.location = QuaternionHelper.moveZ(this.rotation, this.location, -speed * timeStep);
-
+		if(!(forward && backward)){
+			if (forward)
+				dz = speed * timeStep;
+			else if (backward)
+				dz = -speed * timeStep;
+		}
+		
 		// check for left and right movement
 		boolean left = KeyBindings.CONTROL_LEFT.isPressed();
 		boolean right = KeyBindings.CONTROL_RIGHT.isPressed();
 
 		// control strafing left and right
-		if (left)
-			this.location = QuaternionHelper.moveX(this.rotation, this.location, speed * timeStep);
-		if (right)
-			this.location = QuaternionHelper.moveX(this.rotation, this.location, -speed * timeStep);
-
+		if(!(left && right)){
+			if (left)
+				dx = speed * timeStep;
+			else if (right)
+				dx = -speed * timeStep;
+		}
+		
+		
 		// handle going up/down
 		boolean up = KeyBindings.CONTROL_ASCEND.isPressed();
 		boolean down = KeyBindings.CONTROL_DESCEND.isPressed();
-		if (up)
-			this.location = QuaternionHelper.moveY(this.rotation, this.location, -speed * timeStep);
-		if (down)
-			this.location = QuaternionHelper.moveY(this.rotation, this.location, speed * timeStep);
+		if(!(up && down)){
+			if (up)
+				dy = -speed * timeStep;
+			else if (down)
+				dy = speed * timeStep;
+		}
+		
 
 		// roll left/right
 		boolean rollRight = KeyBindings.CONTROL_ROLL_RIGHT.isPressed();
@@ -309,8 +341,13 @@ public class Camera extends Entity {
 			this.rotation = QuaternionHelper.rotateZ(this.rotation, -timeStep);
 		if (rollLeft)
 			this.rotation = QuaternionHelper.rotateZ(this.rotation, timeStep);
+		
+		Vector3f veloc = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(dx, dy, dz), this.rotation);
+		this.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(veloc.x, veloc.y, veloc.z));
+		
+		trans.setRotation(new Quat4f(rotation.x, rotation.y, rotation.z, rotation.w));
 	}
-	
+
 	/**
 	 * Performs a ray test at the center of the camera into the depths of space.
 	 * @return A RayResultCallback that says whether or not something was hit

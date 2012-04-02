@@ -165,6 +165,9 @@ public class Builder {
 			if (cameraRay.hasHit()) {
 				lookingAt = (DynamicEntity) cameraRay.collisionObject
 						.getUserPointer();
+				
+				if(lookingAt == camera)
+					lookingAt = null;
 
 				// grab the entity if the mouse button is down
 				if (!leftGrabbed && MouseManager.button0) {
@@ -302,50 +305,9 @@ public class Builder {
 	 *            Amount of time passed (gotten from camera)
 	 */
 	private void moveEntityWithCamera(float timeStep) {
-		timeStep *= 100;
-		Transform trans = new Transform();
-		lookingAt.rigidBody.getWorldTransform(trans);
-
-		Vector3f location = new Vector3f(trans.origin.x, trans.origin.y,
-				trans.origin.z);
-
-		// check for forward and backward movement
-		boolean forward = KeyBindings.CONTROL_FORWARD.isPressed();
-		boolean backward = KeyBindings.CONTROL_BACKWARD.isPressed();
-		// control forward and backward movement
-		if (forward)
-			location = QuaternionHelper.moveZ(camera.rotation, location,
-					camera.speed * timeStep);
-		if (backward)
-			location = QuaternionHelper.moveZ(camera.rotation, location,
-					-camera.speed * timeStep);
-
-		// check for left and right movement
-		boolean left = KeyBindings.CONTROL_LEFT.isPressed();
-		boolean right = KeyBindings.CONTROL_RIGHT.isPressed();
-		// control strafing left and right
-		if (left)
-			location = QuaternionHelper.moveX(camera.rotation, location,
-					camera.speed * timeStep);
-		if (right)
-			location = QuaternionHelper.moveX(camera.rotation, location,
-					-camera.speed * timeStep);
-
-		// handle going up/down
-		boolean up = KeyBindings.CONTROL_ASCEND.isPressed();
-		boolean down = KeyBindings.CONTROL_DESCEND.isPressed();
-		if (up)
-			location = QuaternionHelper.moveY(camera.rotation, location,
-					-camera.speed * timeStep);
-		if (down)
-			location = QuaternionHelper.moveY(camera.rotation, location,
-					camera.speed * timeStep);
-
-		trans.origin.set(location.x, location.y, location.z);
-
-		lookingAt.location.set(location);
-
-		lookingAt.rigidBody.setWorldTransform(trans);
+		javax.vecmath.Vector3f linvec = new javax.vecmath.Vector3f();
+		camera.rigidBody.getLinearVelocity(linvec);
+		lookingAt.rigidBody.setLinearVelocity(linvec);
 	}
 
 	/**

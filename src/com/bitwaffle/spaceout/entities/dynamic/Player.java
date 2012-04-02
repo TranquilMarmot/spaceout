@@ -73,7 +73,7 @@ public class Player extends DynamicEntity implements Health {
 				//javax.vecmath.Vector3f speed = new javax.vecmath.Vector3f();
 				//rigidBody.getLinearVelocity(speed);
 				
-				if(Keys.LSHIFT.isPressed())
+				if(KeyBindings.CONTROL_BOOST.isPressed())
 					boosting = true;
 				else
 					boosting = false;
