@@ -22,7 +22,8 @@ import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.linearmath.Transform;
 
 /**
- * A camera that tells how the scene is being looked at
+ * A camera that describes how the scene is being looked at and can move around inside of the physics world
+ * There should only be one camera at a time, Entities.camera
  * 
  * @author TranquilMarmot
  */
@@ -39,7 +40,7 @@ public class Camera extends DynamicEntity {
 	public Builder builder;
 
 	/** how fast the camera moves in free mode */
-	public float speed = 200.0f;
+	public float speed = 350.0f;
 	private float maxSpeed = 10000.0f, minSpeed = 0.01f;
 
 	/** Offset along Y axis */
@@ -76,7 +77,7 @@ public class Camera extends DynamicEntity {
 	public boolean buildMode = false;
 	
 	/** how fast the camera rolls */
-	float rollSpeed = 13.0f;
+	float rollSpeed = 100.0f;
 	
 	// FIXME should the crosshair be its own class?
 	public int crosshairWidth = 8, crosshairHeight = 8;
@@ -133,14 +134,19 @@ public class Camera extends DynamicEntity {
 
 		// check for any key presses
 		checkForModeSwitch();
-
-		// If we're not in freeMode and not in vanityMode, we're rotating with an entity
-		if (!freeMode && !vanityMode) {
-			this.rotation.set(following.rotation);
-		} else if ((vanityMode || freeMode) && !builder.rightGrabbed) {
-			// if we're in vanity or free mode, apply any rotation changes
-			this.rotation = QuaternionHelper.rotateX(this.rotation, MouseManager.dy);
-			this.rotation = QuaternionHelper.rotateY(this.rotation, MouseManager.dx);
+		
+		if(!builder.rightGrabbed){
+			float dz = 0.0f;
+			// roll left/right
+			boolean rollRight = KeyBindings.CONTROL_ROLL_RIGHT.isPressed();
+			boolean rollLeft = KeyBindings.CONTROL_ROLL_LEFT.isPressed();
+			if (rollRight)
+				dz = -timeStep * rollSpeed;
+			if (rollLeft)
+				dz = timeStep * rollSpeed;
+			
+			// apply any rotation changes
+			this.rotation = QuaternionHelper.rotate(this.rotation, new Vector3f(MouseManager.dy, MouseManager.dx, dz));
 			// update rigid body transform
 			trans.setRotation(new Quat4f(rotation.x, rotation.y, rotation.z, rotation.w));
 		}
@@ -332,15 +338,6 @@ public class Camera extends DynamicEntity {
 			else if (down)
 				dy = speed * timeStep;
 		}
-		
-
-		// roll left/right
-		boolean rollRight = KeyBindings.CONTROL_ROLL_RIGHT.isPressed();
-		boolean rollLeft = KeyBindings.CONTROL_ROLL_LEFT.isPressed();
-		if (rollRight)
-			this.rotation = QuaternionHelper.rotateZ(this.rotation, -timeStep);
-		if (rollLeft)
-			this.rotation = QuaternionHelper.rotateZ(this.rotation, timeStep);
 		
 		Vector3f veloc = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(dx, dy, dz), this.rotation);
 		this.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(veloc.x, veloc.y, veloc.z));
