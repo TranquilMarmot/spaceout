@@ -135,20 +135,9 @@ public class Camera extends DynamicEntity {
 		// check for any key presses
 		checkForModeSwitch();
 		
+		// only look around if the builder isn't rotating something
 		if(!builder.rightGrabbed){
-			float dz = 0.0f;
-			// roll left/right
-			boolean rollRight = KeyBindings.CONTROL_ROLL_RIGHT.isPressed();
-			boolean rollLeft = KeyBindings.CONTROL_ROLL_LEFT.isPressed();
-			if (rollRight)
-				dz = -timeStep * rollSpeed;
-			if (rollLeft)
-				dz = timeStep * rollSpeed;
-			
-			// apply any rotation changes
-			this.rotation = QuaternionHelper.rotate(this.rotation, new Vector3f(MouseManager.dy, MouseManager.dx, dz));
-			// update rigid body transform
-			trans.setRotation(new Quat4f(rotation.x, rotation.y, rotation.z, rotation.w));
+			lookLogic(timeStep, trans);
 		}
 
 		// if we're not in free mode, move the camera to be behind whatever it's
@@ -163,6 +152,27 @@ public class Camera extends DynamicEntity {
 		}
 		
 		this.rigidBody.setWorldTransform(trans);
+	}
+	
+	/**
+	 * Changes where the camera is looking based on mouse movement/keyboard input
+	 * @param timeStep Time since last update
+	 * @param trans Transform to modify
+	 */
+	private void lookLogic(float timeStep, Transform trans){
+		float dz = 0.0f;
+		// roll left/right
+		boolean rollRight = KeyBindings.CONTROL_ROLL_RIGHT.isPressed();
+		boolean rollLeft = KeyBindings.CONTROL_ROLL_LEFT.isPressed();
+		if (rollRight)
+			dz = timeStep * rollSpeed;
+		if (rollLeft)
+			dz = timeStep * -rollSpeed;
+		
+		// apply any rotation changes
+		this.rotation = QuaternionHelper.rotate(this.rotation, new Vector3f(MouseManager.dy, MouseManager.dx, dz));
+		// update rigid body transform
+		trans.setRotation(new Quat4f(rotation.x, rotation.y, rotation.z, rotation.w));
 	}
 
 	/**
@@ -299,6 +309,7 @@ public class Camera extends DynamicEntity {
 	 * 
 	 * @param timeStep
 	 *            Amount of time passed since last update
+	 * @param trans Transform to modify
 	 */
 	private void freeMode(float timeStep, Transform trans) {
 		timeStep *= 100;

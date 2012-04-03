@@ -149,13 +149,11 @@ public class XMLParser {
 		Vector3f shipAcceleration = new Vector3f(2500.0f, 2500.0f, 2500.0f);
 		Vector3f shipBoostSpeed = new Vector3f(100000.0f, 100000.0f, 100000.0f);
 		float shipTopSpeed = 150.0f;
-		float shipStabilizationSpeed = 0.5f;
 		float shipStopSpeed = 0.25f;
-		float shipRollSpeed = 25f;
-		float shipXTurnSpeed = 25f;
-		float shipYTurnSpeed = 25f;
+		float shipRollSpeed = 25.0f;
+		float shipTurnSpeed = 50.0f;
 		
-		Ship ship = new Ship(shipName, shipModel, shipHealth, shipMass, shipRestitution, shipAcceleration, shipBoostSpeed, shipTopSpeed, shipStabilizationSpeed, shipStopSpeed, shipRollSpeed, shipXTurnSpeed, shipYTurnSpeed);
+		Ship ship = new Ship(shipName, shipModel, shipHealth, shipMass, shipRestitution, shipAcceleration, shipBoostSpeed, shipTopSpeed, shipStopSpeed, shipRollSpeed, shipTurnSpeed);
 		
 		Player player = new Player(location, rotation, ship,
 				mass, restitution);

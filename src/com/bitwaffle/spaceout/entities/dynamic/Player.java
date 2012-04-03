@@ -126,8 +126,9 @@ public class Player extends DynamicEntity implements Health {
 	}
 
 	/**
-	 * Gracefullt stabilizes the player's angular velocity
+	 * Gracefully stabilizes the player's angular velocity
 	 */
+	/*
 	@SuppressWarnings("unused")
 	private void stabilize(float timeStep) {
 		javax.vecmath.Vector3f angularVelocity = new javax.vecmath.Vector3f(
@@ -143,7 +144,7 @@ public class Player extends DynamicEntity implements Health {
 
 		rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(stableX,
 				stableY, stableZ));
-	}
+	}*/
 
 	/**
 	 * Pew pew
@@ -154,7 +155,8 @@ public class Player extends DynamicEntity implements Health {
 		Quaternion bulletRotation = new Quaternion(this.rotation.x,
 				this.rotation.y, this.rotation.z, this.rotation.w);
 
-		// move the bullet to in front of the player so it doesn't it the player
+		// move the bullet to in front of the player
+		// FIXME this should be an offset from the center to represent the location of a gun or something
 		Vector3f bulletMoveAmount = new Vector3f(0.0f, 0.0f, 10.0f);
 		bulletMoveAmount = QuaternionHelper.rotateVectorByQuaternion(
 				bulletMoveAmount, bulletRotation);
@@ -294,6 +296,10 @@ public class Player extends DynamicEntity implements Health {
 		}
 	}
 	
+	/**
+	 * Uses spherical linear interpolation to rotate the ship towards where the camera is looking
+	 * @param timeStep
+	 */
 	private void rotationLogic(float timeStep){
 		javax.vecmath.Vector3f angVec = new javax.vecmath.Vector3f();
 		this.rigidBody.getAngularVelocity(angVec);
@@ -308,8 +314,8 @@ public class Player extends DynamicEntity implements Health {
 			Quat4f camquat = new Quat4f(Entities.camera.rotation.x, Entities.camera.rotation.y, Entities.camera.rotation.z, Entities.camera.rotation.w);
 			Quat4f thisquat = new Quat4f(rotation.x, rotation.y, rotation.z, rotation.w);
 			
-			// TODO make this magic '225.0f' number a variable for the ship
-			float interpolationAmount = (float)(Math.PI / (timeStep * 225.0f));
+			// TODO make this magic number a variable for the ship
+			float interpolationAmount = timeStep * ship.getTurnSpeed();
 			
 			// SLERP magix!
 			thisquat.interpolate(camquat, thisquat, interpolationAmount);
@@ -326,9 +332,11 @@ public class Player extends DynamicEntity implements Health {
 	}
 	
 	@SuppressWarnings("unused")
-	private void rotationLogicRotate(float timeStep){
-		float xRot = MouseManager.dy * ship.getXTurnSpeed() * timeStep;
-		float yRot = MouseManager.dx * ship.getYTurnSpeed() * timeStep;
+	private void rotationLogicDirect(float timeStep){
+		//float xRot = MouseManager.dy * ship.getXTurnSpeed() * timeStep;
+		//float yRot = MouseManager.dx * ship.getYTurnSpeed() * timeStep;
+		float xRot = MouseManager.dy * timeStep;
+		float yRot = MouseManager.dx * timeStep;
 		
 		float zRot = 0.0f;
 		// check if we need to apply torque on the Z axis
@@ -365,8 +373,10 @@ public class Player extends DynamicEntity implements Health {
 		javax.vecmath.Vector3f angularVelocity = new javax.vecmath.Vector3f();
 		rigidBody.getAngularVelocity(angularVelocity);
 		
-		float xRot = MouseManager.dy * ship.getXTurnSpeed();
-		float yRot = MouseManager.dx * ship.getYTurnSpeed();
+		//float xRot = MouseManager.dy * ship.getXTurnSpeed();
+		//float yRot = MouseManager.dx * ship.getYTurnSpeed();
+		float xRot = MouseManager.dy;
+		float yRot = MouseManager.dx;
 		
 		float zRot = 0.0f;
 		// check if we need to apply torque on the Z axis
