@@ -202,7 +202,7 @@ public class Console {
 		int currentWidth = 0;
 
 		// If the next word is too big, time to split the line.
-		if (words[0].length() > consoleWidth) {
+		if (words[0].length() >= consoleWidth) {
 			currentWidth = consoleWidth;
 		} else {
 			// Otherwise, for each word:
