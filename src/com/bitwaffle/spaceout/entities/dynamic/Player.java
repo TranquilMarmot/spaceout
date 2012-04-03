@@ -1,13 +1,16 @@
 package com.bitwaffle.spaceout.entities.dynamic;
 
+import javax.vecmath.Quat4f;
+
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
+import com.bitwaffle.spaceguts.entities.particles.trail.Trail;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.input.KeyBindings;
+import com.bitwaffle.spaceguts.input.Keys;
 import com.bitwaffle.spaceguts.input.MouseManager;
 import com.bitwaffle.spaceguts.physics.CollisionTypes;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
@@ -15,8 +18,10 @@ import com.bitwaffle.spaceguts.util.Runner;
 import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.interfaces.Health;
 import com.bitwaffle.spaceout.resources.Models;
+import com.bitwaffle.spaceout.resources.Textures;
 import com.bitwaffle.spaceout.ship.Ship;
 import com.bulletphysics.collision.dispatch.CollisionObject;
+import com.bulletphysics.linearmath.Transform;
 
 /**
  * The player!
@@ -28,9 +33,12 @@ public class Player extends DynamicEntity implements Health {
 	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET);
 	
 	private Ship ship;
+	
+	// FIXME temp code
+	private Trail trail1, trail2;
 
 	/** to keep the button from being held down */
-	private boolean button0Down = false;
+	private boolean button0Down = false, boosting = false;
 
 	public Player(Vector3f location, Quaternion rotation, Ship ship,
 			float mass, float restitution) {
@@ -39,6 +47,10 @@ public class Player extends DynamicEntity implements Health {
 		rigidBody.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 		this.ship = ship;
 		this.type = "Player";
+
+		// FIXME temp code
+		trail1 = new Trail(this, 15, 0.6f, Textures.TRAIL, new Vector3f(0.9f, 0.13f, 2.34f));
+		trail2 = new Trail(this, 15, 0.6f, Textures.TRAIL, new Vector3f(-0.8f, 0.13f, 2.34f));
 	}
 
 	@Override
@@ -48,44 +60,53 @@ public class Player extends DynamicEntity implements Health {
 	public void update(float timeStep) {
 		// only update if we're not paused, a menu isn't up and the camera's not
 		// in free mode
-		if (!Runner.paused && !GUI.menuUp && !Entities.camera.freeMode) {
-			// check to make sure the rigid body is active
-			if (!rigidBody.isActive())
-				rigidBody.activate();
-
-			javax.vecmath.Vector3f speed = new javax.vecmath.Vector3f();
-			rigidBody.getLinearVelocity(speed);
+		if(!Runner.paused){
+			//FIXME temp code
+			trail1.update(timeStep);
+			trail2.update(timeStep);
 			
-			//FIXME this if statement necessary?
+			if(!GUI.menuUp && !Entities.camera.freeMode){
+				// check to make sure the rigid body is active
+				if (!rigidBody.isActive())
+					rigidBody.activate();
 
-			// perform acceleration
-			zLogic(timeStep);
-			xLogic(timeStep);
-			yLogic(timeStep);
-			
-			
-			// cap the players' speed
-			checkSpeed();
+				//javax.vecmath.Vector3f speed = new javax.vecmath.Vector3f();
+				//rigidBody.getLinearVelocity(speed);
+				
+				if(Keys.LSHIFT.isPressed())
+					boosting = true;
+				else
+					boosting = false;
 
-			// perform rotation
-			if(!Entities.camera.vanityMode)
-				rotationLogic(timeStep);
+				// perform acceleration
+				zLogic(timeStep);
+				xLogic(timeStep);
+				yLogic(timeStep);
+				
+				
+				// cap the players' speed
+				checkSpeed();
 
-			// handle bullet shooting
-			if (MouseManager.button0 && !button0Down && !Console.consoleOn) {
-				button0Down = true;
-				shootBullet();
+				// perform rotation
+				if(!Entities.camera.vanityMode)
+					rotationLogic(timeStep);
+
+				// handle bullet shooting
+				if (MouseManager.button0 && !button0Down && !Console.consoleOn) {
+					button0Down = true;
+					shootBullet();
+				}
+				if (!MouseManager.button0)
+					button0Down = false;
+
+				// handle stabilization
+				//if (KeyBindings.CONTROL_STABILIZE.isPressed())
+				//	stabilize(timeStep);
+
+				// handle stopping
+				if (KeyBindings.CONTROL_STOP.isPressed())
+					stop(timeStep);
 			}
-			if (!MouseManager.button0)
-				button0Down = false;
-
-			// handle stabilization
-			if (KeyBindings.CONTROL_STABILIZE.isPressed())
-				stabilize(timeStep);
-
-			// handle stopping
-			if (KeyBindings.CONTROL_STOP.isPressed())
-				stop(timeStep);
 		}
 	}
 
@@ -112,7 +133,7 @@ public class Player extends DynamicEntity implements Health {
 		javax.vecmath.Vector3f angularVelocity = new javax.vecmath.Vector3f(
 				0.0f, 0.0f, 0.0f);
 		rigidBody.getAngularVelocity(angularVelocity);
-		// TODO make this framerate independent
+		
 		float stableZ = angularVelocity.z
 				- ((angularVelocity.z / ship.getStabilizationSpeed()) * timeStep);
 		float stableX = angularVelocity.x
@@ -157,7 +178,7 @@ public class Player extends DynamicEntity implements Health {
 		bullet.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(vec.x,
 				vec.y, vec.z));
 	}
-
+	
 	/**
 	 * Accelerate/decelerate along the Z axis
 	 */
@@ -167,13 +188,24 @@ public class Player extends DynamicEntity implements Health {
 
 		if (forward || backward) {
 			if (forward) {
-				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
+				Vector3f vec;
+				if(boosting)
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+							new Vector3f(0.0f, 0.0f, ship.getBoostSpeed().z * timeStep), rotation);
+				else
+					vec = QuaternionHelper.rotateVectorByQuaternion(
 						new Vector3f(0.0f, 0.0f, ship.getAccelerationSpeed().z * timeStep), rotation);
+				
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
 			if (backward) {
-				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
+				Vector3f vec;
+				if(boosting)
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+							new Vector3f(0.0f, 0.0f, -ship.getBoostSpeed().z * timeStep), rotation);
+				else
+					vec = QuaternionHelper.rotateVectorByQuaternion(
 						new Vector3f(0.0f, 0.0f, -ship.getAccelerationSpeed().z * timeStep), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
@@ -190,14 +222,24 @@ public class Player extends DynamicEntity implements Health {
 
 		if (left || right) {
 			if (left) {
-				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(ship.getAccelerationSpeed().x * timeStep, 0.0f, 0.0f), rotation);
+				Vector3f vec;
+				if(boosting)
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+						new Vector3f(ship.getBoostSpeed().x * timeStep, 0.0f, 0.0f), rotation);
+				else
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+							new Vector3f(ship.getAccelerationSpeed().x * timeStep, 0.0f, 0.0f), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
 			if (right) {
-				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(-ship.getAccelerationSpeed().x * timeStep, 0.0f, 0.0f), rotation);
+				Vector3f vec;
+				if(boosting)
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+							new Vector3f(-ship.getBoostSpeed().x * timeStep, 0.0f, 0.0f), rotation);
+				else
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+							new Vector3f(-ship.getAccelerationSpeed().x * timeStep, 0.0f, 0.0f), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
@@ -213,14 +255,24 @@ public class Player extends DynamicEntity implements Health {
 
 		if (ascend || descend) {
 			if (ascend) {
-				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(0.0f, -ship.getAccelerationSpeed().y * timeStep, 0.0f), rotation);
+				Vector3f vec;
+				if(boosting)
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+						new Vector3f(0.0f, -ship.getBoostSpeed().y * timeStep, 0.0f), rotation);
+				else
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+							new Vector3f(0.0f, -ship.getAccelerationSpeed().y * timeStep, 0.0f), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
 			if (descend) {
-				Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(
-						new Vector3f(0.0f, ship.getAccelerationSpeed().y * timeStep, 0.0f), rotation);
+				Vector3f vec;
+				if(boosting)
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+						new Vector3f(0.0f, ship.getBoostSpeed().y * timeStep, 0.0f), rotation);
+				else
+					vec = QuaternionHelper.rotateVectorByQuaternion(
+							new Vector3f(0.0f, ship.getAccelerationSpeed().y * timeStep, 0.0f), rotation);
 				rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(vec.x,
 						vec.y, vec.z));
 			}
@@ -243,6 +295,39 @@ public class Player extends DynamicEntity implements Health {
 	}
 	
 	private void rotationLogic(float timeStep){
+		float xRot = MouseManager.dy * ship.getXTurnSpeed() * timeStep;
+		float yRot = MouseManager.dx * ship.getYTurnSpeed() * timeStep;
+		
+		float zRot = 0.0f;
+		// check if we need to apply torque on the Z axis
+		boolean rollRight = KeyBindings.CONTROL_ROLL_RIGHT.isPressed();
+		boolean rollLeft = KeyBindings.CONTROL_ROLL_LEFT.isPressed();
+
+		// handle applying torque on the Z axis
+		if (rollRight || rollLeft) {
+			if (rollRight)
+				zRot = -ship.getRollSpeed() * timeStep;
+			else
+				zRot = ship.getRollSpeed() * timeStep;
+		}
+		
+		if(xRot != 0.0f || yRot != 0.0f || zRot != 0.0f){
+			rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
+			
+			Transform trans = new Transform();
+			
+			rigidBody.getWorldTransform(trans);
+			Quat4f rot = new Quat4f();
+			trans.getRotation(rot);
+			Quaternion rota = QuaternionHelper.rotate(new Quaternion(rot.x, rot.y, rot.z, rot.w), new Vector3f(xRot, yRot, zRot));
+			trans.setRotation(new Quat4f(rota.x, rota.y, rota.z, rota.w));
+			rotation.set(rota);
+			rigidBody.setWorldTransform(trans);
+		}
+	}
+	
+	
+	private void rotationLogicOld(float timeStep){
 		// TODO very impotant!!! make this framerate independent
 		javax.vecmath.Vector3f angularVelocity = new javax.vecmath.Vector3f();
 		rigidBody.getAngularVelocity(angularVelocity);
@@ -271,22 +356,27 @@ public class Player extends DynamicEntity implements Health {
 		
 		rigidBody.setAngularVelocity(angularVelocity);
 	}
+	
+	@Override
+	public void draw(){
+		super.draw();
+		//FIXME temp code
+		trail1.draw();
+		trail2.draw();
+	}
 
 	@Override
 	public int getCurrentHealth() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void hurt(int amount) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void heal(int amount) {
-		// TODO Auto-generated method stub
 		
 	}
 }

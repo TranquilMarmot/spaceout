@@ -1,8 +1,6 @@
 /*
  *	TODO, I've a feeling we're not in Kansas any more!
  *
- * Temp
- * 			TODO Do at least one homework assignment today
  * Bugs
  * 			TODO After the first time, the fullscreen key has to be pressed twice to have an effect
  * 			TODO Destroy the Java AWT window when going into fullscreen, then create it again on leaving fullscreen
@@ -49,6 +47,9 @@
  * 			TODO More powers! Things like initial rotation, center offset, etc. (keep in mind that these also have to be translated to bullet)
  * 			TODO Bump-maps, normal maps
  * 			TODO Create an AnimatedModel class that has a an addFrame(Frame frame) and int curFrame.
+ * 		Particles
+ * 			TODO More plasma-looking thruster particles
+ * 			TODO Make particles look less spaced out
  * System
  * 		General
  * 			TODO Debug class shouldn't really be all static- variables are being hammered every update (in the init() method)
@@ -57,7 +58,6 @@
  * 			TODO Look into having ships stored as a zip file containing an obj, a png, and an xml file (is it too slow? easier if its uncompressed?)
  * 			TODO Add a "/save" command that saves the game and return to the main menu
  * 		Console
- * 			TODO Make up/down keys control chat history
  * 			TODO Save chat/console history to text file
  * 			TODO Chat color parsing
  * 			TODO Make ctrl+v work with the console

@@ -5,11 +5,14 @@ import org.lwjgl.util.vector.Vector3f;
 
 
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
+import com.bitwaffle.spaceguts.entities.Entities;
+import com.bitwaffle.spaceguts.entities.particles.trail.Trail;
 import com.bitwaffle.spaceguts.graphics.render.Render3D;
 import com.bitwaffle.spaceguts.graphics.shapes.VBOQuadric;
 import com.bitwaffle.spaceguts.physics.CollisionTypes;
 import com.bitwaffle.spaceguts.physics.Physics;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
+import com.bitwaffle.spaceout.entities.passive.particles.Explosion;
 import com.bitwaffle.spaceout.interfaces.Health;
 import com.bitwaffle.spaceout.resources.Textures;
 import com.bulletphysics.collision.dispatch.CollisionObject;
@@ -26,6 +29,8 @@ public class Planet extends DynamicEntity implements Health{
 	final static short COL_WITH = (short)(CollisionTypes.SHIP | CollisionTypes.WALL | CollisionTypes.PLANET);
 	
 	private static SphereShape shape;
+	
+	private Trail trail;
 	
 	//FIXME planets shouldnt really have health this is for shits and giggles
 	int health = 100;
@@ -45,6 +50,8 @@ public class Planet extends DynamicEntity implements Health{
 		this.texture = texture;
 		
 		quadric = new VBOQuadric(size, 20, 20);
+		
+		trail = new Trail(this, 20, 1.0f, Textures.TRAIL, new Vector3f(0.0f, 0.0f, 0.0f));
 	}
 	
 	@Override
@@ -52,6 +59,7 @@ public class Planet extends DynamicEntity implements Health{
 		Render3D.useDefaultMaterial();
 		texture.texture().bind();
 		quadric.draw();
+		trail.draw();
 	}
 	
 	private static SphereShape getShape(float size){
@@ -71,6 +79,12 @@ public class Planet extends DynamicEntity implements Health{
 		Physics.dynamicsWorld.debugDrawObject(worldTransform, shape,
 				new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
 	}
+	
+	@Override
+	public void update(float timeStep){
+		super.update(timeStep);
+		trail.update(timeStep);
+	}
 
 	@Override
 	public int getCurrentHealth() {
@@ -80,8 +94,11 @@ public class Planet extends DynamicEntity implements Health{
 	@Override
 	public void hurt(int amount) {
 		health -= amount;
-		if(health <= 0)
+		if(health <= 0){
+			Explosion splode = new Explosion(this.location, this.rotation, 1.0f);
+			Entities.addPassiveEntity(splode);
 			removeFlag = true;
+		}
 		
 	}
 

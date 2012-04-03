@@ -17,8 +17,8 @@ void main()
 {
 	NormalMatrix = mat3(ModelViewMatrix);
     TexCoord = vec2(VertexTexCoord.x, VertexTexCoord.y);
-    Normal = normalize( NormalMatrix * VertexNormal);
-    Position = vec3( ModelViewMatrix * vec4(VertexPosition,1.0) );
+    Normal = normalize(NormalMatrix * VertexNormal);
+    Position = vec3(ModelViewMatrix * vec4(VertexPosition,1.0));
 
 	mat4 MVP = ProjectionMatrix * ModelViewMatrix;
     gl_Position = MVP * vec4(VertexPosition,1.0);
