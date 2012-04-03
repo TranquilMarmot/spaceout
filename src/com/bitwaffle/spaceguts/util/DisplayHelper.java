@@ -28,6 +28,7 @@ import com.bitwaffle.spaceguts.input.KeyBindings;
 public class DisplayHelper {
 	private static final String ICON_PATH = "res/images/";
 	
+	/** How many samples to use for multisample anti-aliasing */
 	public static final int MSAA_SAMPLES = 4;
 	
 	/**
@@ -122,7 +123,13 @@ public class DisplayHelper {
 			
 			// for creating a display with multisampling
 			PixelFormat pf = new PixelFormat().withSamples(MSAA_SAMPLES).withSRGB(true);
-			Display.create(pf);
+			
+			try{
+				Display.create(pf);
+			} catch(LWJGLException e){
+				System.out.println("Couldn't initialize display with " + MSAA_SAMPLES + "x MSAA, initializing with no anti-aliasing instead");
+				Display.create();
+			}
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}
