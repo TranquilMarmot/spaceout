@@ -90,7 +90,6 @@ public class Camera extends DynamicEntity {
 	 * Camera constructor
 	 */
 	public Camera() {
-		// FIXME The camera can interfere with stuff, which shouldn't be the case (ideally, it would ignore everything except what it's bumping into)
 		super(new Vector3f(0.0f, 0.0f, 0.0f), new Quaternion(0.0f, 0.0f, 0.0f, 1.0f), new SphereShape(10.0f), 0.0001f, 0.01f, CollisionTypes.NOTHING, (short)-1);
 		this.zoom = INIT_ZOOM;
 		this.yOffset = INIT_YOFFSET;
