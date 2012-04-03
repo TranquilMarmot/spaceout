@@ -77,17 +77,15 @@
  * 			TODO Make a menu for placing new entities (SPACEBAR while in free mode)
  *			TODO Make a model importer that takes in an obj file and lets you edit the mtl file and see how it would look in-game (look into blender plugins)
  *		Launcher
- *			TODO Make it only download the file if they're needed
- *			TODO Make it download files when play is clicked
- *				 Might be a good idea to have a separate window pop up if the files aren't downloaded and ask where to download them to,
- *				 with a confirm dialog asking the user if its okay to use X amount of space
- *			TODO If the program can't get write access to the home directory, have it ask the user where to save the game to
+ *			TODO If the program can't get write access to the home directory, have it ask the user where to save the game to (rather than having it be passed in via args)
  *			TODO Give an option to un-install the game
- *			TODO Make the web page display more prettyful
  *			TODO Users should be able to start the game through the launcher or by just running spaceout.jar
  *				 This means that signing in will have to occur in-game and if the user logs in from the launcher,
  *				 it would start the game with args for the user. Maybe files should be downloaded in-game, too,
- *				 so that if there's an update it would download when the game starts.
+ *				 so that if there's an update it would download when the game starts. Although it might also be 
+ *				 good to have all file downloading done through the launcher.
+ *			TODO A good way to handle updates would be to have one .spaceout.zip on the server with all the latest files (so anyone without the files could just download the latest version) but then also keep around
+ *				 archives specifically for updating from one version to another version, so that the whole game doesn't need to be downloaded if just one or two things are being changed.
  * Gameplay
  * 			TODO More weapons
  * 			TODO Story

@@ -1,16 +1,21 @@
 package com.bitwaffle.launcher;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 public class Launcher {
 	/** Directory to use for downloading and extracting file */
-	private static String homeDir;
+	public static String homeDir;
 	
+	/** where we downloadin these files from? */
 	public static final String FILE_SERVER = "bitwaffle.com/spaceoutstuff";
 	
 	/** version string in local directory, version string from server*/
 	public static String localVersion, serverVersion;
+	
+	public static boolean serverFound = true;
 	
 	/**
 	 * @param args
@@ -24,16 +29,21 @@ public class Launcher {
 			homeDir = System.getProperty("user.home") + "/";
 		}
 		
-		Display.createWindow();
-		
 		System.out.println("Welcome to the Spaceout launcher!                            ");
 		System.out.println("Using " + homeDir + " as home directory");
+		
+		// get version strings
+		getVersions();
+		
+		// everything is handled through the window
+		Display.createWindow();
 	}
 	
 	/**
 	 * @return Whether or not .spaceout and spaceout.jar exist
 	 */
 	public static boolean filesExist(){
+		// TODO this should somehow check if ALL the files exist somehow (maybe check file sizes against something?)
 		File dotspout = new File(homeDir + "/.spaceout");
 		File spoutjar = new File(homeDir + "/.spaceout/spaceout.jar");
 		
@@ -56,30 +66,42 @@ public class Launcher {
 					 return false;
 			}
 			else{
-				return downloadAndCompareVersions();
+				return compareVersions();
 			}
 		}
 	}
 	
 	/**
-	 * Sets the localVersion to the string from the version file
-	 * Downloads the version file from the server and sets the serverVersion string
-	 * @return Whether or not the two version strings are the same
+	 * Gets the local version from HOME/.spaceout/version
+	 * and the server version from FILE_SERVER/version
 	 */
-	private static boolean downloadAndCompareVersions(){
-		File localversion = new File(homeDir + "/.spaceout/version");
-		localVersion = FileOps.getFirstLineFromFile(localversion);
-		 
+	private static void getVersions(){
+		try{
+			File localversion = new File(homeDir + "/.spaceout/version");
+			localVersion = FileOps.getFirstLineFromFile(localversion);
+		} catch(FileNotFoundException e){
+			// if there's no version file, we don't know the version
+			localVersion = "???";
+		}
+		System.out.println("Local version is " + localVersion);
+		
+		try{
+			serverVersion = FileOps.getFirstLineFromURL("http://" + FILE_SERVER + "/version");
+		} catch(UnknownHostException e){
+			serverFound = false;
+			serverVersion = "(error connecting to server)";
+		}
+		System.out.println("Server version is " + serverVersion);
+	}
+	
+	/**
+	 * @return Whether or not the versions are the same (if they aren't, better update)
+	 */
+	private static boolean compareVersions(){
 		 // nothing was in the file!
-		 if(localVersion == null && !localVersion.equals("0"))
+		 if(localVersion == null || localVersion.equals("0"))
 			 return true;
 		 else{
-			 FileOps.downloadFile(FILE_SERVER, "/version", homeDir + ".spaceout/servversion");
-			 
-			 File servVersion = new File(homeDir + "/.spaceout/servversion");
-			 serverVersion = FileOps.getFirstLineFromFile(servVersion);
-			 FileOps.deleteFile(homeDir + ".spaceout/servversion");
-			 
 			 if(serverVersion == null)
 				 return false;
 			 else{

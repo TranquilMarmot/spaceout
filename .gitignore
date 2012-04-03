@@ -6,6 +6,7 @@
 .project
 
 # screenshots
+<<<<<<< HEAD
 screenshots/*
 
 # javadocs
@@ -13,3 +14,9 @@ doc/
 
 #binaries
 bin/
+=======
+screenshots/
+
+# javadocs
+doc/
+>>>>>>> feature_launcher

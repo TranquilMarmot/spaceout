@@ -29,6 +29,7 @@ public class Display {
 	/** How many items from the feed to show */
 	private static final int NUMITEMS = 5;
 	
+	/** Default size of launcher window */
 	private static final int DEFAULT_WIDTH = 886, DEFAULT_HEIGHT = 710;
 	
 	/** Our main frame*/
@@ -40,6 +41,7 @@ public class Display {
 	/** Our progress bar */
 	public static JProgressBar progBar;
 	
+	/** Checkbox to tell the launcher whether or not to look for updates from the server */
 	public static JCheckBox checkForUpdate;
 	
 	/** Info string */
@@ -52,7 +54,7 @@ public class Display {
 		frame = new JFrame("Spaceout Pre-alpha Launcher");
 		frame.setLayout(new BorderLayout());
 		
-		frame.add(createSouthernPanel(), BorderLayout.PAGE_END);
+		frame.add(createSouthernPanel(), BorderLayout.SOUTH);
 		frame.add(createCenterPane(), BorderLayout.CENTER);
 		
 		// close the frame when its close button is clicked
@@ -117,6 +119,9 @@ public class Display {
 		return south;
 	}
 	
+	/**
+	 * @return Panel with logo and download updates checkbox
+	 */
 	private static JPanel createLogoAndCheckBox(){
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
@@ -129,6 +134,9 @@ public class Display {
 		return panel;
 	}
 	
+	/**
+	 * @return Logo for Spaceout
+	 */
 	private static JLabel createLogo(){
 		// TODO make this have some sort of logo (might have to download it from the server)
 		JLabel spout = new JLabel("     SPACEOUT     ");
@@ -138,8 +146,11 @@ public class Display {
 		return spout;
 	}
 	
+	/**
+	 * @return Checkbox to tell whether or not to check for updates
+	 */
 	private static JCheckBox createUpdateCheckBox(){
-		checkForUpdate = new JCheckBox("Check for updates");
+		checkForUpdate = new JCheckBox("   Check for updates   ");
 		checkForUpdate.setSelected(true);
 		checkForUpdate.addActionListener(getCheckBoxListener());
 		checkForUpdate.setBackground(Color.black);
@@ -148,36 +159,51 @@ public class Display {
 		return checkForUpdate;
 	}
 	
+	/**
+	 * @return Listener for the update checkbox
+	 */
 	private static ActionListener getCheckBoxListener(){
 		return new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				JCheckBox boxxy = (JCheckBox) e.getSource();
-				
-				if(boxxy.isSelected()){
-					
-					if(!Launcher.filesExist()){ 
-						start.setText("Download Game (" + Launcher.totalFileSize() + " bytes)");
-						start.removeActionListener(start.getActionListeners()[0]);
-						start.addActionListener(getDownloadListener());
-					} else if(Launcher.updateRequired()){
-						start.setText("Update Game (from " + Launcher.localVersion + " to " + Launcher.serverVersion + ")");
-						start.removeActionListener(start.getActionListeners()[0]);
-						start.addActionListener(getDownloadListener());
+				if(!Launcher.serverFound){
+					if(!Launcher.filesExist()){
+						info.setText("ERROR: Server not found!");
+						start.setText("No game files!");
+						start.setEnabled(false);
 					} else{
+						info.setText("ERROR: Server not found! Game files exist, though!");
 						start.setText("Start Game");
-						start.removeActionListener(start.getActionListeners()[0]);
 						start.addActionListener(getLaunchListener());
 					}
 				} else{
-					if(!Launcher.filesExist()){ 
-						start.setText("Download Game (" + Launcher.totalFileSize() + " bytes)");
-						start.removeActionListener(start.getActionListeners()[0]);
-						start.addActionListener(getDownloadListener());
-					}else{
-						start.setText("Start Game");
-						start.removeActionListener(start.getActionListeners()[0]);
-						start.addActionListener(getLaunchListener());
+					JCheckBox boxxy = (JCheckBox) e.getSource();
+					
+					// basically just switch the state of the start button
+					if(boxxy.isSelected()){
+						if(!Launcher.filesExist()){ 
+							start.setText("Download Game (" + Launcher.totalFileSize() + " bytes)");
+							start.removeActionListener(start.getActionListeners()[0]);
+							start.addActionListener(getDownloadListener());
+						} else if(Launcher.updateRequired()){
+							start.setText("Update Game (from " + Launcher.localVersion + " to " + Launcher.serverVersion + ")");
+							start.removeActionListener(start.getActionListeners()[0]);
+							start.addActionListener(getDownloadListener());
+						} else{
+							start.setText("Start Game");
+							start.removeActionListener(start.getActionListeners()[0]);
+							start.addActionListener(getLaunchListener());
+						}
+					} else{
+						if(!Launcher.filesExist()){ 
+							start.setText("Download Game (" + Launcher.totalFileSize() + " bytes)");
+							start.removeActionListener(start.getActionListeners()[0]);
+							start.addActionListener(getDownloadListener());
+						}else{
+							start.setText("Start Game");
+							start.removeActionListener(start.getActionListeners()[0]);
+							start.addActionListener(getLaunchListener());
+						}
 					}
 				}
 			}
@@ -197,7 +223,6 @@ public class Display {
 		JPanel sep2 = new JPanel();
 		sep2.setBackground(Color.black);
 		
-		
 		buttons.add(createProgressBar());
 		buttons.add(sep);
 		buttons.add(sep2);
@@ -212,18 +237,32 @@ public class Display {
 	 * @return A button that starts the game
 	 */
 	private static JButton createStartButton(){
-		if(!Launcher.filesExist()){
-			info.setText("Using " + Launcher.getHomeDir() + " as home directory");
-			start = new JButton("Download Game (" + Launcher.totalFileSize() + " bytes)");
-			start.addActionListener(getDownloadListener());
-		}else if(Launcher.updateRequired()){
-			start = new JButton("Update Game (from " + Launcher.localVersion + " to " + Launcher.serverVersion + ")");
-			start.addActionListener(getDownloadListener());
-		}else{
-			progBar.setVisible(false);
-			start = new JButton("Start Game");
-			start.addActionListener(getLaunchListener());
+		// if there's no server and files exist, let the game be played, otherwise don't
+		if(!Launcher.serverFound){
+			if(!Launcher.filesExist()){
+				info.setText("ERROR: Server not found!");
+				start = new JButton("No game files!");
+				start.setEnabled(false);
+			} else{
+				info.setText("ERROR: Server not found! Game files exist, though!");
+				start = new JButton("Start Game");
+				start.addActionListener(getLaunchListener());
+			}
+		} else{
+			if(!Launcher.filesExist()){
+				info.setText("Using " + Launcher.getHomeDir() + " as home directory");
+				start = new JButton("Download Game (" + Launcher.totalFileSize() + " bytes)");
+				start.addActionListener(getDownloadListener());
+			}else if(Launcher.updateRequired()){
+				start = new JButton("Update Game (from " + Launcher.localVersion + " to " + Launcher.serverVersion + ")");
+				start.addActionListener(getDownloadListener());
+			}else{
+				progBar.setVisible(false);
+				start = new JButton("Start Game");
+				start.addActionListener(getLaunchListener());
+			}
 		}
+
 		start.setBackground(Color.black);
 		start.setForeground(Color.green);
 		
