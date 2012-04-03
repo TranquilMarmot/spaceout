@@ -10,7 +10,6 @@ import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.entities.particles.trail.Trail;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.input.KeyBindings;
-import com.bitwaffle.spaceguts.input.Keys;
 import com.bitwaffle.spaceguts.input.MouseManager;
 import com.bitwaffle.spaceguts.physics.CollisionTypes;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
@@ -73,7 +72,7 @@ public class Player extends DynamicEntity implements Health {
 				//javax.vecmath.Vector3f speed = new javax.vecmath.Vector3f();
 				//rigidBody.getLinearVelocity(speed);
 				
-				if(Keys.LSHIFT.isPressed())
+				if(KeyBindings.CONTROL_BOOST.isPressed())
 					boosting = true;
 				else
 					boosting = false;
@@ -129,6 +128,7 @@ public class Player extends DynamicEntity implements Health {
 	/**
 	 * Gracefullt stabilizes the player's angular velocity
 	 */
+	@SuppressWarnings("unused")
 	private void stabilize(float timeStep) {
 		javax.vecmath.Vector3f angularVelocity = new javax.vecmath.Vector3f(
 				0.0f, 0.0f, 0.0f);
@@ -295,6 +295,38 @@ public class Player extends DynamicEntity implements Health {
 	}
 	
 	private void rotationLogic(float timeStep){
+		javax.vecmath.Vector3f angVec = new javax.vecmath.Vector3f();
+		this.rigidBody.getAngularVelocity(angVec);
+		float currentAngularVelocity = angVec.length();
+		
+		// if the mouse has moved, set the angular velocity to zero (to prevent spinning out of control)
+		if(MouseManager.dx != 0.0f && MouseManager.dy != 0.0f && currentAngularVelocity != 0)
+			this.rigidBody.setAngularVelocity(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f));
+		
+		// only interpolate values if the angular velocity is 0 (we're not spinning out of control) and the two rotations aren't already equal (dot product == 1)
+		if(currentAngularVelocity == 0 && Quaternion.dot(this.rotation, Entities.camera.rotation) != 1.0f){
+			Quat4f camquat = new Quat4f(Entities.camera.rotation.x, Entities.camera.rotation.y, Entities.camera.rotation.z, Entities.camera.rotation.w);
+			Quat4f thisquat = new Quat4f(rotation.x, rotation.y, rotation.z, rotation.w);
+			
+			// TODO make this magic '225.0f' number a variable for the ship
+			float interpolationAmount = (float)(Math.PI / (timeStep * 225.0f));
+			
+			// SLERP magix!
+			thisquat.interpolate(camquat, thisquat, interpolationAmount);
+			
+			// set current rotation
+			this.rotation.set(thisquat.x, thisquat.y, thisquat.z, thisquat.w);
+			
+			// set world transform to represent interpolated value
+			Transform trans = new Transform();
+			this.rigidBody.getWorldTransform(trans);
+			trans.setRotation(thisquat);
+			this.rigidBody.setWorldTransform(trans);
+		}
+	}
+	
+	@SuppressWarnings("unused")
+	private void rotationLogicRotate(float timeStep){
 		float xRot = MouseManager.dy * ship.getXTurnSpeed() * timeStep;
 		float yRot = MouseManager.dx * ship.getYTurnSpeed() * timeStep;
 		
@@ -327,7 +359,8 @@ public class Player extends DynamicEntity implements Health {
 	}
 	
 	
-	private void rotationLogicOld(float timeStep){
+	@SuppressWarnings("unused")
+	private void rotationLogicAngVec(float timeStep){
 		// TODO very impotant!!! make this framerate independent
 		javax.vecmath.Vector3f angularVelocity = new javax.vecmath.Vector3f();
 		rigidBody.getAngularVelocity(angularVelocity);

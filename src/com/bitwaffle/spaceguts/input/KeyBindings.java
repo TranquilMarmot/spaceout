@@ -3,6 +3,7 @@ package com.bitwaffle.spaceguts.input;
 /**
  * Bindings for all the special input for the game. They will all be initialized to their default values,
  * but they can easily be changed using the setKey() method.
+ * Each binding it a Button[] so that multiple buttons can control one key binding.
  * @author TranquilMarmot
  * @see Button
  * @see Keys
@@ -14,12 +15,13 @@ public enum KeyBindings {
 	CONTROL_BACKWARD(new Button[]{Keys.S}),
 	CONTROL_LEFT(new Button[]{Keys.A}),
 	CONTROL_RIGHT(new Button[]{Keys.D}),
-	CONTROL_DESCEND(new Button[]{Keys.Z}),
+	CONTROL_DESCEND(new Button[]{Keys.LSHIFT}),
 	CONTROL_ASCEND(new Button[]{Keys.SPACE}),
 	CONTROL_ROLL_LEFT(new Button[]{Keys.Q}),
 	CONTROL_ROLL_RIGHT(new Button[]{Keys.E}),
 	CONTROL_STABILIZE(new Button[]{Keys.LCONTROL}),
 	CONTROL_STOP(new Button[]{Keys.F}),
+	CONTROL_BOOST(new Button[]{Keys.Z}),
 	
 	SYS_CAMERA_MODE(new Button[]{Keys.C}),
 	SYS_BUILD_MODE(new Button[]{Keys.B}),

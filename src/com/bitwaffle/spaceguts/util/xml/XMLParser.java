@@ -68,7 +68,7 @@ public class XMLParser {
 		 * Grab the rest of the entities in the file
 		 */
 		if (nodes != null && nodes.getLength() > 0) {
-			Camera.createCamera();
+			Entities.camera = new Camera();
 
 			Entities.skybox = new Skybox(Entities.camera);
 
