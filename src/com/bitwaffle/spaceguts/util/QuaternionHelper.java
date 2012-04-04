@@ -2,6 +2,8 @@ package com.bitwaffle.spaceguts.util;
 
 import java.nio.FloatBuffer;
 
+import javax.vecmath.Quat4f;
+
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
@@ -124,6 +126,52 @@ public class QuaternionHelper {
 		Quaternion resQuat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		Quaternion.mul(vecQuat, quatNegate, resQuat);
 		Quaternion.mul(quat, resQuat, resQuat);
+
+		return new Vector3f(resQuat.x, resQuat.y, resQuat.z);
+	}
+	
+	/**
+	 * Rotates a vector by a quaternion
+	 * 
+	 * @param vector
+	 *            The vector to rotate
+	 * @param quat
+	 *            The quaternion to rotate the vector by
+	 * @return Rotate vector
+	 */
+	public static Vector3f rotateVectorByQuaternion(javax.vecmath.Vector3f vector,
+			Quaternion quat) {
+		Quaternion vecQuat = new Quaternion(vector.x, vector.y, vector.z, 0.0f);
+
+		Quaternion quatNegate = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		quat.negate(quatNegate);
+
+		Quaternion resQuat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		Quaternion.mul(vecQuat, quatNegate, resQuat);
+		Quaternion.mul(quat, resQuat, resQuat);
+
+		return new Vector3f(resQuat.x, resQuat.y, resQuat.z);
+	}
+	
+	/**
+	 * Rotates a vector by a quaternion
+	 * 
+	 * @param vector
+	 *            The vector to rotate
+	 * @param quat
+	 *            The quaternion to rotate the vector by
+	 * @return Rotate vector
+	 */
+	public static Vector3f rotateVectorByQuaternion(javax.vecmath.Vector3f vector,
+			Quat4f quat) {
+		Quaternion vecQuat = new Quaternion(vector.x, vector.y, vector.z, 0.0f);
+
+		Quat4f quatNegate = new Quat4f(0.0f, 0.0f, 0.0f, 1.0f);
+		quat.negate(quatNegate);
+
+		Quaternion resQuat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		Quaternion.mul(vecQuat, new Quaternion(quatNegate.x, quatNegate.y, quatNegate.z, quatNegate.w), resQuat);
+		Quaternion.mul(new Quaternion(quat.x, quat.y, quat.z, quat.w), resQuat, resQuat);
 
 		return new Vector3f(resQuat.x, resQuat.y, resQuat.z);
 	}

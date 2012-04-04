@@ -1,13 +1,9 @@
 package com.bitwaffle.spaceguts.util;
 
-import java.nio.FloatBuffer;
-
-import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 public class MatrixHelper {
-	private static FloatBuffer matrixBuffer = BufferUtils.createFloatBuffer(16);
 	public static Matrix4f perspective(float fovy, float aspect, float zNear, float zFar){
 		Matrix4f result = new Matrix4f();
 		result.setIdentity();
@@ -24,26 +20,31 @@ public class MatrixHelper {
 
 		cotangent = (float) Math.cos(radians) / sine;
 		
-		matrixBuffer.clear();
-
-		matrixBuffer.put(0 * 4 + 0, cotangent / aspect);
-		matrixBuffer.put(1 * 4 + 1, cotangent);
-		matrixBuffer.put(2 * 4 + 2, - (zFar + zNear) / deltaZ);
-		matrixBuffer.put(2 * 4 + 3, -1);
-		matrixBuffer.put(3 * 4 + 2, -2 * zNear * zFar / deltaZ);
-		matrixBuffer.put(3 * 4 + 3, 0);
-		matrixBuffer.rewind();
+		result.m00 = cotangent / aspect;
+		result.m01 = 0.0f;
+		result.m02 = 0.0f;
+		result.m03 = 0.0f;
 		
-		Matrix4f multMatrix =new Matrix4f();
-		multMatrix.load(matrixBuffer);
+		result.m10 = 0.0f;
+		result.m11 = cotangent;
+		result.m12 = 0.0f;
+		result.m13 = 0.0f;
 		
-		Matrix4f.mul(result, multMatrix, result);
+		result.m20 = 0.0f;
+		result.m21 = 0.0f;
+		result.m22 = -(zFar + zNear) / deltaZ;
+		result.m23 = -1.0f;
+		
+		result.m30 = 0.0f;
+		result.m31 = 0.0f;
+		result.m32 = -2.0f * zNear * zFar / deltaZ;
+		result.m33 = 0.0f;
 		
 		return result;
 	}
 	
 	public static Matrix4f lookAt(Vector3f eye, Vector3f center, Vector3f up){
-		Matrix4f ret = new Matrix4f();
+		Matrix4f result = new Matrix4f();
 		Vector3f forward = new Vector3f(center.x - eye.x, center.y - eye.y, center.z - eye.z);
 		forward.normalise();
 		
@@ -53,26 +54,28 @@ public class MatrixHelper {
 		
 		Vector3f.cross(side, forward, up);
 		
-		matrixBuffer.clear();
-		matrixBuffer.put(0 * 4 + 0, side.x);
-		matrixBuffer.put(1 * 4 + 0, side.y);
-		matrixBuffer.put(2 * 4 + 0, side.z);
-
-		matrixBuffer.put(0 * 4 + 1, up.x);
-		matrixBuffer.put(1 * 4 + 1, up.y);
-		matrixBuffer.put(2 * 4 + 1, up.z);
-
-		matrixBuffer.put(0 * 4 + 2, -forward.x);
-		matrixBuffer.put(1 * 4 + 2, -forward.y);
-		matrixBuffer.put(2 * 4 + 2, -forward.z);
+		result.m00 = side.x;
+		result.m01 = up.x;
+		result.m02 = -forward.x;
+		result.m03 = 0.0f;
 		
-		matrixBuffer.rewind();
-		Matrix4f mul = new Matrix4f();
-		mul.load(matrixBuffer);
+		result.m10 = side.y;
+		result.m11 = up.y;
+		result.m12 = -forward.y;
+		result.m13 = 0.0f;
 		
-		Matrix4f.mul(ret, mul, ret);
-		ret.translate(new Vector3f(-eye.x, -eye.y, -eye.z));
+		result.m20 = side.z;
+		result.m21 = up.z;
+		result.m22 = -forward.z;
+		result.m23 = 0.0f;
 		
-		return ret;
+		result.m30 = 0.0f;
+		result.m31 = 0.0f;
+		result.m32 = 0.0f;
+		result.m33 = 0.0f;
+		
+		result.translate(new Vector3f(-eye.x, -eye.y, -eye.z));
+		
+		return result;
 	}
 }

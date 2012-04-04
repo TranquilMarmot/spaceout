@@ -135,15 +135,13 @@ public class Camera extends DynamicEntity {
 		checkForModeSwitch();
 		
 		// only look around if the builder isn't rotating something
-		if(!builder.rightGrabbed){
+		if(!builder.rightGrabbed)
 			lookLogic(timeStep, trans);
-		}
 
 		// if we're not in free mode, move the camera to be behind whatever it's
 		// following
 		if (!freeMode) {
 			this.location.set(following.location);
-			
 			trans.origin.set(location.x, location.y, location.z);
 		} else if (freeMode && !vanityMode) {
 			// else do logic for moving around in free mode
@@ -159,8 +157,8 @@ public class Camera extends DynamicEntity {
 	 * @param trans Transform to modify
 	 */
 	private void lookLogic(float timeStep, Transform trans){
-		float dz = 0.0f;
 		// roll left/right
+		float dz = 0.0f;
 		boolean rollRight = KeyBindings.CONTROL_ROLL_RIGHT.isPressed();
 		boolean rollLeft = KeyBindings.CONTROL_ROLL_LEFT.isPressed();
 		if (rollRight)
@@ -241,7 +239,10 @@ public class Camera extends DynamicEntity {
 					
 					// save the camera's location and move it back a bit
 					oldLocation.set(location);
-					Vector3f.add(this.location, QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, -25.0f), this.rotation), this.location);
+					
+					Vector3f.add(this.location, QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, -50.0f), this.rotation), this.location);
+					
+					System.out.println("Before: " + oldLocation + " after: " + location);
 					
 					Transform trans = new Transform();
 					this.rigidBody.getWorldTransform(trans);
@@ -264,6 +265,11 @@ public class Camera extends DynamicEntity {
 					
 					// re-set the location
 					location.set(oldLocation);
+					
+					Transform trans = new Transform();
+					this.rigidBody.getWorldTransform(trans);
+					trans.origin.set(location.x, location.y, location.z);
+					this.rigidBody.setWorldTransform(trans);
 				}
 			}
 		} else{

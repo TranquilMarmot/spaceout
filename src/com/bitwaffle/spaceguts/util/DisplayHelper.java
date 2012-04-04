@@ -122,7 +122,7 @@ public class DisplayHelper {
 			frame.setVisible(true);
 			
 			// for creating a display with multisampling
-			PixelFormat pf = new PixelFormat().withSamples(MSAA_SAMPLES).withSRGB(true);
+			PixelFormat pf = new PixelFormat().withSamples(MSAA_SAMPLES);
 			
 			try{
 				Display.create(pf);

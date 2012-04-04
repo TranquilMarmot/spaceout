@@ -12,7 +12,6 @@ import com.bitwaffle.spaceout.entities.passive.Skybox;
  * Handles all the current entities
  * 
  * @author TranquilMarmot
- * 
  */
 public class Entities {
 	/** player instance */
