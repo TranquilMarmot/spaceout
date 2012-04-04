@@ -164,9 +164,9 @@ public class Camera extends DynamicEntity {
 		boolean rollRight = KeyBindings.CONTROL_ROLL_RIGHT.isPressed();
 		boolean rollLeft = KeyBindings.CONTROL_ROLL_LEFT.isPressed();
 		if (rollRight)
-			dz = timeStep * rollSpeed;
-		if (rollLeft)
 			dz = timeStep * -rollSpeed;
+		if (rollLeft)
+			dz = timeStep * rollSpeed;
 		
 		// apply any rotation changes
 		this.rotation = QuaternionHelper.rotate(this.rotation, new Vector3f(MouseManager.dy, MouseManager.dx, dz));
