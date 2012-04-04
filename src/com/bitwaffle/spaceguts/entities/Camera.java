@@ -242,8 +242,6 @@ public class Camera extends DynamicEntity {
 					
 					Vector3f.add(this.location, QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, -50.0f), this.rotation), this.location);
 					
-					System.out.println("Before: " + oldLocation + " after: " + location);
-					
 					Transform trans = new Transform();
 					this.rigidBody.getWorldTransform(trans);
 					trans.origin.set(location.x, location.y, location.z);
