@@ -38,7 +38,7 @@ import com.bitwaffle.spaceout.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.77.1";
+	public static final String VERSION = "0.0.77.5";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
@@ -206,7 +206,8 @@ public class Runner {
 				"Until Next Time...", "¡Adios, Amigo!...", "Game Over, Man! Game Over!!!...", "And So, I Bid You Adieu...", "So Long, And Thanks For All The Fish...",
 				"Ciao...", "Y'all Come Back Now, Ya Hear?...", "Catch You Later!...", "Mahalo And Aloha...", "Sayonara...", "Thanks For Playing!...",
 				"Auf Wiedersehen...", "Yo Homes, Smell Ya Later!... (Looked Up At My Kingdom, I Was Finally There, To Sit On My Throne As The Prince Of Bel-air)",
-				"Shop Smart, Shop S-Mart!...", "Good Night, And Good Luck!..."};
+				"Shop Smart, Shop S-Mart!...", "Good Night, And Good Luck!...", "Remember, I'm Pulling For You. We're All In This Together!...", "Keep Your Stick On The Ice!...",
+				"Remember, If The Women Don't Find You Handsome, They Should At Least Find You Handy!..."};
 		
 		return shutdown[new Random().nextInt(shutdown.length)];
 	}

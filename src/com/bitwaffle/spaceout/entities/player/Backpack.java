@@ -2,25 +2,25 @@ package com.bitwaffle.spaceout.entities.player;
 
 import java.util.ArrayList;
 
-import com.bitwaffle.spaceout.interfaces.InventoryItem;
+import com.bitwaffle.spaceout.entities.dynamic.Pickup;
 
 public class Backpack {
-	private ArrayList<InventoryItem> items;
+	private ArrayList<Pickup> items;
 	
 		
 	public Backpack(){
-		items = new ArrayList<InventoryItem>();
+		items = new ArrayList<Pickup>();
 	}
 	
-	public void addInventoryItem(InventoryItem item){
+	public void addInventoryItem(Pickup item){
 		items.add(item);
 	}
 	
-	public void removeInventoryItem(InventoryItem item){
+	public void removeInventoryItem(Pickup item){
 		items.remove(item);
 	}
 	
-	public ArrayList<InventoryItem> getItems(){
+	public ArrayList<Pickup> getItems(){
 		return items;
 	}
 }

@@ -3,14 +3,11 @@ package com.bitwaffle.spaceout.entities.dynamic;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.physics.CollisionTypes;
-import com.bitwaffle.spaceout.entities.player.Backpack;
-import com.bitwaffle.spaceout.interfaces.InventoryItem;
 import com.bitwaffle.spaceout.resources.Models;
 import com.bulletphysics.collision.shapes.ConeShape;
 
-public class Diamond extends DynamicEntity implements InventoryItem{
+public class Diamond extends Pickup{
 	private static final Models MODEL = Models.DIAMOND;
 	private static final float MASS = 1.0f;
 	private static final float RESTITUTION = 0.5f;
@@ -22,20 +19,4 @@ public class Diamond extends DynamicEntity implements InventoryItem{
 		this.model = MODEL.getModel();
 		this.type = "Diamond";
 	}
-	
-	@Override
-	public void update(float timeStep){
-		// TODO look for anything that can pick this up
-	}
-
-	@Override
-	public String getName() {
-		return "Diamond";
-	}
-
-	@Override
-	public void pickup(Backpack inventory) {
-		inventory.addInventoryItem(this);
-	}
-
 }

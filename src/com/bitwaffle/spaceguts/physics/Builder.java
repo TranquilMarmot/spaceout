@@ -98,8 +98,10 @@ public class Builder {
 		if (Keys.P.isPressed())
 			addRandomSphere();
 		
-		if(Keys.O.isPressed())
+		if(Keys.O.isPressed()){
 			addRandomDiamond();
+			addRandomDiamond();
+		}
 
 		if (KeyBindings.BUILDER_OPEN_ADD_MENU.pressedOnce()){
 			if(GUI.menuUp)

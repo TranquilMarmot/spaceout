@@ -19,17 +19,15 @@ import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceguts.util.Runner;
 import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.entities.dynamic.LaserBullet;
+import com.bitwaffle.spaceout.entities.dynamic.Pickup;
 import com.bitwaffle.spaceout.interfaces.Health;
 import com.bitwaffle.spaceout.interfaces.Inventory;
-import com.bitwaffle.spaceout.interfaces.InventoryItem;
 import com.bitwaffle.spaceout.resources.Models;
 import com.bitwaffle.spaceout.resources.Textures;
 import com.bitwaffle.spaceout.ship.Ship;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.dispatch.CollisionWorld;
-import com.bulletphysics.collision.dispatch.CollisionWorld.ConvexResultCallback;
 import com.bulletphysics.collision.dispatch.CollisionWorld.LocalConvexResult;
-import com.bulletphysics.collision.dispatch.GhostObject;
 import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.linearmath.Transform;
 
@@ -41,6 +39,11 @@ import com.bulletphysics.linearmath.Transform;
 public class Player extends DynamicEntity implements Health, Inventory{
 	final static short COL_GROUP = CollisionTypes.SHIP;
 	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET | CollisionTypes.PICKUP);
+	
+	public float pickupSweepSize = 25.0f;
+	public float pickupSweepDistance = 50.0f;
+	public float pickupDistance = 5.0f;
+	
 	
 	public Backpack inventory;
 	
@@ -77,6 +80,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 			//FIXME temp code
 			trail1.update(timeStep);
 			trail2.update(timeStep);
+			checkForPickups(timeStep);
 			
 			// only update if a menu isn't up and we're not in free mode
 			if(!GUI.menuUp && !Entities.camera.freeMode){
@@ -114,39 +118,55 @@ public class Player extends DynamicEntity implements Health, Inventory{
 				if (KeyBindings.CONTROL_STOP.isPressed())
 					stop(timeStep);
 			}
-			
-			checkForPickups();
 		}
 	}
 	
-	private void checkForPickups(){
-		SphereShape shape = new SphereShape(50.0f);
+	// TODO javadoc and comment
+	private class ItemConvexResultCallback extends CollisionWorld.ConvexResultCallback{
+		private ArrayList<Pickup> hits;
+		
+		public ItemConvexResultCallback(ArrayList<Pickup> hits){
+			this.hits = hits;
+		}
+		
+		@Override
+		public float addSingleResult(LocalConvexResult arg0, boolean arg1) {
+			CollisionObject obj = arg0.hitCollisionObject;
+			
+			DynamicEntity ent = (DynamicEntity) obj.getUserPointer();
+			
+			if(ent != Entities.camera && ent instanceof Pickup)
+				hits.add((Pickup)ent);
+			
+			return 0;
+		}
+		
+	}
+	
+	private void checkForPickups(float timeStep){
+		SphereShape shape = new SphereShape(pickupSweepSize);
 		
 		Transform from = new Transform(), to = new Transform();
 		this.rigidBody.getWorldTransform(to);
 		this.rigidBody.getWorldTransform(from);
 		
-		Vector3f sweepDirection = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, 50.0f), this.rotation);
+		ArrayList<Pickup> hits = new ArrayList<Pickup>();
+		ItemConvexResultCallback callback = new ItemConvexResultCallback(hits);
 		
-		from.origin.add(new javax.vecmath.Vector3f(sweepDirection.x, sweepDirection.y, sweepDirection.z));
-		
-		ArrayList<InventoryItem> hits = new ArrayList<InventoryItem>();
-		
-		CollisionWorld.ConvexResultCallback callback = new CollisionWorld.ConvexResultCallback() {
-			@Override
-			public float addSingleResult(LocalConvexResult arg0, boolean arg1) {
-				CollisionObject obj = arg0.hitCollisionObject;
-				
-				DynamicEntity ent = (DynamicEntity) obj.getUserPointer();
-				
-				if(ent != Entities.camera)
-					Console.console.print(ent.type);
-				
-				return 0;
-			}
-		};
-		
+		Vector3f forward = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, pickupSweepDistance), this.rotation);
+		from.origin.add(new javax.vecmath.Vector3f(forward.x, forward.y, forward.z));
 		Physics.dynamicsWorld.convexSweepTest(shape, to, from, callback);
+		
+		/*
+		from.origin.set(to.origin);
+		Vector3f backward = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, -pickupGrabberDistance), this.rotation);
+		from.origin.add(new javax.vecmath.Vector3f(backward.x, backward.y, backward.z));
+		Physics.dynamicsWorld.convexSweepTest(shape, to, from, callback);
+		*/
+		
+		for(Pickup item : hits){
+				item.setGravitateTowards(this, pickupDistance, inventory);
+		}
 	}
 
 	/**
@@ -373,17 +393,17 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	}
 
 	@Override
-	public void addInventoryItem(InventoryItem item) {
+	public void addInventoryItem(Pickup item) {
 		inventory.addInventoryItem(item);
 	}
 
 	@Override
-	public void removeInventoryItem(InventoryItem item) {
+	public void removeInventoryItem(Pickup item) {
 		inventory.removeInventoryItem(item);
 	}
 
 	@Override
-	public ArrayList<InventoryItem> getItems() {
+	public ArrayList<Pickup> getItems() {
 		return inventory.getItems();
 	}
 }
