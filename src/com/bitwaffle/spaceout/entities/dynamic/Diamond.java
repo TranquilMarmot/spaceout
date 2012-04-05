@@ -20,6 +20,7 @@ public class Diamond extends DynamicEntity implements InventoryItem{
 	public Diamond(Vector3f location, Quaternion rotation) {
 		super(location, rotation, new ConeShape(0.4f, 0.7f), MASS, RESTITUTION, COL_GROUP, COL_WITH);
 		this.model = MODEL.getModel();
+		this.type = "Diamond";
 	}
 	
 	@Override

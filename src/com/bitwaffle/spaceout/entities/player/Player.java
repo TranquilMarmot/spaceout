@@ -14,6 +14,7 @@ import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.input.KeyBindings;
 import com.bitwaffle.spaceguts.input.MouseManager;
 import com.bitwaffle.spaceguts.physics.CollisionTypes;
+import com.bitwaffle.spaceguts.physics.Physics;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceguts.util.Runner;
 import com.bitwaffle.spaceguts.util.console.Console;
@@ -25,6 +26,11 @@ import com.bitwaffle.spaceout.resources.Models;
 import com.bitwaffle.spaceout.resources.Textures;
 import com.bitwaffle.spaceout.ship.Ship;
 import com.bulletphysics.collision.dispatch.CollisionObject;
+import com.bulletphysics.collision.dispatch.CollisionWorld;
+import com.bulletphysics.collision.dispatch.CollisionWorld.ConvexResultCallback;
+import com.bulletphysics.collision.dispatch.CollisionWorld.LocalConvexResult;
+import com.bulletphysics.collision.dispatch.GhostObject;
+import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.linearmath.Transform;
 
 /**
@@ -108,7 +114,39 @@ public class Player extends DynamicEntity implements Health, Inventory{
 				if (KeyBindings.CONTROL_STOP.isPressed())
 					stop(timeStep);
 			}
+			
+			checkForPickups();
 		}
+	}
+	
+	private void checkForPickups(){
+		SphereShape shape = new SphereShape(50.0f);
+		
+		Transform from = new Transform(), to = new Transform();
+		this.rigidBody.getWorldTransform(to);
+		this.rigidBody.getWorldTransform(from);
+		
+		Vector3f sweepDirection = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, 50.0f), this.rotation);
+		
+		from.origin.add(new javax.vecmath.Vector3f(sweepDirection.x, sweepDirection.y, sweepDirection.z));
+		
+		ArrayList<InventoryItem> hits = new ArrayList<InventoryItem>();
+		
+		CollisionWorld.ConvexResultCallback callback = new CollisionWorld.ConvexResultCallback() {
+			@Override
+			public float addSingleResult(LocalConvexResult arg0, boolean arg1) {
+				CollisionObject obj = arg0.hitCollisionObject;
+				
+				DynamicEntity ent = (DynamicEntity) obj.getUserPointer();
+				
+				if(ent != Entities.camera)
+					Console.console.print(ent.type);
+				
+				return 0;
+			}
+		};
+		
+		Physics.dynamicsWorld.convexSweepTest(shape, to, from, callback);
 	}
 
 	/**
