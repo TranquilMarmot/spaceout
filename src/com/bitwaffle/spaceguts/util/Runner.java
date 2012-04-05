@@ -2,6 +2,7 @@ package com.bitwaffle.spaceguts.util;
 
 import java.util.Random;
 
+import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
@@ -84,7 +85,11 @@ public class Runner {
 			shutdown();
 		} catch (Exception e) {
 			// if an exception is caught, destroy the display and the frame
-			//shutdown();
+			shutdown();
+			
+			// TODO this should really bring up an error notification in the game rather than just dying
+			// throw an alert window to let the user know what happened
+			Sys.alert("Oh great, what now...", "Spaceout has crashed!\n\n" + e.getLocalizedMessage());
 			e.printStackTrace();
 		}
 	}
@@ -186,9 +191,10 @@ public class Runner {
 	 * To be called when the game is quit
 	 */
 	private void shutdown() {
+		System.out.println(goodbye());
+		Mouse.setGrabbed(false);
 		Display.destroy();
 		DisplayHelper.frame.dispose();
-		System.out.println(goodbye());
 	}
 	
 	/**
