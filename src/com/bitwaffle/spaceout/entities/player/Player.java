@@ -1,4 +1,6 @@
-package com.bitwaffle.spaceout.entities.dynamic;
+package com.bitwaffle.spaceout.entities.player;
+
+import java.util.ArrayList;
 
 import javax.vecmath.Quat4f;
 
@@ -15,7 +17,10 @@ import com.bitwaffle.spaceguts.physics.CollisionTypes;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceguts.util.Runner;
 import com.bitwaffle.spaceguts.util.console.Console;
+import com.bitwaffle.spaceout.entities.dynamic.LaserBullet;
 import com.bitwaffle.spaceout.interfaces.Health;
+import com.bitwaffle.spaceout.interfaces.Inventory;
+import com.bitwaffle.spaceout.interfaces.InventoryItem;
 import com.bitwaffle.spaceout.resources.Models;
 import com.bitwaffle.spaceout.resources.Textures;
 import com.bitwaffle.spaceout.ship.Ship;
@@ -27,9 +32,11 @@ import com.bulletphysics.linearmath.Transform;
  * 
  * @author TranquilMarmot
  */
-public class Player extends DynamicEntity implements Health {
+public class Player extends DynamicEntity implements Health, Inventory{
 	final static short COL_GROUP = CollisionTypes.SHIP;
-	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET);
+	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET | CollisionTypes.PICKUP);
+	
+	public Backpack inventory;
 	
 	private Ship ship;
 	
@@ -46,6 +53,8 @@ public class Player extends DynamicEntity implements Health {
 		rigidBody.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 		this.ship = ship;
 		this.type = "Player";
+		
+		inventory = new Backpack();
 
 		// FIXME temp code
 		trail1 = new Trail(this, 15, 0.6f, Textures.TRAIL, new Vector3f(0.9f, 0.13f, 2.34f));
@@ -323,5 +332,20 @@ public class Player extends DynamicEntity implements Health {
 	@Override
 	public void heal(int amount) {
 		
+	}
+
+	@Override
+	public void addInventoryItem(InventoryItem item) {
+		inventory.addInventoryItem(item);
+	}
+
+	@Override
+	public void removeInventoryItem(InventoryItem item) {
+		inventory.removeInventoryItem(item);
+	}
+
+	@Override
+	public ArrayList<InventoryItem> getItems() {
+		return inventory.getItems();
 	}
 }

@@ -20,6 +20,7 @@ import com.bitwaffle.spaceguts.input.KeyBindings;
 import com.bitwaffle.spaceguts.input.Keys;
 import com.bitwaffle.spaceguts.input.MouseManager;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
+import com.bitwaffle.spaceout.entities.dynamic.Diamond;
 import com.bitwaffle.spaceout.entities.dynamic.Planet;
 import com.bitwaffle.spaceout.resources.Models;
 import com.bitwaffle.spaceout.resources.Textures;
@@ -96,6 +97,9 @@ public class Builder {
 
 		if (Keys.P.isPressed())
 			addRandomSphere();
+		
+		if(Keys.O.isPressed())
+			addRandomDiamond();
 
 		if (KeyBindings.BUILDER_OPEN_ADD_MENU.pressedOnce()){
 			if(GUI.menuUp)
@@ -365,5 +369,31 @@ public class Builder {
 		p.type = tex;
 
 		Entities.addDynamicEntity(p);
+	}
+	
+	/**
+	 * Adds a random diamond to the world, right in front of the camera
+	 */
+	private void addRandomDiamond() {
+		Random randy = new Random();
+
+		float diamondX = randy.nextFloat() * 75.0f;
+		float diamondY = randy.nextFloat() * 75.0f;
+		float diamondZ = -100.0f;
+		Vector3f diamondLocation = new Vector3f(diamondX, diamondY, diamondZ);
+
+		// put the sphere right in front of the camera
+		Vector3f downInFront = QuaternionHelper.rotateVectorByQuaternion(
+				new Vector3f(0.0f, 0.0f, 300.0f), camera.rotation);
+
+		Vector3f.add(camera.location, downInFront, downInFront);
+
+		Vector3f.add(diamondLocation, downInFront, diamondLocation);
+
+		Quaternion diamondRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		
+		Diamond d = new Diamond(diamondLocation, diamondRotation);
+
+		Entities.addDynamicEntity(d);
 	}
 }

@@ -14,7 +14,7 @@ public enum Models {
 	SAUCER(Paths.SHIPS_PATH.path() + "saucer", 1.0f, Textures.SAUCER),
 	SKYBOX(Paths.MODEL_PATH.path() + "box", 100000.0f, Textures.SKYBOX),
 	WESCOTT(Paths.SHIPS_PATH.path() + "wescott-8-beta", 1.0f, Textures.WESCOTT),
-	DIAMOND(Paths.MODEL_PATH.path() + "diamond", 5.0f, Textures.DIAMOND);
+	DIAMOND(Paths.MODEL_PATH.path() + "diamond", 2.0f, Textures.DIAMOND);
 	
 	/** the actual model object */
 	private Model model;

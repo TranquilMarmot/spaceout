@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import com.bitwaffle.spaceout.entities.dynamic.Player;
 import com.bitwaffle.spaceout.entities.passive.Skybox;
+import com.bitwaffle.spaceout.entities.player.Player;
 
 
 /**

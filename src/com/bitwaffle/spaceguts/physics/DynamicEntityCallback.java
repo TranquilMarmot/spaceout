@@ -10,6 +10,8 @@ import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceout.interfaces.Bullet;
 import com.bitwaffle.spaceout.interfaces.Health;
+import com.bitwaffle.spaceout.interfaces.Inventory;
+import com.bitwaffle.spaceout.interfaces.InventoryItem;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.narrowphase.ManifoldPoint;
 import com.bulletphysics.collision.narrowphase.PersistentManifold;
@@ -96,6 +98,13 @@ public class DynamicEntityCallback extends InternalTickCallback {
 					} else if(entB instanceof Bullet && entA instanceof Health){
 						bulletHealthCollision((Bullet) entB, (Health) entA);
 					}
+					
+					/*
+					if(entA instanceof InventoryItem && entB instanceof Inventory){
+						(Inventory)entB.putItem((InventoryItem) entA);
+					} else if(entA instanceof InventoryItem && entB instanceof Inventory){
+						
+					}*/
 					
 					
 					/*
