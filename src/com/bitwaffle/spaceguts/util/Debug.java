@@ -232,12 +232,13 @@ public class Debug {
 
 				javax.vecmath.Vector3f linear = new javax.vecmath.Vector3f();
 				Entities.player.rigidBody.getLinearVelocity(linear);
-				float xSpeed = (linear.x * 100.0f) / 1000.0f;
-				float ySpeed = (linear.y * 100.0f) / 1000.0f;
-				float zSpeed = (linear.z * 100.0f) / 1000.0f;
+				
+				float speed = linear.length();
+				if(speed < 0.05f)
+					speed = 0.0f;
+				
 				font.drawString(DisplayHelper.windowWidth - 125,
-						DisplayHelper.windowHeight - 75, xSpeed + "\n" + ySpeed
-								+ "\n" + zSpeed);
+						DisplayHelper.windowHeight - 20, "Speed: " + Float.toString(speed));
 			}
 		}
 

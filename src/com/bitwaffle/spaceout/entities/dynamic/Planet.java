@@ -26,7 +26,7 @@ import com.bulletphysics.linearmath.Transform;
  */
 public class Planet extends DynamicEntity implements Health{
 	final static short COL_GROUP = CollisionTypes.PLANET;
-	final static short COL_WITH = (short)(CollisionTypes.SHIP | CollisionTypes.WALL | CollisionTypes.PLANET);
+	final static short COL_WITH = (short)(CollisionTypes.SHIP | CollisionTypes.WALL | CollisionTypes.PLANET | CollisionTypes.PICKUP);
 	
 	private static SphereShape shape;
 	

@@ -41,7 +41,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET | CollisionTypes.PICKUP);
 	
 	public float pickupSweepSize = 25.0f;
-	public float pickupSweepDistance = 50.0f;
+	public float pickupSweepDistance = 100.0f;
 	public float pickupDistance = 5.0f;
 	
 	
@@ -165,7 +165,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		*/
 		
 		for(Pickup item : hits){
-				item.setGravitateTowards(this, pickupDistance, inventory);
+				item.setFollowing(this, pickupDistance, inventory);
 		}
 	}
 
