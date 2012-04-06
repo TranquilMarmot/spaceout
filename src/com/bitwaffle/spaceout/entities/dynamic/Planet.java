@@ -1,5 +1,7 @@
 package com.bitwaffle.spaceout.entities.dynamic;
 
+import java.util.Random;
+
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -51,7 +53,7 @@ public class Planet extends DynamicEntity implements Health{
 		
 		quadric = new VBOQuadric(size, 20, 20);
 		
-		trail = new Trail(this, 20, 1.0f, Textures.TRAIL, new Vector3f(0.0f, 0.0f, 0.0f));
+		trail = new Trail(this, 20, 0.2f, Textures.TRAIL, new Vector3f(0.0f, 0.0f, 0.0f));
 	}
 	
 	@Override
@@ -95,11 +97,54 @@ public class Planet extends DynamicEntity implements Health{
 	public void hurt(int amount) {
 		health -= amount;
 		if(health <= 0){
-			Explosion splode = new Explosion(this.location, this.rotation, 1.0f);
-			Entities.addPassiveEntity(splode);
-			removeFlag = true;
+			explode();
 		}
 		
+	}
+	
+	private void explode(){
+		Explosion splode = new Explosion(this.location, this.rotation, 1.0f);
+		Entities.addPassiveEntity(splode);
+		removeFlag = true;
+		
+		for(int i = 0; i < 30; i++){
+			addRandomDiamond();
+		}
+	}
+	
+	// TODO find a better way to do loot drops
+	private void addRandomDiamond() {
+		Random randy = new Random();
+
+		float diamondX = randy.nextFloat() * 10.0f;
+		float diamondY = randy.nextFloat() * 10.0f;
+		float diamondZ = randy.nextFloat() * 10.0f;
+		
+		if(randy.nextBoolean()) diamondX = -diamondX;
+		if(randy.nextBoolean()) diamondY = -diamondY;
+		if(randy.nextBoolean()) diamondZ = -diamondZ;
+		
+		Vector3f diamondLocation = new Vector3f();
+
+		// put the sphere right in front of the camera
+		Vector3f downInFront = QuaternionHelper.rotateVectorByQuaternion(
+				new Vector3f(diamondX, diamondY, diamondZ), this.rotation);
+
+		Vector3f.add(this.location, downInFront, diamondLocation);
+
+		Quaternion diamondRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		
+		float xRot = randy.nextFloat() * 100.0f;
+		float yRot = randy.nextFloat() * 100.0f;
+		float zRot = randy.nextFloat() * 100.0f;
+		
+		diamondRotation = QuaternionHelper.rotate(diamondRotation, new Vector3f(xRot,yRot, zRot));
+		
+		float diamondStopSpeed = 0.3f;
+		
+		Diamond d = new Diamond(diamondLocation, diamondRotation, diamondStopSpeed);
+
+		Entities.addDynamicEntity(d);
 	}
 
 	@Override

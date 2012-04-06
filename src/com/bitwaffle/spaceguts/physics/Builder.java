@@ -379,22 +379,30 @@ public class Builder {
 	private void addRandomDiamond() {
 		Random randy = new Random();
 
-		float diamondX = randy.nextFloat() * 75.0f;
-		float diamondY = randy.nextFloat() * 75.0f;
-		float diamondZ = -100.0f;
-		Vector3f diamondLocation = new Vector3f(diamondX, diamondY, diamondZ);
+		float diamondX = randy.nextFloat() * 10.0f;
+		float diamondY = randy.nextFloat() * 10.0f;
+		float diamondZ = randy.nextFloat() * 100.0f;
+		
+		if(randy.nextBoolean()) diamondX = -diamondX;
+		if(randy.nextBoolean()) diamondY = -diamondY;
+		
+		Vector3f diamondLocation = new Vector3f();
 
 		// put the sphere right in front of the camera
 		Vector3f downInFront = QuaternionHelper.rotateVectorByQuaternion(
-				new Vector3f(0.0f, 0.0f, 300.0f), camera.rotation);
+				new Vector3f(diamondX, diamondY, diamondZ), camera.rotation);
 
-		Vector3f.add(camera.location, downInFront, downInFront);
-
-		Vector3f.add(diamondLocation, downInFront, diamondLocation);
+		Vector3f.add(camera.location, downInFront, diamondLocation);
 
 		Quaternion diamondRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		
-		Diamond d = new Diamond(diamondLocation, diamondRotation);
+		float xRot = randy.nextFloat() * 100.0f;
+		float yRot = randy.nextFloat() * 100.0f;
+		float zRot = randy.nextFloat() * 100.0f;
+		
+		diamondRotation = QuaternionHelper.rotate(diamondRotation, new Vector3f(xRot,yRot, zRot));
+		
+		Diamond d = new Diamond(diamondLocation, diamondRotation, 0.25f);
 
 		Entities.addDynamicEntity(d);
 	}

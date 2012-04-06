@@ -249,6 +249,8 @@ public class Debug {
 		String fpsString = currentFPS + " fps";
 		font.drawString(DisplayHelper.windowWidth - font.getWidth(fpsString) - 2, font.getDescent() + 16,
 				currentFPS + " fps");
+		
+		drawControls();
 	}
 
 	/**
@@ -258,6 +260,36 @@ public class Debug {
 		// draw what version of Spaceout this is
 		font.drawString(DisplayHelper.windowWidth - font.getWidth(Runner.VERSION) - 3, font.getDescent() - 4,
 				Runner.VERSION);
+	}
+	
+	private static void drawControls(){
+		String controls;
+		
+		if(Entities.camera != null && !Entities.camera.buildMode){
+			controls = 
+					"WASD - Accelerate\n" +
+					"QE - Roll\n" +
+					"Space - Ascend\n" + 
+					"Shift - Descend\n" + 
+					"F - Stop\n" + 
+					"Z - Boost\n" +
+					"B - Enter Build Mode\n" + 
+					"C - Change Camera Mode";
+		} else{
+			controls = 
+					"WASD - Move\n" +
+					"QE - Roll\n" +
+					"Space - Ascend\n" +
+					"Shift - Descend\n" +
+					"MouseWheel - Change Speed\n" +
+					"Tab - Open Builder Menu\n" +
+					"P - Add Random Planets\n" +
+					"O - Add Random Diamonds\n" +
+					"B - Exit Build Mode";
+			
+		}
+		
+		font.drawString(DisplayHelper.windowWidth - 220, DisplayHelper.windowHeight - font.getHeight(controls) - 20, controls);
 	}
 
 	/**

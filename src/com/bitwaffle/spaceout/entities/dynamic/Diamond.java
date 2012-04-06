@@ -10,6 +10,7 @@ import com.bulletphysics.collision.shapes.ConeShape;
 
 /**
  * DIAMONDS!!!!
+ * Diamonds stop once they're sent out (so they can be collected)
  * @author TranquilMarmot
  */
 public class Diamond extends Pickup{
@@ -20,10 +21,37 @@ public class Diamond extends Pickup{
 	private static final float CONE_HEIGHT =0.7f;
 	final static short COL_GROUP = CollisionTypes.PICKUP;
 	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET | CollisionTypes.SHIP | CollisionTypes.PICKUP);
+	
+	private float stopSpeed;
 
-	public Diamond(Vector3f location, Quaternion rotation) {
+	public Diamond(Vector3f location, Quaternion rotation, float stopSpeed) {
 		super(location, rotation, new ConeShape(CONE_RADIUS, CONE_HEIGHT), MASS, RESTITUTION, COL_GROUP, COL_WITH);
 		this.model = MODEL.getModel();
 		this.type = "Diamond";
+		this.stopSpeed = stopSpeed;
+	}
+	
+	@Override
+	public void update(float timeStep){
+		super.update(timeStep);
+		
+		if(following == null)
+			stop(timeStep);
+	}
+	
+	/**
+	 * Gracefully stops the player
+	 */
+	private void stop(float timeStep) {
+		javax.vecmath.Vector3f linearVelocity = new javax.vecmath.Vector3f(
+				0.0f, 0.0f, 0.0f);
+		rigidBody.getLinearVelocity(linearVelocity);
+
+		float stopX = linearVelocity.x - ((linearVelocity.x / stopSpeed) * timeStep);
+		float stopY = linearVelocity.y - ((linearVelocity.y / stopSpeed) * timeStep);
+		float stopZ = linearVelocity.z - ((linearVelocity.z / stopSpeed) * timeStep);
+
+		rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(stopX, stopY,
+				stopZ));
 	}
 }
