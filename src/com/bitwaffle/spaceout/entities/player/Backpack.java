@@ -2,7 +2,7 @@ package com.bitwaffle.spaceout.entities.player;
 
 import java.util.ArrayList;
 
-import com.bitwaffle.spaceout.entities.dynamic.Pickup;
+import com.bitwaffle.spaceguts.entities.Pickup;
 
 public class Backpack {
 	private ArrayList<Pickup> items;

@@ -6,6 +6,7 @@ import org.lwjgl.util.vector.Vector3f;
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entity;
 import com.bitwaffle.spaceguts.physics.CollisionTypes;
+import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceout.interfaces.Bullet;
 import com.bitwaffle.spaceout.resources.Models;
 
@@ -21,7 +22,7 @@ public class LaserBullet extends DynamicEntity implements Bullet{
 	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET);
 	
 	private int damage;
-	private Entity owner;
+	private Entity origin;
 	
 	/** how long the bullet stays alive for */
 	public float life = 10.0f;
@@ -29,15 +30,23 @@ public class LaserBullet extends DynamicEntity implements Bullet{
 	/** how long the bullet has been alive */
 	public float timeAlive = 0.0f;
 
-	public LaserBullet(Entity owner, Vector3f location, Quaternion rotation, Models model,
-			float mass, float restitution, int damage) {
+	public LaserBullet(Entity origin, Vector3f location, Quaternion rotation, Models model,
+			float mass, float restitution, int damage, float speed) {
 		super(location, rotation, model, mass, restitution);
 		this.type = "Bullet";
 		this.damage = damage;
 		
 		this.rigidBody.setCcdMotionThreshold(5.0f);
 		
-		this.owner = owner;
+		this.origin = origin;
+		
+		// give the bullet some speed
+		javax.vecmath.Vector3f currentVelocity = new javax.vecmath.Vector3f();
+		rigidBody.getInterpolationLinearVelocity(currentVelocity);
+		Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(
+				0.0f, 0.0f, speed), rotation);
+		this.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(vec.x,
+				vec.y, vec.z));
 	}
 
 	@Override
@@ -58,6 +67,6 @@ public class LaserBullet extends DynamicEntity implements Bullet{
 	
 	@Override
 	public Entity getOwner(){
-		return owner;
+		return origin;
 	}
 }

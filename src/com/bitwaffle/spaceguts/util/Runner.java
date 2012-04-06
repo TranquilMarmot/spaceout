@@ -125,6 +125,7 @@ public class Runner {
 		ResourceLoader.addJob(Models.WESCOTT);
 		ResourceLoader.addJob(Models.SAUCER);
 		ResourceLoader.addJob(Models.SKYBOX);
+		ResourceLoader.addJob(Models.DIAMOND);
 		ResourceLoader.addJob(Textures.MENU_PICKER_ACTIVE);
 		ResourceLoader.addJob(Textures.MENU_PICKER_MOUSEOVER);
 		ResourceLoader.addJob(Textures.MENU_PICKER_SELECTED);
@@ -172,12 +173,8 @@ public class Runner {
 	 * Checks whether or not the game's paused boolean needs to be flipped
 	 */
 	private void pauseLogic() {
-		// if pauseDown is true, it means that the pause button is being
-		// held,
-		// so it avoids repeatedly flipping paused when the key is held
-		if (KeyBindings.SYS_PAUSE.pressedOnce()) {
+		if (KeyBindings.SYS_PAUSE.pressedOnce())
 			paused = !paused;
-		}
 
 		// release the mouse if the game's paused or the console is on or the
 		// menu is up

@@ -9,6 +9,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
+import com.bitwaffle.spaceguts.entities.Pickup;
 import com.bitwaffle.spaceguts.entities.particles.trail.Trail;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.input.KeyBindings;
@@ -19,7 +20,6 @@ import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceguts.util.Runner;
 import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.entities.dynamic.LaserBullet;
-import com.bitwaffle.spaceout.entities.dynamic.Pickup;
 import com.bitwaffle.spaceout.interfaces.Health;
 import com.bitwaffle.spaceout.interfaces.Inventory;
 import com.bitwaffle.spaceout.resources.Models;
@@ -38,15 +38,26 @@ import com.bulletphysics.linearmath.Transform;
  */
 public class Player extends DynamicEntity implements Health, Inventory{
 	final static short COL_GROUP = CollisionTypes.SHIP;
-	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET | CollisionTypes.PICKUP);
+	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET);
 	
+	/** Radius for sphere that looks for pickups */
 	public float pickupSweepSize = 25.0f;
-	public float pickupSweepDistance = 100.0f;
-	public float pickupDistance = 5.0f;
+	/** How far in front of the ship that sphere travels */
+	public float pickupSweepDistance = 10.0f;
+	/** How close a pickup has to be before it's added to the inventory */
+	public float pickupDistance = 2.0f;
 	
+	/**
+	 * Backpack, backpack. Backpack, backpack.
+	 * I'm the Backpack.
+	 * Loaded up with things and nick-nacks too.
+	 * Anything that you might need I got inside for you.
+	 * Backpack, backpack. Backpack, backpack.
+	 * YEAH!
+	 */
+	public Backpack backpack;
 	
-	public Backpack inventory;
-	
+	/** Used for info in equations */
 	private Ship ship;
 	
 	// FIXME temp code
@@ -63,7 +74,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		this.ship = ship;
 		this.type = "Player";
 		
-		inventory = new Backpack();
+		backpack = new Backpack();
 
 		// FIXME temp code
 		trail1 = new Trail(this, 15, 0.6f, Textures.TRAIL, new Vector3f(0.9f, 0.13f, 2.34f));
@@ -80,14 +91,8 @@ public class Player extends DynamicEntity implements Health, Inventory{
 			//FIXME temp code
 			trail1.update(timeStep);
 			trail2.update(timeStep);
-			checkForPickups(timeStep);
-			
 			// only update if a menu isn't up and we're not in free mode
 			if(!GUI.menuUp && !Entities.camera.freeMode){
-				// check to make sure the rigid body is active
-				if (!rigidBody.isActive())
-					rigidBody.activate();
-				
 				if(KeyBindings.CONTROL_BOOST.isPressed())
 					boosting = true;
 				else
@@ -97,7 +102,6 @@ public class Player extends DynamicEntity implements Health, Inventory{
 				zLogic(timeStep);
 				xLogic(timeStep);
 				yLogic(timeStep);
-				
 				
 				// cap the players' speed
 				checkSpeed();
@@ -117,24 +121,35 @@ public class Player extends DynamicEntity implements Health, Inventory{
 				// handle stopping
 				if (KeyBindings.CONTROL_STOP.isPressed())
 					stop(timeStep);
+				
+				checkForPickups(timeStep);
 			}
 		}
 	}
 	
-	// TODO javadoc and comment
-	private class ItemConvexResultCallback extends CollisionWorld.ConvexResultCallback{
+	/**
+	 * Used for keeping track of found pickups
+	 * @author TranquilMarmot
+	 *
+	 */
+	private class PickupConvexResultCallback extends CollisionWorld.ConvexResultCallback{
+		/** list of hits */
 		private ArrayList<Pickup> hits;
 		
-		public ItemConvexResultCallback(ArrayList<Pickup> hits){
+		/**
+		 * @param hits List to add hits to
+		 */
+		public PickupConvexResultCallback(ArrayList<Pickup> hits){
 			this.hits = hits;
 		}
 		
 		@Override
-		public float addSingleResult(LocalConvexResult arg0, boolean arg1) {
-			CollisionObject obj = arg0.hitCollisionObject;
+		public float addSingleResult(LocalConvexResult convexResult, boolean normalInWorldSpace) {
+			CollisionObject obj = convexResult.hitCollisionObject;
 			
 			DynamicEntity ent = (DynamicEntity) obj.getUserPointer();
 			
+			// dont' add the camera and only add if it's a pickup
 			if(ent != Entities.camera && ent instanceof Pickup)
 				hits.add((Pickup)ent);
 			
@@ -143,30 +158,55 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		
 	}
 	
+	/**
+	 * Performs a convex sweep test in front of the player and sets any found pickups
+	 * to follow the player.
+	 * @param timeStep Time passed since last update
+	 */
 	private void checkForPickups(float timeStep){
+		// we'll use a sphere for simplicity
 		SphereShape shape = new SphereShape(pickupSweepSize);
 		
+		// grab current world transform
 		Transform from = new Transform(), to = new Transform();
 		this.rigidBody.getWorldTransform(to);
 		this.rigidBody.getWorldTransform(from);
 		
+		/*
+		 *  See PickupConvexResultCallback inner class
+		 *  Any pickups found from the sweep test are added to hits
+		 *  It is possible to do multiple tests and have them all add to the same list,
+		 *  but there's no guarantee that there won't be duplicates so be careful
+		 */
 		ArrayList<Pickup> hits = new ArrayList<Pickup>();
-		ItemConvexResultCallback callback = new ItemConvexResultCallback(hits);
+		PickupConvexResultCallback callback = new PickupConvexResultCallback(hits);
 		
+		// set 'to' transform to be in front of the player
 		Vector3f forward = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, pickupSweepDistance), this.rotation);
 		from.origin.add(new javax.vecmath.Vector3f(forward.x, forward.y, forward.z));
+		
+		// perform sweep test
 		Physics.dynamicsWorld.convexSweepTest(shape, to, from, callback);
 		
-		/*
-		from.origin.set(to.origin);
-		Vector3f backward = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, -pickupGrabberDistance), this.rotation);
-		from.origin.add(new javax.vecmath.Vector3f(backward.x, backward.y, backward.z));
-		Physics.dynamicsWorld.convexSweepTest(shape, to, from, callback);
-		*/
+		// make found pickups follow player
+		for(Pickup item : hits)
+				item.setFollowing(this, pickupDistance, backpack);
+	}
+	
+	/**
+	 * I'M RICH, BIATCH
+	 * @return how many diamonds the player has in inventory
+	 */
+	// FIXME this is probably temporary
+	public int howManyDiamonds(){
+		int num = 0;
 		
-		for(Pickup item : hits){
-				item.setFollowing(this, pickupDistance, inventory);
+		for(Pickup p : backpack.getItems()){
+			if((p.type.equals("Diamond")))
+				num++;
 		}
+		
+		return num;
 	}
 
 	/**
@@ -208,16 +248,8 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		float bulletSpeed = 2500.0f;
 
 		LaserBullet bullet = new LaserBullet(this, bulletLocation, bulletRotation,
-				bulletModel, bulletMass, bulletRestitution, bulletDamage);
+				bulletModel, bulletMass, bulletRestitution, bulletDamage, bulletSpeed);
 		Entities.addDynamicEntity(bullet);
-
-		// give the bullet some speed
-		javax.vecmath.Vector3f currentVelocity = new javax.vecmath.Vector3f();
-		rigidBody.getInterpolationLinearVelocity(currentVelocity);
-		Vector3f vec = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(
-				0.0f, 0.0f, bulletSpeed), rotation);
-		bullet.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(vec.x,
-				vec.y, vec.z));
 	}
 	
 	/**
@@ -336,7 +368,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	}
 	
 	/**
-	 * Uses spherical linear interpolation to rotate the ship towards where the camera is looking
+	 * Uses spherical linear interpolation (slerp) to rotate the ship towards where the camera is looking
 	 * @param timeStep
 	 */
 	private void rotationLogic(float timeStep){
@@ -394,16 +426,16 @@ public class Player extends DynamicEntity implements Health, Inventory{
 
 	@Override
 	public void addInventoryItem(Pickup item) {
-		inventory.addInventoryItem(item);
+		backpack.addInventoryItem(item);
 	}
 
 	@Override
 	public void removeInventoryItem(Pickup item) {
-		inventory.removeInventoryItem(item);
+		backpack.removeInventoryItem(item);
 	}
 
 	@Override
 	public ArrayList<Pickup> getItems() {
-		return inventory.getItems();
+		return backpack.getItems();
 	}
 }

@@ -13,6 +13,8 @@ public class CollisionTypes {
 	public static final short BULLET = bit(3);
 	public static final short PICKUP = bit(4);
 	
+	public static final short EVERYTHING = (short)(SHIP | WALL | PLANET | BULLET | PICKUP); 
+	
 	private static short bit(int x) {
 		return (short) (1 << x);
 	}

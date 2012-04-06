@@ -2,7 +2,7 @@ package com.bitwaffle.spaceout.interfaces;
 
 import java.util.ArrayList;
 
-import com.bitwaffle.spaceout.entities.dynamic.Pickup;
+import com.bitwaffle.spaceguts.entities.Pickup;
 
 /**
  * Anything that can pick up items should implement this interface

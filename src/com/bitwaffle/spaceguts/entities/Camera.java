@@ -17,6 +17,7 @@ import com.bitwaffle.spaceguts.util.DisplayHelper;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.resources.Textures;
+import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback;
 import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.linearmath.Transform;
@@ -90,22 +91,22 @@ public class Camera extends DynamicEntity {
 	 * Camera constructor
 	 */
 	public Camera() {
-		super(new Vector3f(0.0f, 0.0f, 0.0f), new Quaternion(0.0f, 0.0f, 0.0f, 1.0f), new SphereShape(10.0f), 0.0001f, 0.01f, CollisionTypes.NOTHING, (short)-1);
+		super(new Vector3f(0.0f, 0.0f, 0.0f), new Quaternion(0.0f, 0.0f, 0.0f, 1.0f), new SphereShape(10.0f), 0.0001f, 0.01f, CollisionTypes.NOTHING, CollisionTypes.EVERYTHING);
 		this.zoom = INIT_ZOOM;
 		this.yOffset = INIT_YOFFSET;
 		this.xOffset = INIT_XOFFSET;
 		rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		this.type = "camera";
 		builder = new Builder(this);
+		
+		this.rigidBody.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 	}
 
 	/**
 	 * Update the camera. This handles following other things, mode switches etc.
 	 */
 	public void update(float timeStep) {
-		// make sure the rigid body is active
-		if(!this.rigidBody.isActive())
-			this.rigidBody.activate();
+		this.rigidBody.applyDamping(100.0f);
 		
 		// get the rigid body's tranform
 		Transform trans = new Transform();
