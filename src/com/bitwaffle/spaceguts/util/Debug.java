@@ -251,6 +251,13 @@ public class Debug {
 				currentFPS + " fps");
 		
 		drawControls();
+		
+		if(Entities.player != null){
+			String lockon = "Locked on to: ";
+			if(Entities.player.lockon != null)
+				lockon += Entities.player.lockon.type;
+			font.drawString(200, 200, lockon);
+		}
 	}
 
 	/**

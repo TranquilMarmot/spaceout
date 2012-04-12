@@ -15,19 +15,20 @@ import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.input.KeyBindings;
 import com.bitwaffle.spaceguts.input.MouseManager;
 import com.bitwaffle.spaceguts.physics.CollisionTypes;
+import com.bitwaffle.spaceguts.physics.ConvexResultCallback;
 import com.bitwaffle.spaceguts.physics.Physics;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceguts.util.Runner;
 import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.entities.dynamic.LaserBullet;
+import com.bitwaffle.spaceout.entities.dynamic.Planet;
 import com.bitwaffle.spaceout.interfaces.Health;
 import com.bitwaffle.spaceout.interfaces.Inventory;
 import com.bitwaffle.spaceout.resources.Models;
 import com.bitwaffle.spaceout.resources.Textures;
 import com.bitwaffle.spaceout.ship.Ship;
 import com.bulletphysics.collision.dispatch.CollisionObject;
-import com.bulletphysics.collision.dispatch.CollisionWorld;
-import com.bulletphysics.collision.dispatch.CollisionWorld.LocalConvexResult;
+import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.linearmath.Transform;
 
@@ -65,6 +66,8 @@ public class Player extends DynamicEntity implements Health, Inventory{
 
 	/** to keep the button from being held down */
 	private boolean button0Down = false, boosting = false;
+	
+	public DynamicEntity lockon = null;
 
 	public Player(Vector3f location, Quaternion rotation, Ship ship,
 			float mass, float restitution) {
@@ -122,71 +125,45 @@ public class Player extends DynamicEntity implements Health, Inventory{
 				if (KeyBindings.CONTROL_STOP.isPressed())
 					stop(timeStep);
 				
-				checkForPickups(timeStep);
+				checkForPickups();
+				lockOn();
 			}
 		}
 	}
 	
 	/**
-	 * Used for keeping track of found pickups
-	 * @author TranquilMarmot
-	 *
+	 * Searches for things to lock on to
 	 */
-	private class PickupConvexResultCallback extends CollisionWorld.ConvexResultCallback{
-		/** list of hits */
-		private ArrayList<Pickup> hits;
+	private void lockOn(){
+		BoxShape box = new BoxShape(new javax.vecmath.Vector3f(5.0f, 5.0f, 5.0f));
 		
-		/**
-		 * @param hits List to add hits to
-		 */
-		public PickupConvexResultCallback(ArrayList<Pickup> hits){
-			this.hits = hits;
-		}
+		ArrayList<Planet> hits = new ArrayList<Planet>();
+		ConvexResultCallback<Planet> callback = new ConvexResultCallback<Planet>(hits, CollisionTypes.PLANET);
 		
-		@Override
-		public float addSingleResult(LocalConvexResult convexResult, boolean normalInWorldSpace) {
-			CollisionObject obj = convexResult.hitCollisionObject;
-			
-			DynamicEntity ent = (DynamicEntity) obj.getUserPointer();
-			
-			// dont' add the camera and only add if it's a pickup
-			if(ent != Entities.camera && ent instanceof Pickup)
-				hits.add((Pickup)ent);
-			
-			return 0;
-		}
+		Physics.convexSweepTest(this, new Vector3f(0.0f, 0.0f, 500.0f), box, callback);
 		
+		if(hits.size() > 0)
+			this.lockon = hits.get(0);
 	}
 	
 	/**
 	 * Performs a convex sweep test in front of the player and sets any found pickups
 	 * to follow the player.
-	 * @param timeStep Time passed since last update
 	 */
-	private void checkForPickups(float timeStep){
+	private void checkForPickups(){
 		// we'll use a sphere for simplicity
 		SphereShape shape = new SphereShape(pickupSweepSize);
 		
-		// grab current world transform
-		Transform from = new Transform(), to = new Transform();
-		this.rigidBody.getWorldTransform(to);
-		this.rigidBody.getWorldTransform(from);
-		
 		/*
-		 *  See PickupConvexResultCallback inner class
+		 *  See ConvexResultCallback class
 		 *  Any pickups found from the sweep test are added to hits
 		 *  It is possible to do multiple tests and have them all add to the same list,
 		 *  but there's no guarantee that there won't be duplicates so be careful
 		 */
 		ArrayList<Pickup> hits = new ArrayList<Pickup>();
-		PickupConvexResultCallback callback = new PickupConvexResultCallback(hits);
+		ConvexResultCallback<Pickup> callback = new ConvexResultCallback<Pickup>(hits, CollisionTypes.PICKUP);
 		
-		// set 'to' transform to be in front of the player
-		Vector3f forward = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, pickupSweepDistance), this.rotation);
-		from.origin.add(new javax.vecmath.Vector3f(forward.x, forward.y, forward.z));
-		
-		// perform sweep test
-		Physics.dynamicsWorld.convexSweepTest(shape, to, from, callback);
+		Physics.convexSweepTest(this, new Vector3f(0.0f, 0.0f, pickupSweepDistance), shape, callback);
 		
 		// make found pickups follow player
 		for(Pickup item : hits)
@@ -202,7 +179,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		int num = 0;
 		
 		for(Pickup p : backpack.getItems()){
-			if((p.type.equals("Diamond")))
+			if(p.type.equals("Diamond"))
 				num++;
 		}
 		

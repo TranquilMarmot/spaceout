@@ -23,32 +23,37 @@ public class Explosion extends Entity{
 	float lived;
 	
 	// info for particle emitter
-	final static Vector3f LOCATION_VARIANCE = new Vector3f(5.0f, 5.0f, 5.0f);
-	final static Vector3f VELOCITY_VARIANCE = new Vector3f(10.0f, 10.0f, 10.0f);
-	final static float EMIT_SPEED = 0.05f;
-	final static int PARTICLES_PER_EMISSION = 20;
-	final static float PARTICLE_TTL_VARIANCE = 2.5f;
+	private Vector3f locationVariance = new Vector3f(5.0f, 5.0f, 5.0f);
+	private Vector3f velocityVariance = new Vector3f(10.0f, 10.0f, 10.0f);
+	private float EMIT_SPEED = 0.05f;
+	private int particlesPerEmission = 20;
+	private float paritcleTTLVariance = 2.5f;
 	
 	/**
 	 * Boom!
 	 * @param location Where this explosion originates
 	 * @param rotation FIXME is this even necessary?
 	 */
-	public Explosion(Vector3f location, Quaternion rotation, float ttl){
+	public Explosion(Vector3f location, Quaternion rotation, float ttl, float size){
 		this.location = location;
 		this.rotation = rotation;
 		lived = 0.0f;
 		this.ttl = ttl;
 		
+		locationVariance = new Vector3f(size, size, size);
+		velocityVariance = new Vector3f(size * 2, size * 2, size * 2);
+		particlesPerEmission = (int)size * 4;
+		paritcleTTLVariance = size / 2.0f;
+		
 		emitter = new Emitter(this,
 				Textures.FIRE,
 				// no offset
 				new Vector3f(0.0f, 0.0f, 0.0f),
-				LOCATION_VARIANCE, 
-				VELOCITY_VARIANCE, 
+				locationVariance, 
+				velocityVariance, 
 				EMIT_SPEED, 
-				PARTICLES_PER_EMISSION, 
-				PARTICLE_TTL_VARIANCE);
+				particlesPerEmission, 
+				paritcleTTLVariance);
 		emitter.active = true;
 	}
 
