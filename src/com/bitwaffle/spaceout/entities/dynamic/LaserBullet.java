@@ -18,7 +18,7 @@ import com.bitwaffle.spaceout.resources.Models;
  * 
  */
 public class LaserBullet extends DynamicEntity implements Bullet{
-	final static short COL_GROUP = CollisionTypes.BULLET;
+	final static short COL_GROUP = CollisionTypes.PROJECTILE;
 	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET);
 	
 	private int damage;

@@ -21,6 +21,7 @@ import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceguts.util.Runner;
 import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.entities.dynamic.LaserBullet;
+import com.bitwaffle.spaceout.entities.dynamic.Missile;
 import com.bitwaffle.spaceout.entities.dynamic.Planet;
 import com.bitwaffle.spaceout.interfaces.Health;
 import com.bitwaffle.spaceout.interfaces.Inventory;
@@ -116,10 +117,14 @@ public class Player extends DynamicEntity implements Health, Inventory{
 				// handle bullet shooting
 				if (MouseManager.button0 && !button0Down && !Console.consoleOn) {
 					button0Down = true;
-					shootBullet();
+					//shootBullet();
+					shootMissile();
 				}
 				if (!MouseManager.button0)
 					button0Down = false;
+				
+				if(MouseManager.button1)
+					shootBullet();
 
 				// handle stopping
 				if (KeyBindings.CONTROL_STOP.isPressed())
@@ -227,6 +232,27 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		LaserBullet bullet = new LaserBullet(this, bulletLocation, bulletRotation,
 				bulletModel, bulletMass, bulletRestitution, bulletDamage, bulletSpeed);
 		Entities.addDynamicEntity(bullet);
+	}
+	
+	/**
+	 * Ker-pow
+	 */
+	private void shootMissile() {
+		Vector3f missileLocation = new Vector3f(this.location.x,
+				this.location.y, this.location.z);
+		Quaternion missileRotation = new Quaternion(this.rotation.x,
+				this.rotation.y, this.rotation.z, this.rotation.w);
+
+		// move the bullet to in front of the player
+		// FIXME this should be an offset from the center to represent the location of a gun or something
+		Vector3f missileMoveAmount = new Vector3f(0.0f, 0.0f, 10.0f);
+		missileMoveAmount = QuaternionHelper.rotateVectorByQuaternion(
+				missileMoveAmount, missileRotation);
+		Vector3f.add(missileLocation, missileMoveAmount, missileLocation);
+		
+		Missile miss = new Missile(missileLocation, missileRotation, lockon);
+
+		Entities.addDynamicEntity(miss);
 	}
 	
 	/**

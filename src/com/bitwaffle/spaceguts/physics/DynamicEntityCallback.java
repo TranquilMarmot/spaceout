@@ -7,6 +7,7 @@ import javax.vecmath.Quat4f;
 
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
+import com.bitwaffle.spaceout.entities.dynamic.Missile;
 import com.bitwaffle.spaceout.interfaces.Bullet;
 import com.bitwaffle.spaceout.interfaces.Health;
 import com.bulletphysics.collision.dispatch.CollisionObject;
@@ -92,8 +93,12 @@ public class DynamicEntityCallback extends InternalTickCallback {
 					
 					if(entA instanceof Bullet && entB instanceof Health){
 						bulletHealthCollision((Bullet) entA, (Health) entB);
+						if(entA instanceof Missile)
+							entA.removeFlag = true;
 					} else if(entB instanceof Bullet && entA instanceof Health){
 						bulletHealthCollision((Bullet) entB, (Health) entA);
+						if(entB instanceof Missile)
+							entB.removeFlag = true;
 					}
 					
 					/*

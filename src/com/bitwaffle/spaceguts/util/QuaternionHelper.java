@@ -356,4 +356,18 @@ public class QuaternionHelper {
 		
 		return ret;
 	}
+	
+	public static Quaternion getQuaternionFromAxisAngle(Vector3f axis, float angle){
+		double l = Math.sqrt((double)((axis.x * axis.x) + (axis.y * axis.y) + (axis.z * axis.z)));
+		
+		double omega = -0.5 * angle;
+		float s = (float)(Math.sin(omega) / l);
+		
+		float x = s * axis.x;
+		float y = s * axis.y;
+		float z = s * axis.z;
+		float w = (float)(Math.cos(omega));
+		
+		return new Quaternion(x, y, z, w);
+	}
 }
