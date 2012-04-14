@@ -11,6 +11,13 @@ import org.lwjgl.util.vector.Vector3f;
 public class QuaternionHelper {
 	final static float PIOVER180 = ((float) Math.PI) / 180.0f;
 
+	/**
+	 * Converts angles to a quaternion
+	 * @param pitch X axis rotation
+	 * @param yaw Y axis rotation
+	 * @param roll Z axis rotation
+	 * @return Quaternion representing angles
+	 */
 	public static Quaternion getQuaternionFromAngles(float pitch, float yaw,
 			float roll) {
 		Quaternion quat;
@@ -38,7 +45,11 @@ public class QuaternionHelper {
 		return retQuat;
 	}
 
-	// not sure if this one works properly
+	/**
+	 * Not sure if this works
+	 * @param quat Quaternion to convert
+	 * @return float array with 4 elements- x, y, z, and angle
+	 */
 	public static float[] convertToAxisAngle(Quaternion quat) {
 		float scale = (float) Math
 				.sqrt(((quat.x * quat.x) + (quat.y * quat.y) + (quat.z * quat.z)));
@@ -202,6 +213,12 @@ public class QuaternionHelper {
 		return new Vector3f(x, y, z);
 	}
 	
+	/**
+	 * Rotate a quaternion by a vector
+	 * @param quat Quaternion to rotate
+	 * @param amount Amount to rotate quaternion by
+	 * @return Rotated quaternion
+	 */
 	public static Quaternion rotate(Quaternion quat, Vector3f amount){
 		Quaternion ret = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		
@@ -320,6 +337,11 @@ public class QuaternionHelper {
 		return ret;
 	}
 	
+	/**
+	 * Converts a quaternion to a rotation matrix
+	 * @param quat Quaternion to convert
+	 * @return Rotation matrix representing given quaternion
+	 */
 	public static Matrix4f toMatrix(Quaternion quat){
 		float x2 = quat.x * quat.x;
 		float y2 = quat.y * quat.y;
@@ -357,16 +379,43 @@ public class QuaternionHelper {
 		return ret;
 	}
 	
-	public static Quaternion getQuaternionFromAxisAngle(Vector3f axis, float angle){
-		double l = Math.sqrt((double)((axis.x * axis.x) + (axis.y * axis.y) + (axis.z * axis.z)));
+	/**
+	 * Finds the quaternion between two vectors. 
+	 * @param vec1 First vector
+	 * @param vec2 Second vector
+	 * @return Quaternion between vectors
+	 */
+	public static Quaternion quaternionBetweenVectors(Vector3f vec1, Vector3f vec2){
+		Vector3f v1 = new Vector3f();
+		Vector3f v2 = new Vector3f();
+		vec1.normalise(v1);
+		vec2.normalise(v2);
 		
-		double omega = -0.5 * angle;
-		float s = (float)(Math.sin(omega) / l);
+		float v1l = v1.length(), v2l = v2.length();
+		float dot = Vector3f.dot(v1, v2);
+		float angle = (float)Math.acos(dot / (v1l * v2l));
+		Vector3f axis = new Vector3f();
+		Vector3f.cross(v1, v2, axis);
+		axis.normalise(axis);
 		
-		float x = s * axis.x;
-		float y = s * axis.y;
-		float z = s * axis.z;
-		float w = (float)(Math.cos(omega));
+		return quaternionFromAxisAngle(axis, angle);
+	}
+	
+	/**
+	 * Converts an axis and an angle to a quaternion
+	 * @param axis Axis
+	 * @param angle Angle
+	 * @return Quaternion representing rotation
+	 */
+	public static Quaternion quaternionFromAxisAngle(Vector3f axis, float angle){
+		double halfAngle = (double)angle / 2;
+		
+		float s = (float)Math.sin(halfAngle);
+		
+		float x = axis.x * s;
+		float y = axis.y * s;
+		float z = axis.z * s;
+		float w = (float)Math.cos(halfAngle);
 		
 		return new Quaternion(x, y, z, w);
 	}

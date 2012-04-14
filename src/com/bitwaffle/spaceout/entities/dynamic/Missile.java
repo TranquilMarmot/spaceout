@@ -16,7 +16,7 @@ import com.bulletphysics.linearmath.Transform;
 public class Missile extends DynamicEntity implements Bullet{
 	private static final int DAMAGE = 100;
 	private static final float DETONATION_DISTACNE = 10.0f;
-	private static final float SPEED = 100.0f;
+	private float speed = 100.0f;
 	
 	private DynamicEntity target;
 
@@ -36,53 +36,23 @@ public class Missile extends DynamicEntity implements Bullet{
 		subtract.normalise(subtract);
 		subtract.negate(subtract);
 		
-		float dx = (subtract.x * SPEED);
-		float dy = (subtract.y * SPEED);
-		float dz = (subtract.z * SPEED);
+		float dx1 = (subtract.x * speed);
+		float dy1 = (subtract.y * speed);
+		float dz1 = (subtract.z * speed);
 		
 		// set linear velocity to go towards following
-		this.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(dx, dy, dz));
+		this.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(dx1, dy1, dz1));
 		
+		speed += 0.5f;
 		
-		Vector3f cross = new Vector3f();
-		Vector3f thisLocNorm = new Vector3f();
-		this.location.normalise(thisLocNorm);
-		Vector3f targetLocNorm = new Vector3f();
-		target.location.normalise(targetLocNorm);
-		Vector3f.cross(thisLocNorm, targetLocNorm, cross);
-		//Vector3f.cross(this.location, target.location, cross);
-		//cross.normalise(cross);
-		float angle = Vector3f.angle(this.location, target.location);
-		cross.negate(cross);
+		Quaternion wat = QuaternionHelper.quaternionBetweenVectors(this.location, new Vector3f(dx1, dy1, dz1));
 		
-		
-		Quaternion toTarget = QuaternionHelper.getQuaternionFromAxisAngle(cross, angle);
-		
-		Vector3f by90 = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(-45.0f, 0.0f, 0.0f), this.rotation);
-		
-		toTarget = QuaternionHelper.rotate(toTarget, by90);
-		
-		Quat4f targetquat = new Quat4f(toTarget.x, toTarget.y, toTarget.z, toTarget.w);
-		Quat4f thisquat = new Quat4f(rotation.x, rotation.y, rotation.z, rotation.w);
-		
-		//Quaternion newRot = QuaternionHelper.rotate(this.rotation, new Vector3f(-5.0f, 0.0f, 0.0f));
-		//Quat4f thisquat = new Quat4f(newRot.x, newRot.y, newRot.z, newRot.w);
-		
-		//float interpolationAmount = timeStep;
-		float interpolationAmount = timeStep * 50.0f;
-		
-		thisquat.interpolate(targetquat, thisquat, interpolationAmount);
-		
-		this.rotation.set(thisquat.x, thisquat.y, thisquat.z, thisquat.w);
+		this.rotation.set(wat);
 		
 		Transform trans = new Transform();
 		this.rigidBody.getWorldTransform(trans);
-		trans.setRotation(thisquat);
+		trans.setRotation(new Quat4f(wat.x, wat.y, wat.z, wat.w));
 		this.rigidBody.setWorldTransform(trans);
-		
-		
-		//Vector3f speed = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, SPEED), this.rotation);
-		//this.rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(speed.x, speed.y, speed.z));
 	}
 
 	@Override
