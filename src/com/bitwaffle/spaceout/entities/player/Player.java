@@ -118,7 +118,8 @@ public class Player extends DynamicEntity implements Health, Inventory{
 				if (MouseManager.button0 && !button0Down && !Console.consoleOn) {
 					button0Down = true;
 					//shootBullet();
-					shootMissile();
+					if(lockon != null)
+						shootMissile();
 				}
 				if (!MouseManager.button0)
 					button0Down = false;
@@ -149,6 +150,9 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		
 		if(hits.size() > 0)
 			this.lockon = hits.get(0);
+		
+		if(lockon != null && lockon.removeFlag)
+			lockon = null;
 	}
 	
 	/**

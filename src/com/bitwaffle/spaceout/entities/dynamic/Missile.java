@@ -7,18 +7,27 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entity;
+import com.bitwaffle.spaceguts.entities.particles.Emitter;
 import com.bitwaffle.spaceguts.physics.CollisionTypes;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceout.interfaces.Bullet;
 import com.bitwaffle.spaceout.resources.Models;
+import com.bitwaffle.spaceout.resources.Textures;
 import com.bulletphysics.linearmath.Transform;
 
 public class Missile extends DynamicEntity implements Bullet{
 	private static final int DAMAGE = 100;
-	private static final float DETONATION_DISTACNE = 10.0f;
+	//private static final float DETONATION_DISTACNE = 10.0f;
 	private float speed = 100.0f;
+	private static Vector3f fireOffset = new Vector3f(0.0f, 0.0f, -2.0f);
+	private static Vector3f locationVariance = new Vector3f(1.0f, 1.0f, 1.0f);
+	private static Vector3f velocityVariance = new Vector3f(2.0f, 2.0f, 5.0f);
+	private static float emitSpeed = 0.05f;
+	private static int particlesPerEmission = 2;
+	private static float particleTTLVariance = 2.0f;
 	
 	private DynamicEntity target;
+	private Emitter fire;
 
 	public Missile(Vector3f location, Quaternion rotation, DynamicEntity target) {
 		// TODO these should probably be represented by cylinders instead of a convex hull
@@ -26,6 +35,8 @@ public class Missile extends DynamicEntity implements Bullet{
 				CollisionTypes.EVERYTHING);
 		
 		this.target = target;
+		
+		fire = new Emitter(this, Textures.FIRE, fireOffset, locationVariance, velocityVariance, emitSpeed, particlesPerEmission, particleTTLVariance);
 	}
 	
 	@Override
@@ -53,6 +64,14 @@ public class Missile extends DynamicEntity implements Bullet{
 		this.rigidBody.getWorldTransform(trans);
 		trans.setRotation(new Quat4f(wat.x, wat.y, wat.z, wat.w));
 		this.rigidBody.setWorldTransform(trans);
+		
+		fire.update(timeStep);
+	}
+	
+	@Override
+	public void draw(){
+		super.draw();
+		fire.draw();
 	}
 
 	@Override

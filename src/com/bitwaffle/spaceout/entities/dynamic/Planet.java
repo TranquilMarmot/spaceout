@@ -107,7 +107,7 @@ public class Planet extends DynamicEntity implements Health{
 		Entities.addPassiveEntity(splode);
 		removeFlag = true;
 		
-		for(int i = 0; i < 30; i++){
+		for(int i = 0; i < 25; i++){
 			addRandomDiamond();
 		}
 	}

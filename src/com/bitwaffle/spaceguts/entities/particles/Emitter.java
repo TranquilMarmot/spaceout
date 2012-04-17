@@ -75,6 +75,7 @@ public class Emitter{
 		this.particlesPerEmission = particlesPerEmission;
 		this.particleTTLVariance = particleTTLVariance;
 		particles = new ArrayList<Particle>();
+		this.active = true;
 		
 		// seed with the time
 		randy = new Random(System.nanoTime());
