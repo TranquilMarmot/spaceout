@@ -66,7 +66,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	private Trail trail1, trail2;
 
 	/** to keep the button from being held down */
-	private boolean button0Down = false, boosting = false;
+	private boolean button0Down = false, button1Down = false, boosting = false;
 	
 	public DynamicEntity lockon = null;
 
@@ -117,15 +117,18 @@ public class Player extends DynamicEntity implements Health, Inventory{
 				// handle bullet shooting
 				if (MouseManager.button0 && !button0Down && !Console.consoleOn) {
 					button0Down = true;
-					//shootBullet();
-					if(lockon != null)
-						shootMissile();
+					shootBullet();
 				}
 				if (!MouseManager.button0)
 					button0Down = false;
 				
-				if(MouseManager.button1)
-					shootBullet();
+				if(MouseManager.button1 && !button1Down && !Console.consoleOn){
+					button1Down = true;
+					if(lockon != null)
+						shootMissile();
+				}
+				if(!MouseManager.button1)
+					button1Down = false;
 
 				// handle stopping
 				if (KeyBindings.CONTROL_STOP.isPressed())
@@ -168,6 +171,8 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		 *  Any pickups found from the sweep test are added to hits
 		 *  It is possible to do multiple tests and have them all add to the same list,
 		 *  but there's no guarantee that there won't be duplicates so be careful
+		 *  (Would be possible to get a list containing no duplicates if, say, a 
+		 *  hash map is used)
 		 */
 		ArrayList<Pickup> hits = new ArrayList<Pickup>();
 		ConvexResultCallback<Pickup> callback = new ConvexResultCallback<Pickup>(hits, CollisionTypes.PICKUP);

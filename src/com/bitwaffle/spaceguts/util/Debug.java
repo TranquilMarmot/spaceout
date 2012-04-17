@@ -256,7 +256,7 @@ public class Debug {
 			String lockon = "Locked on to: ";
 			if(Entities.player.lockon != null)
 				lockon += Entities.player.lockon.type;
-			font.drawString(200, 200, lockon);
+			font.drawString(200, 20, lockon);
 		}
 	}
 
