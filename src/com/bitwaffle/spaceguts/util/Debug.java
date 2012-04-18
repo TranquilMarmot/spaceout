@@ -278,7 +278,7 @@ public class Debug {
 					"QE - Roll\n" +
 					"Space - Ascend\n" + 
 					"Shift - Descend\n" + 
-					"F - Stop\n" + 
+					"F - Brake\n" + 
 					"Z - Boost\n" +
 					"B - Enter Build Mode\n" + 
 					"C - Change Camera Mode";

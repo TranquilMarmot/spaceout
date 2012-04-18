@@ -8,7 +8,7 @@ import javax.vecmath.Quat4f;
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceout.entities.dynamic.Missile;
-import com.bitwaffle.spaceout.interfaces.Bullet;
+import com.bitwaffle.spaceout.interfaces.Projectile;
 import com.bitwaffle.spaceout.interfaces.Health;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.narrowphase.ManifoldPoint;
@@ -91,12 +91,12 @@ public class DynamicEntityCallback extends InternalTickCallback {
 					DynamicEntity entA = (DynamicEntity) objA.getUserPointer();
 					DynamicEntity entB = (DynamicEntity) objB.getUserPointer();
 					
-					if(entA instanceof Bullet && entB instanceof Health){
-						bulletHealthCollision((Bullet) entA, (Health) entB);
+					if(entA instanceof Projectile && entB instanceof Health){
+						bulletHealthCollision((Projectile) entA, (Health) entB);
 						if(entA instanceof Missile)
 							entA.removeFlag = true;
-					} else if(entB instanceof Bullet && entA instanceof Health){
-						bulletHealthCollision((Bullet) entB, (Health) entA);
+					} else if(entB instanceof Projectile && entA instanceof Health){
+						bulletHealthCollision((Projectile) entB, (Health) entA);
 						if(entB instanceof Missile)
 							entB.removeFlag = true;
 					}
@@ -111,7 +111,7 @@ public class DynamicEntityCallback extends InternalTickCallback {
 		}
 	}
 	
-	private static void bulletHealthCollision(Bullet bullet, Health health){
+	private static void bulletHealthCollision(Projectile bullet, Health health){
 		if(bullet.getOwner() != health)
 			health.hurt(bullet.getDamage());
 	}

@@ -124,86 +124,25 @@ public class Player extends DynamicEntity implements Health, Inventory{
 				
 				if(MouseManager.button1 && !button1Down && !Console.consoleOn){
 					button1Down = true;
-					if(lockon != null)
-						shootMissile();
+					shootMissile();
 				}
 				if(!MouseManager.button1)
 					button1Down = false;
 
 				// handle stopping
 				if (KeyBindings.CONTROL_STOP.isPressed())
-					stop(timeStep);
+					brake(timeStep);
 				
 				checkForPickups();
 				lockOn();
 			}
 		}
 	}
-	
-	/**
-	 * Searches for things to lock on to
-	 */
-	private void lockOn(){
-		BoxShape box = new BoxShape(new javax.vecmath.Vector3f(5.0f, 5.0f, 5.0f));
-		
-		ArrayList<Planet> hits = new ArrayList<Planet>();
-		ConvexResultCallback<Planet> callback = new ConvexResultCallback<Planet>(hits, CollisionTypes.PLANET);
-		
-		Physics.convexSweepTest(this, new Vector3f(0.0f, 0.0f, 500.0f), box, callback);
-		
-		if(hits.size() > 0)
-			this.lockon = hits.get(0);
-		
-		if(lockon != null && lockon.removeFlag)
-			lockon = null;
-	}
-	
-	/**
-	 * Performs a convex sweep test in front of the player and sets any found pickups
-	 * to follow the player.
-	 */
-	private void checkForPickups(){
-		// we'll use a sphere for simplicity
-		SphereShape shape = new SphereShape(pickupSweepSize);
-		
-		/*
-		 *  See ConvexResultCallback class
-		 *  Any pickups found from the sweep test are added to hits
-		 *  It is possible to do multiple tests and have them all add to the same list,
-		 *  but there's no guarantee that there won't be duplicates so be careful
-		 *  (Would be possible to get a list containing no duplicates if, say, a 
-		 *  hash map is used)
-		 */
-		ArrayList<Pickup> hits = new ArrayList<Pickup>();
-		ConvexResultCallback<Pickup> callback = new ConvexResultCallback<Pickup>(hits, CollisionTypes.PICKUP);
-		
-		Physics.convexSweepTest(this, new Vector3f(0.0f, 0.0f, pickupSweepDistance), shape, callback);
-		
-		// make found pickups follow player
-		for(Pickup item : hits)
-				item.setFollowing(this, pickupDistance, backpack);
-	}
-	
-	/**
-	 * I'M RICH, BIATCH
-	 * @return how many diamonds the player has in inventory
-	 */
-	// FIXME this is probably temporary
-	public int howManyDiamonds(){
-		int num = 0;
-		
-		for(Pickup p : backpack.getItems()){
-			if(p.type.equals("Diamond"))
-				num++;
-		}
-		
-		return num;
-	}
 
 	/**
 	 * Gracefully stops the player
 	 */
-	private void stop(float timeStep) {
+	private void brake(float timeStep) {
 		javax.vecmath.Vector3f linearVelocity = new javax.vecmath.Vector3f(
 				0.0f, 0.0f, 0.0f);
 		rigidBody.getLinearVelocity(linearVelocity);
@@ -252,14 +191,14 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		Quaternion missileRotation = new Quaternion(this.rotation.x,
 				this.rotation.y, this.rotation.z, this.rotation.w);
 
-		// move the bullet to in front of the player
+		// move the missile to in front of the player
 		// FIXME this should be an offset from the center to represent the location of a gun or something
 		Vector3f missileMoveAmount = new Vector3f(0.0f, 0.0f, 10.0f);
 		missileMoveAmount = QuaternionHelper.rotateVectorByQuaternion(
 				missileMoveAmount, missileRotation);
 		Vector3f.add(missileLocation, missileMoveAmount, missileLocation);
 		
-		Missile miss = new Missile(missileLocation, missileRotation, lockon);
+		Missile miss = new Missile(missileLocation, missileRotation, lockon, 25.0f, 75.0f, 10.0f);
 
 		Entities.addDynamicEntity(miss);
 	}
@@ -411,6 +350,66 @@ public class Player extends DynamicEntity implements Health, Inventory{
 			trans.setRotation(thisquat);
 			this.rigidBody.setWorldTransform(trans);
 		}
+	}
+	
+	/**
+	 * Searches for things to lock on to
+	 */
+	private void lockOn(){
+		BoxShape box = new BoxShape(new javax.vecmath.Vector3f(5.0f, 5.0f, 5.0f));
+		
+		ArrayList<Planet> hits = new ArrayList<Planet>();
+		ConvexResultCallback<Planet> callback = new ConvexResultCallback<Planet>(hits, CollisionTypes.PLANET);
+		
+		Physics.convexSweepTest(this, new Vector3f(0.0f, 0.0f, 500.0f), box, callback);
+		
+		if(hits.size() > 0)
+			this.lockon = hits.get(0);
+		
+		if(lockon != null && lockon.removeFlag)
+			lockon = null;
+	}
+	
+	/**
+	 * Performs a convex sweep test in front of the player and sets any found pickups
+	 * to follow the player.
+	 */
+	private void checkForPickups(){
+		// we'll use a sphere for simplicity
+		SphereShape shape = new SphereShape(pickupSweepSize);
+		
+		/*
+		 *  See ConvexResultCallback class
+		 *  Any pickups found from the sweep test are added to hits
+		 *  It is possible to do multiple tests and have them all add to the same list,
+		 *  but there's no guarantee that there won't be duplicates so be careful
+		 *  (Would be possible to get a list containing no duplicates if, say, a 
+		 *  hash map is used)
+		 */
+		ArrayList<Pickup> hits = new ArrayList<Pickup>();
+		ConvexResultCallback<Pickup> callback = new ConvexResultCallback<Pickup>(hits, CollisionTypes.PICKUP);
+		
+		Physics.convexSweepTest(this, new Vector3f(0.0f, 0.0f, pickupSweepDistance), shape, callback);
+		
+		// make found pickups follow player
+		for(Pickup item : hits)
+				item.setFollowing(this, pickupDistance, backpack);
+	}
+	
+	/**
+	 * I'M RICH, BIATCH
+	 * @return how many diamonds the player has in inventory
+	 */
+	// FIXME this is probably temporary
+	public int howManyDiamonds(){
+		int num = 0;
+		
+		for(Pickup p : backpack.getItems()){
+			if(p.type.equals("Diamond"))
+				num++;
+		}
+		
+		return num;
 	}
 	
 	@Override

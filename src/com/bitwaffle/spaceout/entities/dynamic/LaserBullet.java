@@ -7,7 +7,7 @@ import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entity;
 import com.bitwaffle.spaceguts.physics.CollisionTypes;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
-import com.bitwaffle.spaceout.interfaces.Bullet;
+import com.bitwaffle.spaceout.interfaces.Projectile;
 import com.bitwaffle.spaceout.resources.Models;
 
 
@@ -17,7 +17,7 @@ import com.bitwaffle.spaceout.resources.Models;
  * @author TranquilMarmot
  * 
  */
-public class LaserBullet extends DynamicEntity implements Bullet{
+public class LaserBullet extends DynamicEntity implements Projectile{
 	final static short COL_GROUP = CollisionTypes.PROJECTILE;
 	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET);
 	

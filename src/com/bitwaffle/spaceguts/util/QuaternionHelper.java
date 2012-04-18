@@ -393,7 +393,7 @@ public class QuaternionHelper {
 		
 		float v1l = v1.length(), v2l = v2.length();
 		float dot = Vector3f.dot(v1, v2);
-		float angle = (float)Math.acos(dot / (v1l * v2l));
+		double angle = Math.acos(dot / (v1l * v2l));
 		Vector3f axis = new Vector3f();
 		Vector3f.cross(v1, v2, axis);
 		axis.normalise(axis);
@@ -407,8 +407,8 @@ public class QuaternionHelper {
 	 * @param angle Angle
 	 * @return Quaternion representing rotation
 	 */
-	public static Quaternion quaternionFromAxisAngle(Vector3f axis, float angle){
-		double halfAngle = (double)angle / 2;
+	public static Quaternion quaternionFromAxisAngle(Vector3f axis, double angle){
+		double halfAngle = angle / 2;
 		
 		float s = (float)Math.sin(halfAngle);
 		
