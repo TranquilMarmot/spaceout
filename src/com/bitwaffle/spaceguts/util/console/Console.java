@@ -155,6 +155,7 @@ public class Console {
 		ConsoleOutputStream out = new ConsoleOutputStream(this);
 		PrintStream stream = new PrintStream(out);
 		System.setOut(stream);
+		Debug.printSysInfo();
 	}
 
 	/**
@@ -198,7 +199,7 @@ public class Console {
 	 * @param s
 	 *            The string to print to the console
 	 */
-	public void print(String s) {
+	protected void print(String s) {
 		// Make the console text bright
 		this.wake();
 
@@ -292,7 +293,7 @@ public class Console {
 			// otherwise just add it to the text
 			else
 				// TODO give the player a name
-				print("<" + System.getProperty("user.name") + "> " + input);
+				System.out.println("<" + System.getProperty("user.name") + "> " + input);
 
 			// adds the input to the command history
 			if (!commandHistoryList.get(0).equals(""))
@@ -386,12 +387,12 @@ public class Console {
 					// this one line issues a command! Neat!
 					ConsoleCommands.valueOf(command).issue(toker);
 				} catch (NumberFormatException e) {
-					console.print("Incorrect number format "
+					System.out.println("Incorrect number format "
 							+ e.getLocalizedMessage().toLowerCase());
 				} catch (IllegalArgumentException e) {
-					console.print("Command not found! (" + command + ")");
+					System.out.println("Command not found! (" + command + ")");
 				} catch (NoSuchElementException e) {
-					console.print("Not enough vairbales for command '"
+					System.out.println("Not enough vairbales for command '"
 							+ command + "'!");
 				}
 			}
