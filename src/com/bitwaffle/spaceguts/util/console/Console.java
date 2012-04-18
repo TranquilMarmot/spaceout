@@ -292,7 +292,7 @@ public class Console {
 			// otherwise just add it to the text
 			else
 				// TODO give the player a name
-				print("<Player> " + input);
+				print("<" + System.getProperty("user.name") + "> " + input);
 
 			// adds the input to the command history
 			if (!commandHistoryList.get(0).equals(""))
@@ -402,7 +402,6 @@ public class Console {
 	 * Update the console
 	 */
 	public void update() {
-
 		// check for command
 		if (Console.commandOn) {
 			input = "/";
