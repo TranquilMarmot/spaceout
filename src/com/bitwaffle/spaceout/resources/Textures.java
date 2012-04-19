@@ -26,6 +26,8 @@ public enum Textures {
 	LASERBULLET("PNG", Paths.MODEL_PATH.path() + "laserbullet/laserbullet.png", false, GL11.GL_NEAREST),
 	SAUCER("PNG", Paths.SHIPS_PATH.path() + "saucer/saucer.png", false, GL11.GL_NEAREST),
 	WESCOTT("PNG", Paths.SHIPS_PATH.path() + "wescott-8-beta/wescott-8-beta.png", false, GL11.GL_NEAREST),
+	DIAMOND("PNG", Paths.MODEL_PATH.path() + "diamond/diamond.png", false, GL11.GL_NEAREST),
+	MISSILE("PNG", Paths.MODEL_PATH.path() + "missile/missile.png", false, GL11.GL_NEAREST),
 	
 	// Planets
 	EARTH ("JPG", Paths.TEXTURE_PATH.path() + "planets/earth.jpg", true, GL11.GL_LINEAR),
@@ -40,6 +42,7 @@ public enum Textures {
 	
 	// GUI
 	CROSSHAIR("PNG", Paths.CROSSHAIR_PATH.path(), true, GL11.GL_NEAREST),
+	TARGET("PNG", Paths.TARGET_PATH.path(), false, GL11.GL_NEAREST),
 	MENU_BACKGROUND1("JPG", Paths.BACKGROUND_IMAGE_PATH.path() + "apod1.jpg", false, GL11.GL_NEAREST),
 	MENU_BACKGROUND2("JPG", Paths.BACKGROUND_IMAGE_PATH.path() + "apod2.jpg", false, GL11.GL_NEAREST),
 	MENU_SPACEOUT_TEXT("PNG", Paths.MENU_IMAGE_PATH.path() + "spaceout.png", false, GL11.GL_NEAREST),

@@ -6,7 +6,7 @@ import com.bitwaffle.spaceguts.entities.Entity;
  * Interface for a bullet (anything that does damage)
  * @author TranquilMarmot
  */
-public interface Bullet {
+public interface Projectile {
 	/**
 	 * How much damage does this bullet do when it hits something?
 	 * @return Amount of damage to do

@@ -35,10 +35,10 @@ public class Ship{
 	private Vector3f boostSpeed;
 	/** How fast the ship can go */
 	private float topSpeed;
-	/** How fast the ship can staiblize/stop */
-	private float stabilizationSpeed, stopSpeed;
-	/** How fast the ship can turn */ //TODO these should be controlled by the ship's thrusters
-	private float rollSpeed, xTurnSpeed, yTurnSpeed;
+	/** How fast the ship can stop */
+	private float stopSpeed;
+	/** How fast the ship can turn */
+	private float rollSpeed, turnSpeed;
 	
 	/**
 	 * Create a ship object
@@ -55,7 +55,7 @@ public class Ship{
 	 * @param xTurnSpeed How fast the ship turns about its x axis
 	 * @param yTurnSpeed How fast the ship turns about its y axis
 	 */
-	public Ship(String name, Models model, int health, float mass, float restitution, Vector3f accelerationSpeed, Vector3f boostSpeed, float topSpeed, float stabilizationSpeed, float stopSpeed, float rollSpeed, float xTurnSpeed, float yTurnSpeed){
+	public Ship(String name, Models model, int health, float mass, float restitution, Vector3f accelerationSpeed, Vector3f boostSpeed, float topSpeed, float stopSpeed, float rollSpeed, float turnSpeed){
 		this.name = name;
 		this.model = model;
 		this.health = health;
@@ -64,11 +64,9 @@ public class Ship{
 		this.accelerationSpeed = accelerationSpeed;
 		this.boostSpeed = boostSpeed;
 		this.topSpeed = topSpeed;
-		this.stabilizationSpeed = stabilizationSpeed;
 		this.stopSpeed = stopSpeed;
 		this.rollSpeed = rollSpeed;
-		this.xTurnSpeed = xTurnSpeed;
-		this.yTurnSpeed = yTurnSpeed;
+		this.turnSpeed = turnSpeed;
 	}
 	
 	public Models getModel(){ return model; }
@@ -79,9 +77,7 @@ public class Ship{
 	public Vector3f getAccelerationSpeed(){ return accelerationSpeed; }
 	public Vector3f getBoostSpeed(){ return boostSpeed; }
 	public float getTopSpeed(){ return topSpeed; }
-	public float getStabilizationSpeed(){ return stabilizationSpeed; }
 	public float getStopSpeed(){ return stopSpeed; }
 	public float getRollSpeed(){ return rollSpeed; }
-	public float getXTurnSpeed(){ return xTurnSpeed; }
-	public float getYTurnSpeed(){ return yTurnSpeed; }
+	public float getTurnSpeed(){ return turnSpeed; }
 }

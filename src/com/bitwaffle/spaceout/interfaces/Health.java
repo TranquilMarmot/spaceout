@@ -13,7 +13,7 @@ public interface Health {
 	
 	/**
 	 * Hurt the entity
-	 * @param amount The amount to hurt the entity by (i.e. from {@link Bullet}.getDamage())
+	 * @param amount The amount to hurt the entity by (i.e. from {@link Projectile}.getDamage())
 	 */
 	public void hurt(int amount);
 	

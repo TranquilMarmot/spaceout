@@ -2,6 +2,8 @@ package com.bitwaffle.spaceguts.util;
 
 import java.nio.FloatBuffer;
 
+import javax.vecmath.Quat4f;
+
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
@@ -9,6 +11,13 @@ import org.lwjgl.util.vector.Vector3f;
 public class QuaternionHelper {
 	final static float PIOVER180 = ((float) Math.PI) / 180.0f;
 
+	/**
+	 * Converts angles to a quaternion
+	 * @param pitch X axis rotation
+	 * @param yaw Y axis rotation
+	 * @param roll Z axis rotation
+	 * @return Quaternion representing angles
+	 */
 	public static Quaternion getQuaternionFromAngles(float pitch, float yaw,
 			float roll) {
 		Quaternion quat;
@@ -36,7 +45,11 @@ public class QuaternionHelper {
 		return retQuat;
 	}
 
-	// not sure if this one works properly
+	/**
+	 * Not sure if this works
+	 * @param quat Quaternion to convert
+	 * @return float array with 4 elements- x, y, z, and angle
+	 */
 	public static float[] convertToAxisAngle(Quaternion quat) {
 		float scale = (float) Math
 				.sqrt(((quat.x * quat.x) + (quat.y * quat.y) + (quat.z * quat.z)));
@@ -127,6 +140,52 @@ public class QuaternionHelper {
 
 		return new Vector3f(resQuat.x, resQuat.y, resQuat.z);
 	}
+	
+	/**
+	 * Rotates a vector by a quaternion
+	 * 
+	 * @param vector
+	 *            The vector to rotate
+	 * @param quat
+	 *            The quaternion to rotate the vector by
+	 * @return Rotate vector
+	 */
+	public static Vector3f rotateVectorByQuaternion(javax.vecmath.Vector3f vector,
+			Quaternion quat) {
+		Quaternion vecQuat = new Quaternion(vector.x, vector.y, vector.z, 0.0f);
+
+		Quaternion quatNegate = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		quat.negate(quatNegate);
+
+		Quaternion resQuat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		Quaternion.mul(vecQuat, quatNegate, resQuat);
+		Quaternion.mul(quat, resQuat, resQuat);
+
+		return new Vector3f(resQuat.x, resQuat.y, resQuat.z);
+	}
+	
+	/**
+	 * Rotates a vector by a quaternion
+	 * 
+	 * @param vector
+	 *            The vector to rotate
+	 * @param quat
+	 *            The quaternion to rotate the vector by
+	 * @return Rotate vector
+	 */
+	public static Vector3f rotateVectorByQuaternion(javax.vecmath.Vector3f vector,
+			Quat4f quat) {
+		Quaternion vecQuat = new Quaternion(vector.x, vector.y, vector.z, 0.0f);
+
+		Quat4f quatNegate = new Quat4f(0.0f, 0.0f, 0.0f, 1.0f);
+		quat.negate(quatNegate);
+
+		Quaternion resQuat = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		Quaternion.mul(vecQuat, new Quaternion(quatNegate.x, quatNegate.y, quatNegate.z, quatNegate.w), resQuat);
+		Quaternion.mul(new Quaternion(quat.x, quat.y, quat.z, quat.w), resQuat, resQuat);
+
+		return new Vector3f(resQuat.x, resQuat.y, resQuat.z);
+	}
 
 	/**
 	 * Converts a quaternion to good ol' euler angles
@@ -154,6 +213,12 @@ public class QuaternionHelper {
 		return new Vector3f(x, y, z);
 	}
 	
+	/**
+	 * Rotate a quaternion by a vector
+	 * @param quat Quaternion to rotate
+	 * @param amount Amount to rotate quaternion by
+	 * @return Rotated quaternion
+	 */
 	public static Quaternion rotate(Quaternion quat, Vector3f amount){
 		Quaternion ret = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		
@@ -272,6 +337,11 @@ public class QuaternionHelper {
 		return ret;
 	}
 	
+	/**
+	 * Converts a quaternion to a rotation matrix
+	 * @param quat Quaternion to convert
+	 * @return Rotation matrix representing given quaternion
+	 */
 	public static Matrix4f toMatrix(Quaternion quat){
 		float x2 = quat.x * quat.x;
 		float y2 = quat.y * quat.y;
@@ -307,5 +377,46 @@ public class QuaternionHelper {
 		ret.m33 = (1.0f);
 		
 		return ret;
+	}
+	
+	/**
+	 * Finds the quaternion between two vectors. Assumes that the vectors are NOT unit length.
+	 * @param vec1 First vector
+	 * @param vec2 Second vector
+	 * @return Quaternion between vectors
+	 */
+	public static Quaternion quaternionBetweenVectors(Vector3f vec1, Vector3f vec2){
+		Vector3f c = new Vector3f();
+		Vector3f.cross(vec1, vec2, c);
+		
+		double v1squr = (double)vec1.lengthSquared();
+		double v2squr = (double)vec2.lengthSquared();
+		double angle = Math.sqrt(v1squr * v2squr) + (double)Vector3f.dot(vec1, vec2);
+		
+		Quaternion q = new Quaternion(c.x, c.y, c.z, (float) angle);
+		q.normalise(q);
+		return q;
+	}
+	
+	/**
+	 * Converts an axis and an angle to a quaternion
+	 * @param axis Axis
+	 * @param angle Angle
+	 * @return Quaternion representing rotation
+	 */
+	public static Quaternion quaternionFromAxisAngle(Vector3f axis, double angle){
+		if(Math.abs(angle) < 1e-6)
+			return new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		
+		double halfAngle = angle * 0.5;
+		
+		float s = (float)Math.sin(halfAngle);
+		
+		float x = axis.x * s;
+		float y = axis.y * s;
+		float z = axis.z * s;
+		float w = (float)Math.cos(halfAngle);
+		
+		return new Quaternion(x, y, z, w);
 	}
 }

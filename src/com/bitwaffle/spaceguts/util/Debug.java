@@ -232,12 +232,13 @@ public class Debug {
 
 				javax.vecmath.Vector3f linear = new javax.vecmath.Vector3f();
 				Entities.player.rigidBody.getLinearVelocity(linear);
-				float xSpeed = (linear.x * 100.0f) / 1000.0f;
-				float ySpeed = (linear.y * 100.0f) / 1000.0f;
-				float zSpeed = (linear.z * 100.0f) / 1000.0f;
+				
+				float speed = linear.length();
+				if(speed < 0.05f)
+					speed = 0.0f;
+				
 				font.drawString(DisplayHelper.windowWidth - 125,
-						DisplayHelper.windowHeight - 75, xSpeed + "\n" + ySpeed
-								+ "\n" + zSpeed);
+						DisplayHelper.windowHeight - 20, "Speed: " + Float.toString(speed));
 			}
 		}
 
@@ -248,6 +249,15 @@ public class Debug {
 		String fpsString = currentFPS + " fps";
 		font.drawString(DisplayHelper.windowWidth - font.getWidth(fpsString) - 2, font.getDescent() + 16,
 				currentFPS + " fps");
+		
+		drawControls();
+		
+		if(Entities.player != null){
+			String lockon = "Locked on to: ";
+			if(Entities.player.lockon != null)
+				lockon += Entities.player.lockon.type;
+			font.drawString(200, 20, lockon);
+		}
 	}
 
 	/**
@@ -257,6 +267,36 @@ public class Debug {
 		// draw what version of Spaceout this is
 		font.drawString(DisplayHelper.windowWidth - font.getWidth(Runner.VERSION) - 3, font.getDescent() - 4,
 				Runner.VERSION);
+	}
+	
+	private static void drawControls(){
+		String controls;
+		
+		if(Entities.camera != null && !Entities.camera.buildMode){
+			controls = 
+					"WASD - Accelerate\n" +
+					"QE - Roll\n" +
+					"Space - Ascend\n" + 
+					"Shift - Descend\n" + 
+					"F - Brake\n" + 
+					"Z - Boost\n" +
+					"B - Enter Build Mode\n" + 
+					"C - Change Camera Mode";
+		} else{
+			controls = 
+					"WASD - Move\n" +
+					"QE - Roll\n" +
+					"Space - Ascend\n" +
+					"Shift - Descend\n" +
+					"MouseWheel - Change Speed\n" +
+					"Tab - Open Builder Menu\n" +
+					"P - Add Random Planets\n" +
+					"O - Add Random Diamonds\n" +
+					"B - Exit Build Mode";
+			
+		}
+		
+		font.drawString(DisplayHelper.windowWidth - 220, DisplayHelper.windowHeight - font.getHeight(controls) - 20, controls);
 	}
 
 	/**

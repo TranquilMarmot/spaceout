@@ -48,6 +48,8 @@ public enum ConsoleCommands {
 	q(new QuitCommand()),
 	exit(new QuitCommand()),
 	
+	diamonds(new HowManyDiamonds()),
+	
 	warp(new WarpCommand());
 
 	
@@ -417,4 +419,21 @@ class WarpCommand implements Command{
 	public void help(){
 		Console.console.print("Warp command temporarily broken :(");
 	}
+}
+
+/**
+ * 
+ * @author TranquilMarmot
+ */
+class HowManyDiamonds implements Command{
+	@Override
+	public void issue(StringTokenizer toker) {
+		Console.console.print("You have collected " + Entities.player.howManyDiamonds() + " diamonds");
+	}
+
+	@Override
+	public void help() {
+		Console.console.print("Tells you how many diamonds you've collected");
+	}
+	
 }

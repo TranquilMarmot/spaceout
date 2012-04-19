@@ -1,6 +1,7 @@
 package com.bitwaffle.spaceguts.graphics.render;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.util.glu.GLU;
 
 import com.bitwaffle.spaceguts.entities.Entities;
@@ -40,8 +41,13 @@ public class Graphics {
 	public static void initGL(){
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
 		
+		// enable depth testing
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
+		
+		// enable multisampling
+		GL11.glEnable(GL13.GL_MULTISAMPLE);
+		
 		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
 		GL11.glClearDepth(1.0f);
 		

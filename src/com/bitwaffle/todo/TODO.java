@@ -10,11 +10,8 @@
  * 			TODO Add a thing to the Physics Debug that also draws an arrow representing the current speed (first point is entity origin, second is origin+linear velocity)
  * 			TODO Give things thrusters
  * 			TODO Figure out how to warp things
- * 			TODO Figure out how to get a ship to reorient itself to start going in a new direction when the direction it's facing is changed
- * 			TODO Third person ship controls like Halo- you look where you want to go and the ship turns towards it	
  * 			TODO Explosions! Use a sphere to see what objects are inside of the explosion and apply impulse accordingly
  * 			TODO Turrets (pivoting on joints)
- * 			TODO Maybe things shouldn't just float/spin forever (reduce velocities verrrrry slowly)
  * 			TODO Machine gun that just sends out ray tests for bullets (end point for the ray tests should be randomly varied by small amounts based on how long the gun is being shot)
  * OpenAL
  * 			TODO Decide on a format for sound files (wav? ogg?)
@@ -70,11 +67,8 @@
  * 			TODO Have key configuration load from XML on startup
  * 		Builder
  * 			TODO Make a CameraMode class that keeps track of things like max zoom, min zoom, offsets, etc (then it will just be set whenever the mode is switched! Make a CameraModes enum)
- * 			TODO Give the camera an object in the physics world so it bumps into things (figure out how to get it to collide, but not effect other things when it hits them) - might require a lot of fiddling with things!
- * 			TODO Make the crosshair behave differently when it's grabbing things (i.e. make it an open hand and when you grab something it changes)
  * 			TODO Make the item at the crosshair glow with an outline, like in Left 4 Dead (this will require writing a new shader)
  * 			TODO Make grabbed entitities gravitate to the cursor
- * 			TODO Make a menu for placing new entities (SPACEBAR while in free mode)
  *			TODO Make a model importer that takes in an obj file and lets you edit the mtl file and see how it would look in-game (look into blender plugins)
  *		Launcher
  *			TODO If the program can't get write access to the home directory, have it ask the user where to save the game to (rather than having it be passed in via args)

@@ -17,6 +17,7 @@ import com.bitwaffle.spaceguts.util.DisplayHelper;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.resources.Textures;
+import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.dispatch.CollisionWorld.ClosestRayResultCallback;
 import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.linearmath.Transform;
@@ -90,23 +91,22 @@ public class Camera extends DynamicEntity {
 	 * Camera constructor
 	 */
 	public Camera() {
-		// FIXME The camera can interfere with stuff, which shouldn't be the case (ideally, it would ignore everything except what it's bumping into)
-		super(new Vector3f(0.0f, 0.0f, 0.0f), new Quaternion(0.0f, 0.0f, 0.0f, 1.0f), new SphereShape(10.0f), 0.0001f, 0.01f, CollisionTypes.NOTHING, (short)-1);
+		super(new Vector3f(0.0f, 0.0f, 0.0f), new Quaternion(0.0f, 0.0f, 0.0f, 1.0f), new SphereShape(10.0f), 0.0001f, 0.01f, CollisionTypes.NOTHING, CollisionTypes.EVERYTHING);
 		this.zoom = INIT_ZOOM;
 		this.yOffset = INIT_YOFFSET;
 		this.xOffset = INIT_XOFFSET;
 		rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		this.type = "camera";
 		builder = new Builder(this);
+		
+		this.rigidBody.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 	}
 
 	/**
 	 * Update the camera. This handles following other things, mode switches etc.
 	 */
 	public void update(float timeStep) {
-		// make sure the rigid body is active
-		if(!this.rigidBody.isActive())
-			this.rigidBody.activate();
+		this.rigidBody.applyDamping(100.0f);
 		
 		// get the rigid body's tranform
 		Transform trans = new Transform();
@@ -135,27 +135,14 @@ public class Camera extends DynamicEntity {
 		// check for any key presses
 		checkForModeSwitch();
 		
-		if(!builder.rightGrabbed){
-			float dz = 0.0f;
-			// roll left/right
-			boolean rollRight = KeyBindings.CONTROL_ROLL_RIGHT.isPressed();
-			boolean rollLeft = KeyBindings.CONTROL_ROLL_LEFT.isPressed();
-			if (rollRight)
-				dz = -timeStep * rollSpeed;
-			if (rollLeft)
-				dz = timeStep * rollSpeed;
-			
-			// apply any rotation changes
-			this.rotation = QuaternionHelper.rotate(this.rotation, new Vector3f(MouseManager.dy, MouseManager.dx, dz));
-			// update rigid body transform
-			trans.setRotation(new Quat4f(rotation.x, rotation.y, rotation.z, rotation.w));
-		}
+		// only look around if the builder isn't rotating something
+		if(!builder.rightGrabbed)
+			lookLogic(timeStep, trans);
 
 		// if we're not in free mode, move the camera to be behind whatever it's
 		// following
 		if (!freeMode) {
 			this.location.set(following.location);
-			
 			trans.origin.set(location.x, location.y, location.z);
 		} else if (freeMode && !vanityMode) {
 			// else do logic for moving around in free mode
@@ -163,6 +150,27 @@ public class Camera extends DynamicEntity {
 		}
 		
 		this.rigidBody.setWorldTransform(trans);
+	}
+	
+	/**
+	 * Changes where the camera is looking based on mouse movement/keyboard input
+	 * @param timeStep Time since last update
+	 * @param trans Transform to modify
+	 */
+	private void lookLogic(float timeStep, Transform trans){
+		// roll left/right
+		float dz = 0.0f;
+		boolean rollRight = KeyBindings.CONTROL_ROLL_RIGHT.isPressed();
+		boolean rollLeft = KeyBindings.CONTROL_ROLL_LEFT.isPressed();
+		if (rollRight)
+			dz = timeStep * -rollSpeed;
+		if (rollLeft)
+			dz = timeStep * rollSpeed;
+		
+		// apply any rotation changes
+		this.rotation = QuaternionHelper.rotate(this.rotation, new Vector3f(MouseManager.dy, MouseManager.dx, dz));
+		// update rigid body transform
+		trans.setRotation(new Quat4f(rotation.x, rotation.y, rotation.z, rotation.w));
 	}
 
 	/**
@@ -232,7 +240,8 @@ public class Camera extends DynamicEntity {
 					
 					// save the camera's location and move it back a bit
 					oldLocation.set(location);
-					Vector3f.add(this.location, QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, -25.0f), this.rotation), this.location);
+					
+					Vector3f.add(this.location, QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, -50.0f), this.rotation), this.location);
 					
 					Transform trans = new Transform();
 					this.rigidBody.getWorldTransform(trans);
@@ -255,6 +264,11 @@ public class Camera extends DynamicEntity {
 					
 					// re-set the location
 					location.set(oldLocation);
+					
+					Transform trans = new Transform();
+					this.rigidBody.getWorldTransform(trans);
+					trans.origin.set(location.x, location.y, location.z);
+					this.rigidBody.setWorldTransform(trans);
 				}
 			}
 		} else{
@@ -299,6 +313,7 @@ public class Camera extends DynamicEntity {
 	 * 
 	 * @param timeStep
 	 *            Amount of time passed since last update
+	 * @param trans Transform to modify
 	 */
 	private void freeMode(float timeStep, Transform trans) {
 		timeStep *= 100;

@@ -2,7 +2,6 @@ package com.bitwaffle.spaceguts.entities.particles.trail;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.LinkedList;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -22,18 +21,20 @@ public class TrailRenderer {
 	private int vaoHandle, numIndices;
 	
 	/** The trail we're rendering */
-	private LinkedList<TrailLink> chain;
+	private Trail trail;
 	
 	/** Handles for vertex buffer objects */
 	IntBuffer vboHandles;
 	
 	private Textures texture;
 	
+	private FloatBuffer vertBuf, normBuf, texBuf;
+	
 	/**
 	 * @param trail Trail to render with this renderer
 	 */
-	public TrailRenderer(LinkedList<TrailLink> chain, Textures texture){
-		this.chain = chain;
+	public TrailRenderer(Trail trail, Textures texture){
+		this.trail = trail;
 		this.texture = texture;
 		initVBO();
 	}
@@ -42,18 +43,14 @@ public class TrailRenderer {
 	 * Updates the vertex arrays to contain the most recent trail data
 	 */
 	public void updateVBO(){
-		// set number of links/indices
-		int numLinks = chain.size();
-		numIndices = (numLinks * 2) + 2;
-		
-		// buffers for sending data
-		FloatBuffer vertBuf = BufferUtils.createFloatBuffer(numIndices * 3);
-		FloatBuffer normBuf = BufferUtils.createFloatBuffer(numIndices * 3);
-		FloatBuffer texBuf = BufferUtils.createFloatBuffer(numIndices * 2);
+		// clear buffers
+		vertBuf.clear();
+		normBuf.clear();
+		texBuf.clear();
 		
 		// iterate through every link
-		for(int i = 0; i < numLinks; i++){
-			TrailLink link = chain.get(i);
+		for(int i = 0; i < trail.chain.size(); i++){
+			TrailLink link = trail.chain.get(i);
 			
 			vertBuf.put(link.top.x);
 			vertBuf.put(link.top.y);
@@ -98,19 +95,17 @@ public class TrailRenderer {
 	}
 	
 	public void initVBO(){
-		int numLinks = chain.size();
-		
 		// 2 indices for the first link, and 2 for every link after
-		numIndices = (numLinks * 2) + 2;
+		numIndices = (trail.length * 2) + 2;
 		
 		// 3 vertices per index, unless it's a texture coordinate
-		FloatBuffer vertBuf = BufferUtils.createFloatBuffer(numIndices * 3);
-		FloatBuffer normBuf = BufferUtils.createFloatBuffer(numIndices * 3);
-		FloatBuffer texBuf = BufferUtils.createFloatBuffer(numIndices * 2);
+		vertBuf = BufferUtils.createFloatBuffer(numIndices * 3);
+		normBuf = BufferUtils.createFloatBuffer(numIndices * 3);
+		texBuf = BufferUtils.createFloatBuffer(numIndices * 2);
 		
 		// iterate through every link
-		for(int i = 0; i < numLinks; i++){
-			TrailLink link = chain.get(i);
+		for(int i = 0; i < trail.chain.size(); i++){
+			TrailLink link = trail.chain.get(i);
 			
 			vertBuf.put(link.top.x);
 			vertBuf.put(link.top.y);

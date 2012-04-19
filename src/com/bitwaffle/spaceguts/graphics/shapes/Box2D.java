@@ -24,16 +24,19 @@ public class Box2D {
 		Vector3f[] vertices = new Vector3f[4];
 		Point2f[] texCoords = new Point2f[4];
 		
-		vertices[0] = new Vector3f(0.0f, 0.0f, 0.0f);
+		width = width / 2;
+		height = height /2;
+		
+		vertices[0] = new Vector3f(-width, -height, 0.0f);
 		texCoords[0] = new Point2f(0.0f, 0.0f);
 		
-		vertices[1] = new Vector3f(width, 0.0f, 0.0f);
+		vertices[1] = new Vector3f(width, -height, 0.0f);
 		texCoords[1] = new Point2f(texture.getWidth(), 0.0f);
 		
 		vertices[2] = new Vector3f(width, height, 0.0f);
 		texCoords[2] = new Point2f(texture.getWidth(), texture.getHeight());
 		
-		vertices[3] = new Vector3f(0.0f, height, 0.0f);
+		vertices[3] = new Vector3f(-width, height, 0.0f);
 		texCoords[3] = new Point2f(0.0f, texture.getHeight());
 		
 		FloatBuffer vertBuf = BufferUtils.createFloatBuffer(12);

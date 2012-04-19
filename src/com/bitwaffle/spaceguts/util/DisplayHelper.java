@@ -15,6 +15,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.PixelFormat;
 
 import com.bitwaffle.spaceguts.input.KeyBindings;
 
@@ -26,6 +27,9 @@ import com.bitwaffle.spaceguts.input.KeyBindings;
  */
 public class DisplayHelper {
 	private static final String ICON_PATH = "res/images/";
+	
+	/** How many samples to use for multisample anti-aliasing */
+	public static final int MSAA_SAMPLES = 4;
 	
 	/**
 	 * these change whenever the screen size is changed. The values that they
@@ -116,7 +120,16 @@ public class DisplayHelper {
 					MIN_WINDOW_HEIGHT));
 			frame.pack();
 			frame.setVisible(true);
-			Display.create();
+			
+			// for creating a display with multisampling
+			PixelFormat pf = new PixelFormat().withSamples(MSAA_SAMPLES);
+			
+			try{
+				Display.create(pf);
+			} catch(LWJGLException e){
+				System.out.println("Couldn't initialize display with " + MSAA_SAMPLES + "x MSAA, initializing with no anti-aliasing instead");
+				Display.create();
+			}
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}

@@ -14,6 +14,7 @@ public enum Paths {
 	PARTICLE_IMAGE_PATH("res/images/particles/"),
 	
 	CROSSHAIR_PATH("res/images/gui/crosshair.png"),
+	TARGET_PATH("res/images/gui/target.png"),
 	BUILDER_IMAGE_PATH("res/images/gui/Builder/"),
 	
 	TEXTURE_PATH("res/images/textures/"),

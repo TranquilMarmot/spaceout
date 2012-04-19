@@ -6,10 +6,10 @@ To make spaceout.jar:
 - Inside of the 'spaceout' folder, select the checkbox next to 'src'.
   Make sure it's the only checkbox selected!
   
-- De-select the 'launcher' package inside of 'src'
+- De-select the 'com.bitwaffle.launcher' package inside of 'src' (Optional, but recommended - no reason for the code to be in there)
 
-- Browse for where you want to export the jar (should be $HOME/.spaceout in Linux or /Users/[you]/.spaceout in Windows)
-   Make sure it's named 'spaceout.jar'!
+- Browse for where you want to export the jar (should be $HOME/.spaceout in Linux or /Users/[you]/.spaceout in Windows - it needs to be in the same folder as )
+  Make sure it's named 'spaceout.jar'!
    
 - Click 'Next' and then 'Next' again
 
@@ -19,8 +19,7 @@ To make spaceout.jar:
 
 - Click 'Finish' and you should have your jar!
 
-
-
+---------------------------------------------------------------------------------------------------------
 
 To make the launcher jar:
 - In Eclipse, go to File -> Export
@@ -28,7 +27,7 @@ To make the launcher jar:
 - Under 'Java', select 'JAR File'
 
 - Inside of the 'spaceout' folder there's a 'src' folder
-  Inside of the 'src' folder, select just the 'launcher' package
+  Inside of the 'src' folder, select just the 'com.bitwaffle.launcher' package
   Make sure it's the only checkbox selected!
   
 - Browse for where you want to export the jar

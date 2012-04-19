@@ -3,15 +3,19 @@ package com.bitwaffle.spaceguts.physics;
 
 import javax.vecmath.Vector3f;
 
-
+import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.input.KeyBindings;
+import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
 import com.bulletphysics.collision.dispatch.CollisionDispatcher;
+import com.bulletphysics.collision.dispatch.CollisionWorld;
 import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
+import com.bulletphysics.collision.shapes.ConvexShape;
 import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.bulletphysics.linearmath.Clock;
+import com.bulletphysics.linearmath.Transform;
 
 
 /**
@@ -108,5 +112,18 @@ public class Physics {
 		float delta = clock.getTimeMicroseconds();
 		clock.reset();
 		return delta;
+	}
+	
+	public static void convexSweepTest(DynamicEntity origin, org.lwjgl.util.vector.Vector3f distance, ConvexShape shape, CollisionWorld.ConvexResultCallback callback){
+		// grab current world transform
+		Transform from = new Transform(), to = new Transform();
+		origin.rigidBody.getWorldTransform(to);
+		origin.rigidBody.getWorldTransform(from);
+		
+		// set 'to' transform to be in front of the player
+		org.lwjgl.util.vector.Vector3f forward = QuaternionHelper.rotateVectorByQuaternion(distance, origin.rotation);
+		from.origin.add(new javax.vecmath.Vector3f(forward.x, forward.y, forward.z));
+		
+		dynamicsWorld.convexSweepTest(shape, to, from, callback);	
 	}
 }

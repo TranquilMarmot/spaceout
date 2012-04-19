@@ -2,6 +2,7 @@ package com.bitwaffle.spaceguts.util;
 
 import java.util.Random;
 
+import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
@@ -37,7 +38,7 @@ import com.bitwaffle.spaceout.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.77";
+	public static final String VERSION = "0.0.77.6.7";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
@@ -84,7 +85,11 @@ public class Runner {
 			shutdown();
 		} catch (Exception e) {
 			// if an exception is caught, destroy the display and the frame
-			//shutdown();
+			shutdown();
+			
+			// TODO this should really bring up an error notification in the game rather than just dying
+			// throw an alert window to let the user know what happened
+			Sys.alert("Oh great, what now...", "Spaceout has crashed!\n\n" + e.getLocalizedMessage());
 			e.printStackTrace();
 		}
 	}
@@ -120,6 +125,7 @@ public class Runner {
 		ResourceLoader.addJob(Models.WESCOTT);
 		ResourceLoader.addJob(Models.SAUCER);
 		ResourceLoader.addJob(Models.SKYBOX);
+		ResourceLoader.addJob(Models.DIAMOND);
 		ResourceLoader.addJob(Textures.MENU_PICKER_ACTIVE);
 		ResourceLoader.addJob(Textures.MENU_PICKER_MOUSEOVER);
 		ResourceLoader.addJob(Textures.MENU_PICKER_SELECTED);
@@ -167,12 +173,8 @@ public class Runner {
 	 * Checks whether or not the game's paused boolean needs to be flipped
 	 */
 	private void pauseLogic() {
-		// if pauseDown is true, it means that the pause button is being
-		// held,
-		// so it avoids repeatedly flipping paused when the key is held
-		if (KeyBindings.SYS_PAUSE.pressedOnce()) {
+		if (KeyBindings.SYS_PAUSE.pressedOnce())
 			paused = !paused;
-		}
 
 		// release the mouse if the game's paused or the console is on or the
 		// menu is up
@@ -186,9 +188,10 @@ public class Runner {
 	 * To be called when the game is quit
 	 */
 	private void shutdown() {
+		System.out.println(goodbye());
+		Mouse.setGrabbed(false);
 		Display.destroy();
 		DisplayHelper.frame.dispose();
-		System.out.println(goodbye());
 	}
 	
 	/**
@@ -196,11 +199,13 @@ public class Runner {
 	 * @return None of your business
 	 */
 	private String goodbye(){
-		String[] shutdown = { "Goodbye, world...", "Goodbye, cruel world...", "See ya...", "Later...", "Buh-bye...", "Thank you, come again!...",
-				"Until Next Time...", "¡Adios, Amigo!...", "Game Over, Man! Game Over!!!...", "And So, I Bid You Adieu...", "So Long, And Thanks For All The Fish...",
-				"Ciao...", "Y'all Come Back Now, Ya Hear?...", "Catch You Later!...", "Mahalo And Aloha...", "Sayonara...", "Thanks For Playing!...",
-				"Auf Wiedersehen...", "Yo Homes, Smell Ya Later!... (Looked Up At My Kingdom, I Was Finally There, To Sit On My Throne As The Prince Of Bel-air)",
-				"Shop Smart, Shop S-Mart!...", "Good Night, And Good Luck!..."};
+		String[] shutdown = { "Goodbye, world!...", "Goodbye, cruel world!...", "See ya!...", "Later!...", "Buh-bye!...", "Thank you, come again!...",
+				"Until Next Time!...", "¡Adios, Amigo!...", "Game Over, Man! Game Over!!!...", "And So, I Bid You Adieu!...", "So Long, And Thanks For All The Fish!...",
+				"¡Ciao!...", "Y'all Come Back Now, Ya Hear?...", "Catch You Later!...", "Mahalo And Aloha!...", "Sayonara!...", "Thanks For Playing!...",
+				"Auf Wiedersehen!...", "Yo Homes, Smell Ya Later!... (Looked Up At My Kingdom, I Was Finally There, To Sit On My Throne As The Prince Of Bel-air)",
+				"Shop Smart, Shop S-Mart!...", "Good Night, And Good Luck!...", "Remember, I'm Pulling For You. We're All In This Together!...", "Keep Your Stick On The Ice!...",
+				"Omnia Extares!...", "C'est la vie!...", "See you on the flip side!...", "Toodle-oo!...", "Ta ta (For Now)!...", "¡Hasta La Vista, Baby!...",
+				"Komapsumnida!...", "...!olleH", "Live Long And Prosper!...", "Cheerio!...", "Shalom!...", "Peace Out!...", "Arrivederci!..."};
 		
 		return shutdown[new Random().nextInt(shutdown.length)];
 	}

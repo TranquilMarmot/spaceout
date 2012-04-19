@@ -8,7 +8,7 @@ Quickly set up a Spaceout project with Git and Eclipse!
  
  - Now, do 'git clone git@bitbucket.org:bitwaffle/spaceout.git'. This should get all the files you'll need.
  
- - Open up Eclipse (make sure you're in the workspace you cloned spaceout into)
+ - Open up Eclipse (make sure you're using the workspace you cloned spaceout into)
  
  - Now, go to File -> New -> Java Project
  
@@ -16,6 +16,6 @@ Quickly set up a Spaceout project with Git and Eclipse!
  
  - Click the little arrow next to the Run arrow and click "Run configurations..." then go to the "Arguments" tab
  
- - In "Program arguments:" put "${workspace_loc:spaceout/lib/natives/OS}" where OS is 'linux', 'windows', 'macosx', or 'solaris' (hahahah solaris)
+ - In "Program arguments:" put "${workspace_loc:spaceout/lib/natives/*YOUROS*}" where '*YOUROS*' is 'linux', 'windows', 'macosx', or 'solaris' (hahahah solaris)
  
  - Compile and run the game; if it works you're ready to get coding, monkey! If not, shoot me an email at nate272@gmail.com
