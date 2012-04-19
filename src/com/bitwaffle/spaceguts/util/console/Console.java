@@ -1,5 +1,6 @@
 package com.bitwaffle.spaceguts.util.console;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
@@ -27,6 +28,8 @@ public class Console {
 	 * TODO: Decide what needs to be static and what doesn't 
 	 * - The input bar will remain static, while the command scrollback is per object.
 	 * 		(this should already work fine) 
+	 * - The console itself probably shouldn't be static, especially if we plan on having
+	 * 	 multiple consoles
 	 * TODO: Implement tabs 
 	 * TODO: Fix scrolling so it only happens in the tab you have open 
 	 * TODO: Consider the implications of moving issueCommand to another class
@@ -133,7 +136,6 @@ public class Console {
 	 *            window height expanding up
 	 */
 	public Console(int x, int y, int w, int h) {
-
 		this.x = x;
 		this.y = y;
 		consoleWidth = w;
@@ -148,10 +150,16 @@ public class Console {
 		commandHistoryList.add("");
 		chIndex = 0;
 		updateCommandHistory();
+		
+		// set System.out to go to the console
+		ConsoleOutputStream out = new ConsoleOutputStream(this);
+		PrintStream stream = new PrintStream(out);
+		System.setOut(stream);
+		Debug.printSysInfo();
 	}
 
 	/**
-	 * new Console(0,10,65,14)
+	 * Default console constructor
 	 */
 	public Console() {
 		this(0, 10, 65, 14);
@@ -191,7 +199,7 @@ public class Console {
 	 * @param s
 	 *            The string to print to the console
 	 */
-	public void print(String s) {
+	protected void print(String s) {
 		// Make the console text bright
 		this.wake();
 
@@ -285,7 +293,7 @@ public class Console {
 			// otherwise just add it to the text
 			else
 				// TODO give the player a name
-				print("<Player> " + input);
+				System.out.println("<" + System.getProperty("user.name") + "> " + input);
 
 			// adds the input to the command history
 			if (!commandHistoryList.get(0).equals(""))
@@ -379,12 +387,12 @@ public class Console {
 					// this one line issues a command! Neat!
 					ConsoleCommands.valueOf(command).issue(toker);
 				} catch (NumberFormatException e) {
-					console.print("Incorrect number format "
+					System.out.println("Incorrect number format "
 							+ e.getLocalizedMessage().toLowerCase());
 				} catch (IllegalArgumentException e) {
-					console.print("Command not found! (" + command + ")");
+					System.out.println("Command not found! (" + command + ")");
 				} catch (NoSuchElementException e) {
-					console.print("Not enough vairbales for command '"
+					System.out.println("Not enough vairbales for command '"
 							+ command + "'!");
 				}
 			}
@@ -395,7 +403,6 @@ public class Console {
 	 * Update the console
 	 */
 	public void update() {
-
 		// check for command
 		if (Console.commandOn) {
 			input = "/";

@@ -14,7 +14,6 @@ import org.w3c.dom.NodeList;
 import com.bitwaffle.spaceguts.entities.Camera;
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
-import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.entities.dynamic.Planet;
 import com.bitwaffle.spaceout.entities.passive.Skybox;
 import com.bitwaffle.spaceout.entities.passive.Sun;
@@ -91,8 +90,7 @@ public class XMLParser {
 				Entities.camera.freeMode = false;
 			}
 		} else {
-			Console.console
-					.print("Error in XMLParser! Either there was nothing in the given file ("
+			System.out.println("Error in XMLParser! Either there was nothing in the given file ("
 							+ file
 							+ ") or the parser simply just didn't want to work");
 		}

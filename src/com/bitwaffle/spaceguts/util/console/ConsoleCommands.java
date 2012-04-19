@@ -92,19 +92,19 @@ class HelpCommand implements Command{
 	public void issue(StringTokenizer toker){
 		if(toker.hasMoreElements()){
 			ConsoleCommands command = ConsoleCommands.valueOf(toker.nextToken());
-			Console.console.print("HELP for " + command + ":");
+			System.out.println("HELP for " + command + ":");
 			command.help();
 		} else{
-			Console.console.print("AVAILABLE COMMANDS:");
-			Console.console.print("(use /help COMMAND or /COMMAND help for more details)");
+			System.out.println("AVAILABLE COMMANDS:");
+			System.out.println("(use /help COMMAND or /COMMAND help for more details)");
 			for(ConsoleCommands command : ConsoleCommands.values())
-				Console.console.print(command.name());
+				System.out.println(command.name());
 		}
 	}
 	
 	@Override
 	public void help(){
-		Console.console.print("Usage: /help command (leave command blank to get a list of commands)");
+		System.out.println("Usage: /help command (leave command blank to get a list of commands)");
 	}
 }
 
@@ -119,7 +119,7 @@ class ClearCommand implements Command{
 	
 	@Override
 	public void help(){
-		Console.console.print("Clears the console");
+		System.out.println("Clears the console");
 	}
 }
 
@@ -129,7 +129,7 @@ class ClearCommand implements Command{
 class SpeedCommand implements Command{
 	@Override
 	public void issue(StringTokenizer toker) {
-		Console.console.print("Speed commands temporarily unavailable");
+		System.out.println("Speed commands temporarily unavailable");
 		
 		//String speedCommand = toker.nextToken().toLowerCase();
 		//Float speedChange = Float.parseFloat(toker.nextToken());
@@ -163,7 +163,7 @@ class SpeedCommand implements Command{
 	
 	@Override
 	public void help(){
-		Console.console.print("Speed commands temporarily broken!");
+		System.out.println("Speed commands temporarily broken!");
 	}
 }
 
@@ -182,7 +182,7 @@ class PositionCommand implements Command{
 		float oldY = Entities.player.location.y;
 		float oldZ = Entities.player.location.z;
 
-		Console.console.print("Moving player to x: " + x + " y: " + y + " z: " + z
+		System.out.println("Moving player to x: " + x + " y: " + y + " z: " + z
 				+ " from x: " + oldX + " y: " + oldY + " z: " + oldZ);
 		
 		Transform trans = new Transform();
@@ -199,7 +199,7 @@ class PositionCommand implements Command{
 	
 	@Override
 	public void help(){
-		Console.console.print("Position commands temporarily broken!");
+		System.out.println("Position commands temporarily broken!");
 	}
 }
 
@@ -212,26 +212,26 @@ class ListCommand implements Command{
 		String which = toker.nextToken();
 		
 		if(which.equals("dynamic")){
-			Console.console.print("Listing dynamic entities...");
+			System.out.println("Listing dynamic entities...");
 			for (DynamicEntity ent : Entities.dynamicEntities)
-				Console.console.print(ent.type);
+				System.out.println(ent.type);
 		} else if(which.equals("static")){
-			Console.console.print("Listing static entities...");
+			System.out.println("Listing static entities...");
 			for(Entity ent : Entities.passiveEntities)
-				Console.console.print(ent.type);
+				System.out.println(ent.type);
 		} else if(which.equals("lights") || which.equals("light")){
-			Console.console.print("Listing lights...");
+			System.out.println("Listing lights...");
 			for(Light l : Entities.lights)
-				Console.console.print(l.type + "; using light at " + l.location.x + " " + l.location.y + " " + l.location.z);
+				System.out.println(l.type + "; using light at " + l.location.x + " " + l.location.y + " " + l.location.z);
 		} else{
-			Console.console.print("List command not recognized! (" + which + ")");
+			System.out.println("List command not recognized! (" + which + ")");
 		}
 	}
 	
 	@Override
 	public void help(){
-		Console.console.print("Usage: /list TYPE");
-		Console.console.print("Where TYPE is one of: dynamic, static, lights");
+		System.out.println("Usage: /list TYPE");
+		System.out.println("Where TYPE is one of: dynamic, static, lights");
 	}
 	
 }
@@ -242,17 +242,17 @@ class ListCommand implements Command{
 class NumberCommand implements Command{
 	@Override
 	public void issue(StringTokenizer toker){
-		Console.console.print("Number of static entities: "
+		System.out.println("Number of static entities: "
 				+ Entities.passiveEntities.size());
-		Console.console.print("Number of dynamic entities: "
+		System.out.println("Number of dynamic entities: "
 				+ Entities.dynamicEntities.size());
-		Console.console.print("Number of lights: "
+		System.out.println("Number of lights: "
 				+ Entities.lights.size());
 	}
 	
 	@Override
 	public void help(){
-		Console.console.print("Lists the number of entities");
+		System.out.println("Lists the number of entities");
 	}
 }
 
@@ -261,9 +261,9 @@ class BeerCommand implements Command{
 	public void issue(StringTokenizer toker){
 		 int i = 99;
 		 do {
-			 Console.console.print(i + " bottles of beer on the wall, " + i
+			 System.out.println(i + " bottles of beer on the wall, " + i
 					 + " bottles of beer");
-			 Console.console.print("Take one down, pass it around, "
+			 System.out.println("Take one down, pass it around, "
 					 + (i - 1) + " bottles of beer on the wall");
 			 i--;
 		 } while(i > 0);
@@ -271,7 +271,7 @@ class BeerCommand implements Command{
 	
 	@Override
 	public void help(){
-		Console.console.print("Computers are much faster at counting than you are!");
+		System.out.println("Computers are much faster at counting than you are!");
 	}
 }
 
@@ -290,7 +290,7 @@ class CameraCommand implements Command{
 		// zoom
 		if (cameraCommand.equals("zoom")) {
 			float zoom = Float.parseFloat(toker.nextToken());
-			Console.console.print("Changing camera zoom from " + Entities.camera.zoom
+			System.out.println("Changing camera zoom from " + Entities.camera.zoom
 					+ " to " + zoom);
 			Entities.camera.zoom = zoom;
 		}
@@ -298,7 +298,7 @@ class CameraCommand implements Command{
 		// y offset
 		else if (cameraCommand.equals("yoffset")) {
 			float yOffset = Float.parseFloat(toker.nextToken());
-			Console.console.print("Changing camera yOffset from "
+			System.out.println("Changing camera yOffset from "
 					+ Entities.camera.yOffset + " to " + yOffset);
 			Entities.camera.yOffset = yOffset;
 		}
@@ -306,7 +306,7 @@ class CameraCommand implements Command{
 		// x offset
 		else if (cameraCommand.equals("xoffset")) {
 			float xOffset = Float.parseFloat(toker.nextToken());
-			Console.console.print("Changing camera xOffset from "
+			System.out.println("Changing camera xOffset from "
 					+ Entities.camera.xOffset + " to " + xOffset);
 			Entities.camera.xOffset = xOffset;
 		}
@@ -317,13 +317,13 @@ class CameraCommand implements Command{
 			String toFollow = toker.nextToken();
 
 			if (toFollow.toLowerCase().equals("player")) {
-				Console.console.print("Camera now following " + toFollow);
+				System.out.println("Camera now following " + toFollow);
 				Entities.camera.following = Entities.player;
 				changed = true;
 			} else {
 				for (DynamicEntity ent : Entities.dynamicEntities) {
 					if (ent.type.toLowerCase().equals(toFollow.toLowerCase())) {
-						Console.console.print("Camera now following " + toFollow);
+						System.out.println("Camera now following " + toFollow);
 						Entities.camera.following = ent;
 						changed = true;
 						break;
@@ -333,7 +333,7 @@ class CameraCommand implements Command{
 				if(!changed){
 					for (Entity ent : Entities.passiveEntities) {
 						if (ent.type.toLowerCase().equals(toFollow.toLowerCase())) {
-							Console.console.print("Camera now following " + toFollow);
+							System.out.println("Camera now following " + toFollow);
 							Entities.camera.following = ent;
 							changed = true;
 							break;
@@ -343,24 +343,24 @@ class CameraCommand implements Command{
 			}
 			
 			if (!changed) {
-				Console.console.print("Couldn't find entity " + toFollow);
+				System.out.println("Couldn't find entity " + toFollow);
 			}
 		}
 
 		// invalid
 		else {
-			Console.console.print("Invalid camera command! (" + cameraCommand + ")");
+			System.out.println("Invalid camera command! (" + cameraCommand + ")");
 		}
 	}
 	
 	@Override
 	public void help(){
-		Console.console.print("Usage: /camera COMMAND NEWVALUE");
-		Console.console.print("Possible commands:");
-		Console.console.print("zoom - Zooms the camera to a given number");
-		Console.console.print("xoffset - Change the camera's alignment on the x axis");
-		Console.console.print("yoffset - Change the camera's alignment on the y axis");
-		Console.console.print("follow - Finds the first entity it can and follows it (entity must be player or from DynamicEntities)");
+		System.out.println("Usage: /camera COMMAND NEWVALUE");
+		System.out.println("Possible commands:");
+		System.out.println("zoom - Zooms the camera to a given number");
+		System.out.println("xoffset - Change the camera's alignment on the x axis");
+		System.out.println("yoffset - Change the camera's alignment on the y axis");
+		System.out.println("follow - Finds the first entity it can and follows it (entity must be player or from DynamicEntities)");
 	}
 }
 
@@ -375,7 +375,7 @@ class QuitCommand implements Command{
 	
 	@Override
 	public void help(){
-		Console.console.print("Quit the game... instantly");
+		System.out.println("Quit the game... instantly");
 	}
 }
 
@@ -390,7 +390,7 @@ class WarpCommand implements Command{
 		String warp = toker.nextToken();
 		for (Entity ent : Entities.dynamicEntities){
 			if (ent.type.toLowerCase().equals(warp.toLowerCase())) {
-				Console.console.print("Warping Player to " + ent.type + " ("
+				System.out.println("Warping Player to " + ent.type + " ("
 						+ ent.location.x + "," + ent.location.y + ","
 						+ ent.location.z + ")");
 				Transform playerTransform = new Transform();
@@ -411,13 +411,13 @@ class WarpCommand implements Command{
 		}
 		
 		if(!hasWarped){
-			Console.console.print("Couldn't find entity " + warp);
+			System.out.println("Couldn't find entity " + warp);
 		}
 	}
 	
 	@Override
 	public void help(){
-		Console.console.print("Warp command temporarily broken :(");
+		System.out.println("Warp command temporarily broken :(");
 	}
 }
 

@@ -53,6 +53,7 @@ public class MainMenu extends GUIObject {
 		loadMenuButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				System.out.println("Welcome to Spaceout!");
 				// create the load menu
 				 LoadMenu lmenu = new LoadMenu(0, 0, XML_PATH);
 				 GUI.addGUIObject(lmenu);

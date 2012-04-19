@@ -13,8 +13,6 @@ import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
-import com.bitwaffle.spaceguts.util.console.Console;
-
 
 /**
  * Takes a screenshot of the current OpenGL context. A majority of the code for
@@ -61,7 +59,7 @@ public class Screenshot {
 		 * This won't work properly past the year 2100.
 		 */
 		Formatter format = new Formatter();
-		format.format("spaceout-%02d.%02d.%d-%02d.%d.%02d" + am_pm, month, day,
+		format.format("spaceout-%02d.%02d.%02d-%02d.%d.%02d" + am_pm, month, day,
 				year - 2000, hours, minutes, seconds);
 
 		GL11.glReadBuffer(GL11.GL_FRONT);
@@ -71,6 +69,10 @@ public class Screenshot {
 				* currentWindowHeight * bpp);
 		GL11.glReadPixels(0, 0, currentWindowWidth, currentWindowHeight,
 				GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+		
+		File directory = new File("screenshots/");
+		if(!directory.exists())
+			directory.mkdir();
 
 		File file = new File("screenshots/" + format.toString() + ".png");
 		String fileFormat = "PNG";
@@ -90,8 +92,7 @@ public class Screenshot {
 		try {
 			file.createNewFile();
 			ImageIO.write(image, fileFormat, file);
-			Console.console
-					.print("Saved screenshot to " + file.getAbsolutePath());
+			System.out.println("Saved screenshot to " + file.getAbsolutePath());
 		} catch (IOException e) {
 			System.out.println("Error writing screenshot to "
 					+ file.getAbsolutePath()
