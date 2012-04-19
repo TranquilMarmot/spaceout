@@ -6,6 +6,8 @@ import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
+import com.bitwaffle.spaceguts.audio.Audio;
+import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.menu.MainMenu;
 import com.bitwaffle.spaceguts.graphics.render.Graphics;
@@ -70,12 +72,24 @@ public class Runner {
 	public void run() {
 		// initialize everything
 		init();
+		
+		boolean audioInit = false;
+		
 		try {
 			// keep going until the done flag is up or a window close is
 			// requested
 			while (!done) {
 				// update everything
 				update();
+				
+				if(!audioInit && Entities.camera != null){
+					Audio.init();
+					audioInit = true;
+				}
+				
+				if(audioInit)
+					Audio.update();
+				
 				// render the scene
 				Graphics.render();
 				// update the display (this swaps the buffers)
