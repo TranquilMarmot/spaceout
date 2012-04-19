@@ -5,7 +5,6 @@ import java.util.Random;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.entities.particles.trail.Trail;
@@ -14,7 +13,6 @@ import com.bitwaffle.spaceguts.graphics.shapes.VBOQuadric;
 import com.bitwaffle.spaceguts.physics.CollisionTypes;
 import com.bitwaffle.spaceguts.physics.Physics;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
-import com.bitwaffle.spaceout.entities.passive.particles.Explosion;
 import com.bitwaffle.spaceout.interfaces.Health;
 import com.bitwaffle.spaceout.resources.Textures;
 import com.bulletphysics.collision.dispatch.CollisionObject;
@@ -103,8 +101,6 @@ public class Planet extends DynamicEntity implements Health{
 	}
 	
 	private void explode(){
-		Explosion splode = new Explosion(this.location, this.rotation, 1.0f, 5.0f);
-		Entities.addPassiveEntity(splode);
 		removeFlag = true;
 		
 		for(int i = 0; i < 25; i++){

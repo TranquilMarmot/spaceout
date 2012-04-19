@@ -380,25 +380,22 @@ public class QuaternionHelper {
 	}
 	
 	/**
-	 * Finds the quaternion between two vectors. 
+	 * Finds the quaternion between two vectors. Assumes that the vectors are NOT unit length.
 	 * @param vec1 First vector
 	 * @param vec2 Second vector
 	 * @return Quaternion between vectors
 	 */
 	public static Quaternion quaternionBetweenVectors(Vector3f vec1, Vector3f vec2){
-		Vector3f v1 = new Vector3f();
-		Vector3f v2 = new Vector3f();
-		vec1.normalise(v1);
-		vec2.normalise(v2);
+		Vector3f c = new Vector3f();
+		Vector3f.cross(vec1, vec2, c);
 		
-		float v1l = v1.length(), v2l = v2.length();
-		float dot = Vector3f.dot(v1, v2);
-		double angle = Math.acos(dot / (v1l * v2l));
-		Vector3f axis = new Vector3f();
-		Vector3f.cross(v1, v2, axis);
-		axis.normalise(axis);
+		double v1squr = (double)vec1.lengthSquared();
+		double v2squr = (double)vec2.lengthSquared();
+		double angle = Math.sqrt(v1squr * v2squr) + (double)Vector3f.dot(vec1, vec2);
 		
-		return quaternionFromAxisAngle(axis, angle);
+		Quaternion q = new Quaternion(c.x, c.y, c.z, (float) angle);
+		q.normalise(q);
+		return q;
 	}
 	
 	/**
@@ -408,7 +405,10 @@ public class QuaternionHelper {
 	 * @return Quaternion representing rotation
 	 */
 	public static Quaternion quaternionFromAxisAngle(Vector3f axis, double angle){
-		double halfAngle = angle / 2;
+		if(Math.abs(angle) < 1e-6)
+			return new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		
+		double halfAngle = angle * 0.5;
 		
 		float s = (float)Math.sin(halfAngle);
 		

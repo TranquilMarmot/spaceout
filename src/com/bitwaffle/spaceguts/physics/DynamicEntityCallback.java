@@ -94,11 +94,11 @@ public class DynamicEntityCallback extends InternalTickCallback {
 					if(entA instanceof Projectile && entB instanceof Health){
 						bulletHealthCollision((Projectile) entA, (Health) entB);
 						if(entA instanceof Missile)
-							entA.removeFlag = true;
+							((Missile) entA).explode();
 					} else if(entB instanceof Projectile && entA instanceof Health){
 						bulletHealthCollision((Projectile) entB, (Health) entA);
 						if(entB instanceof Missile)
-							entB.removeFlag = true;
+							((Missile) entB).explode();
 					}
 					
 					/*
