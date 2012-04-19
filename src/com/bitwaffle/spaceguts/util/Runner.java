@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 
 import com.bitwaffle.spaceguts.audio.Audio;
@@ -97,6 +98,7 @@ public class Runner {
 				Display.sync(DisplayHelper.targetFPS);
 			}
 			shutdown();
+			AL.destroy();
 		} catch (Exception e) {
 			// if an exception is caught, destroy the display and the frame
 			shutdown();
