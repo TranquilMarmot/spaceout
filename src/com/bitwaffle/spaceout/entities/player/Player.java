@@ -204,7 +204,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 				missileMoveAmount, missileRotation);
 		Vector3f.add(missileLocation, missileMoveAmount, missileLocation);
 		
-		Missile miss = new Missile(missileLocation, missileRotation, lockon, 50.0f, 25.0f, 10.0f);
+		Missile miss = new Missile(missileLocation, missileRotation, lockon, 75.0f, 50.0f, 12.0f);
 
 		Entities.addDynamicEntity(miss);
 	}

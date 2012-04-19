@@ -25,7 +25,7 @@ public class Explosion extends Entity{
 	// info for particle emitter
 	private Vector3f locationVariance = new Vector3f(5.0f, 5.0f, 5.0f);
 	private Vector3f velocityVariance = new Vector3f(10.0f, 10.0f, 10.0f);
-	private float EMIT_SPEED = 0.05f;
+	private float emitSpeed = 0.05f;
 	private int particlesPerEmission = 20;
 	private float paritcleTTLVariance = 2.5f;
 	
@@ -34,9 +34,9 @@ public class Explosion extends Entity{
 	 * @param location Where this explosion originates
 	 * @param rotation FIXME is this even necessary?
 	 */
-	public Explosion(Vector3f location, Quaternion rotation, float ttl, float size){
+	public Explosion(Vector3f location, float ttl, float size){
 		this.location = location;
-		this.rotation = rotation;
+		this.rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		lived = 0.0f;
 		this.ttl = ttl;
 		
@@ -51,7 +51,7 @@ public class Explosion extends Entity{
 				new Vector3f(0.0f, 0.0f, 0.0f),
 				locationVariance, 
 				velocityVariance, 
-				EMIT_SPEED, 
+				emitSpeed, 
 				particlesPerEmission, 
 				paritcleTTLVariance);
 		emitter.active = true;

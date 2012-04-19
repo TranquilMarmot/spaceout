@@ -1,5 +1,6 @@
 package com.bitwaffle.spaceout.entities.dynamic;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.vecmath.Quat4f;
@@ -12,11 +13,14 @@ import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.entities.Entity;
 import com.bitwaffle.spaceguts.entities.particles.Emitter;
 import com.bitwaffle.spaceguts.physics.CollisionTypes;
+import com.bitwaffle.spaceguts.physics.ConvexResultCallback;
+import com.bitwaffle.spaceguts.physics.Physics;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceout.entities.passive.particles.Explosion;
 import com.bitwaffle.spaceout.interfaces.Projectile;
 import com.bitwaffle.spaceout.resources.Models;
 import com.bitwaffle.spaceout.resources.Textures;
+import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.linearmath.Transform;
 
 /**
@@ -43,6 +47,10 @@ public class Missile extends DynamicEntity implements Projectile{
 	private static final float FIRE_EMIT_SPEED = 0.05f;
 	private static final int FIRE_PARTICLES_PER_EMISSION = 2;
 	private static final float FIRE_PARTICLE_TTL_VARIANCE = 2.0f;
+	
+	private static Vector3f explosionDistance = new Vector3f(0.0f, 0.0f, 1.0f);
+	private static float explosionSize = 100.0f;
+	private static float explosionForce = 10.0f;
 	
 	/** What the missile is aiming for */
 	private DynamicEntity target;
@@ -77,11 +85,33 @@ public class Missile extends DynamicEntity implements Projectile{
 	 * Ker-plow boooom
 	 */
 	public void explode(){
-		Explosion splode = new Explosion(this.location, this.rotation, 1.0f, 5.0f);
+		// particle effect for explosion
+		Explosion splode = new Explosion(this.location, 1.0f, 5.0f);
 		Entities.addPassiveEntity(splode);
-		removeFlag = true;
 		
-		// TODO throw things near the missile outwards
+		// perform a convex sweep test to push thing outwards
+		ArrayList<DynamicEntity> hits = new ArrayList<DynamicEntity>();
+		ConvexResultCallback<DynamicEntity> callback = new ConvexResultCallback<DynamicEntity>(hits, CollisionTypes.EVERYTHING);
+		Physics.convexSweepTest(this, explosionDistance, new SphereShape(explosionSize), callback);
+		for(DynamicEntity ent : hits){
+			if(ent != this){
+				Vector3f subtract = new Vector3f();
+				Vector3f.sub(this.location, ent.location, subtract);
+				subtract.negate(subtract);
+				subtract.normalise(subtract);
+				
+				javax.vecmath.Vector3f entSpeed = new javax.vecmath.Vector3f();
+				ent.rigidBody.getLinearVelocity(entSpeed);
+				
+				float dx = entSpeed.x + (subtract.x * explosionForce);
+				float dy = entSpeed.y + (subtract.y * explosionForce);
+				float dz = entSpeed.z + (subtract.z * explosionForce);
+			
+				ent.rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(dx, dy, dz));
+			}
+		}
+		// get rid of ze missile
+		removeFlag = true;
 	}
 	
 	@Override
