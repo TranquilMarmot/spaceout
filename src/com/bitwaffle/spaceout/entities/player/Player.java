@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import javax.vecmath.Quat4f;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -12,6 +14,8 @@ import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.entities.Pickup;
 import com.bitwaffle.spaceguts.entities.particles.trail.Trail;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
+import com.bitwaffle.spaceguts.graphics.render.Render3D;
+import com.bitwaffle.spaceguts.graphics.shapes.Box2D;
 import com.bitwaffle.spaceguts.input.KeyBindings;
 import com.bitwaffle.spaceguts.input.MouseManager;
 import com.bitwaffle.spaceguts.physics.CollisionTypes;
@@ -41,6 +45,8 @@ import com.bulletphysics.linearmath.Transform;
 public class Player extends DynamicEntity implements Health, Inventory{
 	final static short COL_GROUP = CollisionTypes.SHIP;
 	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET);
+	
+	private static Box2D box = new Box2D(1.0f, 1.0f, Textures.TARGET.texture());
 	
 	/** Radius for sphere that looks for pickups */
 	public float pickupSweepSize = 25.0f;
@@ -418,6 +424,58 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		//FIXME temp code
 		trail1.draw();
 		trail2.draw();
+		if(lockon != null)
+			drawTarget();
+	}
+	
+	/**
+	 * Draws a target over what the player is locked on to
+	 */
+	private void drawTarget(){
+		// enable blending
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		
+		// otherwise, we wouldn't be able to see the target
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		
+		Render3D.program.setUniform("Light.LightEnabled", false);
+		
+		Textures.TARGET.texture().bind();
+		
+		// save the modelview matrix so we can muck wit it
+		Matrix4f oldModelView = new Matrix4f();
+		oldModelView.load(Render3D.modelview);
+		
+		// undo rotation (modelview is currently rotated to draw player)
+		Quaternion revQuat = new Quaternion();
+		this.rotation.negate(revQuat);
+		Matrix4f.mul(Render3D.modelview, QuaternionHelper.toMatrix(revQuat), Render3D.modelview);
+		
+		// new translation
+		float transx = location.x - lockon.location.x;
+		float transy = location.y - lockon.location.y;
+		float transz = location.z - lockon.location.z;
+		
+		// translate and scale the modelview
+		Render3D.modelview.translate(new Vector3f(transx, transy, transz));
+		// billboard the target
+		Matrix4f.mul(Render3D.modelview, QuaternionHelper.toMatrix(Entities.camera.rotation), Render3D.modelview);
+		
+		// make it bigger!
+		Render3D.modelview.scale(new Vector3f(10.0f, 10.0f, 1.0f));
+		
+		// don't forget to set the modelview before drawing (d'oh!)
+		Render3D.program.setUniform("ModelViewMatrix", Render3D.modelview);
+		
+		box.draw();
+		
+		// reset everything to the way it was
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		Render3D.modelview.load(oldModelView);
+		GL11.glDisable(GL11.GL_BLEND);
+		Render3D.program.setUniform("Light.LightEnabled", true);
+		Render3D.modelview.load(oldModelView);
 	}
 
 	@Override
