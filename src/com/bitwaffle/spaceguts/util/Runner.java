@@ -4,10 +4,11 @@ import java.util.Random;
 
 import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector3f;
 
 import com.bitwaffle.spaceguts.audio.Audio;
+import com.bitwaffle.spaceguts.audio.SoundSource;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.menu.MainMenu;
@@ -19,6 +20,7 @@ import com.bitwaffle.spaceguts.physics.Physics;
 import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.resources.Models;
 import com.bitwaffle.spaceout.resources.ResourceLoader;
+import com.bitwaffle.spaceout.resources.Sounds;
 import com.bitwaffle.spaceout.resources.Textures;
 
 
@@ -41,7 +43,7 @@ import com.bitwaffle.spaceout.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.77.6.7";
+	public static final String VERSION = "0.0.77.6.8";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
@@ -52,6 +54,9 @@ public class Runner {
 	/** the keyboard and mouse handlers that need to be updated every frame */
 	public static KeyboardManager keyboard = new KeyboardManager();
 	public static MouseManager mouse = new MouseManager();
+	
+	//FIXME temp
+	SoundSource test;
 
 	/**
 	 * @param args Can be given a home directory to use to look for natives in instead of using the default System.getProperty("user.home")
@@ -73,24 +78,12 @@ public class Runner {
 	public void run() {
 		// initialize everything
 		init();
-		
-		boolean audioInit = false;
-		
 		try {
 			// keep going until the done flag is up or a window close is
 			// requested
 			while (!done) {
 				// update everything
 				update();
-				
-				if(!audioInit && Entities.camera != null){
-					Audio.init();
-					audioInit = true;
-				}
-				
-				if(audioInit)
-					Audio.update();
-				
 				// render the scene
 				Graphics.render();
 				// update the display (this swaps the buffers)
@@ -98,7 +91,6 @@ public class Runner {
 				Display.sync(DisplayHelper.targetFPS);
 			}
 			shutdown();
-			AL.destroy();
 		} catch (Exception e) {
 			// if an exception is caught, destroy the display and the frame
 			shutdown();
@@ -123,6 +115,8 @@ public class Runner {
 		GUI.addGUIObject(mainMenu);
 		
 		Graphics.initGL();
+		
+		Audio.init();
 		
 		//initialize resources
 		// TODO loading screen!
@@ -157,6 +151,9 @@ public class Runner {
 		ResourceLoader.processJobs();
 		
 		System.out.println("-------------------------------");
+		
+		// FIXME temp
+		test = new SoundSource(Sounds.DING, new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, 0.0f));
 	}
 
 	/**
@@ -175,6 +172,12 @@ public class Runner {
 		
 		// update the GUI
 		GUI.update();
+		
+		if(Entities.camera != null){
+			Audio.update();
+			// FIXME temp
+			test.playSound();
+		}
 		
 		// update the physics engine
 		if (!paused && Physics.dynamicsWorld != null)
@@ -205,6 +208,9 @@ public class Runner {
 	 */
 	private void shutdown() {
 		System.out.println(goodbye());
+		//FIXME temp
+		test.shutdown();
+		Audio.shutdown();
 		Mouse.setGrabbed(false);
 		Display.destroy();
 		DisplayHelper.frame.dispose();

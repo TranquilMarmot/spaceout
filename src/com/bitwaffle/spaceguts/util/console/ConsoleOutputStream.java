@@ -55,7 +55,11 @@ class ConsoleOutputStream extends OutputStream{
 	
 	@Override
 	public void write(int wat) throws IOException {
-		char[] chars = Character.toChars(wat);
+		char[] chars = null;
+		try{
+			chars = Character.toChars(wat);
+		} catch(IllegalArgumentException e){}
+		
 		for(char c : chars){
 			// handle newline
 			if(c == '\n'){
