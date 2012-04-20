@@ -8,6 +8,7 @@ import javax.vecmath.Quat4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.bitwaffle.spaceguts.audio.SoundSource;
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.entities.Entity;
@@ -19,6 +20,7 @@ import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceout.entities.passive.particles.Explosion;
 import com.bitwaffle.spaceout.interfaces.Projectile;
 import com.bitwaffle.spaceout.resources.Models;
+import com.bitwaffle.spaceout.resources.Sounds;
 import com.bitwaffle.spaceout.resources.Textures;
 import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.linearmath.Transform;
@@ -57,6 +59,9 @@ public class Missile extends DynamicEntity implements Projectile{
 	
 	/** Particle effect */
 	private Emitter fire;
+	
+	/** The sound the missile makes */
+	private SoundSource thrusterSound;
 
 	/**
 	 * Create a new missile
@@ -79,6 +84,11 @@ public class Missile extends DynamicEntity implements Projectile{
 		this.timeLived = 0.0f;
 		
 		fire = new Emitter(this, Textures.FIRE, FIRE_OFFSET, FIRE_LOC_VARIANCE, FIRE_VELOC_VARIANCE, FIRE_EMIT_SPEED, FIRE_PARTICLES_PER_EMISSION, FIRE_PARTICLE_TTL_VARIANCE);
+		
+		// create looping sound and play it
+		Vector3f veloc = QuaternionHelper.rotateVectorByQuaternion(new Vector3f(0.0f, 0.0f, initialSpeed), rotation);
+		thrusterSound = new SoundSource(Sounds.THRUSTER, true, this.location, veloc);
+		thrusterSound.playSound();
 	}
 	
 	/**
@@ -88,6 +98,10 @@ public class Missile extends DynamicEntity implements Projectile{
 		// particle effect for explosion
 		Explosion splode = new Explosion(this.location, 1.0f, 5.0f);
 		Entities.addPassiveEntity(splode);
+		
+		// stop and remove sound
+		thrusterSound.stopSound();
+		thrusterSound.removeFlag = true;
 		
 		// perform a convex sweep test to push thing outwards
 		ArrayList<DynamicEntity> hits = new ArrayList<DynamicEntity>();
@@ -186,6 +200,12 @@ public class Missile extends DynamicEntity implements Projectile{
 		
 		// increase the missile's speed
 		speed += speedIncrease * timeStep;
+		
+		// set sound location and velocity
+		javax.vecmath.Vector3f veloc = new javax.vecmath.Vector3f();
+		this.rigidBody.getLinearVelocity(veloc);
+		thrusterSound.setVelocity(new Vector3f(veloc.x, veloc.y, veloc.z));
+		thrusterSound.setLocation(this.location);
 		
 		// age the missile and explode if necessary
 		timeLived += timeStep;

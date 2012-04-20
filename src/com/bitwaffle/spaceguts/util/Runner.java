@@ -40,7 +40,7 @@ import com.bitwaffle.spaceout.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.77.6.8";
+	public static final String VERSION = "0.0.77.6.9";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
@@ -179,8 +179,14 @@ public class Runner {
 	 * Checks whether or not the game's paused boolean needs to be flipped
 	 */
 	private void pauseLogic() {
-		if (KeyBindings.SYS_PAUSE.pressedOnce())
+		if (KeyBindings.SYS_PAUSE.pressedOnce()){
 			paused = !paused;
+			
+			if(paused)
+				Audio.pause();
+			else
+				Audio.play();
+		}
 
 		// release the mouse if the game's paused or the console is on or the
 		// menu is up

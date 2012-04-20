@@ -37,7 +37,6 @@ public class Diamond extends Pickup{
 		this.type = "Diamond";
 		this.stopSpeed = stopSpeed;
 		
-		beep = new SoundSource(Sounds.DING, false, this.location, new Vector3f(0.0f, 0.0f, 0.0f));
 	}
 	
 	@Override
@@ -46,12 +45,6 @@ public class Diamond extends Pickup{
 		
 		if(following == null)
 			stop(timeStep);
-		
-		beep.setLocation(location);
-		
-		javax.vecmath.Vector3f veloc = new javax.vecmath.Vector3f();
-		this.rigidBody.getLinearVelocity(veloc);
-		beep.setVelocity(new Vector3f(veloc.x, veloc.y, veloc.z));
 	}
 	
 	/**
@@ -75,7 +68,13 @@ public class Diamond extends Pickup{
 		super.pickup(backpack);
 		
 		if(!soundPlayed){
+			javax.vecmath.Vector3f veloc = new javax.vecmath.Vector3f();
+			this.rigidBody.getLinearVelocity(veloc);
+			
+			// create and play sound (setting the removeFlag to true immediately after playing a sound removes it after it's played once)
+			beep = new SoundSource(Sounds.DING, false, this.location, new Vector3f(veloc.x, veloc.y, veloc.z));
 			beep.playSound();
+			beep.removeFlag = true;
 			soundPlayed = true;
 		}
 	}

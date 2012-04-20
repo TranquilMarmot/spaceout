@@ -14,7 +14,9 @@ import org.lwjgl.util.WaveData;
  * @author TranquilMarmot
  */
 public enum Sounds {
-	DING(Paths.SOUND_PATH.path() + "ding.wav", 1.0f, 1.0f);
+	DING(Paths.SOUND_PATH.path() + "ding.wav", 1.0f, 1.0f),
+	SPLODE(Paths.SOUND_PATH.path() + "splodion.wav", 1.0f, 1.0f),
+	THRUSTER(Paths.SOUND_PATH.path() + "thruster.wav", 1.0f, 1.0f);
 	
 	
 	/** Buffer to use for OpenAL stuff */
@@ -31,6 +33,8 @@ public enum Sounds {
 	 */
 	private Sounds(String file, float pitch, float gain){
 		this.pitch = pitch;
+		
+		//FIXME this gain has no effect (it'll either be 1 or 0 right now- should be multiplied by current volume if not muted)
 		this.gain = gain;
 		
 		// generate buffer handle

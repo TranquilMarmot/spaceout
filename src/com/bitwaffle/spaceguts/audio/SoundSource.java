@@ -20,6 +20,9 @@ public class SoundSource {
 	/** Handle to use for source */
 	private int handle;
 	
+	/** If this is set to true, then this source should be removed as soon as it's done playing its sound */
+	public boolean removeFlag = false;
+	
 	/**
 	 * Create a new source for sound
 	 * @param sound Sound to play
@@ -115,6 +118,9 @@ public class SoundSource {
 		AL10.alSourcePause(handle);
 	}
 	
+	/**
+	 * Rewinds sound
+	 */
 	public void rewindSound(){
 		AL10.alSourceRewind(handle);
 	}
@@ -140,5 +146,16 @@ public class SoundSource {
 	 */
 	public void shutdown(){
 		AL10.alDeleteSources(handle);
+	}
+	
+	/**
+	 * @return Whether or not a sound is being played right now
+	 */
+	public boolean isPlaying(){
+		int stat = AL10.alGetSourcei(handle, AL10.AL_SOURCE_STATE);
+		if(stat == AL10.AL_PLAYING)
+			return true;
+		else
+			return false;
 	}
 }

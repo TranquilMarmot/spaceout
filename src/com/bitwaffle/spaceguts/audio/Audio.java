@@ -7,6 +7,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
+import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.bitwaffle.spaceguts.entities.Entities;
@@ -95,8 +96,10 @@ public class Audio {
 		// orientation
 		Vector3f at = new Vector3f(0.0f, 0.0f, -1.0f);
 		Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
-		at = QuaternionHelper.rotateVectorByQuaternion(at, Entities.camera.rotation);
-		up = QuaternionHelper.rotateVectorByQuaternion(up, Entities.camera.rotation);
+		Quaternion cameraRev = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		Entities.camera.rotation.negate(cameraRev);
+		at = QuaternionHelper.rotateVectorByQuaternion(at, cameraRev);
+		up = QuaternionHelper.rotateVectorByQuaternion(up, cameraRev);
 		listenerOrient.clear();
 		listenerOrient.put(at.x);
 		listenerOrient.put(at.y);
@@ -112,6 +115,20 @@ public class Audio {
 		if(err != AL10.AL_NO_ERROR){
 			System.out.println("Error in OpenAL! number: " + err + " string: " + AL10.alGetString(err));
 		}
+		
+		// get rid of any straggling sound sources
+		ArrayList<SoundSource> toRemove = new ArrayList<SoundSource>();
+		for(SoundSource src : soundSources){
+			if(src.removeFlag){
+				// only remove something if it's not playing anything
+				if(!src.isPlaying()){
+					src.shutdown();
+					toRemove.add(src);
+				}
+			}
+		}
+		for(SoundSource src : toRemove)
+			soundSources.remove(src);
 	}
 	
 	/**
@@ -130,6 +147,23 @@ public class Audio {
 	 */
 	public static float currentVolume(){
 		return volume;
+	}
+	
+	/**
+	 * Pauses all sounds
+	 */
+	public static void pause(){
+		for(SoundSource src : soundSources)
+			src.pauseSound();
+	}
+	
+	/**
+	 * Plays all sounds
+	 */
+	public static void play(){
+		for(SoundSource src : soundSources)
+			if(!src.isPlaying())
+				src.playSound();
 	}
 	
 	/**
