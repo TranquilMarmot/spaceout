@@ -173,7 +173,7 @@ public class Audio {
 		muted = !muted;
 		
 		for(SoundSource src : soundSources)
-			src.setGain(muted ? 0.0f : volume);
+			src.setGain(muted ? 0.0f : volume * src.getGain());
 	}
 	
 	/**

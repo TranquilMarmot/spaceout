@@ -23,6 +23,8 @@ public class SoundSource {
 	/** If this is set to true, then this source should be removed as soon as it's done playing its sound */
 	public boolean removeFlag = false;
 	
+	private float pitch, gain;
+	
 	/**
 	 * Create a new source for sound
 	 * @param sound Sound to play
@@ -44,12 +46,15 @@ public class SoundSource {
 		setLocation(location);
 		setVelocity(velocity);
 		
+		this.pitch = sound.pitch;
+		this.gain = sound.gain;
+		
 		// set values
 		AL10.alSourcei(handle, AL10.AL_BUFFER, sound.getHandle());
-		AL10.alSourcef(handle, AL10.AL_PITCH, sound.pitch);
+		AL10.alSourcef(handle, AL10.AL_PITCH, pitch);
 		AL10.alSourcei(handle, AL10.AL_LOOPING, loop ? AL10.AL_TRUE : AL10.AL_FALSE);
 		
-		setGain(Audio.isMuted() ? 0.0f : Audio.currentVolume());
+		setGain(Audio.isMuted() ? 0.0f : Audio.currentVolume() * gain);
 		
 		// all sound sources are added to this list so they can be deleted when the game exits
 		Audio.soundSources.add(this);
@@ -60,7 +65,22 @@ public class SoundSource {
 	 * @param pitch New pitch
 	 */
 	public void setPitch(float pitch){
+		this.pitch = pitch;
 		AL10.alSourcef(handle, AL10.AL_PITCH, pitch);
+	}
+	
+	/**
+	 * @return Current pitch
+	 */
+	public float getPitch(){
+		return pitch;
+	}
+	
+	/**
+	 * @return Current gain
+	 */
+	public float getGain(){
+		return gain;
 	}
 	
 	/**
@@ -68,7 +88,8 @@ public class SoundSource {
 	 * @param gain New gain
 	 */
 	public void setGain(float gain){
-		AL10.alSourcef(handle, AL10.AL_GAIN, gain);
+		this.gain = gain;
+		AL10.alSourcef(handle, AL10.AL_GAIN,  Audio.currentVolume() * gain);
 	}
 	
 	/**

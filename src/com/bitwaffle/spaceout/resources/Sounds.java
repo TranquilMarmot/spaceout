@@ -14,8 +14,8 @@ import org.lwjgl.util.WaveData;
  * @author TranquilMarmot
  */
 public enum Sounds {
-	DING(Paths.SOUND_PATH.path() + "ding.wav", 1.0f, 1.0f),
-	SPLODE(Paths.SOUND_PATH.path() + "splodion.wav", 1.0f, 1.0f),
+	DING(Paths.SOUND_PATH.path() + "ding.wav", 1.0f, 0.25f),
+	SPLODE(Paths.SOUND_PATH.path() + "splodion.wav", 1.0f, 10.0f),
 	THRUSTER(Paths.SOUND_PATH.path() + "thruster.wav", 1.0f, 1.0f);
 	
 	

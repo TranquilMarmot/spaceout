@@ -51,8 +51,8 @@ public class Missile extends DynamicEntity implements Projectile{
 	private static final float FIRE_PARTICLE_TTL_VARIANCE = 2.0f;
 	
 	private static Vector3f explosionDistance = new Vector3f(0.0f, 0.0f, 1.0f);
-	private static float explosionSize = 100.0f;
-	private static float explosionForce = 10.0f;
+	private static float explosionSize = 150.0f;
+	private static float explosionForce = 50.0f;
 	
 	/** What the missile is aiming for */
 	private DynamicEntity target;
