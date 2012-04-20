@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.util.Formatter;
 
 import org.lwjgl.Sys;
+import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Vector3f;
@@ -403,5 +404,9 @@ public class Debug {
 		String glVendor = GL11.glGetString(GL11.GL_VENDOR);
 		String glRenderer = GL11.glGetString(GL11.GL_RENDERER);
 		System.out.println(glRenderer + " (" + glVendor + ")");
+		
+		String alVersion = AL10.alGetString(AL10.AL_VERSION);
+		String alVendor = AL10.alGetString(AL10.AL_VENDOR);
+		System.out.println("OpenAL version " + alVersion + " (" + alVendor + ")");
 	}
 }

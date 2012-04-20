@@ -35,7 +35,7 @@ public class Camera extends DynamicEntity {
 	private static final float INIT_YOFFSET = -2.7F;
 
 	/** the entity that the camera is following */
-	public Entity following;
+	public DynamicEntity following;
 	
 	/** handles special interactions with the game world */
 	public Builder builder;

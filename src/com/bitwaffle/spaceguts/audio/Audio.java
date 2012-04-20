@@ -1,6 +1,7 @@
 package com.bitwaffle.spaceguts.audio;
 
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -11,32 +12,73 @@ import org.lwjgl.util.vector.Vector3f;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
 
+/**
+ * Manages intiializing OpenAL and upating the listener location to be at the camera's location
+ * @author TranquilMarmot
+ *
+ */
 public class Audio {
-	static FloatBuffer listenerPos, listenerVel, listenerOrient;
+	/** Used for deleting all sound sources on shutdown (see {@link SoundSource}'s constructor, each SoundSource gets added to this when it's created */
+	protected static ArrayList<SoundSource> soundSources = new ArrayList<SoundSource>();
 	
+	/** Buffers for transferring data to OpenAL */
+	private static FloatBuffer listenerPos, listenerVel, listenerOrient;
+	
+	/** For checking for errors */
+	private static int err;
+	
+	/** Factor to use for doppler effect */
+	private static final float DOPPLER_FACTOR = 0.0f;
+	
+	/** Velocity to use for doppler effect*/
+	private static final float DOPPLER_VELOCITY = 1.0f;
+	
+	
+	/**
+	 * Initializes OpenAL
+	 */
 	public static void init(){
 		try {
 			AL.create();
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 		}
+		// zero out error
 		AL10.alGetError();
 		
+		// set doppler values
+		AL10.alDopplerFactor(DOPPLER_FACTOR);
+		AL10.alDopplerVelocity(DOPPLER_VELOCITY);
+		
+		// initialize buffers
 		listenerPos = BufferUtils.createFloatBuffer(3);
 		listenerVel = BufferUtils.createFloatBuffer(3);
 		listenerOrient = BufferUtils.createFloatBuffer(6);
 	}
 	
+	/**
+	 * Updates the listener's position, velocity and orientation to match the camera
+	 */
 	public static void update(){
+		// position
 		listenerPos.clear();
+		
 		listenerPos.put(Entities.camera.location.x);
 		listenerPos.put(Entities.camera.location.y);
 		listenerPos.put(Entities.camera.location.z);
 		listenerPos.rewind();
 		AL10.alListener(AL10.AL_POSITION, listenerPos);
 		
+		// velocity
 		javax.vecmath.Vector3f linvec = new javax.vecmath.Vector3f();
-		Entities.camera.rigidBody.getLinearVelocity(linvec);
+		
+		// if we're following anything, we want its velocity
+		if(Entities.camera.buildMode || Entities.camera.freeMode){
+			Entities.camera.rigidBody.getLinearVelocity(linvec);
+		} else{
+			Entities.camera.following.rigidBody.getLinearVelocity(linvec);
+		}
+		
 		listenerVel.clear();
 		listenerVel.put(linvec.x);
 		listenerVel.put(linvec.y);
@@ -44,6 +86,7 @@ public class Audio {
 		listenerVel.rewind();
 		AL10.alListener(AL10.AL_VELOCITY, listenerVel);
 		
+		// orientation
 		Vector3f at = new Vector3f(0.0f, 0.0f, -1.0f);
 		Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
 		at = QuaternionHelper.rotateVectorByQuaternion(at, Entities.camera.rotation);
@@ -57,9 +100,21 @@ public class Audio {
 		listenerOrient.put(up.z);
 		listenerOrient.rewind();
 		AL10.alListener(AL10.AL_ORIENTATION, listenerOrient);
+		
+		// check for errors
+		err = AL10.alGetError();
+		if(err != AL10.AL_NO_ERROR){
+			System.out.println("Error in OpenAL! number: " + err + " string: " + AL10.alGetString(err));
+		}
 	}
 	
+	/**
+	 * Shuts down OpenAL
+	 */
 	public static void shutdown(){
+		// get rid of all sound sources
+		for(SoundSource src : soundSources)
+			src.shutdown();
 		AL.destroy();
 	}
 }

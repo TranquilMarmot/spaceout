@@ -20,6 +20,9 @@ class ConsoleOutputStream extends OutputStream{
 	/** Stream for saving console text to a log */
 	FileOutputStream logStream;
 	
+	/** Save System.out, in case we want to print to it later */
+	OutputStream systemOut;
+	
 	/** 
 	 * Each character printed is added to this string 
 	 * Whenever a newline character is encountered, the string is printed
@@ -36,6 +39,9 @@ class ConsoleOutputStream extends OutputStream{
 	public ConsoleOutputStream(Console console){
 		this.console = console;
 		s = "";
+		
+		// save System.out
+		systemOut = System.out;
 		
 		try{
 			// make sure logs directory exists
@@ -60,18 +66,20 @@ class ConsoleOutputStream extends OutputStream{
 			chars = Character.toChars(wat);
 		} catch(IllegalArgumentException e){}
 		
-		for(char c : chars){
-			// handle newline
-			if(c == '\n'){
-				console.print(s);
-				
-				// write line to log
-				String logString = getCurrentTime() + " - " + s + "\n";
-				logStream.write(logString.getBytes());
-				
-				s = "";
-			} else{
-				s += Character.toString(c);
+		if(chars != null){
+			for(char c : chars){
+				// handle newline
+				if(c == '\n'){
+					console.print(s);
+					
+					// write line to log
+					String logString = getCurrentTime() + " - " + s + "\n";
+					logStream.write(logString.getBytes());
+					
+					s = "";
+				} else{
+					s += Character.toString(c);
+				}
 			}
 		}
 	}

@@ -3,9 +3,12 @@ package com.bitwaffle.spaceout.entities.dynamic;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.bitwaffle.spaceguts.audio.SoundSource;
 import com.bitwaffle.spaceguts.entities.Pickup;
 import com.bitwaffle.spaceguts.physics.CollisionTypes;
+import com.bitwaffle.spaceout.entities.player.Backpack;
 import com.bitwaffle.spaceout.resources.Models;
+import com.bitwaffle.spaceout.resources.Sounds;
 import com.bulletphysics.collision.shapes.ConeShape;
 
 /**
@@ -23,12 +26,18 @@ public class Diamond extends Pickup{
 	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET | CollisionTypes.SHIP | CollisionTypes.PICKUP);
 	
 	private float stopSpeed;
+	
+	private SoundSource beep;
+	
+	private boolean soundPlayed = false;
 
 	public Diamond(Vector3f location, Quaternion rotation, float stopSpeed) {
 		super(location, rotation, new ConeShape(CONE_RADIUS, CONE_HEIGHT), MASS, RESTITUTION, COL_GROUP, COL_WITH);
 		this.model = MODEL.getModel();
 		this.type = "Diamond";
 		this.stopSpeed = stopSpeed;
+		
+		beep = new SoundSource(Sounds.DING, false, this.location, new Vector3f(0.0f, 0.0f, 0.0f));
 	}
 	
 	@Override
@@ -37,6 +46,12 @@ public class Diamond extends Pickup{
 		
 		if(following == null)
 			stop(timeStep);
+		
+		beep.setLocation(location);
+		
+		javax.vecmath.Vector3f veloc = new javax.vecmath.Vector3f();
+		this.rigidBody.getLinearVelocity(veloc);
+		beep.setVelocity(new Vector3f(veloc.x, veloc.y, veloc.z));
 	}
 	
 	/**
@@ -53,5 +68,15 @@ public class Diamond extends Pickup{
 
 		rigidBody.setLinearVelocity(new javax.vecmath.Vector3f(stopX, stopY,
 				stopZ));
+	}
+	
+	@Override
+	public void pickup(Backpack backpack){
+		super.pickup(backpack);
+		
+		if(!soundPlayed){
+			beep.playSound();
+			soundPlayed = true;
+		}
 	}
 }

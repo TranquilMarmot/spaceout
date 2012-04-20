@@ -331,7 +331,7 @@ class CameraCommand implements Command{
 				}
 				
 				if(!changed){
-					for (Entity ent : Entities.passiveEntities) {
+					for (DynamicEntity ent : Entities.dynamicEntities) {
 						if (ent.type.toLowerCase().equals(toFollow.toLowerCase())) {
 							System.out.println("Camera now following " + toFollow);
 							Entities.camera.following = ent;
