@@ -7,6 +7,7 @@ import javax.vecmath.Quat4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.bitwaffle.spaceguts.audio.Audio;
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.entities.Entity;
@@ -50,7 +51,9 @@ public enum ConsoleCommands {
 	
 	diamonds(new HowManyDiamonds()),
 	
-	warp(new WarpCommand());
+	warp(new WarpCommand()),
+	
+	mute(new MuteCommand());
 
 	
 	Command function;
@@ -256,6 +259,11 @@ class NumberCommand implements Command{
 	}
 }
 
+/**
+ * 99 bottles of beer on the wall, 99 bottles of beer!
+ * @author nate
+ *
+ */
 class BeerCommand implements Command{
 	@Override
 	public void issue(StringTokenizer toker){
@@ -422,18 +430,37 @@ class WarpCommand implements Command{
 }
 
 /**
- * 
+ * Tells you how many diamonds you've collected
  * @author TranquilMarmot
  */
 class HowManyDiamonds implements Command{
 	@Override
 	public void issue(StringTokenizer toker) {
-		Console.console.print("You have collected " + Entities.player.howManyDiamonds() + " diamonds");
+		System.out.println("You have collected " + Entities.player.howManyDiamonds() + " diamonds");
 	}
 
 	@Override
 	public void help() {
-		Console.console.print("Tells you how many diamonds you've collected");
+		System.out.println("Tells you how many diamonds you've collected");
 	}
 	
+}
+
+/**
+ * Mutes/unmutes audio
+ * @author TranquilMarmot
+ */
+class MuteCommand implements Command{
+
+	@Override
+	public void issue(StringTokenizer toker) {
+		Audio.mute();
+		
+		System.out.println("Audio is now " + (Audio.isMuted() ? " muted" : " not muted"));
+	}
+
+	@Override
+	public void help() {
+		System.out.println("Mutes an un-mutes the audio");
+	}
 }

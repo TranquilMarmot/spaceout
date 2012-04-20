@@ -12,7 +12,6 @@ import org.lwjgl.util.WaveData;
 /**
  * This enum keeps track of all sound data, and also handles sending sound data to OpenAL
  * @author TranquilMarmot
- *
  */
 public enum Sounds {
 	DING(Paths.SOUND_PATH.path() + "ding.wav", 1.0f, 1.0f);

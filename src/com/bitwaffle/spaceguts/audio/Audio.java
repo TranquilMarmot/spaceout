@@ -33,6 +33,12 @@ public class Audio {
 	/** Velocity to use for doppler effect*/
 	private static final float DOPPLER_VELOCITY = 1.0f;
 	
+	/** Whether or not the game is muted */
+	private static boolean muted = false;
+	
+	/** Current volume */
+	private static float volume = 1.0f;
+	
 	
 	/**
 	 * Initializes OpenAL
@@ -106,6 +112,41 @@ public class Audio {
 		if(err != AL10.AL_NO_ERROR){
 			System.out.println("Error in OpenAL! number: " + err + " string: " + AL10.alGetString(err));
 		}
+	}
+	
+	/**
+	 * Changes the volume of everything
+	 * @param gain New volume level (0 = none, 0.5 = 50%, 1 = 100%, 2 = 200% etc.)
+	 */
+	public static void setVolume(float gain){
+		volume = gain;
+		
+		for(SoundSource src : soundSources)
+			src.setGain(volume);
+	}
+	
+	/**
+	 * @return Current volume level
+	 */
+	public static float currentVolume(){
+		return volume;
+	}
+	
+	/**
+	 * Mutes/un-mutes audio
+	 */
+	public static void mute(){
+		muted = !muted;
+		
+		for(SoundSource src : soundSources)
+			src.setGain(muted ? 0.0f : volume);
+	}
+	
+	/**
+	 * @return Whether or not audio is muted
+	 */
+	public static boolean isMuted(){
+		return muted;
 	}
 	
 	/**
