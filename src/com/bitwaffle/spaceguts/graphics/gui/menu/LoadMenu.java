@@ -6,8 +6,10 @@ import java.io.File;
 import java.io.FilenameFilter;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.opengl.Texture;
 
+import com.bitwaffle.spaceguts.audio.SoundSource;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.GUIObject;
 import com.bitwaffle.spaceguts.graphics.gui.button.MenuButton;
@@ -16,6 +18,7 @@ import com.bitwaffle.spaceguts.physics.Physics;
 import com.bitwaffle.spaceguts.util.Debug;
 import com.bitwaffle.spaceguts.util.DisplayHelper;
 import com.bitwaffle.spaceguts.util.xml.XMLParser;
+import com.bitwaffle.spaceout.resources.Sounds;
 import com.bitwaffle.spaceout.resources.Textures;
 
 
@@ -92,6 +95,10 @@ public class LoadMenu extends GUIObject {
 		backButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				 SoundSource back = new SoundSource(Sounds.BACK, false, new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, 0.0f));
+				 back.playSound();
+				 back.removeFlag = true;
+				 
 				// raise the back to main menu flag
 				backToMainMenu = true;
 			}

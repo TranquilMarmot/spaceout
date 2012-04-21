@@ -7,6 +7,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
+import org.lwjgl.openal.AL11;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -38,7 +39,7 @@ public class Audio {
 	private static boolean muted = false;
 	
 	/** Current volume */
-	private static float volume = 1.0f;
+	private static float volume = 1.5f;
 	
 	
 	/**
@@ -56,6 +57,7 @@ public class Audio {
 		// set doppler values
 		AL10.alDopplerFactor(DOPPLER_FACTOR);
 		AL10.alDopplerVelocity(DOPPLER_VELOCITY);
+		AL11.alSpeedOfSound(700.0f);
 		
 		// initialize buffers
 		listenerPos = BufferUtils.createFloatBuffer(3);
@@ -67,47 +69,70 @@ public class Audio {
 	 * Updates the listener's position, velocity and orientation to match the camera
 	 */
 	public static void update(){
-		// position
 		listenerPos.clear();
+		listenerVel.clear();
+		listenerOrient.clear();
 		
-		listenerPos.put(Entities.camera.location.x);
-		listenerPos.put(Entities.camera.location.y);
-		listenerPos.put(Entities.camera.location.z);
-		listenerPos.rewind();
-		AL10.alListener(AL10.AL_POSITION, listenerPos);
-		
-		// velocity
-		javax.vecmath.Vector3f linvec = new javax.vecmath.Vector3f();
-		
-		// if we're following anything, we want its velocity
-		if(Entities.camera.buildMode || Entities.camera.freeMode){
-			Entities.camera.rigidBody.getLinearVelocity(linvec);
+		if(Entities.camera == null){
+			listenerPos.put(0.0f);
+			listenerPos.put(0.0f);
+			listenerPos.put(0.0f);
+			
+			listenerVel.put(0.0f);
+			listenerVel.put(0.0f);
+			listenerVel.put(0.0f);
+			
+			listenerOrient.put(0.0f);
+			listenerOrient.put(0.0f);
+			listenerOrient.put(-1.0f);
+			listenerOrient.put(0.0f);
+			listenerOrient.put(1.0f);
+			listenerOrient.put(0.0f);
+			
 		} else{
-			Entities.camera.following.rigidBody.getLinearVelocity(linvec);
+			// position
+			Vector3f realPos = Entities.camera.getLocationWithOffset();
+			listenerPos.put(realPos.x);
+			listenerPos.put(realPos.y);
+			listenerPos.put(realPos.z);
+			listenerPos.rewind();
+			
+			// velocity
+			javax.vecmath.Vector3f linvec = new javax.vecmath.Vector3f();
+			
+			// if we're following anything, we want its velocity
+			if(Entities.camera.buildMode || Entities.camera.freeMode)
+				Entities.camera.rigidBody.getLinearVelocity(linvec);
+			else
+				Entities.camera.following.rigidBody.getLinearVelocity(linvec);
+
+			listenerVel.put(linvec.x);
+			listenerVel.put(linvec.y);
+			listenerVel.put(linvec.z);
+			
+			// orientation
+			Vector3f at = new Vector3f(0.0f, 0.0f, 1.0f);
+			Vector3f up = new Vector3f(0.0f, -1.0f, 0.0f);
+			Quaternion cameraRev = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+			Entities.camera.rotation.negate(cameraRev);
+			at = QuaternionHelper.rotateVectorByQuaternion(at, cameraRev);
+			up = QuaternionHelper.rotateVectorByQuaternion(up, cameraRev);
+			listenerOrient.put(at.x);
+			listenerOrient.put(at.y);
+			listenerOrient.put(at.z);
+			listenerOrient.put(up.x);
+			listenerOrient.put(up.y);
+			listenerOrient.put(up.z);
+
 		}
 		
-		listenerVel.clear();
-		listenerVel.put(linvec.x);
-		listenerVel.put(linvec.y);
-		listenerVel.put(linvec.z);
+		listenerPos.rewind();
 		listenerVel.rewind();
-		AL10.alListener(AL10.AL_VELOCITY, listenerVel);
-		
-		// orientation
-		Vector3f at = new Vector3f(0.0f, 0.0f, -1.0f);
-		Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
-		Quaternion cameraRev = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-		Entities.camera.rotation.negate(cameraRev);
-		at = QuaternionHelper.rotateVectorByQuaternion(at, cameraRev);
-		up = QuaternionHelper.rotateVectorByQuaternion(up, cameraRev);
-		listenerOrient.clear();
-		listenerOrient.put(at.x);
-		listenerOrient.put(at.y);
-		listenerOrient.put(at.z);
-		listenerOrient.put(up.x);
-		listenerOrient.put(up.y);
-		listenerOrient.put(up.z);
 		listenerOrient.rewind();
+		
+		
+		AL10.alListener(AL10.AL_POSITION, listenerPos);
+		AL10.alListener(AL10.AL_VELOCITY, listenerVel);
 		AL10.alListener(AL10.AL_ORIENTATION, listenerOrient);
 		
 		// check for errors
@@ -162,7 +187,7 @@ public class Audio {
 	 */
 	public static void play(){
 		for(SoundSource src : soundSources)
-			if(!src.isPlaying())
+			if(!src.isPlaying() && src.isLooping())
 				src.playSound();
 	}
 	

@@ -72,7 +72,7 @@ public class Diamond extends Pickup{
 			this.rigidBody.getLinearVelocity(veloc);
 			
 			// create and play sound (setting the removeFlag to true immediately after playing a sound removes it after it's played once)
-			beep = new SoundSource(Sounds.DING, false, this.location, new Vector3f(veloc.x, veloc.y, veloc.z));
+			beep = new SoundSource(Sounds.DIAMOND_PICKUP, false, this.location, new Vector3f(veloc.x, veloc.y, veloc.z));
 			beep.playSound();
 			beep.removeFlag = true;
 			soundPlayed = true;

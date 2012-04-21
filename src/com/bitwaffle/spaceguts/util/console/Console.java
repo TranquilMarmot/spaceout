@@ -28,7 +28,7 @@ public class Console {
 	 * TODO: Decide what needs to be static and what doesn't 
 	 * - The input bar will remain static, while the command scrollback is per object.
 	 * 		(this should already work fine) 
-	 * - The console itself probably shouldn't be static, especially if we plan on having
+	 * - The console itself (Console.console) probably shouldn't be static, especially if we plan on having
 	 * 	 multiple consoles
 	 * TODO: Implement tabs 
 	 * TODO: Fix scrolling so it only happens in the tab you have open 

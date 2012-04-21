@@ -23,6 +23,8 @@ public class SoundSource {
 	/** If this is set to true, then this source should be removed as soon as it's done playing its sound */
 	public boolean removeFlag = false;
 	
+	private boolean loop;
+	
 	private float pitch, gain;
 	
 	/**
@@ -48,6 +50,7 @@ public class SoundSource {
 		
 		this.pitch = sound.pitch;
 		this.gain = sound.gain;
+		this.loop = loop;
 		
 		// set values
 		AL10.alSourcei(handle, AL10.AL_BUFFER, sound.getHandle());
@@ -137,6 +140,21 @@ public class SoundSource {
 	 */
 	public void pauseSound(){
 		AL10.alSourcePause(handle);
+	}
+	
+	/**
+	 * @return Wheter or not this sound is looping
+	 */
+	public boolean isLooping(){
+		return loop;
+	}
+	
+	/**
+	 * @param loop Whether or not this sound source is looping
+	 */
+	public void setLooping(boolean loop){
+		this.loop = loop;
+		AL10.alSourcei(handle, AL10.AL_LOOPING, loop ? AL10.AL_TRUE : AL10.AL_FALSE);
 	}
 	
 	/**

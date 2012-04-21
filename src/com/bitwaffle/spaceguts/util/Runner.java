@@ -5,8 +5,10 @@ import java.util.Random;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector3f;
 
 import com.bitwaffle.spaceguts.audio.Audio;
+import com.bitwaffle.spaceguts.audio.SoundSource;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.menu.MainMenu;
@@ -18,6 +20,7 @@ import com.bitwaffle.spaceguts.physics.Physics;
 import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.resources.Models;
 import com.bitwaffle.spaceout.resources.ResourceLoader;
+import com.bitwaffle.spaceout.resources.Sounds;
 import com.bitwaffle.spaceout.resources.Textures;
 
 
@@ -141,6 +144,10 @@ public class Runner {
 		ResourceLoader.addJob(Textures.CROSSHAIR);
 		ResourceLoader.addJob(Textures.BUILDER_GRABBED);
 		ResourceLoader.addJob(Textures.BUILDER_OPEN);
+		ResourceLoader.addJob(Sounds.DIAMOND_PICKUP);
+		ResourceLoader.addJob(Sounds.PEW);
+		ResourceLoader.addJob(Sounds.SPLODE);
+		ResourceLoader.addJob(Sounds.THRUSTER);
 		ResourceLoader.processJobs();
 		
 		System.out.println("-------------------------------");
@@ -163,8 +170,7 @@ public class Runner {
 		// update the GUI
 		GUI.update();
 	
-		if(Entities.camera != null)
-			Audio.update();
+		Audio.update();
 		
 		// update the physics engine
 		if (!paused && Physics.dynamicsWorld != null)
@@ -182,10 +188,19 @@ public class Runner {
 		if (KeyBindings.SYS_PAUSE.pressedOnce()){
 			paused = !paused;
 			
-			if(paused)
+			if(paused){
 				Audio.pause();
-			else
+				
+				SoundSource pause = new SoundSource(Sounds.SELECT, false, Entities.camera != null ? Entities.camera.getLocationWithOffset() : new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, 0.0f));
+				pause.playSound();
+				pause.removeFlag =  true;
+			}else{
 				Audio.play();
+				
+				SoundSource resume = new SoundSource(Sounds.FRIENDLY_ALERT, false, Entities.camera != null ? Entities.camera.getLocationWithOffset() : new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, 0.0f));
+				resume.playSound();
+				resume.removeFlag =  true;
+			}
 		}
 
 		// release the mouse if the game's paused or the console is on or the

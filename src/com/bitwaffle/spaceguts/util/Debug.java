@@ -55,11 +55,8 @@ public class Debug {
 	 * Updates the console and the FPS
 	 */
 	public static void update() {
-		// update keys
 		checkKeys();
-		
 		Console.console.update();
-		
 		updateFPS();
 	}
 	
@@ -141,9 +138,8 @@ public class Debug {
 	public static void draw() {
 		if (displayDebug) {
 			drawDebugInfo();
+			Console.console.draw();
 		}
-		
-		Console.console.draw();
 		
 		// draw 'PAUSED' in the middle of the screen if the game is paused
 		if (Runner.paused && Entities.entitiesExist())
@@ -305,27 +301,22 @@ public class Debug {
 	 */
 	@SuppressWarnings("unchecked")
 	public static void init() {
-		GL20.glUseProgram(0);
 		// initialize the font if this is the first draw
-		if (font == null) {
-			try {
-				Font awtFont = new Font(Paths.FONT_PATH.path() + "VeraMono.ttf", Font.PLAIN, 15);
-				font = new UnicodeFont(awtFont, 15, false,
-						false);
-				font.addAsciiGlyphs();
-				font.getEffects().add(new ColorEffect(java.awt.Color.WHITE));
-				font.loadGlyphs();
-			} catch (SlickException e) {
-				System.out.println("Error initializing font!!!");
-				e.printStackTrace();
-			}
+		try {
+			Font awtFont = new Font(Paths.FONT_PATH.path() + "VeraMono.ttf", Font.PLAIN, 15);
+			font = new UnicodeFont(awtFont, 15, false,
+					false);
+			font.addAsciiGlyphs();
+			font.getEffects().add(new ColorEffect(java.awt.Color.WHITE));
+			font.loadGlyphs();
+		} catch (SlickException e) {
+			System.out.println("Error initializing font!!!");
+			e.printStackTrace();
 		}
 
 		// initialize variables if this is the first draw
-		if (lastFrame == null)
-			lastFrame = getTime();
-		if (lastFPS == null)
-			lastFPS = getTime();
+		lastFrame = getTime();
+		lastFPS = getTime();
 		updateFPS();
 	}
 

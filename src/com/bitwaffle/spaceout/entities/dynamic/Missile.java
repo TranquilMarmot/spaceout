@@ -77,6 +77,8 @@ public class Missile extends DynamicEntity implements Projectile{
 		super(location, rotation, Models.MISSILE, 100.0f, 1.0f, CollisionTypes.PROJECTILE,
 				CollisionTypes.EVERYTHING);
 		
+		this.type = "Missile";
+		
 		this.target = target;
 		this.speed = initialSpeed;
 		this.speedIncrease = speedIncrease;
