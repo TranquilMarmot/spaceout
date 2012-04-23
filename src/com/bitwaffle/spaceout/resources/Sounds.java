@@ -18,6 +18,7 @@ public enum Sounds {
 	SPLODE(Paths.SOUND_PATH.path() + "splosion.wav", 1.0f, 25.0f),
 	THRUSTER(Paths.SOUND_PATH.path() + "thruster.wav", 1.0f, 50.0f),
 	PEW(Paths.SOUND_PATH.path() + "pew.wav", 1.0f, 1.5f),
+	HIT(Paths.SOUND_PATH.path() + "hit.wav", 1.0f, 10.0f),
 	
 	SELECT(Paths.SOUND_PATH.path() + "select.wav", 1.0f, 1.0f),
 	BACK(Paths.SOUND_PATH.path() + "back.wav", 1.0f, 1.0f),

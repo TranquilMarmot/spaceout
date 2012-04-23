@@ -4,9 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
 
-import com.bitwaffle.spaceguts.audio.SoundSource;
+import com.bitwaffle.spaceguts.audio.Audio;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.GUIObject;
 import com.bitwaffle.spaceguts.graphics.gui.button.MenuButton;
@@ -64,9 +63,7 @@ public class MainMenu extends GUIObject {
 				// let the GUI know that a menu is up
 				 GUI.menuUp = true;
 				 
-				 SoundSource select = new SoundSource(Sounds.SELECT, false, new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, 0.0f));
-				 select.playSound();
-				 select.removeFlag = true;
+				 Audio.playSoundOnceAtListener(Sounds.SELECT);
 
 				// done with the main menu
 				done = true;

@@ -143,7 +143,7 @@ public class SoundSource {
 	}
 	
 	/**
-	 * @return Wheter or not this sound is looping
+	 * @return Whether or not this sound is looping
 	 */
 	public boolean isLooping(){
 		return loop;

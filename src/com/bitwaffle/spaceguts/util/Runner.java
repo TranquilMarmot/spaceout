@@ -5,11 +5,8 @@ import java.util.Random;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.util.vector.Vector3f;
 
 import com.bitwaffle.spaceguts.audio.Audio;
-import com.bitwaffle.spaceguts.audio.SoundSource;
-import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.menu.MainMenu;
 import com.bitwaffle.spaceguts.graphics.render.Graphics;
@@ -148,6 +145,10 @@ public class Runner {
 		ResourceLoader.addJob(Sounds.PEW);
 		ResourceLoader.addJob(Sounds.SPLODE);
 		ResourceLoader.addJob(Sounds.THRUSTER);
+		ResourceLoader.addJob(Sounds.BACK);
+		ResourceLoader.addJob(Sounds.FRIENDLY_ALERT);
+		ResourceLoader.addJob(Sounds.HIT);
+		ResourceLoader.addJob(Sounds.SELECT);
 		ResourceLoader.processJobs();
 		
 		System.out.println("-------------------------------");
@@ -191,15 +192,11 @@ public class Runner {
 			if(paused){
 				Audio.pause();
 				
-				SoundSource pause = new SoundSource(Sounds.SELECT, false, Entities.camera != null ? Entities.camera.getLocationWithOffset() : new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, 0.0f));
-				pause.playSound();
-				pause.removeFlag =  true;
+				Audio.playSoundOnceAtListener(Sounds.SELECT);
 			}else{
 				Audio.play();
 				
-				SoundSource resume = new SoundSource(Sounds.FRIENDLY_ALERT, false, Entities.camera != null ? Entities.camera.getLocationWithOffset() : new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, 0.0f));
-				resume.playSound();
-				resume.removeFlag =  true;
+				Audio.playSoundOnceAtListener(Sounds.FRIENDLY_ALERT);
 			}
 		}
 

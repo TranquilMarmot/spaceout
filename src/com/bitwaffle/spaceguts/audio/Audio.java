@@ -13,6 +13,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
+import com.bitwaffle.spaceout.resources.Sounds;
 
 /**
  * Manages intiializing OpenAL and upating the listener location to be at the camera's location
@@ -69,10 +70,12 @@ public class Audio {
 	 * Updates the listener's position, velocity and orientation to match the camera
 	 */
 	public static void update(){
+		// clear buffers
 		listenerPos.clear();
 		listenerVel.clear();
 		listenerOrient.clear();
 		
+		// if there's no camera, then we're playing 2D sounds
 		if(Entities.camera == null){
 			listenerPos.put(0.0f);
 			listenerPos.put(0.0f);
@@ -88,7 +91,6 @@ public class Audio {
 			listenerOrient.put(0.0f);
 			listenerOrient.put(1.0f);
 			listenerOrient.put(0.0f);
-			
 		} else{
 			// position
 			Vector3f realPos = Entities.camera.getLocationWithOffset();
@@ -123,14 +125,13 @@ public class Audio {
 			listenerOrient.put(up.x);
 			listenerOrient.put(up.y);
 			listenerOrient.put(up.z);
-
 		}
 		
 		listenerPos.rewind();
 		listenerVel.rewind();
 		listenerOrient.rewind();
 		
-		
+		// set AL's listener data
 		AL10.alListener(AL10.AL_POSITION, listenerPos);
 		AL10.alListener(AL10.AL_VELOCITY, listenerVel);
 		AL10.alListener(AL10.AL_ORIENTATION, listenerOrient);
@@ -216,5 +217,36 @@ public class Audio {
 		for(SoundSource src : soundSources)
 			src.shutdown();
 		AL.destroy();
+	}
+	
+	/**
+	 * Plays a sound from {@link Sounds} once and then sets it to be removed from the list of sound sources.
+	 * This is useful for making noises in menus/item pickups/whatever that shouldn't be effected by the listener's
+	 * location or velocity.
+	 * @param sound Sound to play
+	 */
+	public static void playSoundOnceAtListener(Sounds sound){
+		Vector3f location;
+		javax.vecmath.Vector3f velocity = new javax.vecmath.Vector3f();
+		
+		// if there's no camera, then the listener gets set to be at (0,0,0) - see update() method
+		if(Entities.camera == null){
+			location = new Vector3f(0.0f, 0.0f, 0.0f);
+			velocity = new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f);
+		} else{
+			// position
+			location = Entities.camera.getLocationWithOffset();
+
+			// if we're following anything, we want its velocity
+			if(Entities.camera.buildMode || Entities.camera.freeMode)
+				Entities.camera.rigidBody.getLinearVelocity(velocity);
+			else
+				Entities.camera.following.rigidBody.getLinearVelocity(velocity);
+		}
+		
+		// create a sound source, play it, and set it up to be removed
+		SoundSource tmp = new SoundSource(sound, false, location, new Vector3f(velocity.x, velocity.y, velocity.z));
+		tmp.playSound();
+		tmp.removeFlag = true;
 	}
 }

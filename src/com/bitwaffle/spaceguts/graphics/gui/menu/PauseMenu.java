@@ -4,9 +4,7 @@ package com.bitwaffle.spaceguts.graphics.gui.menu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import org.lwjgl.util.vector.Vector3f;
-
-import com.bitwaffle.spaceguts.audio.SoundSource;
+import com.bitwaffle.spaceguts.audio.Audio;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.GUIObject;
@@ -43,9 +41,7 @@ public class PauseMenu extends GUIObject{
 			public void actionPerformed(ActionEvent e) {
 				Runner.paused = false;
 				
-				SoundSource resume = new SoundSource(Sounds.FRIENDLY_ALERT, false, Entities.camera != null ? Entities.camera.getLocationWithOffset() : new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, 0.0f));
-				resume.playSound();
-				resume.removeFlag = true;
+				Audio.playSoundOnceAtListener(Sounds.FRIENDLY_ALERT);
 			}
 		});
 
@@ -57,9 +53,7 @@ public class PauseMenu extends GUIObject{
 			public void actionPerformed(ActionEvent e) {
 				backToMainMenu = true;
 				
-				SoundSource back = new SoundSource(Sounds.BACK, false, new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, 0.0f));
-				back.playSound();
-				back.removeFlag = true;
+				Audio.playSoundOnceAtListener(Sounds.BACK);
 			}
 		});
 	}
