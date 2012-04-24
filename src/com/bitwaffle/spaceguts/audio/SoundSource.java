@@ -60,7 +60,7 @@ public class SoundSource {
 		AL10.alSourcef(handle, AL10.AL_PITCH, pitch);
 		AL10.alSourcei(handle, AL10.AL_LOOPING, loop ? AL10.AL_TRUE : AL10.AL_FALSE);
 		
-		setGain(Audio.isMuted() ? 0.0f : Audio.currentVolume() * currentGain);
+		setGain(Audio.isMuted() ? 0.0f : currentGain);
 		
 		// all sound sources are added to this list so they can be deleted when the game exits
 		Audio.soundSources.add(this);

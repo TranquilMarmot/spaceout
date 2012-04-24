@@ -53,7 +53,9 @@ public enum ConsoleCommands {
 	
 	warp(new WarpCommand()),
 	
-	mute(new MuteCommand());
+	mute(new MuteCommand()),
+	volume(new VolumeCommand()),
+	vol(new VolumeCommand());
 
 	
 	Command function;
@@ -448,19 +450,51 @@ class HowManyDiamonds implements Command{
 
 /**
  * Mutes/unmutes audio
- * @author TranquilMarmot
  */
 class MuteCommand implements Command{
-
 	@Override
 	public void issue(StringTokenizer toker) {
 		Audio.mute();
 		
-		System.out.println("Audio is now " + (Audio.isMuted() ? " muted" : " not muted"));
+		System.out.println("Audio is now " + (Audio.isMuted() ? "muted" : ("not muted (Volume: " + Audio.currentVolume()) + ")"));
 	}
 
 	@Override
 	public void help() {
 		System.out.println("Mutes an un-mutes the audio");
 	}
+}
+
+/**
+ * Sets volume to a new level (0 = none, 0.5 = 50%, 1 = 100%, 2 = 200% etc.)
+ * Prints out current volume if not given a new volume
+ */
+class VolumeCommand implements Command{
+	@Override
+	public void issue(StringTokenizer toker) {
+		// if there's more elements, set the volume
+		if(toker.hasMoreElements()){
+			try{
+				float newVolume = Float.valueOf(toker.nextToken());
+				float oldVolume = Audio.currentVolume();
+				
+				Audio.setVolume(newVolume);
+				
+				System.out.println("Volume set from " + oldVolume + " to " + newVolume);
+			} catch(IllegalArgumentException e){
+				// check for invalid input
+				System.out.println("Invalid number " + e.getLocalizedMessage().toLowerCase());
+			}
+		} else{
+			// there's no argument, print out the current volume
+			System.out.println("Current volume: " + Audio.currentVolume());
+		}
+	}
+
+	@Override
+	public void help() {
+		System.out.println("Sets volume to a new level (0 = none, 0.5 = 50%, 1 = 100%, 2 = 200% etc.)\n" +
+						   "Prints out current volume if not given a new volume");
+	}
+	
 }

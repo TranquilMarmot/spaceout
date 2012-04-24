@@ -8,7 +8,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.AL10;
 import org.lwjgl.openal.AL11;
-import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.bitwaffle.spaceguts.entities.Entities;
@@ -114,11 +113,9 @@ public class Audio {
 			
 			// orientation
 			Vector3f at = new Vector3f(0.0f, 0.0f, 1.0f);
-			Vector3f up = new Vector3f(0.0f, -1.0f, 0.0f);
-			Quaternion cameraRev = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-			Entities.camera.rotation.negate(cameraRev);
-			at = QuaternionHelper.rotateVectorByQuaternion(at, cameraRev);
-			up = QuaternionHelper.rotateVectorByQuaternion(up, cameraRev);
+			Vector3f up = new Vector3f(0.0f, 1.0f, 0.0f);
+			at = QuaternionHelper.rotateVectorByQuaternion(at, Entities.camera.rotation);
+			up = QuaternionHelper.rotateVectorByQuaternion(up, Entities.camera.rotation);
 			listenerOrient.put(at.x);
 			listenerOrient.put(at.y);
 			listenerOrient.put(at.z);
