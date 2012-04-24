@@ -23,6 +23,8 @@ import com.bulletphysics.linearmath.Transform;
  * so name a command however you want it to be referenced to in-game.
  * Each command constructor takes in a command class that implements the inner Command interface.
  * Many commands can use the same command class.
+ * Commands can also take other commands in their constructors, which allows multiple commands to call the
+ * same Command class without needing to instantiate it.
  * @author TranquilMarmot
  *
  */
@@ -32,8 +34,8 @@ public enum ConsoleCommands {
 	list(new ListCommand()),
 	
 	xyz(new PositionCommand()),
-	pos(new PositionCommand()),
-	position(new PositionCommand()),
+	pos(xyz),
+	position(xyz),
 	
 	clear(new ClearCommand()),
 	
@@ -46,27 +48,48 @@ public enum ConsoleCommands {
 	camera(new CameraCommand()),
 	
 	quit(new QuitCommand()),
-	q(new QuitCommand()),
-	exit(new QuitCommand()),
+	q(quit),
+	exit(quit),
 	
 	diamonds(new HowManyDiamonds()),
 	
 	warp(new WarpCommand()),
 	
 	mute(new MuteCommand()),
+	
 	volume(new VolumeCommand()),
-	vol(new VolumeCommand());
+	vol(volume);
 
 	
-	Command function;
+	protected Command function;
+	
+	/**
+	 * Create a console command with a new function
+	 * @param function Function to use for this command
+	 */
 	private ConsoleCommands(Command function){
 		this.function = function;
 	}
 	
+	/**
+	 * Create a console command that uses a function that another command already uses
+	 * @param command Command to get function from
+	 */
+	private ConsoleCommands(ConsoleCommands command){
+		function = command.function;
+	}
+	
+	/**
+	 * Issues a command
+	 * @param toker StringTokenizer at the first arg for the command (calling toker.nextToken() will return the command's args[1]- the command itself is at args[0])
+	 */
 	public void issue(StringTokenizer toker){
 		function.issue(toker);
 	}
 	
+	/**
+	 * Prints out help for the command
+	 */
 	public void help(){
 		function.help();
 	}
@@ -76,7 +99,6 @@ public enum ConsoleCommands {
 /**
  * Every command class should implement this and override the issue() function to carry out a command
  * @author TranquilMarmot
- *
  */
 interface Command{
 	/**
@@ -92,13 +114,21 @@ interface Command{
 	public void help();
 }
 
+/**
+ * 
+ */
 class HelpCommand implements Command{
 	@Override
 	public void issue(StringTokenizer toker){
 		if(toker.hasMoreElements()){
-			ConsoleCommands command = ConsoleCommands.valueOf(toker.nextToken());
-			System.out.println("HELP for " + command + ":");
-			command.help();
+			String commStr = toker.nextToken();
+			try{
+				ConsoleCommands command = ConsoleCommands.valueOf(commStr);
+				System.out.println("HELP for " + command + ":");
+				command.help();
+			} catch(IllegalArgumentException e){
+				System.out.println("Command not found! (" + commStr + ")");
+			}
 		} else{
 			System.out.println("AVAILABLE COMMANDS:");
 			System.out.println("(use /help COMMAND or /COMMAND help for more details)");
@@ -172,7 +202,6 @@ class SpeedCommand implements Command{
 	}
 }
 
-//FIXME does not work!
 /**
  * Change the player's position
  */
@@ -193,9 +222,11 @@ class PositionCommand implements Command{
 		Transform trans = new Transform();
 		Entities.player.rigidBody.getWorldTransform(trans);
 		
-		trans.transform(new javax.vecmath.Vector3f(x, y, z));
+		trans.origin.set(x,  y, z);
 		
 		Entities.player.rigidBody.setMotionState(new DefaultMotionState(trans));
+		
+		Entities.player.rigidBody.setWorldTransform(trans);
 
 		Entities.player.location.x = x;
 		Entities.player.location.y = y;
@@ -493,8 +524,9 @@ class VolumeCommand implements Command{
 
 	@Override
 	public void help() {
-		System.out.println("Sets volume to a new level (0 = none, 0.5 = 50%, 1 = 100%, 2 = 200% etc.)\n" +
-						   "Prints out current volume if not given a new volume");
+		System.out.println("Usage: /volume NEWVOL\n" + 
+					       "Sets volume to a new level (0 = none, 0.5 = 50%, 1 = 100%, 2 = 200% etc.)\n" +
+						   "Leave NEWVOL blank to print out current volume");
 	}
 	
 }

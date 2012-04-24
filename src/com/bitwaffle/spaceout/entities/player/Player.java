@@ -40,7 +40,7 @@ import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.linearmath.Transform;
 
 /**
- * The player!
+ * Just a player in the game
  * 
  * @author TranquilMarmot
  */
@@ -451,7 +451,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
-		// otherwise, we wouldn't be able to see the target
+		// disable depth test to draw target in front of everything
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		
 		Render3D.program.setUniform("Light.LightEnabled", false);
@@ -480,7 +480,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		// make it bigger!
 		Render3D.modelview.scale(new Vector3f(10.0f, 10.0f, 1.0f));
 		
-		// don't forget to set the modelview before drawing (d'oh!)
+		// don't forget to set the modelview before drawing
 		Render3D.program.setUniform("ModelViewMatrix", Render3D.modelview);
 		
 		lockonbox.draw();
