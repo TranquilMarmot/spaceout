@@ -24,12 +24,6 @@ public class Audio {
 	/** Used for deleting all sound sources on shutdown (see {@link SoundSource}'s constructor, each SoundSource gets added to this when it's created */
 	protected static ArrayList<SoundSource> soundSources = new ArrayList<SoundSource>();
 	
-	/** Buffers for transferring data to OpenAL */
-	private static FloatBuffer listenerPos, listenerVel, listenerOrient;
-	
-	/** For checking for errors */
-	private static int err;
-	
 	/** Factor to use for doppler effect */
 	private static final float DOPPLER_FACTOR = 0.0f;
 	
@@ -41,6 +35,12 @@ public class Audio {
 	
 	/** Current volume */
 	private static float volume = 1.5f;
+	
+	/** Buffers for transferring data to OpenAL */
+	private static FloatBuffer listenerPos, listenerVel, listenerOrient;
+	
+	/** For checking for errors */
+	private static int err;
 	
 	
 	/**
@@ -199,7 +199,7 @@ public class Audio {
 		muted = !muted;
 		
 		for(SoundSource src : soundSources)
-			src.setGain(muted ? 0.0f : volume * src.getGain());
+			src.setGain(muted ? 0.0f : src.getDefaultGain());
 	}
 	
 	/**
