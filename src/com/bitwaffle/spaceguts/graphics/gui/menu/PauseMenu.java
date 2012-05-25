@@ -9,7 +9,7 @@ import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.GUIObject;
 import com.bitwaffle.spaceguts.graphics.gui.button.PauseMenuButton;
 import com.bitwaffle.spaceguts.physics.Physics;
-import com.bitwaffle.spaceguts.util.Runner;
+import com.bitwaffle.spaceout.Runner;
 
 
 

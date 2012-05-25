@@ -10,7 +10,7 @@ import com.bitwaffle.spaceguts.graphics.gui.GUIObject;
 import com.bitwaffle.spaceguts.graphics.gui.button.MenuButton;
 import com.bitwaffle.spaceguts.util.Debug;
 import com.bitwaffle.spaceguts.util.DisplayHelper;
-import com.bitwaffle.spaceguts.util.Runner;
+import com.bitwaffle.spaceout.Runner;
 import com.bitwaffle.spaceout.resources.Textures;
 
 

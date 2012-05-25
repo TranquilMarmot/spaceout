@@ -12,7 +12,7 @@ import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.entities.Entity;
 import com.bitwaffle.spaceguts.entities.Light;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
-import com.bitwaffle.spaceguts.util.Runner;
+import com.bitwaffle.spaceout.Runner;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
 
