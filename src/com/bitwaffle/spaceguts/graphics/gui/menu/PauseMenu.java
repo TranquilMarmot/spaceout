@@ -4,12 +4,14 @@ package com.bitwaffle.spaceguts.graphics.gui.menu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import com.bitwaffle.spaceguts.audio.Audio;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.GUIObject;
 import com.bitwaffle.spaceguts.graphics.gui.button.PauseMenuButton;
 import com.bitwaffle.spaceguts.physics.Physics;
 import com.bitwaffle.spaceguts.util.Runner;
+import com.bitwaffle.spaceout.resources.Sounds;
 
 
 
@@ -38,6 +40,8 @@ public class PauseMenu extends GUIObject{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Runner.paused = false;
+				
+				Audio.playSoundOnceAtListener(Sounds.FRIENDLY_ALERT);
 			}
 		});
 
@@ -48,6 +52,8 @@ public class PauseMenu extends GUIObject{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				backToMainMenu = true;
+				
+				Audio.playSoundOnceAtListener(Sounds.BACK);
 			}
 		});
 	}

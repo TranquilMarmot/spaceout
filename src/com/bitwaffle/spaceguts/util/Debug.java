@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.util.Formatter;
 
 import org.lwjgl.Sys;
+import org.lwjgl.openal.AL10;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.util.vector.Vector3f;
@@ -54,11 +55,8 @@ public class Debug {
 	 * Updates the console and the FPS
 	 */
 	public static void update() {
-		// update keys
 		checkKeys();
-		
 		Console.console.update();
-		
 		updateFPS();
 	}
 	
@@ -140,9 +138,8 @@ public class Debug {
 	public static void draw() {
 		if (displayDebug) {
 			drawDebugInfo();
+			Console.console.draw();
 		}
-		
-		Console.console.draw();
 		
 		// draw 'PAUSED' in the middle of the screen if the game is paused
 		if (Runner.paused && Entities.entitiesExist())
@@ -304,27 +301,22 @@ public class Debug {
 	 */
 	@SuppressWarnings("unchecked")
 	public static void init() {
-		GL20.glUseProgram(0);
 		// initialize the font if this is the first draw
-		if (font == null) {
-			try {
-				Font awtFont = new Font(Paths.FONT_PATH.path() + "VeraMono.ttf", Font.PLAIN, 15);
-				font = new UnicodeFont(awtFont, 15, false,
-						false);
-				font.addAsciiGlyphs();
-				font.getEffects().add(new ColorEffect(java.awt.Color.WHITE));
-				font.loadGlyphs();
-			} catch (SlickException e) {
-				System.out.println("Error initializing font!!!");
-				e.printStackTrace();
-			}
+		try {
+			Font awtFont = new Font(Paths.FONT_PATH.path() + "VeraMono.ttf", Font.PLAIN, 15);
+			font = new UnicodeFont(awtFont, 15, false,
+					false);
+			font.addAsciiGlyphs();
+			font.getEffects().add(new ColorEffect(java.awt.Color.WHITE));
+			font.loadGlyphs();
+		} catch (SlickException e) {
+			System.out.println("Error initializing font!!!");
+			e.printStackTrace();
 		}
 
 		// initialize variables if this is the first draw
-		if (lastFrame == null)
-			lastFrame = getTime();
-		if (lastFPS == null)
-			lastFPS = getTime();
+		lastFrame = getTime();
+		lastFPS = getTime();
 		updateFPS();
 	}
 
@@ -403,5 +395,9 @@ public class Debug {
 		String glVendor = GL11.glGetString(GL11.GL_VENDOR);
 		String glRenderer = GL11.glGetString(GL11.GL_RENDERER);
 		System.out.println(glRenderer + " (" + glVendor + ")");
+		
+		String alVersion = AL10.alGetString(AL10.AL_VERSION);
+		String alVendor = AL10.alGetString(AL10.AL_VENDOR);
+		System.out.println("OpenAL version " + alVersion + " (" + alVendor + ")");
 	}
 }

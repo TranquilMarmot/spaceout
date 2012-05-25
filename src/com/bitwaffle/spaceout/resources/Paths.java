@@ -23,7 +23,9 @@ public enum Paths {
 	SHIPS_PATH(MODEL_PATH.path() + "/ships/"),
 	
 	SHADER_PATH("res/shaders/"), 
-	FONT_PATH("res/fonts/")
+	FONT_PATH("res/fonts/"),
+	
+	SOUND_PATH("res/sounds/")
 	;
 	
 	String path;

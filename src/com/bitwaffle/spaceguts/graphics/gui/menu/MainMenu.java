@@ -5,12 +5,14 @@ import java.awt.event.ActionListener;
 
 import org.lwjgl.opengl.GL11;
 
+import com.bitwaffle.spaceguts.audio.Audio;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.GUIObject;
 import com.bitwaffle.spaceguts.graphics.gui.button.MenuButton;
 import com.bitwaffle.spaceguts.util.Debug;
 import com.bitwaffle.spaceguts.util.DisplayHelper;
 import com.bitwaffle.spaceguts.util.Runner;
+import com.bitwaffle.spaceout.resources.Sounds;
 import com.bitwaffle.spaceout.resources.Textures;
 
 
@@ -60,6 +62,8 @@ public class MainMenu extends GUIObject {
 
 				// let the GUI know that a menu is up
 				 GUI.menuUp = true;
+				 
+				 Audio.playSoundOnceAtListener(Sounds.SELECT);
 
 				// done with the main menu
 				done = true;
@@ -70,7 +74,7 @@ public class MainMenu extends GUIObject {
 		quitButton = new MenuButton("Exit", 238, 55, 0, 50);
 		quitButton.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {				 
 				// end the game
 				Runner.done = true;
 			}

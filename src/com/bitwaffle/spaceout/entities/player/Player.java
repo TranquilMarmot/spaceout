@@ -9,6 +9,7 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.bitwaffle.spaceguts.audio.SoundSource;
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.entities.Pickup;
@@ -30,6 +31,7 @@ import com.bitwaffle.spaceout.entities.dynamic.Planet;
 import com.bitwaffle.spaceout.interfaces.Health;
 import com.bitwaffle.spaceout.interfaces.Inventory;
 import com.bitwaffle.spaceout.resources.Models;
+import com.bitwaffle.spaceout.resources.Sounds;
 import com.bitwaffle.spaceout.resources.Textures;
 import com.bitwaffle.spaceout.ship.Ship;
 import com.bulletphysics.collision.dispatch.CollisionObject;
@@ -38,7 +40,7 @@ import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.linearmath.Transform;
 
 /**
- * The player!
+ * Just a player in the game
  * 
  * @author TranquilMarmot
  */
@@ -46,7 +48,13 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	final static short COL_GROUP = CollisionTypes.SHIP;
 	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET);
 	
-	private static Box2D box = new Box2D(1.0f, 1.0f, Textures.TARGET.texture());
+	/** Used for drawing the lockon target thing */
+	private static Box2D lockonbox = new Box2D(1.0f, 1.0f, Textures.TARGET.texture());
+	
+	/** Used for searching for lockon stuff*/
+	private BoxShape lockonSweepBox = new BoxShape(new javax.vecmath.Vector3f(5.0f, 5.0f, 5.0f));
+	
+	private SoundSource pew;
 	
 	/** Radius for sphere that looks for pickups */
 	public float pickupSweepSize = 25.0f;
@@ -89,6 +97,8 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		// FIXME temp code
 		trail1 = new Trail(this, 15, 0.6f, Textures.TRAIL, new Vector3f(0.9f, 0.13f, 2.34f));
 		trail2 = new Trail(this, 15, 0.6f, Textures.TRAIL, new Vector3f(-0.8f, 0.13f, 2.34f));
+		
+		pew = new SoundSource(Sounds.PEW, false, this.location, new Vector3f(0.0f,0.0f,0.0f));
 	}
 
 	@Override
@@ -186,6 +196,12 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		LaserBullet bullet = new LaserBullet(this, bulletLocation, bulletRotation,
 				bulletModel, bulletMass, bulletRestitution, bulletDamage, bulletSpeed);
 		Entities.addDynamicEntity(bullet);
+		
+		pew.setLocation(Entities.camera.location);
+		javax.vecmath.Vector3f linvec = new javax.vecmath.Vector3f();
+		this.rigidBody.getLinearVelocity(linvec);
+		pew.setVelocity(new Vector3f(linvec.x, linvec.y, linvec.z));
+		pew.playSound();
 	}
 	
 	/**
@@ -362,16 +378,15 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	 * Searches for things to lock on to
 	 */
 	private void lockOn(){
-		BoxShape box = new BoxShape(new javax.vecmath.Vector3f(5.0f, 5.0f, 5.0f));
-		
 		ArrayList<Planet> hits = new ArrayList<Planet>();
 		ConvexResultCallback<Planet> callback = new ConvexResultCallback<Planet>(hits, CollisionTypes.PLANET);
 		
-		Physics.convexSweepTest(this, new Vector3f(0.0f, 0.0f, 500.0f), box, callback);
+		Physics.convexSweepTest(this, new Vector3f(0.0f, 0.0f, 500.0f), lockonSweepBox, callback);
 		
 		if(hits.size() > 0)
 			this.lockon = hits.get(0);
 		
+		// un-lock on to something if it's being removed
 		if(lockon != null && lockon.removeFlag)
 			lockon = null;
 	}
@@ -436,7 +451,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
-		// otherwise, we wouldn't be able to see the target
+		// disable depth test to draw target in front of everything
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		
 		Render3D.program.setUniform("Light.LightEnabled", false);
@@ -465,10 +480,10 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		// make it bigger!
 		Render3D.modelview.scale(new Vector3f(10.0f, 10.0f, 1.0f));
 		
-		// don't forget to set the modelview before drawing (d'oh!)
+		// don't forget to set the modelview before drawing
 		Render3D.program.setUniform("ModelViewMatrix", Render3D.modelview);
 		
-		box.draw();
+		lockonbox.draw();
 		
 		// reset everything to the way it was
 		GL11.glEnable(GL11.GL_DEPTH_TEST);

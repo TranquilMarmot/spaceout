@@ -91,7 +91,7 @@ public enum Textures {
 	/**
 	 * Initializes the texture object for this texture reference
 	 */
-	public void initTexture(){
+	protected void initTexture(){
 		if(!textureLoaded()){
 			try{
 				FileInputStream fis = new FileInputStream(file);

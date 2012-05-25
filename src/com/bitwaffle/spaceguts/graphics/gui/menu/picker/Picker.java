@@ -3,7 +3,11 @@ package com.bitwaffle.spaceguts.graphics.gui.menu.picker;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import org.lwjgl.util.vector.Vector3f;
+
+import com.bitwaffle.spaceguts.audio.SoundSource;
 import com.bitwaffle.spaceguts.graphics.gui.GUIObject;
+import com.bitwaffle.spaceout.resources.Sounds;
 import com.bitwaffle.spaceout.resources.Textures;
 
 
@@ -25,6 +29,10 @@ public class Picker<T> extends GUIObject{
 				@Override
 				public void actionPerformed(ActionEvent e){
 					selectedItem = (ListItem<T>)e.getSource();
+					
+					SoundSource select = new SoundSource(Sounds.FRIENDLY_ALERT, false, new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, 0.0f));
+					select.playSound();
+					select.removeFlag = true;
 				}
 			});
 		}
