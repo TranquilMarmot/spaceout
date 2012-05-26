@@ -5,10 +5,7 @@ import java.awt.event.ActionListener;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.button.MenuButton;
-import com.bitwaffle.spaceguts.graphics.gui.menu.LoadMenu;
-import com.bitwaffle.spaceguts.graphics.gui.menu.MenuTester;
 
 /**
  * Creates a Map of MenuButtons and ActionListeners based on the output of the MenuParser class.
@@ -23,7 +20,10 @@ public class MenuPainter {
 	
 	private Map<MenuButton, ActionListener> menuMap;
 	
-	private static final String XML_PATH = "res/XML/";
+	/* FIXME: If we instantiate this somewhere else,
+	 * it' won't get created for every menu in the game.
+	 */
+	private MenuCommandMap menuCommandMap = new MenuCommandMap();
 	
 	/* Height and width of vertical menu buttons */
 	private static final int VERT_MENU_BUTTON_WIDTH = 238;
@@ -54,14 +54,6 @@ public class MenuPainter {
 	}
 	
 	/**
-	 * Returns the menu. This is useful for drawing/rendering loops.
-	 * @return
-	 */
-	public Map<MenuButton, ActionListener> getMenu() {
-		return menuMap;	
-	}
-	
-	/**
 	 * Styles of menu. Vertical or Horizontal.
 	 */
 	public enum Style {
@@ -86,14 +78,31 @@ public class MenuPainter {
 		case HORIZONTAL_MENU: default:
 			w = HORIZ_MENU_BUTTON_WIDTH;
 			h = HORIZ_MENU_BUTTON_HEIGHT;
-			x = ((numButtons-1)*(HORIZ_MENU_BUTTON_WIDTH/2+HORIZ_MENU_SPACE/2))*-1;
+			x = -1*((numButtons-1)*((HORIZ_MENU_BUTTON_WIDTH+HORIZ_MENU_SPACE)/2));
 			y = startingHeight;
 			heightModifier = 0;
 			widthModifier = HORIZ_MENU_SPACE + HORIZ_MENU_BUTTON_WIDTH;
 			break;
 			
-        }
+		}
 	}
+	
+	/**
+	 * Returns the menu. This is useful for drawing/rendering loops.
+	 * @return
+	 */
+	public Map<MenuButton, ActionListener> getMenu() {
+		return menuMap;	
+	}
+	
+	/* TODO: Figure out why this draws in the wrong place...
+	 *  identical code elsewhere draws properly.
+	public void draw() {
+		for (Map.Entry<MenuButton, ActionListener> entry : this.getMenu().entrySet()) {
+			entry.getKey().draw();
+		}
+	}
+	*/
 	
 	private void buildMenu(Map<String,String> rawMenu) {
 		
@@ -104,6 +113,12 @@ public class MenuPainter {
 		}
 		
 		for (Map.Entry<String, String> entry : rawMenu.entrySet()) {
+			
+			/* This should theoretically create a MenuCommand
+			 * which can be accessed from the Action Listener
+			 */
+			final MenuCommand mc = menuCommandMap.getCommand(entry.getValue());
+			
 			MenuButton m;
 			m = new MenuButton(entry.getKey(),w,h,x,y);
 			
@@ -113,19 +128,18 @@ public class MenuPainter {
 			menuMap.put(m, new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					System.out.println("Welcome to Spaceout!");
-					// create the load menu
-					LoadMenu lmenu = new LoadMenu(0, 0, XML_PATH);
-					GUI.addGUIObject(lmenu);
-	
-					// let the GUI know that a menu is up
-					GUI.menuUp = true;
-	
-					// done with the main menu
-					MenuTester.done = true;
+					
+					/* FIXME: The problem is definititely not occuring 
+					 * due to the MenuCommandMap or MenuCommand interface 
+					 * it occured even when I threw a random chunk of
+					 * ActionListener code in here. The problem is
+					 * obviously the location of the ActionListener 
+					 * itself. This will take some fiddling to fix.
+					 */
+					mc.doCommand();
+					
 				}
 			});
-
 		}
 	}
 }

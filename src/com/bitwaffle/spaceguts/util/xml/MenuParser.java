@@ -55,9 +55,9 @@ public class MenuParser {
 	}
 	
 	/**
-	 * Print the menu, primarily for debugging
+	 * Print the menu for debugging
 	 */
-	public void printMenu() {
+	public void dbg_printMenu() {
 		for (Map.Entry<String, String> entry : menu.entrySet()) {
 			System.out.println(entry.getKey() 
 				+ " : " + entry.getValue());
