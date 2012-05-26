@@ -14,7 +14,7 @@ import org.w3c.dom.NodeList;
 import com.bitwaffle.spaceguts.entities.Camera;
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
-import com.bitwaffle.spaceout.entities.dynamic.Planet;
+import com.bitwaffle.spaceout.entities.dynamic.Asteroid;
 import com.bitwaffle.spaceout.entities.passive.Skybox;
 import com.bitwaffle.spaceout.entities.passive.Sun;
 import com.bitwaffle.spaceout.entities.passive.particles.Debris;
@@ -203,8 +203,7 @@ public class XMLParser {
 		float size = getFloat(ele, "size");
 		float restitution = getFloat(ele, "restitution");
 
-		Planet p = new Planet(location, rotation, size, mass, restitution,
-				texture);
+		Asteroid p = new Asteroid(location, rotation, size, mass, restitution);
 		p.type = name;
 		
 		Entities.addDynamicEntity(p);

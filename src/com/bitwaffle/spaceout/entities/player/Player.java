@@ -27,7 +27,7 @@ import com.bitwaffle.spaceguts.util.Runner;
 import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.entities.dynamic.LaserBullet;
 import com.bitwaffle.spaceout.entities.dynamic.Missile;
-import com.bitwaffle.spaceout.entities.dynamic.Planet;
+import com.bitwaffle.spaceout.entities.dynamic.Asteroid;
 import com.bitwaffle.spaceout.interfaces.Health;
 import com.bitwaffle.spaceout.interfaces.Inventory;
 import com.bitwaffle.spaceout.resources.Models;
@@ -378,8 +378,8 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	 * Searches for things to lock on to
 	 */
 	private void lockOn(){
-		ArrayList<Planet> hits = new ArrayList<Planet>();
-		ConvexResultCallback<Planet> callback = new ConvexResultCallback<Planet>(hits, CollisionTypes.PLANET);
+		ArrayList<Asteroid> hits = new ArrayList<Asteroid>();
+		ConvexResultCallback<Asteroid> callback = new ConvexResultCallback<Asteroid>(hits, CollisionTypes.PLANET);
 		
 		Physics.convexSweepTest(this, new Vector3f(0.0f, 0.0f, 500.0f), lockonSweepBox, callback);
 		
