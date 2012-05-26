@@ -5,18 +5,29 @@ import java.util.Map;
 
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.menu.LoadMenu;
-import com.bitwaffle.spaceguts.graphics.gui.menu.MenuTester;
+import com.bitwaffle.spaceguts.graphics.gui.menu.MainMenu;
+import com.bitwaffle.spaceguts.graphics.gui.menu.PauseMenu;
 import com.bitwaffle.spaceout.Runner;
 
 public class MenuCommandMap {
+	
+	/*
+	 * TODO: Convert to some kind of interface so this can
+	 * be created from the game (spaceout) instead of the
+	 * engine (spaceguts)
+	 */
 	
 	private static final String XML_PATH = "res/XML/";
 	Map<String, MenuCommand> commandMap;
 	
 	public MenuCommandMap() {
 		commandMap = new HashMap<String, MenuCommand>();
-		commandMap.put("QUIT",new MenuCommandMap.Quit());
+		commandMap.put("QUIT_GAME",new MenuCommandMap.Quit());
 		commandMap.put("LOAD_GAME", new MenuCommandMap.LoadGame());
+		
+		/* Pause Menu stuff. */
+		commandMap.put("RESUME", new MenuCommandMap.Resume());
+		commandMap.put("MAIN_MENU", new MenuCommandMap.BackToMenu());
 	}
 	
 	public MenuCommand getCommand(String str) {
@@ -31,15 +42,24 @@ public class MenuCommandMap {
 		}
 		
 	}
-	public class QuitToMenu implements MenuCommand {
+	public class BackToMenu implements MenuCommand {
 
 		@Override
 		public void doCommand() {
-			// TODO Auto-generated method stub
-			
+			PauseMenu.backToMainMenu = true;
+		}
+		
+	}
+	
+	public class Resume implements MenuCommand {
+
+		@Override
+		public void doCommand() {
+			Runner.paused = false;
 		}
 		
 	}	
+	
 	public class LoadGame implements MenuCommand {
 
 		@Override
@@ -53,7 +73,7 @@ public class MenuCommandMap {
 			GUI.menuUp = true;
 
 			// done with the main menu
-			MenuTester.done = true;
+			MainMenu.done = true;
 		}
 		
 	}

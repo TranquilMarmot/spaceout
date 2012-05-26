@@ -2,7 +2,7 @@ package com.bitwaffle.spaceguts.util.menu;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import com.bitwaffle.spaceguts.graphics.gui.button.MenuButton;
@@ -18,12 +18,12 @@ public class MenuPainter {
 	 * LinkedHashMap is used so that the order of the buttons can be maintained!
 	 */
 	
-	private Map<MenuButton, ActionListener> menuMap;
+	private LinkedList<MenuButton> menuList;
 	
-	/* FIXME: If we instantiate this somewhere else,
+	/* TODO: If we instantiate this somewhere else,
 	 * it' won't get created for every menu in the game.
 	 */
-	private MenuCommandMap menuCommandMap = new MenuCommandMap();
+	private static MenuCommandMap menuCommandMap = new MenuCommandMap();
 	
 	/* Height and width of vertical menu buttons */
 	private static final int VERT_MENU_BUTTON_WIDTH = 238;
@@ -61,6 +61,24 @@ public class MenuPainter {
 	}
 	
 	/**
+	 * Update buttons
+	 */
+	public void update() {
+		for (MenuButton button : menuList) {
+			button.update();
+		}
+	}
+	
+	/**
+	 * Draw buttons
+	 */
+	public void draw() {
+		for (MenuButton button : menuList) {
+			button.draw();
+		}
+	}
+	
+	/**
 	 * Sets the way the buttons are layed out. Horizontal buttons are auto-centered.
 	 * @param style Vertical or Horizontal menu layout
 	 */
@@ -88,25 +106,17 @@ public class MenuPainter {
 	}
 	
 	/**
-	 * Returns the menu. This is useful for drawing/rendering loops.
+	 * Returns the menu. This might be useful for drawing/rendering loops,
+	 * if you do them wrong...
 	 * @return
 	 */
-	public Map<MenuButton, ActionListener> getMenu() {
-		return menuMap;	
+	public LinkedList<MenuButton> getMenu() {
+		return menuList;	
 	}
-	
-	/* TODO: Figure out why this draws in the wrong place...
-	 *  identical code elsewhere draws properly.
-	public void draw() {
-		for (Map.Entry<MenuButton, ActionListener> entry : this.getMenu().entrySet()) {
-			entry.getKey().draw();
-		}
-	}
-	*/
 	
 	private void buildMenu(Map<String,String> rawMenu) {
 		
-		menuMap = new LinkedHashMap<MenuButton, ActionListener>();
+		menuList = new LinkedList<MenuButton>();
 		
 		if (style == Style.HORIZONTAL_MENU ) {
 			
@@ -121,25 +131,19 @@ public class MenuPainter {
 			
 			MenuButton m;
 			m = new MenuButton(entry.getKey(),w,h,x,y);
-			
-			y += heightModifier;
-			x += widthModifier;
-			
-			menuMap.put(m, new ActionListener() {
+			m.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					
-					/* FIXME: The problem is definititely not occuring 
-					 * due to the MenuCommandMap or MenuCommand interface 
-					 * it occured even when I threw a random chunk of
-					 * ActionListener code in here. The problem is
-					 * obviously the location of the ActionListener 
-					 * itself. This will take some fiddling to fix.
-					 */
 					mc.doCommand();
 					
 				}
 			});
+			
+			y += heightModifier;
+			x += widthModifier;
+			
+			menuList.add(m);
 		}
 	}
 }

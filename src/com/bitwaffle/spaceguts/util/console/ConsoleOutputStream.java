@@ -55,7 +55,6 @@ class ConsoleOutputStream extends OutputStream{
 	
 	@Override
 	public void write(int wat) throws IOException {
-		/*
 		char[] chars = Character.toChars(wat);
 		for(char c : chars){
 			// handle newline
@@ -71,7 +70,6 @@ class ConsoleOutputStream extends OutputStream{
 				s += Character.toString(c);
 			}
 		}
-		*/
 	}
 	
 	/**

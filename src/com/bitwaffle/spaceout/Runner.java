@@ -8,7 +8,6 @@ import org.lwjgl.opengl.Display;
 
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.menu.MainMenu;
-import com.bitwaffle.spaceguts.graphics.gui.menu.MenuTester;
 import com.bitwaffle.spaceguts.graphics.render.Graphics;
 import com.bitwaffle.spaceguts.input.KeyBindings;
 import com.bitwaffle.spaceguts.input.KeyboardManager;
@@ -106,7 +105,7 @@ public class Runner {
 		Debug.init();
 		Debug.printSysInfo();
 		
-		MenuTester mainMenu = new MenuTester();
+		MainMenu mainMenu = new MainMenu();
 		GUI.addGUIObject(mainMenu);
 		
 		Graphics.initGL();

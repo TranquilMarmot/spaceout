@@ -1,15 +1,16 @@
 package com.bitwaffle.spaceguts.graphics.gui.menu;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.GUIObject;
-import com.bitwaffle.spaceguts.graphics.gui.button.MenuButton;
 import com.bitwaffle.spaceguts.util.Debug;
 import com.bitwaffle.spaceguts.util.DisplayHelper;
+import com.bitwaffle.spaceguts.util.menu.MenuPainter;
+import com.bitwaffle.spaceguts.util.menu.MenuPainter.Style;
+import com.bitwaffle.spaceguts.util.xml.MenuParser;
 import com.bitwaffle.spaceout.Runner;
 import com.bitwaffle.spaceout.resources.Textures;
 
@@ -17,77 +18,47 @@ import com.bitwaffle.spaceout.resources.Textures;
 /**
  * Main menu to show when the game first runs
  * 
- * @author TranquilMarmot
+ * @author arthurdent
  * 
  */
 public class MainMenu extends GUIObject {
 	/** XML path */
-	private static final String XML_PATH = "res/XML/";
 
 	private static final int spaceoutYOffset = -200;
 	private static final int spaceoutScale = 2;
 
 	/** whether or not we're done with the main menu */
 	public static boolean done;
-
-	/** button to press to start the game */
-	private MenuButton loadMenuButton;
-
-	/** button to quit */
-	private MenuButton quitButton;
-
+	
 	private Textures background = Textures.MENU_BACKGROUND1;
 	private Textures spaceout = Textures.MENU_SPACEOUT_TEXT;
 
+	private MenuPainter menuPainter;
+	
 	/**
 	 * Main menu constructor. Creates a startButton that loads from an XML file.
 	 */
 	public MainMenu() {
 		super(0, 0);
-
 		done = false;
-
-		// create the button to go to the load menu
-		loadMenuButton = new MenuButton("Load", 238,
-				55, 0, -40);
-		loadMenuButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("Welcome to Spaceout!");
-				// create the load menu
-				 LoadMenu lmenu = new LoadMenu(0, 0, XML_PATH);
-				 GUI.addGUIObject(lmenu);
-
-				// let the GUI know that a menu is up
-				 GUI.menuUp = true;
-
-				// done with the main menu
-				done = true;
-			}
-		});
-
-		// create the main menu quit button
-		quitButton = new MenuButton("Exit", 238, 55, 0, 50);
-		quitButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				// end the game
-				Runner.done = true;
-			}
-		});
-
+		
+		// Build the main menu from menus.xml
+		MenuParser mp = new MenuParser("main");
+		Map<String,String> rawMenu = mp.getMenu();
+		
+		// Paint the menu to a hashmap
+		menuPainter = new MenuPainter(rawMenu, Style.VERTICAL_MENU, -40);
+		
 		// let the GUI know that a menu is up
 		GUI.menuUp = true;
-		
 		Runner.paused = false;
 	}
 
 	@Override
 	public void update() {
 		// update the buttons
-		loadMenuButton.update();
-		quitButton.update();
-
+		menuPainter.update();
+		
 		// remove the main menu if we're done with it
 		if (done) {
 			GUI.removeGUIObject(this);
@@ -163,8 +134,7 @@ public class MainMenu extends GUIObject {
 		GL11.glEnd();
 
 		// draw the buttons
-		loadMenuButton.draw();
-		quitButton.draw();
+		menuPainter.draw();
 
 		Debug.drawVersion();
 	}
