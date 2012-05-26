@@ -7,10 +7,10 @@
  * JBullet
  * 			TODO Fix physics debug drawing (might require fiddling with shaders)
  * 			TODO Give the sun an immovable physics object
+ * 			TODO Have the LaserBullet be represented by a cone shape instead of a convex hull
  * 			TODO Add a thing to the Physics Debug that also draws an arrow representing the current speed (first point is entity origin, second is origin+linear velocity)
  * 			TODO Give things thrusters
  * 			TODO Figure out how to warp things
- * 			TODO Explosions! Use a sphere to see what objects are inside of the explosion and apply impulse accordingly
  * 			TODO Turrets (pivoting on joints)
  * 			TODO Machine gun that just sends out ray tests for bullets (end point for the ray tests should be randomly varied by small amounts based on how long the gun is being shot)
  * OpenAL
@@ -29,21 +29,21 @@
  * 			TODO Mipmap textures so that they aren't as detailed from far away but are close up
  * 			TODO Inside the cockpit view!
  * 			TODO Get multiple lights working- have bullets give off a glow
+ * 			TODO Bump-maps, normal maps
  * 			TODO Spotlights- especially ones attached to ships
  * 			TODO Shadows
  * 			TODO You know how in Super Smash Bros, when somebody is off screen there's a little circle with a rendering of them in it? That might be nice for finding ships.
  * 		Models
- * 			TODO Multiple objects in one file
+ * 			TODO Look into having ships stored as a zip file containing an obj, a png, and an xml file (is it too slow? easier if its uncompressed?)
  * 			TODO Right now, it assumes that the obj file has vertices, normals, and texture coordinates in it.
  * 				 If any of those are not present, it will not work at all. Ideally, if normals aren't present they should be calculated.
  * 			TODO More powers! Things like initial rotation, center offset, etc. (keep in mind that these also have to be translated to bullet)
- * 			TODO Bump-maps, normal maps
+ *			TODO Make a model importer that takes in an obj file and lets you edit the mtl file and see how it would look in-game (look into blender plugins)
  * 			TODO Create an AnimatedModel class that has a an addFrame(Frame frame) and int curFrame.
  * System
  * 		General
  * 			TODO Make methods in the QuaternionHelper to take javax.vecmath.Vector3f and javax.vecmath.Quat4f objects (but still do the same math on them)
  * 			TODO Make a loading screen!
- * 			TODO Look into having ships stored as a zip file containing an obj, a png, and an xml file (is it too slow? easier if its uncompressed?)
  * 			TODO Add a "/save" command that saves the game and return to the main menu
  * 		Console
  * 			TODO Chat color parsing
@@ -59,8 +59,8 @@
  * 			TODO Make a CameraMode class that keeps track of things like max zoom, min zoom, offsets, etc (then it will just be set whenever the mode is switched! Make a CameraModes enum)
  * 			TODO Make the item at the crosshair glow with an outline, like in Left 4 Dead (this will require writing a new shader)
  * 			TODO Make grabbed entitities gravitate to the cursor
- *			TODO Make a model importer that takes in an obj file and lets you edit the mtl file and see how it would look in-game (look into blender plugins)
  *		Launcher
+ *			TODO Make it so that the game opens in the same window as the launcher (how does Minecraft do it?)
  *			TODO If the launcher can't get write access to the home directory, have it ask the user where to save the game to (rather than having it be passed in via args)
  *			TODO Give an option to un-install the game
  *			TODO Users should be able to start the game through the launcher or by just running spaceout.jar

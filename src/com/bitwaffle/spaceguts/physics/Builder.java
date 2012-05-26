@@ -97,6 +97,9 @@ public class Builder {
 			grabLogic(timeStep);
 
 		if (Keys.P.isPressed())
+			addRandomPlanet();
+		
+		if(Keys.I.isPressed())
 			addRandomAsteroid();
 		
 		if(Keys.O.isPressed()){
@@ -320,7 +323,7 @@ public class Builder {
     /**
      * Adds a random sphere to the world, right in front of the camera
      */
-    private void addRandomSphere() {
+    private void addRandomPlanet() {
             Random randy = new Random();
             float sphereSize = randy.nextInt(200) / 10.0f;
 
@@ -379,10 +382,10 @@ public class Builder {
 	 */
 	private void addRandomAsteroid() {
 		Random randy = new Random();
-		float sphereSize = randy.nextInt(200) / 10.0f;
+		float asteroidSize = randy.nextInt(500) / 10.0f;
 
-		float asteroidX = randy.nextFloat() * 750.0f;
-		float asteroidY = randy.nextFloat() * 750.0f;
+		float asteroidX = randy.nextFloat() * 1000.0f;
+		float asteroidY = randy.nextFloat() * 1000.0f;
 		float asteroidZ = -100.0f;
 		Vector3f asteroidLocation = new Vector3f(asteroidX, asteroidY, asteroidZ);
 
@@ -396,11 +399,7 @@ public class Builder {
 
 		Quaternion asteroidRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 
-		// float sphereMass = randy.nextFloat() * 10.0f;
-		float asteroidMass = sphereSize * 10.0f;
-
-		Asteroid p = new Asteroid(asteroidLocation, asteroidRotation, sphereSize,
-				asteroidMass, 0.0f);
+		Asteroid p = new Asteroid(asteroidLocation, asteroidRotation, asteroidSize);
 
 		Entities.addDynamicEntity(p);
 	}
