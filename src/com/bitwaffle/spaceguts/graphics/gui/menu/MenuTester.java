@@ -20,7 +20,6 @@ import com.bitwaffle.spaceout.resources.Textures;
 /**
  * Main menu to show when the game first runs
  * 
- * @author TranquilMarmot
  * @author arthurdent
  * 
  */
@@ -46,7 +45,7 @@ public class MenuTester extends GUIObject {
 		done = false;
 		
 		// Build the main menu from menus.xml
-		MenuParser mp = new MenuParser("test");
+		MenuParser mp = new MenuParser("main");
 		Map<String,String> rawMenu = mp.getMenu();
 		
 		// Paint the menu to a hashmap

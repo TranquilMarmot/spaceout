@@ -2,7 +2,7 @@ package com.bitwaffle.spaceguts.util.menu;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
@@ -12,10 +12,14 @@ import com.bitwaffle.spaceguts.graphics.gui.menu.MenuTester;
 
 /**
  * Creates a Map of MenuButtons and ActionListeners based on the output of the MenuParser class.
- * @author nick
+ * @author arthurdent
  *
  */
 public class MenuPainter {
+	
+	/*
+	 * LinkedHashMap is used so that the order of the buttons can be maintained!
+	 */
 	
 	private Map<MenuButton, ActionListener> menuMap;
 	
@@ -93,7 +97,7 @@ public class MenuPainter {
 	
 	private void buildMenu(Map<String,String> rawMenu) {
 		
-		menuMap = new HashMap<MenuButton, ActionListener>();
+		menuMap = new LinkedHashMap<MenuButton, ActionListener>();
 		
 		if (style == Style.HORIZONTAL_MENU ) {
 			

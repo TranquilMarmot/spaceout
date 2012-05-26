@@ -1,11 +1,5 @@
 <?xml version="1.0"?>
 <menu_list>
-	<menu name="test">
-		<button
-			name="Test1" 
-			command="TEST"
-		/>
-	</menu>
 	<menu name="main">
 		<button
 			name="Load"
@@ -16,18 +10,22 @@
 			command="QUIT_GAME"
 		/>
 	</menu>
-	<menu name="ingame">
+	<menu name="pause">
 		<button
 			name="Save"
 			command="SAVE_GAME"
 		/>
 		<button
-			name="Main Menu"
-			command="QUIT_TO_MENU"
+			name="Resume"
+			command="UNPAUSE"
 		/>
 		<button
-			name="Quit"
-			command="QUIT_GAME"
+			name="Options"
+			command="OPTIONS"
+		/>
+		<button
+			name="Main Menu"
+			command="QUIT_TO_MENU"
 		/>
 	</menu>
 </menu_list>

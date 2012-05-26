@@ -1,7 +1,7 @@
 package com.bitwaffle.spaceguts.util.xml;
 
 import java.io.File;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -70,7 +70,7 @@ public class MenuParser {
 	 */
 	private Map<String,String> buildMenu() {
 		
-		Map<String,String> parsedMenu = new HashMap<String,String>();
+		Map<String,String> parsedMenu = new LinkedHashMap<String,String>();
 		
 		try {
 	
