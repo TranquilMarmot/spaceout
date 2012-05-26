@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<menu_list>
+	<menu name="test">
+		<button
+			name="Test1" 
+			command="TEST"
+		/>
+	</menu>
+	<menu name="main">
+		<button
+			name="Load"
+			command="LOAD_GAME"
+		/>
+		<button
+			name="Quit"
+			command="QUIT_GAME"
+		/>
+	</menu>
+	<menu name="ingame">
+		<button
+			name="Save"
+			command="SAVE_GAME"
+		/>
+		<button
+			name="Main Menu"
+			command="QUIT_TO_MENU"
+		/>
+		<button
+			name="Quit"
+			command="QUIT_GAME"
+		/>
+	</menu>
+</menu_list>
