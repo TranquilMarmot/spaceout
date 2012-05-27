@@ -1,4 +1,4 @@
-package com.bitwaffle.spaceguts.util;
+package com.bitwaffle.spaceout;
 
 import java.util.Random;
 
@@ -13,6 +13,8 @@ import com.bitwaffle.spaceguts.input.KeyBindings;
 import com.bitwaffle.spaceguts.input.KeyboardManager;
 import com.bitwaffle.spaceguts.input.MouseManager;
 import com.bitwaffle.spaceguts.physics.Physics;
+import com.bitwaffle.spaceguts.util.Debug;
+import com.bitwaffle.spaceguts.util.DisplayHelper;
 import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.resources.Models;
 import com.bitwaffle.spaceout.resources.ResourceLoader;

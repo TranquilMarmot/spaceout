@@ -16,6 +16,7 @@ import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.input.KeyBindings;
 import com.bitwaffle.spaceguts.util.console.Console;
+import com.bitwaffle.spaceout.Runner;
 import com.bitwaffle.spaceout.resources.Paths;
 
 

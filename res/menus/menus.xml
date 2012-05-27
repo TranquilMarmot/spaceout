@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<menu_list>
+	<menu name="main">
+		<button
+			name="Load"
+			command="LOAD_GAME"
+		/>
+		<button
+			name="Quit"
+			command="QUIT_GAME"
+		/>
+	</menu>
+	<menu name="pause">
+		<button
+			name="Resume"
+			command="RESUME"
+		/>
+		<button
+			name="Main Menu"
+			command="MAIN_MENU"
+		/>
+		<button
+			name="Save"
+			command="SAVE_GAME"
+		/>
+		<button
+			name="Quit"
+			command="QUIT_GAME"
+		/>
+	</menu>
+</menu_list>

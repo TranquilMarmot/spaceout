@@ -18,6 +18,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
 
 import com.bitwaffle.spaceguts.input.KeyBindings;
+import com.bitwaffle.spaceout.Runner;
 
 
 /**
