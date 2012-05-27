@@ -15,7 +15,6 @@ import org.w3c.dom.NodeList;
 /**
  * Parse menus from XML files into Map<String,String>
  * 
- * @author TranquilMarmot
  * @author arthurdent
  * 
  */
