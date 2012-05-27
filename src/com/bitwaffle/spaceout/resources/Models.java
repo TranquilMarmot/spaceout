@@ -42,7 +42,7 @@ public enum Models {
 		return model != null;
 	}
 	
-	public void initModel(){
+	protected void initModel(){
 		//System.out.println("initializing model " + this);
 		if(!modelLoaded()){
 			model = ModelLoader.loadObjFile(file, scale, texture);

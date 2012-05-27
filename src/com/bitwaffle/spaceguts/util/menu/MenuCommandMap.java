@@ -3,11 +3,13 @@ package com.bitwaffle.spaceguts.util.menu;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.bitwaffle.spaceguts.audio.Audio;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.menu.LoadMenu;
 import com.bitwaffle.spaceguts.graphics.gui.menu.MainMenu;
 import com.bitwaffle.spaceguts.graphics.gui.menu.PauseMenu;
 import com.bitwaffle.spaceout.Runner;
+import com.bitwaffle.spaceout.resources.Sounds;
 
 public class MenuCommandMap {
 	
@@ -47,6 +49,7 @@ public class MenuCommandMap {
 		@Override
 		public void doCommand() {
 			PauseMenu.backToMainMenu = true;
+			Audio.playSoundOnceAtListener(Sounds.BACK);
 		}
 		
 	}
@@ -56,6 +59,7 @@ public class MenuCommandMap {
 		@Override
 		public void doCommand() {
 			Runner.paused = false;
+			Audio.playSoundOnceAtListener(Sounds.FRIENDLY_ALERT);
 		}
 		
 	}	
@@ -71,6 +75,8 @@ public class MenuCommandMap {
 
 			// let the GUI know that a menu is up
 			GUI.menuUp = true;
+			
+			Audio.playSoundOnceAtListener(Sounds.SELECT);
 
 			// done with the main menu
 			MainMenu.done = true;

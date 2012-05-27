@@ -5,11 +5,15 @@ import java.util.NoSuchElementException;
 
 import javax.vecmath.Quat4f;
 
+import org.lwjgl.util.vector.Vector3f;
+
+import com.bitwaffle.spaceguts.audio.SoundSource;
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceout.entities.dynamic.Missile;
 import com.bitwaffle.spaceout.interfaces.Projectile;
 import com.bitwaffle.spaceout.interfaces.Health;
+import com.bitwaffle.spaceout.resources.Sounds;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.narrowphase.ManifoldPoint;
 import com.bulletphysics.collision.narrowphase.PersistentManifold;
@@ -95,10 +99,20 @@ public class DynamicEntityCallback extends InternalTickCallback {
 						bulletHealthCollision((Projectile) entA, (Health) entB);
 						if(entA instanceof Missile)
 							((Missile) entA).explode();
+						else{
+							SoundSource hit = new SoundSource(Sounds.HIT, false, entA.location, new Vector3f(0.0f, 0.0f, 0.0f));
+							hit.playSound();
+							hit.removeFlag = true;
+						}
 					} else if(entB instanceof Projectile && entA instanceof Health){
 						bulletHealthCollision((Projectile) entB, (Health) entA);
 						if(entB instanceof Missile)
 							((Missile) entB).explode();
+						else{
+							SoundSource hit = new SoundSource(Sounds.HIT, false, entB.location, new Vector3f(0.0f, 0.0f, 0.0f));
+							hit.playSound();
+							hit.removeFlag = true;
+						}
 					}
 					
 					/*

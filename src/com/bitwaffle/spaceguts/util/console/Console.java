@@ -24,11 +24,11 @@ import com.bitwaffle.spaceout.resources.Textures;
  * 
  */
 public class Console {
-	/**
+	/*
 	 * TODO: Decide what needs to be static and what doesn't 
 	 * - The input bar will remain static, while the command scrollback is per object.
 	 * 		(this should already work fine) 
-	 * - The console itself probably shouldn't be static, especially if we plan on having
+	 * - The console itself (Console.console) probably shouldn't be static, especially if we plan on having
 	 * 	 multiple consoles
 	 * TODO: Implement tabs 
 	 * TODO: Fix scrolling so it only happens in the tab you have open 
@@ -36,6 +36,7 @@ public class Console {
 	 * TODO: Implement chat log files
 	 * TODO: Fix backspace erratic behvaior
 	 * TODO: A bunch of crap that belongs in util.console is still in util.Debug
+	 * FIXME: The code to draw the console is super complex and muddled, it might help to split it into multiple methods
 	 */
 
 	/** the console */
@@ -122,6 +123,13 @@ public class Console {
 	/** all the commands that are typed in */
 	private ArrayList<String> commandHistoryList;
 	private int chIndex;
+	
+	/**
+	 * Default console constructor
+	 */
+	public Console() {
+		this(0, 10, 65, 14);
+	}
 
 	/**
 	 * Creates a new console with the specified parameters
@@ -156,13 +164,6 @@ public class Console {
 		PrintStream stream = new PrintStream(out);
 		System.setOut(stream);
 		Debug.printSysInfo();
-	}
-
-	/**
-	 * Default console constructor
-	 */
-	public Console() {
-		this(0, 10, 65, 14);
 	}
 
 	/**
@@ -284,7 +285,6 @@ public class Console {
 	 */
 	public void submit() {
 		if (input.length() > 0) {
-
 			// trim off any whitespace
 			input.trim();
 			// do a command if the input starts with a /
@@ -313,7 +313,6 @@ public class Console {
 			autoClose = false;
 			Console.consoleOn = false;
 		}
-
 	}
 
 	/**
@@ -365,36 +364,27 @@ public class Console {
 			// split the command at the spaces
 			StringTokenizer toker = new StringTokenizer(comm, " ");
 
-			// grab the actual command and lop off the / at the beginning
-			String command = toker.nextToken();
-			command = command.substring(1, command.length());
+			/*
+			 * Grab the actual command and lop off the / at the beginning
+			 * Note that calling toker.nextToken() advances the tokenizer to the next token.
+			 * This way, when the tokenizer is passed on to the command being executed,
+			 * calling toker.nextToken() again will give you the first argument for the command.
+			 */
+			String commandString = toker.nextToken();
+			commandString = commandString.substring(1, commandString.length());
 
-			boolean commandHelp = false;
+			if(commandString.charAt(0) == '?')
+				commandString = "help";
 
-			try {
-				commandHelp = comm.substring(command.length() + 2,
-						command.length() + 6).equals("help");
-			} catch (StringIndexOutOfBoundsException e) {
-			}
-
-			// if the command string is followed immediately by the string
-			// "help", call the help function for that command. Else, issue the
-			// command.
-			if (comm.length() > 7 && commandHelp) {
-				ConsoleCommands.help.issue(new StringTokenizer(command));
-			} else {
-				try {
-					// this one line issues a command! Neat!
-					ConsoleCommands.valueOf(command).issue(toker);
-				} catch (NumberFormatException e) {
-					System.out.println("Incorrect number format "
-							+ e.getLocalizedMessage().toLowerCase());
-				} catch (IllegalArgumentException e) {
-					System.out.println("Command not found! (" + command + ")");
-				} catch (NoSuchElementException e) {
-					System.out.println("Not enough vairbales for command '"
-							+ command + "'!");
-				}
+			try{
+				ConsoleCommands.valueOf(commandString).issue(toker);
+			} catch (NumberFormatException e) {
+				System.out.println("Incorrect number format " + e.getLocalizedMessage().toLowerCase());
+			} catch (IllegalArgumentException e) {
+				System.out.println("Command not found! (" + commandString + ")");
+			} catch (NoSuchElementException e) {
+				System.out.println("Not enough vairbales for command '"
+						+ commandString + "'!");
 			}
 		}
 	}
@@ -453,21 +443,25 @@ public class Console {
 				GL11.glColor4f(0.15f, 0.15f, 0.15f, 0.35f);
 				GL11.glBegin(GL11.GL_QUADS);
 				{
-					GL11.glVertex2f(0.0f, DisplayHelper.windowHeight
-							- Debug.font.getAscent() - 7);
 					GL11.glVertex2f(
 							0.0f,
-							DisplayHelper.windowHeight
-									- ((Console.console.consoleHeight + 2) * Debug.font
-											.getAscent()));
+							DisplayHelper.windowHeight - Debug.font.getAscent() - 7
+					);
+					
+					GL11.glVertex2f(
+							0.0f,
+							DisplayHelper.windowHeight - ((Console.console.consoleHeight + 2) * Debug.font.getAscent())
+					);
+					
 					GL11.glVertex2f(
 							(consoleWidth * 9) + 10,
-							DisplayHelper.windowHeight
-									- ((Console.console.consoleHeight + 2) * Debug.font
-											.getAscent()));
-					GL11.glVertex2f((consoleWidth * 9) + 10,
-							DisplayHelper.windowHeight - Debug.font.getAscent()
-									- 7);
+							DisplayHelper.windowHeight - ((Console.console.consoleHeight + 2) * Debug.font.getAscent())
+					);
+					
+					GL11.glVertex2f(
+							(consoleWidth * 9) + 10,
+							DisplayHelper.windowHeight - Debug.font.getAscent() - 7
+					);
 				}
 				GL11.glEnd();
 				/* END CONSOLE BACKGROUND */
