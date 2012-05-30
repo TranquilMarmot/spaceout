@@ -2,21 +2,19 @@ package com.bitwaffle.spaceout.entities.passive;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Stack;
 
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
-import com.bitwaffle.spaceguts.entities.Entity;
 import com.bitwaffle.spaceguts.entities.Entities;
+import com.bitwaffle.spaceguts.entities.Entity;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceout.entities.dynamic.Asteroid;
+import com.bulletphysics.linearmath.Transform;
 
 public class AsteroidField extends Entity{
 	Random randy;
 	private ArrayList<Asteroid> asteroids;
-	private Stack<Asteroid> asteroidsToAdd;
-	private Stack<Asteroid> asteroidsToRemove;
 	private int numAsteroids;
 	private float releaseInterval, lastRelease = 0.0f;
 	private float minSize, maxSize;
@@ -26,8 +24,6 @@ public class AsteroidField extends Entity{
 	public AsteroidField(Vector3f location, Vector3f range, Vector3f asteroidSpeed, int numAsteroids, int initialAsteroids, float releaseInterval, float minSize, float maxSize){
 		this.numAsteroids = numAsteroids;
 		asteroids = new ArrayList<Asteroid>(numAsteroids);
-		asteroidsToAdd = new Stack<Asteroid>();
-		asteroidsToRemove = new Stack<Asteroid>();
 		
 		this.releaseInterval = releaseInterval;
 		this.minSize = minSize;
@@ -65,7 +61,7 @@ public class AsteroidField extends Entity{
 		
 		float impulseX = randy.nextBoolean() ?
 				randy.nextFloat() * asteroidSpeed.x:
-				randy.nextFloat() * -asteroidSpeed.x;
+				randy.nextFloat() * asteroidSpeed.x;
 				
 		float impulseY = randy.nextBoolean() ?
 				randy.nextFloat() * asteroidSpeed.y:
@@ -78,9 +74,7 @@ public class AsteroidField extends Entity{
 		a.rigidBody.applyCentralImpulse(new javax.vecmath.Vector3f(impulseX, impulseY, impulseZ));
 		
 		Entities.addDynamicEntity(a);
-		asteroidsToAdd.push(a);
-		
-		System.out.printf(":%d size %f at %f,%f,%f\n", i++, asteroidSize, asteroidX, asteroidY, asteroidZ);
+		asteroids.add(a);
 	}
 
 	@Override
@@ -92,21 +86,37 @@ public class AsteroidField extends Entity{
 			lastRelease = 0.0f;
 		}
 		
+		// FIXME this stack causes the game to freeze?
+		//Stack<Asteroid> toRemove = new Stack<Asteroid>();
 		for(Asteroid a : asteroids){
+			a.update(timeStep);
 			if(a.removeFlag){
-				asteroidsToRemove.push(a);
+				//toRemove.push(a);
+			} else{
+				Transform trans = new Transform();
+				a.rigidBody.getWorldTransform(trans);
+				
+				if(a.location.x > this.location.x + (range.x * 2.0f))
+					trans.origin.x = this.location.x - (range.x * 2.0f);
+				else if(a.location.x < this.location.x - (range.x * 2.0f))
+					trans.origin.x = this.location.x + (range.x * 2.0f);
+				
+				if(a.location.y > this.location.y + (range.y * 2.0f))
+					trans.origin.y = this.location.y - (range.y * 2.0f);
+				else if(a.location.y < this.location.y - (range.y * 2.0f))
+					trans.origin.y = this.location.y + (range.y * 2.0f);
+				
+				if(a.location.z > this.location.z + (range.z * 2.0f))
+					trans.origin.z = this.location.z - (range.z * 2.0f);
+				else if(a.location.z < this.location.z - (range.z * 2.0f))
+					trans.origin.z = this.location.z + (range.z * 2.0f);
+				
+				a.rigidBody.setWorldTransform(trans);
 			}
 		}
-		
-		while(!asteroidsToAdd.isEmpty()){
-			Asteroid add = asteroidsToAdd.pop();
-			asteroids.add(add);
-		}
-		
-		while(!asteroidsToRemove.isEmpty()){
-			Asteroid remove = asteroidsToRemove.pop();
-			asteroids.remove(remove);
-		}
+	
+		//while(!toRemove.isEmpty())
+		//	asteroids.remove(toRemove.pop());
 	}
 
 	@Override public void draw() {}

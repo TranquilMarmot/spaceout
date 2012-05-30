@@ -28,8 +28,13 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 	final static short COL_GROUP = CollisionTypes.PLANET;
 	final static short COL_WITH = (short)(CollisionTypes.SHIP | CollisionTypes.WALL | CollisionTypes.PLANET | CollisionTypes.PICKUP | CollisionTypes.PROJECTILE);
 	
+	/** The fastest the asteroid can spin */
+	final static float ANGVEC_CAP = 10.0f;
+	
+	/** How much damage the asteroid does when it hits the player */
 	final static int DAMAGE = 10;
 	
+	/** How bouncy the asteroid is */
 	final static float ASTEROID_RESTITUTION = 0.5f; 
 	
 	/** Size at which the asteroid will drop loot instead of splitting into smaller asteroids*/
@@ -85,6 +90,21 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 	@Override
 	public void update(float timeStep){
 		super.update(timeStep);
+		
+		capAngularVelocity();
+	}
+	
+	private void capAngularVelocity(){
+		javax.vecmath.Vector3f angVec = new javax.vecmath.Vector3f();
+		rigidBody.getAngularVelocity(angVec);
+		float speed = angVec.length();
+		System.out.println(speed);
+		if(speed > ANGVEC_CAP){
+			angVec.x *= ANGVEC_CAP / speed;
+			angVec.y *= ANGVEC_CAP / speed;
+			angVec.z *= ANGVEC_CAP / speed;
+			rigidBody.setAngularVelocity(angVec);
+		}
 	}
 
 	@Override
