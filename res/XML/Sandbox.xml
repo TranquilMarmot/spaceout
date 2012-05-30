@@ -9,15 +9,15 @@
         
         <Asteroids>
         		<location>600.0f,600.0f,600.0f</location>
-        		<range>2000.0f,2000.0f,2000.0f</range>
+        		<range>1750.0f,1750.0f,1750.0f</range>
         		<asteroidSpeed>500000.0f,500000.0f,500000.0f</asteroidSpeed>
-        		<numAsteroids>50</numAsteroids>
-        		<initialAsteroids>25</initialAsteroids>
-        		<releaseInterval>3.0f</releaseInterval>
+        		<numAsteroids>150</numAsteroids>
+        		<initialAsteroids>50</initialAsteroids>
+        		<releaseInterval>5.0f</releaseInterval>
         		<minSize>25</minSize>
         		<maxSize>200</maxSize>
         </Asteroids>
-        
+                
         <Sun>
                 <location>-600.0f,-600.0f,-2.0f</location>
                 <size>200.0f</size>

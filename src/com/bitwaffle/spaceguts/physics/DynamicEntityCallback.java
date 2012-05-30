@@ -39,7 +39,7 @@ public class DynamicEntityCallback extends InternalTickCallback {
 				c = it.next();
 			} catch (NoSuchElementException e) {
 				//FIXME what causes this?
-				System.out.println("NoSuchElement! " + e.getLocalizedMessage());
+				it = world.getCollisionObjectArray().iterator();
 			}
 
 			if (c != null) {
@@ -126,7 +126,7 @@ public class DynamicEntityCallback extends InternalTickCallback {
 			((Missile) bullet).explode();
 		// else make a noise
 		else{
-			SoundSource hit = new SoundSource(Sounds.HIT, false, ((DynamicEntity)health).location, new Vector3f(0.0f, 0.0f, 0.0f));
+			SoundSource hit = new SoundSource(Sounds.HIT, false, ((DynamicEntity)health).location, new Vector3f(0.01f, 0.01f, 0.01f));
 			hit.playSound();
 			hit.removeFlag = true;
 		}

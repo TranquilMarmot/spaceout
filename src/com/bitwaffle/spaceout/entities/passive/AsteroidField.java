@@ -2,6 +2,7 @@ package com.bitwaffle.spaceout.entities.passive;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Stack;
 
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
@@ -87,11 +88,11 @@ public class AsteroidField extends Entity{
 		}
 		
 		// FIXME this stack causes the game to freeze?
-		//Stack<Asteroid> toRemove = new Stack<Asteroid>();
+		Stack<Asteroid> toRemove = new Stack<Asteroid>();
 		for(Asteroid a : asteroids){
 			a.update(timeStep);
 			if(a.removeFlag){
-				//toRemove.push(a);
+				toRemove.push(a);
 			} else{
 				Transform trans = new Transform();
 				a.rigidBody.getWorldTransform(trans);
@@ -115,8 +116,8 @@ public class AsteroidField extends Entity{
 			}
 		}
 	
-		//while(!toRemove.isEmpty())
-		//	asteroids.remove(toRemove.pop());
+		while(!toRemove.isEmpty())
+			asteroids.remove(toRemove.pop());
 	}
 
 	@Override public void draw() {}

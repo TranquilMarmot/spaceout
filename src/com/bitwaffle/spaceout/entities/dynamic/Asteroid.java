@@ -28,8 +28,15 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 	final static short COL_GROUP = CollisionTypes.PLANET;
 	final static short COL_WITH = (short)(CollisionTypes.SHIP | CollisionTypes.WALL | CollisionTypes.PLANET | CollisionTypes.PICKUP | CollisionTypes.PROJECTILE);
 	
+	private static Matrix4f oldModelView = new Matrix4f();
+	
 	/** The fastest the asteroid can spin */
 	final static float ANGVEC_CAP = 10.0f;
+	
+	final static float LINVEC_CAP = 10.0f;
+	
+	/** How fast the asteroids this asteroid creates will be spinning when they're created */
+	final static float SPAWN_ANGVEC_FACTOR = 25.0f;
 	
 	/** How much damage the asteroid does when it hits the player */
 	final static int DAMAGE = 10;
@@ -38,7 +45,7 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 	final static float ASTEROID_RESTITUTION = 0.5f; 
 	
 	/** Size at which the asteroid will drop loot instead of splitting into smaller asteroids*/
-	final static float LOOT_SIZE = 10.0f;
+	final static float LOOT_SIZE = 25.0f;
 	
 	/** How many items an asteroid drops when it's destroyed and is smaller than LOOT_SIZE */
 	final static int LOOT_AMOUNT = 25;
@@ -49,8 +56,10 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 	/** How heavy an asteroid is based on it's size (mass = size * MASS_FACTOR) */
 	final static float MASS_FACTOR = 10;
 	
-	int health = 100;
+	/** How much health the asteroid has */
+	int health = 80;
 	
+	/** How big the asteroid is */
 	private float size;
 	
 	public Asteroid(Vector3f location, Quaternion rotation, float size) {
@@ -66,7 +75,6 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 	
 	@Override
 	public void draw(){
-		Matrix4f oldModelView = new Matrix4f();
 		oldModelView.load(Render3D.modelview);
 		Render3D.modelview.scale(new org.lwjgl.util.vector.Vector3f(size, size, size));
 		Render3D.program.setUniform("ModelViewMatrix", Render3D.modelview);
@@ -98,7 +106,18 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 		javax.vecmath.Vector3f angVec = new javax.vecmath.Vector3f();
 		rigidBody.getAngularVelocity(angVec);
 		float speed = angVec.length();
-		System.out.println(speed);
+		if(speed > ANGVEC_CAP){
+			angVec.x *= ANGVEC_CAP / speed;
+			angVec.y *= ANGVEC_CAP / speed;
+			angVec.z *= ANGVEC_CAP / speed;
+			rigidBody.setAngularVelocity(angVec);
+		}
+	}
+	
+	private void capLinearVelocity(){
+		javax.vecmath.Vector3f angVec = new javax.vecmath.Vector3f();
+		rigidBody.getAngularVelocity(angVec);
+		float speed = angVec.length();
 		if(speed > ANGVEC_CAP){
 			angVec.x *= ANGVEC_CAP / speed;
 			angVec.y *= ANGVEC_CAP / speed;
@@ -119,7 +138,9 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 		if(health <= 0){
 			explode();
 		}
-		
+		size -= amount / 2.0f;
+		if(size <= LOOT_SIZE)
+			explode();
 	}
 	
 	/**
@@ -150,13 +171,9 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 		asteroidY = randy.nextBoolean() ? -asteroidY - size : asteroidY + size;
 		asteroidZ = randy.nextBoolean() ? -asteroidZ - size : asteroidZ + size;
 		
-		Vector3f asteroidLocation = new Vector3f();
+		Vector3f asteroidLocation = new Vector3f(asteroidX, asteroidY, asteroidZ);
 
-		// put the asteroid right in front of the camera
-		Vector3f downInFront = QuaternionHelper.rotateVectorByQuaternion(
-				new Vector3f(asteroidX, asteroidY, asteroidZ), this.rotation);
-
-		Vector3f.add(this.location, downInFront, asteroidLocation);
+		Vector3f.add(this.location, asteroidLocation, asteroidLocation);
 
 		Quaternion asteroidRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		
@@ -167,7 +184,21 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 		asteroidRotation = QuaternionHelper.rotate(asteroidRotation, new Vector3f(xRot,yRot, zRot));
 		
 		Asteroid a = new Asteroid(asteroidLocation, asteroidRotation, newSize);
+		
+		javax.vecmath.Vector3f linVec = new javax.vecmath.Vector3f();
+		this.rigidBody.getLinearVelocity(linVec);
+		if(randy.nextBoolean()) linVec.x = -linVec.x;
+		if(randy.nextBoolean()) linVec.y = -linVec.y;
+		if(randy.nextBoolean()) linVec.z = -linVec.z;
+		a.rigidBody.setLinearVelocity(linVec);
 
+		javax.vecmath.Vector3f angVec = new javax.vecmath.Vector3f();
+		this.rigidBody.getAngularVelocity(angVec);
+		if(randy.nextBoolean()) angVec.x = -angVec.x;
+		if(randy.nextBoolean()) angVec.y = -angVec.y;
+		if(randy.nextBoolean()) angVec.y = -angVec.y;
+		a.rigidBody.setAngularVelocity(angVec);
+		
 		Entities.addDynamicEntity(a);
 	}
 	
@@ -198,7 +229,7 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 		
 		diamondRotation = QuaternionHelper.rotate(diamondRotation, new Vector3f(xRot,yRot, zRot));
 		
-		float diamondStopSpeed = 0.3f;
+		float diamondStopSpeed = 0.1f;
 		
 		Diamond d = new Diamond(diamondLocation, diamondRotation, diamondStopSpeed);
 
