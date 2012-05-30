@@ -7,6 +7,17 @@
                 <model>SHIP1</model>
         </Player>
         
+        <Asteroids>
+        		<location>600.0f,600.0f,600.0f</location>
+        		<range>1500.0f,1500.0f,1500.0f</range>
+        		<asteroidSpeed>500000.0f,500000.0f,500000.0f</asteroidSpeed>
+        		<numAsteroids>100</numAsteroids>
+        		<initialAsteroids>50</initialAsteroids>
+        		<releaseInterval>3.0f</releaseInterval>
+        		<minSize>25</minSize>
+        		<maxSize>200</maxSize>
+        </Asteroids>
+        
         <Sun>
                 <location>-600.0f,-600.0f,-2.0f</location>
                 <size>200.0f</size>

@@ -48,8 +48,13 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	final static short COL_GROUP = CollisionTypes.SHIP;
 	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET);
 	
+	/** How long the player stays invincible for */
 	private static final float INVINCIBLE_TIME = 1.0f;
+	
+	/** Whether or not the player is currently invincible */
 	private boolean isInvincible = false;
+	
+	/** How long the player has been invincible for (if this >= INVINCIBLE_TIME, the player is no longer invincible) */
 	private float timeInvincible = 0.0f;
 	
 	/** Used for drawing the lockon target thing */
@@ -58,6 +63,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	/** Used for searching for lockon stuff*/
 	private BoxShape lockonSweepBox = new BoxShape(new javax.vecmath.Vector3f(5.0f, 5.0f, 5.0f));
 	
+	/** Sound source for making the gun shooting noise */
 	private SoundSource pew;
 	
 	/** Radius for sphere that looks for pickups */

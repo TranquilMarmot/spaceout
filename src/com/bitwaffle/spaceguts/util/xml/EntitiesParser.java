@@ -9,12 +9,14 @@ import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.bitwaffle.spaceguts.entities.Camera;
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceout.entities.dynamic.Planet;
+import com.bitwaffle.spaceout.entities.passive.AsteroidField;
 import com.bitwaffle.spaceout.entities.passive.Skybox;
 import com.bitwaffle.spaceout.entities.passive.Sun;
 import com.bitwaffle.spaceout.entities.passive.particles.Debris;
@@ -32,7 +34,7 @@ import com.bitwaffle.spaceout.ship.Ship;
  * @see Entities
  * 
  */
-public class XMLParser {
+public class EntitiesParser {
 	/**
 	 * Loads entities from an XML file
 	 * 
@@ -77,7 +79,7 @@ public class XMLParser {
 				 * any node with the name #text is, well, text so we skip it we
 				 * also skip the player's node becayse we already grabbed it
 				 */
-				if (!nodes.item(i).getNodeName().equals("#text")) {
+				if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
 					// grab the element
 					Element ele = (Element) nodes.item(i);
 
@@ -116,7 +118,24 @@ public class XMLParser {
 			makePlanet(ele);
 		} else if (type.equals("saucer")) {
 			makeSaucer(ele);
+		} else if (type.equals("asteroids")){
+			makeAsteroidField(ele);
 		}
+	}
+	
+	private static void makeAsteroidField(Element ele){
+		Vector3f location = getVector3f(ele, "location");
+		Vector3f range = getVector3f(ele, "range");
+		Vector3f asteroidSpeed = getVector3f(ele, "asteroidSpeed");
+		int numAsteroids = getInt(ele, "numAsteroids");
+		int initialAsteroids = getInt(ele, "initialAsteroids");
+		float releaseInterval = getFloat(ele, "releaseInterval");
+		int minSize = getInt(ele, "minSize");
+		int maxSize = getInt(ele, "maxSize");
+		
+		AsteroidField field = new AsteroidField(location, range, asteroidSpeed, numAsteroids, initialAsteroids, releaseInterval, minSize, maxSize);
+		
+		Entities.addPassiveEntity(field);
 	}
 
 	private static void makeSaucer(Element ele) {

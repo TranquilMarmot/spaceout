@@ -21,7 +21,7 @@ import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.linearmath.Transform;
 
 /**
- * � la Atari's 1979 classic, Asteroids.
+ * A la Atari's 1979 classic, Asteroids.
  * @author TranquilMarmot
  */
 public class Asteroid extends DynamicEntity implements Health, Projectile{
@@ -33,7 +33,7 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 	final static float ASTEROID_RESTITUTION = 0.5f; 
 	
 	/** Size at which the asteroid will drop loot instead of splitting into smaller asteroids*/
-	final static float LOOT_SIZE = 5.5f;
+	final static float LOOT_SIZE = 10.0f;
 	
 	/** How many items an asteroid drops when it's destroyed and is smaller than LOOT_SIZE */
 	final static int LOOT_AMOUNT = 25;
@@ -165,7 +165,6 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 		
 		Vector3f diamondLocation = new Vector3f();
 
-		// put the sphere right in front of the camera
 		Vector3f downInFront = QuaternionHelper.rotateVectorByQuaternion(
 				new Vector3f(diamondX, diamondY, diamondZ), this.rotation);
 

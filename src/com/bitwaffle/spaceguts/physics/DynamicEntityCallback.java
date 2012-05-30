@@ -21,6 +21,13 @@ import com.bulletphysics.dynamics.DynamicsWorld;
 import com.bulletphysics.dynamics.InternalTickCallback;
 import com.bulletphysics.linearmath.Transform;
 
+/**
+ * This handles updating EVERYTHING in the game. At the end of every physics tick,
+ * it goes through every object and updates the information in the lists in Entities
+ * that the renderer looks at when drawing.
+ * 
+ * @author TranquilMarmot
+ */
 public class DynamicEntityCallback extends InternalTickCallback {
 	@Override
 	public void internalTick(DynamicsWorld world, float timeStep) {
@@ -31,8 +38,8 @@ public class DynamicEntityCallback extends InternalTickCallback {
 			try {
 				c = it.next();
 			} catch (NoSuchElementException e) {
-				//FIXME dunno about this, will it cause entities to be update twice?
-				it = world.getCollisionObjectArray().iterator();
+				//FIXME what causes this?
+				System.out.println("NoSuchElement! " + e.getLocalizedMessage());
 			}
 
 			if (c != null) {
@@ -114,8 +121,10 @@ public class DynamicEntityCallback extends InternalTickCallback {
 		if(bullet.getOwner() != health)
 			health.hurt(bullet.getDamage());
 		
+		// explode if the bullet is a missile
 		if(bullet instanceof Missile)
 			((Missile) bullet).explode();
+		// else make a noise
 		else{
 			SoundSource hit = new SoundSource(Sounds.HIT, false, ((DynamicEntity)health).location, new Vector3f(0.0f, 0.0f, 0.0f));
 			hit.playSound();
