@@ -21,6 +21,7 @@ import com.bitwaffle.spaceguts.input.Keys;
 import com.bitwaffle.spaceguts.input.MouseManager;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceout.entities.dynamic.Diamond;
+import com.bitwaffle.spaceout.entities.dynamic.Asteroid;
 import com.bitwaffle.spaceout.entities.dynamic.Planet;
 import com.bitwaffle.spaceout.resources.Models;
 import com.bitwaffle.spaceout.resources.Textures;
@@ -96,7 +97,10 @@ public class Builder {
 			grabLogic(timeStep);
 
 		if (Keys.P.isPressed())
-			addRandomSphere();
+			addRandomPlanet();
+		
+		if(Keys.I.isPressed())
+			addRandomAsteroid();
 		
 		if(Keys.O.isPressed()){
 			addRandomDiamond();
@@ -315,43 +319,75 @@ public class Builder {
 		camera.rigidBody.getLinearVelocity(linvec);
 		lookingAt.rigidBody.setLinearVelocity(linvec);
 	}
+	
+    /**
+     * Adds a random sphere to the world, right in front of the camera
+     */
+    private void addRandomPlanet() {
+            Random randy = new Random();
+            float sphereSize = randy.nextInt(200) / 10.0f;
+
+            Textures sphereTexture;
+            String tex;
+
+            switch (randy.nextInt(4)) {
+            case 0:
+                    sphereTexture = Textures.EARTH;
+                    tex = "Earth";
+                    break;
+            case 1:
+                    sphereTexture = Textures.MERCURY;
+                    tex = "Mercury";
+                    break;
+            case 2:
+                    sphereTexture = Textures.VENUS;
+                    tex = "Venus";
+                    break;
+            case 3:
+                    sphereTexture = Textures.MARS;
+                    tex = "Mars";
+                    break;
+            default:
+                    sphereTexture = Textures.EARTH;
+                    tex = "Earth";
+            }
+
+            float sphereX = randy.nextFloat() * 75.0f;
+            float sphereY = randy.nextFloat() * 75.0f;
+            float sphereZ = -100.0f;
+            Vector3f sphereLocation = new Vector3f(sphereX, sphereY, sphereZ);
+
+            // put the sphere right in front of the camera
+            Vector3f downInFront = QuaternionHelper.rotateVectorByQuaternion(
+                            new Vector3f(0.0f, 0.0f, 300.0f), camera.rotation);
+
+            Vector3f.add(camera.location, downInFront, downInFront);
+
+            Vector3f.add(sphereLocation, downInFront, sphereLocation);
+
+            Quaternion sphereRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+
+            // float sphereMass = randy.nextFloat() * 10.0f;
+            float sphereMass = sphereSize * 2.0f;
+
+            Planet p = new Planet(sphereLocation, sphereRotation, sphereSize,
+                            sphereMass, 0.0f, sphereTexture);
+            p.type = tex;
+
+            Entities.addDynamicEntity(p);
+    }
 
 	/**
 	 * Adds a random sphere to the world, right in front of the camera
 	 */
-	private void addRandomSphere() {
+	private void addRandomAsteroid() {
 		Random randy = new Random();
-		float sphereSize = randy.nextInt(200) / 10.0f;
+		float asteroidSize = randy.nextInt(500) / 10.0f;
 
-		Textures sphereTexture;
-		String tex;
-
-		switch (randy.nextInt(4)) {
-		case 0:
-			sphereTexture = Textures.EARTH;
-			tex = "Earth";
-			break;
-		case 1:
-			sphereTexture = Textures.MERCURY;
-			tex = "Mercury";
-			break;
-		case 2:
-			sphereTexture = Textures.VENUS;
-			tex = "Venus";
-			break;
-		case 3:
-			sphereTexture = Textures.MARS;
-			tex = "Mars";
-			break;
-		default:
-			sphereTexture = Textures.EARTH;
-			tex = "Earth";
-		}
-
-		float sphereX = randy.nextFloat() * 75.0f;
-		float sphereY = randy.nextFloat() * 75.0f;
-		float sphereZ = -100.0f;
-		Vector3f sphereLocation = new Vector3f(sphereX, sphereY, sphereZ);
+		float asteroidX = randy.nextFloat() * 1000.0f;
+		float asteroidY = randy.nextFloat() * 1000.0f;
+		float asteroidZ = -100.0f;
+		Vector3f asteroidLocation = new Vector3f(asteroidX, asteroidY, asteroidZ);
 
 		// put the sphere right in front of the camera
 		Vector3f downInFront = QuaternionHelper.rotateVectorByQuaternion(
@@ -359,16 +395,11 @@ public class Builder {
 
 		Vector3f.add(camera.location, downInFront, downInFront);
 
-		Vector3f.add(sphereLocation, downInFront, sphereLocation);
+		Vector3f.add(asteroidLocation, downInFront, asteroidLocation);
 
-		Quaternion sphereRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+		Quaternion asteroidRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 
-		// float sphereMass = randy.nextFloat() * 10.0f;
-		float sphereMass = sphereSize * 2.0f;
-
-		Planet p = new Planet(sphereLocation, sphereRotation, sphereSize,
-				sphereMass, 0.0f, sphereTexture);
-		p.type = tex;
+		Asteroid p = new Asteroid(asteroidLocation, asteroidRotation, asteroidSize);
 
 		Entities.addDynamicEntity(p);
 	}
@@ -402,7 +433,7 @@ public class Builder {
 		
 		diamondRotation = QuaternionHelper.rotate(diamondRotation, new Vector3f(xRot,yRot, zRot));
 		
-		Diamond d = new Diamond(diamondLocation, diamondRotation, 0.25f);
+		Diamond d = new Diamond(diamondLocation, diamondRotation, 0.3f);
 
 		Entities.addDynamicEntity(d);
 	}

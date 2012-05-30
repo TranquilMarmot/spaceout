@@ -11,8 +11,8 @@ import com.bitwaffle.spaceguts.audio.SoundSource;
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceout.entities.dynamic.Missile;
-import com.bitwaffle.spaceout.interfaces.Projectile;
 import com.bitwaffle.spaceout.interfaces.Health;
+import com.bitwaffle.spaceout.interfaces.Projectile;
 import com.bitwaffle.spaceout.resources.Sounds;
 import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.narrowphase.ManifoldPoint;
@@ -95,25 +95,10 @@ public class DynamicEntityCallback extends InternalTickCallback {
 					DynamicEntity entA = (DynamicEntity) objA.getUserPointer();
 					DynamicEntity entB = (DynamicEntity) objB.getUserPointer();
 					
-					if(entA instanceof Projectile && entB instanceof Health){
+					if(entA instanceof Projectile && entB instanceof Health)
 						bulletHealthCollision((Projectile) entA, (Health) entB);
-						if(entA instanceof Missile)
-							((Missile) entA).explode();
-						else{
-							SoundSource hit = new SoundSource(Sounds.HIT, false, entA.location, new Vector3f(0.0f, 0.0f, 0.0f));
-							hit.playSound();
-							hit.removeFlag = true;
-						}
-					} else if(entB instanceof Projectile && entA instanceof Health){
+					else if(entB instanceof Projectile && entA instanceof Health)
 						bulletHealthCollision((Projectile) entB, (Health) entA);
-						if(entB instanceof Missile)
-							((Missile) entB).explode();
-						else{
-							SoundSource hit = new SoundSource(Sounds.HIT, false, entB.location, new Vector3f(0.0f, 0.0f, 0.0f));
-							hit.playSound();
-							hit.removeFlag = true;
-						}
-					}
 					
 					/*
 					System.out.println("Contact point " + j + ":\nA: " + entA.type + " " + ptA.x + " " + ptA.y + " " + ptA.z);
@@ -128,5 +113,13 @@ public class DynamicEntityCallback extends InternalTickCallback {
 	private static void bulletHealthCollision(Projectile bullet, Health health){
 		if(bullet.getOwner() != health)
 			health.hurt(bullet.getDamage());
+		
+		if(bullet instanceof Missile)
+			((Missile) bullet).explode();
+		else{
+			SoundSource hit = new SoundSource(Sounds.HIT, false, ((DynamicEntity)health).location, new Vector3f(0.0f, 0.0f, 0.0f));
+			hit.playSound();
+			hit.removeFlag = true;
+		}
 	}
 }

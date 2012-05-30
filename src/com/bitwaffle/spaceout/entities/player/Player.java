@@ -27,7 +27,7 @@ import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.Runner;
 import com.bitwaffle.spaceout.entities.dynamic.LaserBullet;
 import com.bitwaffle.spaceout.entities.dynamic.Missile;
-import com.bitwaffle.spaceout.entities.dynamic.Planet;
+import com.bitwaffle.spaceout.entities.dynamic.Asteroid;
 import com.bitwaffle.spaceout.interfaces.Health;
 import com.bitwaffle.spaceout.interfaces.Inventory;
 import com.bitwaffle.spaceout.resources.Models;
@@ -47,6 +47,10 @@ import com.bulletphysics.linearmath.Transform;
 public class Player extends DynamicEntity implements Health, Inventory{
 	final static short COL_GROUP = CollisionTypes.SHIP;
 	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET);
+	
+	private static final float INVINCIBLE_TIME = 1.0f;
+	private boolean isInvincible = false;
+	private float timeInvincible = 0.0f;
 	
 	/** Used for drawing the lockon target thing */
 	private static Box2D lockonbox = new Box2D(1.0f, 1.0f, Textures.TARGET.texture());
@@ -82,7 +86,11 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	/** to keep the button from being held down */
 	private boolean button0Down = false, button1Down = false, boosting = false;
 	
+	/** entity that the player is locked on to */
 	public DynamicEntity lockon = null;
+	
+	/** the player's health */
+	private int health = 100;
 
 	public Player(Vector3f location, Quaternion rotation, Ship ship,
 			float mass, float restitution) {
@@ -113,10 +121,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 			trail2.update(timeStep);
 			// only update if a menu isn't up and we're not in free mode
 			if(!GUI.menuUp && !Entities.camera.freeMode){
-				if(KeyBindings.CONTROL_BOOST.isPressed())
-					boosting = true;
-				else
-					boosting = false;
+				boosting = KeyBindings.CONTROL_BOOST.isPressed();
 
 				// perform acceleration
 				zLogic(timeStep);
@@ -151,6 +156,12 @@ public class Player extends DynamicEntity implements Health, Inventory{
 				
 				checkForPickups();
 				lockOn();
+				
+				if(isInvincible){
+					timeInvincible += timeStep;
+					if(timeInvincible >= INVINCIBLE_TIME)
+						isInvincible = false;
+				}
 			}
 		}
 	}
@@ -378,8 +389,8 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	 * Searches for things to lock on to
 	 */
 	private void lockOn(){
-		ArrayList<Planet> hits = new ArrayList<Planet>();
-		ConvexResultCallback<Planet> callback = new ConvexResultCallback<Planet>(hits, CollisionTypes.PLANET);
+		ArrayList<Asteroid> hits = new ArrayList<Asteroid>();
+		ConvexResultCallback<Asteroid> callback = new ConvexResultCallback<Asteroid>(hits, CollisionTypes.PLANET);
 		
 		Physics.convexSweepTest(this, new Vector3f(0.0f, 0.0f, 500.0f), lockonSweepBox, callback);
 		
@@ -495,17 +506,23 @@ public class Player extends DynamicEntity implements Health, Inventory{
 
 	@Override
 	public int getCurrentHealth() {
-		return 0;
+		return health;
 	}
 
 	@Override
 	public void hurt(int amount) {
+		if(!isInvincible){
+			health -= amount;
+			isInvincible = true;
+			timeInvincible = 0.0f;
+		}
 		
+		System.out.printf("Ouch! You got hit and now have %d health\n", health);
 	}
 
 	@Override
 	public void heal(int amount) {
-		
+		health += amount;
 	}
 
 	@Override
