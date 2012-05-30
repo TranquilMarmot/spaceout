@@ -13,6 +13,7 @@ import com.bitwaffle.spaceguts.graphics.render.Render3D;
 import com.bitwaffle.spaceguts.physics.CollisionTypes;
 import com.bitwaffle.spaceguts.physics.Physics;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
+import com.bitwaffle.spaceout.entities.passive.AsteroidField;
 import com.bitwaffle.spaceout.interfaces.Health;
 import com.bitwaffle.spaceout.interfaces.Projectile;
 import com.bitwaffle.spaceout.resources.Models;
@@ -28,12 +29,11 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 	final static short COL_GROUP = CollisionTypes.PLANET;
 	final static short COL_WITH = (short)(CollisionTypes.SHIP | CollisionTypes.WALL | CollisionTypes.PLANET | CollisionTypes.PICKUP | CollisionTypes.PROJECTILE);
 	
+	/** Used for scaling the modelview when drawing */
 	private static Matrix4f oldModelView = new Matrix4f();
 	
 	/** The fastest the asteroid can spin */
 	final static float ANGVEC_CAP = 10.0f;
-	
-	final static float LINVEC_CAP = 10.0f;
 	
 	/** How fast the asteroids this asteroid creates will be spinning when they're created */
 	final static float SPAWN_ANGVEC_FACTOR = 25.0f;
@@ -62,7 +62,16 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 	/** How big the asteroid is */
 	private float size;
 	
-	public Asteroid(Vector3f location, Quaternion rotation, float size) {
+	/** Which asteroid field this asteroid belongs to */
+	private AsteroidField field;
+	
+	/**
+	 * ASS-teroid heh heh heh
+	 * @param location Location of asteroid
+	 * @param rotation Rotation of asteroid
+	 * @param size How big the asteroid is
+	 */
+	public Asteroid(Vector3f location, Quaternion rotation, float size, AsteroidField field) {
 		super(location, rotation, new SphereShape(size), size * MASS_FACTOR, ASTEROID_RESTITUTION, COL_GROUP, COL_WITH);
 		
 		rigidBody.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
@@ -71,10 +80,16 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 		this.type = "Asteroid (size " + size + " health " + health + ")";
 		this.model = Models.ASTEROID.getModel();
 		this.size = size;
+		
+		if(field != null){
+			this.field = field;
+			field.addAsteroidToField(this);
+		}
 	}
 	
 	@Override
 	public void draw(){
+		// scale the modelview before drawing
 		oldModelView.load(Render3D.modelview);
 		Render3D.modelview.scale(new org.lwjgl.util.vector.Vector3f(size, size, size));
 		Render3D.program.setUniform("ModelViewMatrix", Render3D.modelview);
@@ -102,19 +117,10 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 		capAngularVelocity();
 	}
 	
+	/**
+	 * Keep the asteroid from spinning too fast
+	 */
 	private void capAngularVelocity(){
-		javax.vecmath.Vector3f angVec = new javax.vecmath.Vector3f();
-		rigidBody.getAngularVelocity(angVec);
-		float speed = angVec.length();
-		if(speed > ANGVEC_CAP){
-			angVec.x *= ANGVEC_CAP / speed;
-			angVec.y *= ANGVEC_CAP / speed;
-			angVec.z *= ANGVEC_CAP / speed;
-			rigidBody.setAngularVelocity(angVec);
-		}
-	}
-	
-	private void capLinearVelocity(){
 		javax.vecmath.Vector3f angVec = new javax.vecmath.Vector3f();
 		rigidBody.getAngularVelocity(angVec);
 		float speed = angVec.length();
@@ -137,14 +143,15 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 		this.type = "Asteroid (size " + size + " health " + health + ")";
 		if(health <= 0){
 			explode();
+		} else {
+			size -= amount / 2.0f;
+			if(size <= LOOT_SIZE)
+				explode();
 		}
-		size -= amount / 2.0f;
-		if(size <= LOOT_SIZE)
-			explode();
 	}
 	
 	/**
-	 * Cause the asteroid to explode
+	 * Cause the asteroid to explode, either leaving behind more asteroids or some diamonds
 	 */
 	private void explode(){
 		removeFlag = true;
@@ -160,6 +167,10 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 		}
 	}
 	
+	/**
+	 * Adds a random asteroid at this asteroid's location
+	 * @param newSize New size of asteroid
+	 */
 	private void addRandomAsteroid(float newSize){
 		Random randy = new Random();
 
@@ -167,24 +178,24 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 		float asteroidY = randy.nextFloat() * 10.0f;
 		float asteroidZ = randy.nextFloat() * 10.0f;
 		
+		// randomly go positive or negative on each axis (+/- size of parent asteroid)
 		asteroidX = randy.nextBoolean() ? -asteroidX - size : asteroidX + size;
 		asteroidY = randy.nextBoolean() ? -asteroidY - size : asteroidY + size;
 		asteroidZ = randy.nextBoolean() ? -asteroidZ - size : asteroidZ + size;
 		
 		Vector3f asteroidLocation = new Vector3f(asteroidX, asteroidY, asteroidZ);
-
 		Vector3f.add(this.location, asteroidLocation, asteroidLocation);
-
-		Quaternion asteroidRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		
+		// make the new asteroid face a random direction
+		Quaternion asteroidRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		float xRot = randy.nextFloat() * 100.0f;
 		float yRot = randy.nextFloat() * 100.0f;
 		float zRot = randy.nextFloat() * 100.0f;
-		
 		asteroidRotation = QuaternionHelper.rotate(asteroidRotation, new Vector3f(xRot,yRot, zRot));
 		
-		Asteroid a = new Asteroid(asteroidLocation, asteroidRotation, newSize);
+		Asteroid a = new Asteroid(asteroidLocation, asteroidRotation, newSize, field);
 		
+		// randomly go +/- the parent asteroid's speed
 		javax.vecmath.Vector3f linVec = new javax.vecmath.Vector3f();
 		this.rigidBody.getLinearVelocity(linVec);
 		if(randy.nextBoolean()) linVec.x = -linVec.x;
@@ -192,6 +203,7 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 		if(randy.nextBoolean()) linVec.z = -linVec.z;
 		a.rigidBody.setLinearVelocity(linVec);
 
+		// randomly go +/- the parent asteroid's angular speed
 		javax.vecmath.Vector3f angVec = new javax.vecmath.Vector3f();
 		this.rigidBody.getAngularVelocity(angVec);
 		if(randy.nextBoolean()) angVec.x = -angVec.x;
@@ -203,6 +215,9 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 	}
 	
 	// TODO find a better way to do loot drops
+	/**
+	 * Add some random diamonds
+	 */
 	private void addRandomDiamond() {
 		Random randy = new Random();
 

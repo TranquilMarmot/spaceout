@@ -399,7 +399,7 @@ public class Builder {
 
 		Quaternion asteroidRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 
-		Asteroid p = new Asteroid(asteroidLocation, asteroidRotation, asteroidSize);
+		Asteroid p = new Asteroid(asteroidLocation, asteroidRotation, asteroidSize, null);
 
 		Entities.addDynamicEntity(p);
 	}

@@ -49,19 +49,24 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET);
 	
 	/** How long the player stays invincible for */
-	private static final float INVINCIBLE_TIME = 1.0f;
+	private static final float INVINCIBILITY_TIME = 1.0f;
 	
 	/** Whether or not the player is currently invincible */
 	private boolean isInvincible = false;
 	
 	/** How long the player has been invincible for (if this >= INVINCIBLE_TIME, the player is no longer invincible) */
-	private float timeInvincible = 0.0f;
+	private float timeSpentInvincible = 0.0f;
+	
+	private static final float LOCKON_DISTANCE = 2500.0f;
 	
 	/** Used for drawing the lockon target thing */
 	private static Box2D lockonbox = new Box2D(1.0f, 1.0f, Textures.TARGET.texture());
 	
 	/** Used for searching for lockon stuff*/
 	private BoxShape lockonSweepBox = new BoxShape(new javax.vecmath.Vector3f(5.0f, 5.0f, 5.0f));
+	
+	/** entity that the player is locked on to */
+	public DynamicEntity lockon = null;
 	
 	/** Sound source for making the gun shooting noise */
 	private SoundSource pew;
@@ -91,9 +96,6 @@ public class Player extends DynamicEntity implements Health, Inventory{
 
 	/** to keep the button from being held down */
 	private boolean button0Down = false, button1Down = false, boosting = false;
-	
-	/** entity that the player is locked on to */
-	public DynamicEntity lockon = null;
 	
 	/** the player's health */
 	private int health = 100;
@@ -164,8 +166,8 @@ public class Player extends DynamicEntity implements Health, Inventory{
 				lockOn();
 				
 				if(isInvincible){
-					timeInvincible += timeStep;
-					if(timeInvincible >= INVINCIBLE_TIME)
+					timeSpentInvincible += timeStep;
+					if(timeSpentInvincible >= INVINCIBILITY_TIME)
 						isInvincible = false;
 				}
 			}
@@ -398,7 +400,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		ArrayList<Asteroid> hits = new ArrayList<Asteroid>();
 		ConvexResultCallback<Asteroid> callback = new ConvexResultCallback<Asteroid>(hits, CollisionTypes.PLANET);
 		
-		Physics.convexSweepTest(this, new Vector3f(0.0f, 0.0f, 500.0f), lockonSweepBox, callback);
+		Physics.convexSweepTest(this, new Vector3f(0.0f, 0.0f, LOCKON_DISTANCE), lockonSweepBox, callback);
 		
 		if(hits.size() > 0)
 			this.lockon = hits.get(0);
@@ -520,7 +522,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		if(!isInvincible){
 			health -= amount;
 			isInvincible = true;
-			timeInvincible = 0.0f;
+			timeSpentInvincible = 0.0f;
 		}
 		
 		System.out.printf("Ouch! You got hit and now have %d health\n", health);
