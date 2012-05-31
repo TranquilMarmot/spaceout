@@ -54,7 +54,7 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 	final static int NUMBER_OF_DIVISIONS = 3;
 	
 	/** How heavy an asteroid is based on it's size (mass = size * MASS_FACTOR) */
-	final static float MASS_FACTOR = 10;
+	final static float MASS_FACTOR = 2;
 	
 	/** How much health the asteroid has */
 	int health = 80;
@@ -264,5 +264,9 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 	@Override
 	public Entity getOwner() {
 		return this;
+	}
+	
+	public float getSize(){
+		return size;
 	}
 }

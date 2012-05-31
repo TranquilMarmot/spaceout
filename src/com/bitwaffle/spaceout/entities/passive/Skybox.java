@@ -39,9 +39,7 @@ public class Skybox extends Entity {
 	@Override
 	public void update(float timeStep) {
 		// keep the skybox centered on what it's following
-		this.location.x = following.location.x;
-		this.location.y = following.location.y;
-		this.location.z = following.location.z;
+		this.location.set(following.location);
 	}
 
 	@Override

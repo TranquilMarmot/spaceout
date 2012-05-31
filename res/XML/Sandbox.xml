@@ -9,19 +9,28 @@
         
         <Asteroids>
         		<location>600.0f,600.0f,600.0f</location>
-        		<range>1750.0f,1750.0f,1750.0f</range>
+        		<range>5000.0f,5000.0f,5000.0f</range>
         		<asteroidSpeed>500000.0f,500000.0f,500000.0f</asteroidSpeed>
-        		<numAsteroids>150</numAsteroids>
-        		<initialAsteroids>50</initialAsteroids>
-        		<releaseInterval>5.0f</releaseInterval>
-        		<minSize>25</minSize>
-        		<maxSize>200</maxSize>
+        		<numAsteroids>175</numAsteroids>
+        		<initialAsteroids>150</initialAsteroids>
+        		<releaseInterval>1.5f</releaseInterval>
+        		<minSize>50</minSize>
+        		<maxSize>250</maxSize>
         </Asteroids>
                 
         <Sun>
-                <location>-600.0f,-600.0f,-2.0f</location>
-                <size>200.0f</size>
+                <location>1000000.0f,1000000.0f,-2.0f</location>
+                <size>45000.0f</size>
                 <color>1.0f,1.0f,0.3f</color>
                 <intensity>0.9f,0.9f,0.9f</intensity>
         </Sun>
+        
+        <Planet>
+        		<name>Earth</name>
+                <location>-70000.0f,-70000.0f,-2.0f</location>
+                <rotation>0.0f,0.0f,0.0f,1.0f</rotation>
+                <mass>1000000.0f</mass>
+                <size>30000.0f</size>
+               	<restitution>1.0f</restitution>
+        </Planet>
 </Entities>

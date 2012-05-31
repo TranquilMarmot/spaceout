@@ -2,6 +2,7 @@ package com.bitwaffle.spaceout.entities.player;
 
 import java.util.ArrayList;
 
+import javax.vecmath.Point2f;
 import javax.vecmath.Quat4f;
 
 import org.lwjgl.opengl.GL11;
@@ -25,9 +26,9 @@ import com.bitwaffle.spaceguts.physics.Physics;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.Runner;
+import com.bitwaffle.spaceout.entities.dynamic.Asteroid;
 import com.bitwaffle.spaceout.entities.dynamic.LaserBullet;
 import com.bitwaffle.spaceout.entities.dynamic.Missile;
-import com.bitwaffle.spaceout.entities.dynamic.Asteroid;
 import com.bitwaffle.spaceout.interfaces.Health;
 import com.bitwaffle.spaceout.interfaces.Inventory;
 import com.bitwaffle.spaceout.resources.Models;
@@ -61,6 +62,9 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	
 	/** Used for drawing the lockon target thing */
 	private static Box2D lockonbox = new Box2D(1.0f, 1.0f, Textures.TARGET.texture());
+	
+	/** How big the lockon box is */
+	private static Point2f lockonboxSize = new Point2f(10.0f,10.0f);
 	
 	/** Used for searching for lockon stuff*/
 	private BoxShape lockonSweepBox = new BoxShape(new javax.vecmath.Vector3f(5.0f, 5.0f, 5.0f));
@@ -402,8 +406,13 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		
 		Physics.convexSweepTest(this, new Vector3f(0.0f, 0.0f, LOCKON_DISTANCE), lockonSweepBox, callback);
 		
-		if(hits.size() > 0)
+		if(hits.size() > 0){
 			this.lockon = hits.get(0);
+			if(this.lockon instanceof Asteroid){
+				lockonboxSize.x = ((Asteroid) this.lockon).getSize();
+				lockonboxSize.y = ((Asteroid) this.lockon).getSize();
+			}
+		}
 		
 		// un-lock on to something if it's being removed
 		if(lockon != null && lockon.removeFlag)
@@ -497,7 +506,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		Matrix4f.mul(Render3D.modelview, QuaternionHelper.toMatrix(Entities.camera.rotation), Render3D.modelview);
 		
 		// make it bigger!
-		Render3D.modelview.scale(new Vector3f(10.0f, 10.0f, 1.0f));
+		Render3D.modelview.scale(new Vector3f(lockonboxSize.x, lockonboxSize.y, 1.0f));
 		
 		// don't forget to set the modelview before drawing
 		Render3D.program.setUniform("ModelViewMatrix", Render3D.modelview);
@@ -523,9 +532,8 @@ public class Player extends DynamicEntity implements Health, Inventory{
 			health -= amount;
 			isInvincible = true;
 			timeSpentInvincible = 0.0f;
+			System.out.printf("Ouch! You got hit and now have %d health\n", health);
 		}
-		
-		System.out.printf("Ouch! You got hit and now have %d health\n", health);
 	}
 
 	@Override
