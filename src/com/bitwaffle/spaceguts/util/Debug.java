@@ -252,8 +252,11 @@ public class Debug {
 		
 		if(Entities.player != null){
 			String lockon = "Locked on to: ";
-			if(Entities.player.lockon != null)
-				lockon += Entities.player.lockon.type;
+			if(Entities.player.lockon != null){
+				lockon += Entities.player.lockon.type + " [" + Entities.distance(Entities.player.location, Entities.player.lockon.location) + "m]";
+			} else {
+				lockon += "(nothing)";
+			}
 			font.drawString(200, 20, lockon);
 		}
 	}

@@ -2,6 +2,7 @@ package com.bitwaffle.spaceout.entities.player;
 
 import java.util.ArrayList;
 
+import javax.vecmath.Point2f;
 import javax.vecmath.Quat4f;
 
 import org.lwjgl.opengl.GL11;
@@ -25,9 +26,9 @@ import com.bitwaffle.spaceguts.physics.Physics;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.Runner;
+import com.bitwaffle.spaceout.entities.dynamic.Asteroid;
 import com.bitwaffle.spaceout.entities.dynamic.LaserBullet;
 import com.bitwaffle.spaceout.entities.dynamic.Missile;
-import com.bitwaffle.spaceout.entities.dynamic.Planet;
 import com.bitwaffle.spaceout.interfaces.Health;
 import com.bitwaffle.spaceout.interfaces.Inventory;
 import com.bitwaffle.spaceout.resources.Models;
@@ -48,12 +49,30 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	final static short COL_GROUP = CollisionTypes.SHIP;
 	final static short COL_WITH = (short)(CollisionTypes.WALL | CollisionTypes.PLANET);
 	
+	/** How long the player stays invincible for */
+	private static final float INVINCIBILITY_TIME = 1.0f;
+	
+	/** Whether or not the player is currently invincible */
+	private boolean isInvincible = false;
+	
+	/** How long the player has been invincible for (if this >= INVINCIBLE_TIME, the player is no longer invincible) */
+	private float timeSpentInvincible = 0.0f;
+	
+	private static final float LOCKON_DISTANCE = 5000.0f;
+	
 	/** Used for drawing the lockon target thing */
 	private static Box2D lockonbox = new Box2D(1.0f, 1.0f, Textures.TARGET.texture());
+	
+	/** How big the lockon box is */
+	private static Point2f lockonboxSize = new Point2f(10.0f,10.0f);
 	
 	/** Used for searching for lockon stuff*/
 	private BoxShape lockonSweepBox = new BoxShape(new javax.vecmath.Vector3f(5.0f, 5.0f, 5.0f));
 	
+	/** entity that the player is locked on to */
+	public DynamicEntity lockon = null;
+	
+	/** Sound source for making the gun shooting noise */
 	private SoundSource pew;
 	
 	/** Radius for sphere that looks for pickups */
@@ -62,6 +81,10 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	public float pickupSweepDistance = 10.0f;
 	/** How close a pickup has to be before it's added to the inventory */
 	public float pickupDistance = 2.0f;
+	
+	private static final float MISSILE_INITIAL_SPEED = 150.0f;
+	private static final float MISSILE_SPEED_INCREASE = 150.0f;
+	private static final float MISSILE_DETONATION_TIME = 12.0f;
 	
 	/**
 	 * Backpack, backpack. Backpack, backpack.
@@ -82,7 +105,8 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	/** to keep the button from being held down */
 	private boolean button0Down = false, button1Down = false, boosting = false;
 	
-	public DynamicEntity lockon = null;
+	/** the player's health */
+	private int health = 100;
 
 	public Player(Vector3f location, Quaternion rotation, Ship ship,
 			float mass, float restitution) {
@@ -113,10 +137,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 			trail2.update(timeStep);
 			// only update if a menu isn't up and we're not in free mode
 			if(!GUI.menuUp && !Entities.camera.freeMode){
-				if(KeyBindings.CONTROL_BOOST.isPressed())
-					boosting = true;
-				else
-					boosting = false;
+				boosting = KeyBindings.CONTROL_BOOST.isPressed();
 
 				// perform acceleration
 				zLogic(timeStep);
@@ -151,6 +172,12 @@ public class Player extends DynamicEntity implements Health, Inventory{
 				
 				checkForPickups();
 				lockOn();
+				
+				if(isInvincible){
+					timeSpentInvincible += timeStep;
+					if(timeSpentInvincible >= INVINCIBILITY_TIME)
+						isInvincible = false;
+				}
 			}
 		}
 	}
@@ -220,7 +247,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 				missileMoveAmount, missileRotation);
 		Vector3f.add(missileLocation, missileMoveAmount, missileLocation);
 		
-		Missile miss = new Missile(missileLocation, missileRotation, lockon, 75.0f, 50.0f, 12.0f);
+		Missile miss = new Missile(missileLocation, missileRotation, lockon, MISSILE_INITIAL_SPEED, MISSILE_SPEED_INCREASE, MISSILE_DETONATION_TIME);
 
 		Entities.addDynamicEntity(miss);
 	}
@@ -378,13 +405,18 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	 * Searches for things to lock on to
 	 */
 	private void lockOn(){
-		ArrayList<Planet> hits = new ArrayList<Planet>();
-		ConvexResultCallback<Planet> callback = new ConvexResultCallback<Planet>(hits, CollisionTypes.PLANET);
+		ArrayList<Asteroid> hits = new ArrayList<Asteroid>();
+		ConvexResultCallback<Asteroid> callback = new ConvexResultCallback<Asteroid>(hits, CollisionTypes.PLANET);
 		
-		Physics.convexSweepTest(this, new Vector3f(0.0f, 0.0f, 500.0f), lockonSweepBox, callback);
+		Physics.convexSweepTest(this, new Vector3f(0.0f, 0.0f, LOCKON_DISTANCE), lockonSweepBox, callback);
 		
-		if(hits.size() > 0)
+		if(hits.size() > 0){
 			this.lockon = hits.get(0);
+			if(this.lockon instanceof Asteroid){
+				lockonboxSize.x = ((Asteroid) this.lockon).getSize();
+				lockonboxSize.y = ((Asteroid) this.lockon).getSize();
+			}
+		}
 		
 		// un-lock on to something if it's being removed
 		if(lockon != null && lockon.removeFlag)
@@ -478,7 +510,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		Matrix4f.mul(Render3D.modelview, QuaternionHelper.toMatrix(Entities.camera.rotation), Render3D.modelview);
 		
 		// make it bigger!
-		Render3D.modelview.scale(new Vector3f(10.0f, 10.0f, 1.0f));
+		Render3D.modelview.scale(new Vector3f(lockonboxSize.x, lockonboxSize.y, 1.0f));
 		
 		// don't forget to set the modelview before drawing
 		Render3D.program.setUniform("ModelViewMatrix", Render3D.modelview);
@@ -495,17 +527,22 @@ public class Player extends DynamicEntity implements Health, Inventory{
 
 	@Override
 	public int getCurrentHealth() {
-		return 0;
+		return health;
 	}
 
 	@Override
 	public void hurt(int amount) {
-		
+		if(!isInvincible){
+			health -= amount;
+			isInvincible = true;
+			timeSpentInvincible = 0.0f;
+			System.out.printf("Ouch! You got hit and now have %d health\n", health);
+		}
 	}
 
 	@Override
 	public void heal(int amount) {
-		
+		health += amount;
 	}
 
 	@Override

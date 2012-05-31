@@ -16,7 +16,7 @@ import com.bitwaffle.spaceguts.graphics.gui.menu.picker.Picker;
 import com.bitwaffle.spaceguts.physics.Physics;
 import com.bitwaffle.spaceguts.util.Debug;
 import com.bitwaffle.spaceguts.util.DisplayHelper;
-import com.bitwaffle.spaceguts.util.xml.XMLParser;
+import com.bitwaffle.spaceguts.util.xml.EntitiesParser;
 import com.bitwaffle.spaceout.resources.Sounds;
 import com.bitwaffle.spaceout.resources.Textures;
 
@@ -78,7 +78,7 @@ public class LoadMenu extends GUIObject {
 					Physics.initPhysics();
 					
 					// load entities from XML
-					XMLParser.loadEntitiesFromXmlFile(picker.getSelectedItem().getPath());
+					EntitiesParser.loadEntitiesFromXmlFile(picker.getSelectedItem().getPath());
 					
 					// create the pause menu
 					GUI.addGUIObject(new PauseMenu());
