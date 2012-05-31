@@ -45,7 +45,7 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 	final static float ASTEROID_RESTITUTION = 0.5f; 
 	
 	/** Size at which the asteroid will drop loot instead of splitting into smaller asteroids*/
-	final static float LOOT_SIZE = 25.0f;
+	final static float LOOT_SIZE = 20.0f;
 	
 	/** How many items an asteroid drops when it's destroyed and is smaller than LOOT_SIZE */
 	final static int LOOT_AMOUNT = 25;
@@ -198,9 +198,9 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 		// randomly go +/- the parent asteroid's speed
 		javax.vecmath.Vector3f linVec = new javax.vecmath.Vector3f();
 		this.rigidBody.getLinearVelocity(linVec);
-		if(randy.nextBoolean()) linVec.x = -linVec.x;
-		if(randy.nextBoolean()) linVec.y = -linVec.y;
-		if(randy.nextBoolean()) linVec.z = -linVec.z;
+		if(randy.nextBoolean()) linVec.x = -linVec.x / 2;
+		if(randy.nextBoolean()) linVec.y = -linVec.y / 2;
+		if(randy.nextBoolean()) linVec.z = -linVec.z / 2;
 		a.rigidBody.setLinearVelocity(linVec);
 
 		// randomly go +/- the parent asteroid's angular speed

@@ -9,13 +9,13 @@
         
         <Asteroids>
         		<location>600.0f,600.0f,600.0f</location>
-        		<range>5000.0f,5000.0f,5000.0f</range>
-        		<asteroidSpeed>500000.0f,500000.0f,500000.0f</asteroidSpeed>
+        		<range>4300.0f,4300.0f,4300.0f</range>
+        		<asteroidSpeed>15000.0f,15000.0f,15000.0f</asteroidSpeed>
         		<numAsteroids>175</numAsteroids>
-        		<initialAsteroids>150</initialAsteroids>
-        		<releaseInterval>1.5f</releaseInterval>
-        		<minSize>50</minSize>
-        		<maxSize>250</maxSize>
+        		<initialAsteroids>100</initialAsteroids>
+        		<releaseInterval>1.0f</releaseInterval>
+        		<minSize>75</minSize>
+        		<maxSize>200</maxSize>
         </Asteroids>
                 
         <Sun>

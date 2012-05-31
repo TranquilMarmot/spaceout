@@ -92,6 +92,10 @@ public class AsteroidField extends Entity{
 				randy.nextFloat() * -range.z;
 				
 		float asteroidSize = minSize + (randy.nextFloat() * ((maxSize - minSize) + 1));
+		if(randy.nextInt(100) == 42){
+			System.out.println("Super secret!");
+			asteroidSize *= 10.0f;
+		}
 		
 		Quaternion asteroidRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		QuaternionHelper.rotate(asteroidRotation, new Vector3f(randy.nextInt(90), randy.nextInt(90), randy.nextInt(90)));

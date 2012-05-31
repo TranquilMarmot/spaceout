@@ -58,7 +58,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	/** How long the player has been invincible for (if this >= INVINCIBLE_TIME, the player is no longer invincible) */
 	private float timeSpentInvincible = 0.0f;
 	
-	private static final float LOCKON_DISTANCE = 2500.0f;
+	private static final float LOCKON_DISTANCE = 5000.0f;
 	
 	/** Used for drawing the lockon target thing */
 	private static Box2D lockonbox = new Box2D(1.0f, 1.0f, Textures.TARGET.texture());
@@ -81,6 +81,10 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	public float pickupSweepDistance = 10.0f;
 	/** How close a pickup has to be before it's added to the inventory */
 	public float pickupDistance = 2.0f;
+	
+	private static final float MISSILE_INITIAL_SPEED = 150.0f;
+	private static final float MISSILE_SPEED_INCREASE = 150.0f;
+	private static final float MISSILE_DETONATION_TIME = 12.0f;
 	
 	/**
 	 * Backpack, backpack. Backpack, backpack.
@@ -243,7 +247,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 				missileMoveAmount, missileRotation);
 		Vector3f.add(missileLocation, missileMoveAmount, missileLocation);
 		
-		Missile miss = new Missile(missileLocation, missileRotation, lockon, 75.0f, 50.0f, 12.0f);
+		Missile miss = new Missile(missileLocation, missileRotation, lockon, MISSILE_INITIAL_SPEED, MISSILE_SPEED_INCREASE, MISSILE_DETONATION_TIME);
 
 		Entities.addDynamicEntity(miss);
 	}
