@@ -92,10 +92,9 @@ public class AsteroidField extends Entity{
 				randy.nextFloat() * -range.z;
 				
 		float asteroidSize = minSize + (randy.nextFloat() * ((maxSize - minSize) + 1));
-		if(randy.nextInt(100) == 42){
-			System.out.println("Super secret!");
-			asteroidSize *= 10.0f;
-		}
+		
+		// just to make things interesting
+		if(randy.nextInt(100) == 42) asteroidSize *= 7.5f;
 		
 		Quaternion asteroidRotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		QuaternionHelper.rotate(asteroidRotation, new Vector3f(randy.nextInt(90), randy.nextInt(90), randy.nextInt(90)));
@@ -144,20 +143,20 @@ public class AsteroidField extends Entity{
 				Transform trans = new Transform();
 				a.rigidBody.getWorldTransform(trans);
 				
-				if(a.location.x > this.location.x + (range.x * 2.0f))
-					trans.origin.x = this.location.x - (range.x * 2.0f);
-				else if(a.location.x < this.location.x - (range.x * 2.0f))
-					trans.origin.x = this.location.x + (range.x * 2.0f);
+				if(a.location.x > this.location.x + (range.x * 2.0f) + a.getSize())
+					trans.origin.x = this.location.x - (range.x * 2.0f) - a.getSize();
+				else if(a.location.x < this.location.x - (range.x * 2.0f) - a.getSize())
+					trans.origin.x = this.location.x + (range.x * 2.0f) + a.getSize();
 				
-				if(a.location.y > this.location.y + (range.y * 2.0f))
-					trans.origin.y = this.location.y - (range.y * 2.0f);
-				else if(a.location.y < this.location.y - (range.y * 2.0f))
-					trans.origin.y = this.location.y + (range.y * 2.0f);
+				if(a.location.y > this.location.y + (range.y * 2.0f) + a.getSize())
+					trans.origin.y = this.location.y - (range.y * 2.0f) - a.getSize();
+				else if(a.location.y < this.location.y - (range.y * 2.0f) - a.getSize())
+					trans.origin.y = this.location.y + (range.y * 2.0f) + a.getSize();
 				
-				if(a.location.z > this.location.z + (range.z * 2.0f))
-					trans.origin.z = this.location.z - (range.z * 2.0f);
-				else if(a.location.z < this.location.z - (range.z * 2.0f))
-					trans.origin.z = this.location.z + (range.z * 2.0f);
+				if(a.location.z > this.location.z + (range.z * 2.0f) + a.getSize())
+					trans.origin.z = this.location.z - (range.z * 2.0f) - a.getSize();
+				else if(a.location.z < this.location.z - (range.z * 2.0f) - a.getSize())
+					trans.origin.z = this.location.z + (range.z * 2.0f) + a.getSize();
 				
 				a.rigidBody.setWorldTransform(trans);
 			}
