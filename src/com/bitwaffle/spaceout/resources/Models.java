@@ -13,6 +13,7 @@ public enum Models {
 	LASERBULLET(Paths.MODEL_PATH.path() + "laserbullet", 3.5f, Textures.LASERBULLET),
 	SAUCER(Paths.SHIPS_PATH.path() + "saucer", 1.0f, Textures.SAUCER),
 	SKYBOX(Paths.MODEL_PATH.path() + "box", 100000.0f, Textures.SKYBOX),
+	BOX(Paths.MODEL_PATH.path() + "box", 1.0f, Textures.DIAMOND),
 	WESCOTT(Paths.SHIPS_PATH.path() + "wescott-8-beta", 1.0f, Textures.WESCOTT),
 	DIAMOND(Paths.MODEL_PATH.path() + "diamond", 2.0f, Textures.DIAMOND),
 	MISSILE(Paths.MODEL_PATH.path() + "missile", 1.0f, Textures.MISSILE),
@@ -48,9 +49,5 @@ public enum Models {
 		if(!modelLoaded()){
 			model = ModelLoader.loadObjFile(file, scale, texture);
 		}
-	}
-	
-	public void render(){
-		
 	}
 }

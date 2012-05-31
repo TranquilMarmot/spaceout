@@ -33,7 +33,7 @@ public class Asteroid extends DynamicEntity implements Health, Projectile{
 	private static Matrix4f oldModelView = new Matrix4f();
 	
 	/** The fastest the asteroid can spin */
-	final static float ANGVEC_CAP = 10.0f;
+	final static float ANGVEC_CAP = 5.0f;
 	
 	/** How fast the asteroids this asteroid creates will be spinning when they're created */
 	final static float SPAWN_ANGVEC_FACTOR = 25.0f;

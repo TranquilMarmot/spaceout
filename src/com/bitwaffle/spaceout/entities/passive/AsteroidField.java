@@ -4,13 +4,18 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.entities.Entity;
+import com.bitwaffle.spaceguts.graphics.render.Render3D;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceout.entities.dynamic.Asteroid;
+import com.bitwaffle.spaceout.resources.Models;
+import com.bitwaffle.spaceout.resources.Textures;
 import com.bulletphysics.linearmath.Transform;
 
 /**
@@ -59,6 +64,7 @@ public class AsteroidField extends Entity{
 		this.minSize = minSize;
 		this.maxSize = maxSize;
 		this.location = location;
+		this.rotation = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
 		this.range = range;
 		this.asteroidSpeed = asteroidSpeed;
 		
@@ -168,6 +174,19 @@ public class AsteroidField extends Entity{
 		toAdd.push(a);
 	}
 
-	@Override public void draw() {}
+	@Override 
+	public void draw() {
+		Render3D.program.setUniform("Light.LightEnabled", false);
+		GL11.glEnable(GL11.GL_BLEND);
+		Matrix4f oldModelview = new Matrix4f();
+		oldModelview.load(Render3D.modelview);
+		Render3D.modelview.scale(new Vector3f(range.x * 2, range.y * 2, range.z * 2));
+		Render3D.program.setUniform("ModelViewMatrix", Render3D.modelview);
+		Textures.TRANSPARENT_CHECKERS.texture().bind();
+		Models.BOX.getModel().render();
+		Render3D.modelview.load(oldModelview);
+		GL11.glDisable(GL11.GL_BLEND);
+		Render3D.program.setUniform("Light.LightEnabled", true);
+	}
 	@Override public void cleanup() {}
 }
