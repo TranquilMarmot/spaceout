@@ -3,9 +3,11 @@ package com.bitwaffle.spaceout.entities.passive.particles;
 import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 
+import com.bitwaffle.spaceguts.audio.SoundSource;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.entities.Entity;
 import com.bitwaffle.spaceguts.entities.particles.Emitter;
+import com.bitwaffle.spaceout.resources.Sounds;
 import com.bitwaffle.spaceout.resources.Textures;
 
 /**
@@ -28,6 +30,8 @@ public class Explosion extends Entity{
 	private float emitSpeed = 0.05f;
 	private int particlesPerEmission = 20;
 	private float paritcleTTLVariance = 2.5f;
+	
+	private SoundSource explosionSound;
 	
 	/**
 	 * Boom!
@@ -55,6 +59,10 @@ public class Explosion extends Entity{
 				particlesPerEmission, 
 				paritcleTTLVariance);
 		emitter.active = true;
+		
+		explosionSound = new SoundSource(Sounds.SPLODE, false, location, new Vector3f(0.0f, 0.0f, 0.0f));
+		explosionSound.playSound();
+		explosionSound.removeFlag = true;
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
+import com.bitwaffle.spaceguts.audio.Audio;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.menu.MainMenu;
 import com.bitwaffle.spaceguts.graphics.render.Graphics;
@@ -18,6 +19,7 @@ import com.bitwaffle.spaceguts.util.DisplayHelper;
 import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.resources.Models;
 import com.bitwaffle.spaceout.resources.ResourceLoader;
+import com.bitwaffle.spaceout.resources.Sounds;
 import com.bitwaffle.spaceout.resources.Textures;
 
 
@@ -40,7 +42,7 @@ import com.bitwaffle.spaceout.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.77.6.7";
+	public static final String VERSION = "0.0.77.6.10";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
@@ -102,13 +104,14 @@ public class Runner {
 	private void init() {
 		DisplayHelper.createWindow();
 		
+		Graphics.initGL();
+		Audio.init();
+		
 		Debug.init();
 		Debug.printSysInfo();
 		
 		MainMenu mainMenu = new MainMenu();
 		GUI.addGUIObject(mainMenu);
-		
-		Graphics.initGL();
 		
 		//initialize resources
 		// TODO loading screen!
@@ -140,6 +143,14 @@ public class Runner {
 		ResourceLoader.addJob(Textures.CROSSHAIR);
 		ResourceLoader.addJob(Textures.BUILDER_GRABBED);
 		ResourceLoader.addJob(Textures.BUILDER_OPEN);
+		ResourceLoader.addJob(Sounds.DIAMOND_PICKUP);
+		ResourceLoader.addJob(Sounds.PEW);
+		ResourceLoader.addJob(Sounds.SPLODE);
+		ResourceLoader.addJob(Sounds.THRUSTER);
+		ResourceLoader.addJob(Sounds.BACK);
+		ResourceLoader.addJob(Sounds.FRIENDLY_ALERT);
+		ResourceLoader.addJob(Sounds.HIT);
+		ResourceLoader.addJob(Sounds.SELECT);
 		ResourceLoader.processJobs();
 		
 		System.out.println("-------------------------------");
@@ -161,6 +172,8 @@ public class Runner {
 		
 		// update the GUI
 		GUI.update();
+	
+		Audio.update();
 		
 		// update the physics engine
 		if (!paused && Physics.dynamicsWorld != null)
@@ -175,8 +188,19 @@ public class Runner {
 	 * Checks whether or not the game's paused boolean needs to be flipped
 	 */
 	private void pauseLogic() {
-		if (KeyBindings.SYS_PAUSE.pressedOnce())
+		if (KeyBindings.SYS_PAUSE.pressedOnce()){
 			paused = !paused;
+			
+			if(paused){
+				Audio.pause();
+				
+				Audio.playSoundOnceAtListener(Sounds.SELECT);
+			}else{
+				Audio.play();
+				
+				Audio.playSoundOnceAtListener(Sounds.FRIENDLY_ALERT);
+			}
+		}
 
 		// release the mouse if the game's paused or the console is on or the
 		// menu is up
@@ -191,6 +215,7 @@ public class Runner {
 	 */
 	private void shutdown() {
 		System.out.println(goodbye());
+		Audio.shutdown();
 		Mouse.setGrabbed(false);
 		Display.destroy();
 		DisplayHelper.frame.dispose();
