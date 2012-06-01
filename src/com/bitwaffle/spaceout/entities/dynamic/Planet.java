@@ -49,7 +49,7 @@ public class Planet extends DynamicEntity implements Health{
                 this.type = "Planet";
                 this.texture = texture;
                 
-                quadric = new VBOQuadric(size, 20, 20);
+                quadric = new VBOQuadric(size, 50, 50);
                 
                 trail = new Trail(this, 20, 0.2f, Textures.TRAIL, new Vector3f(0.0f, 0.0f, 0.0f));
         }

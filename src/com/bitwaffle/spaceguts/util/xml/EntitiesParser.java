@@ -157,26 +157,56 @@ public class EntitiesParser {
 		float mass = getFloat(ele, "mass");
 		float restitution = getFloat(ele, "restitution");
 		
-		/* TEMP SHIP INFO TODO make this load from XML */
-		String shipName = "WingX";
-		Models shipModel = Models.SAUCER;
-		int shipHealth = 100;
-		float shipMass = 50.0f;
-		float shipRestitution = 0.01f;
-		Vector3f shipAcceleration = new Vector3f(2500.0f, 2500.0f, 2500.0f);
-		Vector3f shipBoostSpeed = new Vector3f(100000.0f, 100000.0f, 100000.0f);
-		float shipTopSpeed = 150.0f;
-		float shipStopSpeed = 0.25f;
-		float shipRollSpeed = 25.0f;
-		float shipTurnSpeed = 50.0f;
+		Ship ship;
 		
-		Ship ship = new Ship(shipName, shipModel, shipHealth, shipMass, shipRestitution, shipAcceleration, shipBoostSpeed, shipTopSpeed, shipStopSpeed, shipRollSpeed, shipTurnSpeed);
+		NodeList nl = ele.getElementsByTagName("ship");
+		if(nl != null && nl.getLength() > 0){
+			if(nl.getLength() > 1){
+				System.out.println("Found more than one ship in player XML node! Using first result.");
+			}
+			Element el = (Element) nl.item(0);
+			
+			ship = makeShip(el);
+		} else{
+			System.out.println("Couldn't find ship info in player XML node! Using default values.");
+		
+			// default ship values
+			String shipName = "WingX";
+			Models shipModel = Models.SAUCER;
+			int shipHealth = 100;
+			float shipMass = 50.0f;
+			float shipRestitution = 0.01f;
+			Vector3f shipAcceleration = new Vector3f(5000.0f, 5000.0f, 5000.0f);
+			Vector3f shipBoostSpeed = new Vector3f(100000.0f, 100000.0f, 100000.0f);
+			float shipTopSpeed = 300.0f;
+			float shipStopSpeed = 0.25f;
+			float shipRollSpeed = 25.0f;
+			float shipTurnSpeed = 50.0f;
+			
+			ship = new Ship(shipName, shipModel, shipHealth, shipMass, shipRestitution, shipAcceleration, shipBoostSpeed, shipTopSpeed, shipStopSpeed, shipRollSpeed, shipTurnSpeed);
+		}
 		
 		Player player = new Player(location, rotation, ship,
 				mass, restitution);
 		player.type = "dynamicPlayer";
 
 		Entities.player = player;
+	}
+	
+	private static Ship makeShip(Element ele){
+		String shipName = getString(ele, "name");
+		Models shipModel = Models.valueOf(getString(ele, "model"));
+		int shipHealth = getInt(ele, "health");
+		float shipMass = getFloat(ele, "mass");
+		float shipRestitution = getFloat(ele, "restitution");
+		Vector3f shipAcceleration = getVector3f(ele, "acceleration");
+		Vector3f shipBoostSpeed = getVector3f(ele, "boostSpeed");
+		float shipTopSpeed = getFloat(ele, "topSpeed");
+		float shipStopSpeed = getFloat(ele, "stopSpeed");
+		float shipRollSpeed = getFloat(ele, "rollSpeed");
+		float shipTurnSpeed = getFloat(ele, "turnSpeed");
+		
+		return new Ship(shipName, shipModel, shipHealth, shipMass, shipRestitution, shipAcceleration, shipBoostSpeed, shipTopSpeed, shipStopSpeed, shipRollSpeed, shipTurnSpeed);
 	}
 
 	private static void makeDebris(Element ele) {

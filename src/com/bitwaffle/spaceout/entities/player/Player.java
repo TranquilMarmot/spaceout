@@ -82,8 +82,8 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	/** How close a pickup has to be before it's added to the inventory */
 	public float pickupDistance = 2.0f;
 	
-	private static final float MISSILE_INITIAL_SPEED = 150.0f;
-	private static final float MISSILE_SPEED_INCREASE = 150.0f;
+	private static final float MISSILE_INITIAL_SPEED = 300.0f;
+	private static final float MISSILE_SPEED_INCREASE = 200.0f;
 	private static final float MISSILE_DETONATION_TIME = 12.0f;
 	
 	/**
