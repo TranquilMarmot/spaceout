@@ -76,7 +76,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	private SoundSource pew;
 	
 	/** Radius for sphere that looks for pickups */
-	public float pickupSweepSize = 25.0f;
+	public float pickupSweepSize = 50.0f;
 	/** How far in front of the ship that sphere travels */
 	public float pickupSweepDistance = 10.0f;
 	/** How close a pickup has to be before it's added to the inventory */
