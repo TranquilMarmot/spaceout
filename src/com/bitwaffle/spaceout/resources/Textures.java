@@ -15,7 +15,7 @@ import org.newdawn.slick.opengl.TextureLoader;
  * @author TranquilMarmot
  *
  */
-public enum Textures {	
+public enum Textures {
 	// Environment
 	SKYBOX("PNG", Paths.TEXTURE_PATH.path() + "skybox.png", true, GL11.GL_NEAREST),
 	WHITE("BMP", Paths.TEXTURE_PATH.path() + "white.bmp", true, GL11.GL_NEAREST),

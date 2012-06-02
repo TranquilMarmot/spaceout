@@ -97,7 +97,7 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	public Backpack backpack;
 	
 	/** Used for info in equations */
-	private Ship ship;
+	public Ship ship;
 	
 	// FIXME temp code
 	private Trail trail1, trail2;
@@ -447,22 +447,6 @@ public class Player extends DynamicEntity implements Health, Inventory{
 		// make found pickups follow player
 		for(Pickup item : hits)
 				item.setFollowing(this, pickupDistance, backpack);
-	}
-	
-	/**
-	 * I'M RICH, BIATCH
-	 * @return how many diamonds the player has in inventory
-	 */
-	// FIXME this is probably temporary
-	public int howManyDiamonds(){
-		int num = 0;
-		
-		for(Pickup p : backpack.getItems()){
-			if(p.type.equals("Diamond"))
-				num++;
-		}
-		
-		return num;
 	}
 	
 	@Override

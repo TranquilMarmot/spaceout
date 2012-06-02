@@ -164,41 +164,38 @@ class ClearCommand implements Command{
 class SpeedCommand implements Command{
 	@Override
 	public void issue(StringTokenizer toker) {
-		System.out.println("Speed commands temporarily unavailable");
+		if(!toker.hasMoreTokens()){
+			this.help();
+			return;
+		}
 		
-		//String speedCommand = toker.nextToken().toLowerCase();
-		//Float speedChange = Float.parseFloat(toker.nextToken());
-		
-		/*
-		if(speedCommand.equals("x")){
-			console.print("Changing player X acceleration from " + Entities.player.xAccel + " to " + speedChange);
-			Entities.player.xAccel = speedChange;
-		} else if(speedCommand.equals("y")){
-			console.print("Changing player Y acceleration from " + Entities.player.yAccel + " to " + speedChange);
-			Entities.player.yAccel = speedChange;
-		} else if(speedCommand.equals("z")){
-			console.print("Changing player Z acceleration from " + Entities.player.zAccel + " to " + speedChange);
-			Entities.player.zAccel = speedChange;
-		} else if(speedCommand.equals("stable")){
-			console.print("Changing player stabilization speed from " + Entities.player.stabilizationSpeed + " to " + speedChange);
-			Entities.player.stabilizationSpeed = speedChange;
+		String speedCommand = toker.nextToken().toLowerCase();
+		if(speedCommand.equals("top")){
+			if(toker.hasMoreTokens()){
+				Float speedChange = Float.parseFloat(toker.nextToken());
+				System.out.printf("Changing player top speed from %f to %f\n", Entities.player.ship.getTopSpeed(), speedChange);
+				Entities.player.ship.setTopSpeed(speedChange);
+			} else 
+				System.out.printf("Player's current top speed is %f\n", Entities.player.ship.getTopSpeed());
 		} else if(speedCommand.equals("stop")){
-			console.print("Changing player stop speed from " + Entities.player.stopSpeed + " to " + speedChange);
-			Entities.player.stopSpeed = speedChange;
-		} else if(speedCommand.equals("roll")){
-			console.print("Changing player roll speed from " + Entities.player.rollSpeed + " to " + speedChange);
-			Entities.player.rollSpeed = speedChange;
+			if(toker.hasMoreTokens()){
+				Float speedChange = Float.parseFloat(toker.nextToken());
+				System.out.printf("Changing player stop speed from %f to %f\n", Entities.player.ship.getStopSpeed(), speedChange);
+				Entities.player.ship.setStopSpeed(speedChange);
+			} else 
+				System.out.printf("Player's current stop speed is %f\n", Entities.player.ship.getStopSpeed());
+		} else{
+			System.out.println("Unknown speed command! (" + speedCommand + ")");
 		}
-		// invalid
-		else {
-			console.print("Not a valid speed command!");
-		}
-		*/
 	}
 	
 	@Override
 	public void help(){
-		System.out.println("Speed commands temporarily broken!");
+		System.out.println("Usage: /speed COMMAND");
+		System.out.println("Put a new value after command to set a variable, else leave it blank to just print out the variable");
+		System.out.println("Possible commands:");
+		System.out.println("top - change player's top speed");
+		System.out.println("stop - change player's top speed");
 	}
 }
 
@@ -469,7 +466,7 @@ class WarpCommand implements Command{
 class HowManyDiamonds implements Command{
 	@Override
 	public void issue(StringTokenizer toker) {
-		System.out.println("You have collected " + Entities.player.howManyDiamonds() + " diamonds");
+		System.out.println("You have collected " + Entities.player.backpack.numDiamonds() + " diamonds");
 	}
 
 	@Override
@@ -492,7 +489,7 @@ class MuteCommand implements Command{
 
 	@Override
 	public void help() {
-		System.out.println("Mutes an un-mutes the audio");
+		System.out.println("Mutes and un-mutes the audio");
 	}
 }
 

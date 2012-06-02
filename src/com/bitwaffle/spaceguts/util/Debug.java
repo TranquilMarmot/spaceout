@@ -234,6 +234,8 @@ public class Debug {
 				float speed = linear.length();
 				if(speed < 0.05f)
 					speed = 0.0f;
+				else if(speed >= Entities.player.ship.getTopSpeed() - 1)
+					speed = Entities.player.ship.getTopSpeed();
 				
 				font.drawString(DisplayHelper.windowWidth - 125,
 						DisplayHelper.windowHeight - 20, "Speed: " + Float.toString(speed));
