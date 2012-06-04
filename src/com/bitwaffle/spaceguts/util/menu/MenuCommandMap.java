@@ -8,6 +8,7 @@ import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.menu.LoadMenu;
 import com.bitwaffle.spaceguts.graphics.gui.menu.MainMenu;
 import com.bitwaffle.spaceguts.graphics.gui.menu.PauseMenu;
+import com.bitwaffle.spaceguts.util.Debug;
 import com.bitwaffle.spaceout.Runner;
 import com.bitwaffle.spaceout.resources.Sounds;
 
@@ -72,7 +73,7 @@ public class MenuCommandMap {
 			// create the load menu
 			LoadMenu lmenu = new LoadMenu(0, 0, XML_PATH);
 			GUI.addGUIObject(lmenu);
-
+			
 			// let the GUI know that a menu is up
 			GUI.menuUp = true;
 			

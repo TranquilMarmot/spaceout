@@ -53,12 +53,13 @@ public class GUI {
 	 */
 	public static void draw(){
 		Debug.draw();
+		HUD.draw();
 		
 		for(GUIObject obj : guiObjects){
 			obj.draw();
 		}
 		
-		if(Entities.camera != null && !menuUp && Debug.displayDebug)
+		if(Entities.camera != null && !menuUp)
 			Entities.camera.draw2D();
 	}
 	
