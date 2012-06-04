@@ -1,5 +1,7 @@
 package com.bitwaffle.spaceguts.graphics.gui.menu;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
@@ -69,6 +71,7 @@ public class MainMenu extends GUIObject {
 	public void draw() {
 		// draw the background
 		background.texture().bind();
+		
 		GL11.glBegin(GL11.GL_QUADS);
 		{
 
@@ -93,6 +96,8 @@ public class MainMenu extends GUIObject {
 			GL11.glVertex2i(0, DisplayHelper.windowHeight);
 		}
 		GL11.glEnd();
+		
+		glColor3f(0.00f, 0.00f, 0.00f);
 
 		// draw 'spaceout'
 		spaceout.texture().bind();

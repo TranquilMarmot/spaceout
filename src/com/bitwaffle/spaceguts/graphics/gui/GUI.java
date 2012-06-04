@@ -53,6 +53,7 @@ public class GUI {
 	 */
 	public static void draw(){
 		Debug.draw();
+		HUD.draw();
 		
 		for(GUIObject obj : guiObjects){
 			obj.draw();

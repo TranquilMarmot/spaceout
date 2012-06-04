@@ -16,6 +16,7 @@ import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.entities.Pickup;
 import com.bitwaffle.spaceguts.entities.particles.trail.Trail;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
+import com.bitwaffle.spaceguts.graphics.gui.menu.PauseMenu;
 import com.bitwaffle.spaceguts.graphics.render.Render3D;
 import com.bitwaffle.spaceguts.graphics.shapes.Box2D;
 import com.bitwaffle.spaceguts.input.KeyBindings;
@@ -23,6 +24,7 @@ import com.bitwaffle.spaceguts.input.MouseManager;
 import com.bitwaffle.spaceguts.physics.CollisionTypes;
 import com.bitwaffle.spaceguts.physics.ConvexResultCallback;
 import com.bitwaffle.spaceguts.physics.Physics;
+import com.bitwaffle.spaceguts.util.Debug;
 import com.bitwaffle.spaceguts.util.QuaternionHelper;
 import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.Runner;
@@ -106,7 +108,9 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	private boolean button0Down = false, button1Down = false, boosting = false;
 	
 	/** the player's health */
-	private int health = 100;
+	public static final int MAX_HEALTH = 100;
+	
+	public static int health = MAX_HEALTH;
 
 	public Player(Vector3f location, Quaternion rotation, Ship ship,
 			float mass, float restitution) {
@@ -521,6 +525,11 @@ public class Player extends DynamicEntity implements Health, Inventory{
 			isInvincible = true;
 			timeSpentInvincible = 0.0f;
 			System.out.printf("Ouch! You got hit and now have %d health\n", health);
+			if (health <= 0) {
+				Debug.pauseText = "GAME OVER!";
+				Runner.paused = true;
+			}
+			
 		}
 	}
 

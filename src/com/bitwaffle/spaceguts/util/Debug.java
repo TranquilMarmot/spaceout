@@ -49,6 +49,8 @@ public class Debug {
 	private static int backspaceRepeatCounter = 0;
 	public static int backspaceRepeatWait = 30;
 	
+	public static String pauseText = "PAUSED";
+	
 	/** String formatters */
 	private static Formatter cameraInfoFormatter, locationFormatter;
 
@@ -145,7 +147,7 @@ public class Debug {
 		// draw 'PAUSED' in the middle of the screen if the game is paused
 		if (Runner.paused && Entities.entitiesExist())
 			Debug.font.drawString((DisplayHelper.windowWidth / 2) - 25,
-					DisplayHelper.windowHeight / 2, "PAUSED");
+					DisplayHelper.windowHeight / 2, pauseText);
 	}
 
 	/**
