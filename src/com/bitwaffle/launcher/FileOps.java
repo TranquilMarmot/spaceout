@@ -212,9 +212,19 @@ public class FileOps {
 		return vers;
 	}
 	
-	public static boolean hasWriteAccess(String file){
-		// FIXME why wont this work?
-		File f = new File(file);
-		return f.canWrite();
+	/**
+	 * Returns whether or not Java can get write access to a given directory
+	 * @param directory Directory to check access to
+	 * @return Whether or not Java can write to the given directory
+	 */
+	public static boolean hasWriteAccess(String directory){
+		File f = new File(directory + "writetest");
+		try {
+			f.createNewFile();
+			f.delete();
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
 	}
 }

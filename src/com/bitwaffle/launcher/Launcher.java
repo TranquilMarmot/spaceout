@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 public class Launcher {
-	/** Directory to use for downloading and extracting file */
-	public static String homeDir;
+	/** Directory to use for downloading and extracting file (set to user.home by default) */
+	public static String workingDir;
 	
 	/** where we downloadin these files from? */
 	public static final String FILE_SERVER = "bitwaffle.com/spaceoutstuff";
@@ -15,6 +15,7 @@ public class Launcher {
 	/** version string in local directory, version string from server*/
 	public static String localVersion, serverVersion;
 	
+	/** Whether or not the server was found */
 	public static boolean serverFound = true;
 	
 	/**
@@ -23,14 +24,15 @@ public class Launcher {
 	 * 		Else one arg should be given with the home directory to use, trailing slash included ("/folder/", not "/folder")
 	 */
 	public static void main(String[] args){
+		System.getProperty("system.fileseparator");
 		if(args.length > 0){
-			homeDir = args[0];
+			workingDir = args[0];
 		} else{
-			homeDir = System.getProperty("user.home") + "/";
+			workingDir = System.getProperty("user.home") + "/";
 		}
 		
 		System.out.println("Welcome to the Spaceout launcher!                            ");
-		System.out.println("Using " + homeDir + " as home directory");
+		System.out.println("Using " + workingDir + " as home directory");
 		
 		// get version strings
 		getVersions();
@@ -43,9 +45,9 @@ public class Launcher {
 	 * @return Whether or not .spaceout and spaceout.jar exist
 	 */
 	public static boolean filesExist(){
-		// TODO this should somehow check if ALL the files exist somehow (maybe check file sizes against something?)
-		File dotspout = new File(homeDir + "/.spaceout");
-		File spoutjar = new File(homeDir + "/.spaceout/spaceout.jar");
+		// TODO this should somehow check if ALL the files exist somehow (generate a list of every file)
+		File dotspout = new File(workingDir + "/.spaceout");
+		File spoutjar = new File(workingDir + "/.spaceout/spaceout.jar");
 		
 		return dotspout.exists() && spoutjar.exists();
 	}
@@ -77,7 +79,7 @@ public class Launcher {
 	 */
 	private static void getVersions(){
 		try{
-			File localversion = new File(homeDir + "/.spaceout/version");
+			File localversion = new File(workingDir + "/.spaceout/version");
 			localVersion = FileOps.getFirstLineFromFile(localversion);
 		} catch(FileNotFoundException e){
 			// if there's no version file, we don't know the version
@@ -157,16 +159,16 @@ public class Launcher {
 		createDirectories();
 		
 		// download, extract and delete .spaceout.zip
-		FileOps.downloadFile(FILE_SERVER, "/.spaceout.zip", homeDir + ".spaceout/.spaceout.zip");
-		FileOps.extractZip(homeDir + ".spaceout/.spaceout.zip", homeDir + ".spaceout");
-		FileOps.deleteFile(homeDir + ".spaceout/.spaceout.zip");
+		FileOps.downloadFile(FILE_SERVER, "/.spaceout.zip", workingDir + ".spaceout/.spaceout.zip");
+		FileOps.extractZip(workingDir + ".spaceout/.spaceout.zip", workingDir + ".spaceout");
+		FileOps.deleteFile(workingDir + ".spaceout/.spaceout.zip");
 		
 		// download, extract, and delete the native folder
-		FileOps.downloadFile(FILE_SERVER, "/natives/" + nativesFile, homeDir + ".spaceout/" + nativesFile);
-		FileOps.extractZip(homeDir + ".spaceout/" + nativesFile, homeDir + ".spaceout/lib/natives");
-		FileOps.deleteFile(homeDir + ".spaceout/" + nativesFile);
+		FileOps.downloadFile(FILE_SERVER, "/natives/" + nativesFile, workingDir + ".spaceout/" + nativesFile);
+		FileOps.extractZip(workingDir + ".spaceout/" + nativesFile, workingDir + ".spaceout/lib/natives");
+		FileOps.deleteFile(workingDir + ".spaceout/" + nativesFile);
 		
-		FileOps.downloadFile(FILE_SERVER, "/version", homeDir + ".spaceout/version");
+		FileOps.downloadFile(FILE_SERVER, "/version", workingDir + ".spaceout/version");
 		
 		System.out.println("Done");
 		System.out.println("Ready to play!");
@@ -176,11 +178,11 @@ public class Launcher {
 	 * Creates the base directories for extracting the .zip files to
 	 */
 	private static void createDirectories(){
-		FileOps.createDirectory(homeDir + ".spaceout");
-		FileOps.createDirectory(homeDir + ".spaceout/lib");
-		FileOps.createDirectory(homeDir + ".spaceout/res");
-		FileOps.createDirectory(homeDir + ".spaceout/screenshots");
-		FileOps.createDirectory(homeDir + ".spaceout/lib/natives");
+		FileOps.createDirectory(workingDir + ".spaceout");
+		FileOps.createDirectory(workingDir + ".spaceout/lib");
+		FileOps.createDirectory(workingDir + ".spaceout/res");
+		FileOps.createDirectory(workingDir + ".spaceout/screenshots");
+		FileOps.createDirectory(workingDir + ".spaceout/lib/natives");
 	}
 	
 	/**
@@ -188,7 +190,7 @@ public class Launcher {
 	 * At this point, it's assumed that .spaceout exists.
 	 */
 	public static void launchGame(){
-		String directory = homeDir + ".spaceout/";
+		String directory = workingDir + ".spaceout/";
 		
 		// so we can execute the command in the right spot
 		File file = new File(directory);
@@ -200,7 +202,10 @@ public class Launcher {
 		}
 	}
 	
+	/**
+	 * @return Current working directory
+	 */
 	public static String getHomeDir(){
-		return homeDir;
+		return workingDir;
 	}
 }

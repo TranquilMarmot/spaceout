@@ -294,7 +294,7 @@ public class Display {
 		return new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				if(!FileOps.hasWriteAccess(Launcher.homeDir)){
+				if(!FileOps.hasWriteAccess(Launcher.workingDir)){
 					chooseNewHomeDir();
 				} else{
 					progBar.setVisible(true);
@@ -319,20 +319,20 @@ public class Display {
 	
 	private static void chooseNewHomeDir(){
 		try{
-			AccessController.checkPermission(new FilePermission(Launcher.homeDir, "write"));
+			AccessController.checkPermission(new FilePermission(Launcher.workingDir, "write"));
 		} catch (java.security.AccessControlException e){
 			
 		}
 		
-		int ret = JOptionPane.showConfirmDialog(null, "Error: Couldn't get write access to " + Launcher.homeDir + "\nSelect a different directory?", "Write Access Denied", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+		int ret = JOptionPane.showConfirmDialog(null, "Error: Couldn't get write access to " + Launcher.workingDir + "\nSelect a different directory?", "Write Access Denied", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
 		if(ret == JOptionPane.YES_OPTION){
 			JFileChooser chooser = new JFileChooser();
 			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			
 		    int returnVal = chooser.showOpenDialog(null);
 		    if(returnVal == JFileChooser.APPROVE_OPTION) {
-		    	Launcher.homeDir = chooser.getSelectedFile().getAbsolutePath() + System.getProperty("file.separator");
-		    	Display.info.setText("Using " + Launcher.homeDir + " as home directory");
+		    	Launcher.workingDir = chooser.getSelectedFile().getAbsolutePath() + System.getProperty("file.separator");
+		    	Display.info.setText("Using " + Launcher.workingDir + " as home directory");
 		    }
 		}
 	}
