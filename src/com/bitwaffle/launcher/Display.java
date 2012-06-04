@@ -8,11 +8,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FilePermission;
+import java.security.AccessController;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -290,23 +294,47 @@ public class Display {
 		return new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
-				progBar.setVisible(true);
-				start.setText("Downloading...");
-				start.setEnabled(false);
-				Thread t = new Thread(){
-					@Override
-					public void run(){
-						Launcher.downloadAndExtractFiles();
-						progBar.setVisible(false);
-						start.setEnabled(true);
-						start.setText("Start Game");
-						start.removeActionListener(start.getActionListeners()[0]);
-						start.addActionListener(getLaunchListener());
-					}
-				};
-				t.start();
+				if(!FileOps.hasWriteAccess(Launcher.homeDir)){
+					chooseNewHomeDir();
+				} else{
+					progBar.setVisible(true);
+					start.setText("Downloading...");
+					start.setEnabled(false);
+					Thread t = new Thread(){
+						@Override
+						public void run(){
+							Launcher.downloadAndExtractFiles();
+							progBar.setVisible(false);
+							start.setEnabled(true);
+							start.setText("Start Game");
+							start.removeActionListener(start.getActionListeners()[0]);
+							start.addActionListener(getLaunchListener());
+						}
+					};
+					t.start();	
+				}
 			}
 		};
+	}
+	
+	private static void chooseNewHomeDir(){
+		try{
+			AccessController.checkPermission(new FilePermission(Launcher.homeDir, "write"));
+		} catch (java.security.AccessControlException e){
+			
+		}
+		
+		int ret = JOptionPane.showConfirmDialog(null, "Error: Couldn't get write access to " + Launcher.homeDir + "\nSelect a different directory?", "Write Access Denied", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+		if(ret == JOptionPane.YES_OPTION){
+			JFileChooser chooser = new JFileChooser();
+			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			
+		    int returnVal = chooser.showOpenDialog(null);
+		    if(returnVal == JFileChooser.APPROVE_OPTION) {
+		    	Launcher.homeDir = chooser.getSelectedFile().getAbsolutePath() + System.getProperty("file.separator");
+		    	Display.info.setText("Using " + Launcher.homeDir + " as home directory");
+		    }
+		}
 	}
 	
 	/**

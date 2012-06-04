@@ -14,7 +14,6 @@ public class Material {
 	private float Shininess;
 	
 	/**
-	 * 
 	 * @param Ka Ambient color
 	 * @param Kd Diffuse color
 	 * @param Ks Specular color

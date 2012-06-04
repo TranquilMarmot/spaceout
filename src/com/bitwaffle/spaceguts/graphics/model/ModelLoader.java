@@ -1,6 +1,7 @@
 package com.bitwaffle.spaceguts.graphics.model;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -83,7 +84,7 @@ public class ModelLoader {
 		String name = directory.substring(lastSlash);
 		
 		// get a list of materials
-		MaterialList materials = loadMaterialList(directory + name + ".mtl");
+		MaterialList materials = null;
 		
 		try{
 			// open the .obj file
@@ -101,6 +102,14 @@ public class ModelLoader {
 				// grab the line's type
 				String lineType = toker.nextToken();
 				
+				// load material library
+				if(lineType.equals("mtllib")){
+					try{
+						materials = loadMaterialList(directory + "/" + toker.nextToken());
+					} catch(FileNotFoundException e){
+						materials = loadMaterialList(directory + name + ".mtl");
+					}
+				}
 				// object name
 				if (lineType.equals("o")) {
 					//System.out.println("Loading " + toker.nextToken());
@@ -145,13 +154,16 @@ public class ModelLoader {
 					//if(builder.isMakingModelPart())
 					//	builder.endModelPart();
 					
+					if(materials == null)
+						materials = loadMaterialList(directory + name + ".mtl");
+					
 					String mat = toker.nextToken();
 					builder.startModelPart(materials.getMaterial(mat));
 				}
 
 				// face
 				if (line.startsWith("f")) {
-					// to see if we're dealing with a triangle or a quad (the ModelBuilder automaticall splits quads into triangles)
+					// to see if we're dealing with a triangle or a quad (the ModelBuilder automatically splits quads into triangles)
 					int numVertices = toker.countTokens();
 
 					int[] vertexIndices = new int[numVertices];
@@ -186,10 +198,10 @@ public class ModelLoader {
 	
 	/**
 	 * Get a material list for an obj file
-	 * @param file .obj file to load .mtl file for (string should contain ".obj" at the end)
+	 * @param .mtl file to load MaterialList from
 	 * @return List of materials from .mtl file
 	 */
-	private static MaterialList loadMaterialList(String file){
+	private static MaterialList loadMaterialList(String file) throws FileNotFoundException{
 		// material list
 		MaterialList list = new MaterialList();
 		try{
@@ -249,6 +261,8 @@ public class ModelLoader {
 					list.addMaterial(name, mat);
 				}
 			}
+		} catch(FileNotFoundException e){
+			throw e;
 		} catch(IOException e){
 			e.printStackTrace();
 		}
