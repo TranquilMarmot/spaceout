@@ -85,6 +85,8 @@ public class LoadMenu extends GUIObject {
 
 					// raise the file loaded flag
 					fileLoaded = true;
+					
+					Debug.displayDebug = false;
 				}
 			}
 

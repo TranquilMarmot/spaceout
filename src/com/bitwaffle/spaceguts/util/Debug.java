@@ -49,6 +49,8 @@ public class Debug {
 	private static int backspaceRepeatCounter = 0;
 	public static int backspaceRepeatWait = 30;
 	
+	public static String pauseText = "PAUSED";
+	
 	/** String formatters */
 	private static Formatter cameraInfoFormatter, locationFormatter;
 
@@ -145,7 +147,7 @@ public class Debug {
 		// draw 'PAUSED' in the middle of the screen if the game is paused
 		if (Runner.paused && Entities.entitiesExist())
 			Debug.font.drawString((DisplayHelper.windowWidth / 2) - 25,
-					DisplayHelper.windowHeight / 2, "PAUSED");
+					DisplayHelper.windowHeight / 2, pauseText);
 	}
 
 	/**
@@ -228,17 +230,10 @@ public class Debug {
 					font.drawString(100, 3, look, Color.green);
 				}
 
-				javax.vecmath.Vector3f linear = new javax.vecmath.Vector3f();
-				Entities.player.rigidBody.getLinearVelocity(linear);
-				
-				float speed = linear.length();
-				if(speed < 0.05f)
-					speed = 0.0f;
-				else if(speed >= Entities.player.ship.getTopSpeed() - 1)
-					speed = Entities.player.ship.getTopSpeed();
+
 				
 				font.drawString(DisplayHelper.windowWidth - 125,
-						DisplayHelper.windowHeight - 20, "Speed: " + Float.toString(speed));
+						DisplayHelper.windowHeight - 20, "Speed: " + Float.toString(getSpeed()));
 			}
 		}
 
@@ -261,6 +256,24 @@ public class Debug {
 			}
 			font.drawString(200, 20, lockon);
 		}
+	}
+	
+	public static float getSpeed() {
+		
+		if (Entities.player != null) {
+		
+		javax.vecmath.Vector3f linear = new javax.vecmath.Vector3f();
+		Entities.player.rigidBody.getLinearVelocity(linear);
+		
+		float speed = linear.length();
+		if(speed < 0.05f)
+			speed = 0.0f;
+		else if(speed >= Entities.player.ship.getTopSpeed() - 1)
+			speed = Entities.player.ship.getTopSpeed();
+		
+			return speed;
+		}
+		return 0;
 	}
 
 	/**
