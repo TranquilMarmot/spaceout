@@ -59,7 +59,7 @@ public class GUI {
 			obj.draw();
 		}
 		
-		if(Entities.camera != null && !menuUp && Debug.displayDebug)
+		if(Entities.camera != null && !menuUp)
 			Entities.camera.draw2D();
 	}
 	

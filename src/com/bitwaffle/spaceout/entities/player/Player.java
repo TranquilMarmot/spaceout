@@ -16,7 +16,6 @@ import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.entities.Pickup;
 import com.bitwaffle.spaceguts.entities.particles.trail.Trail;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
-import com.bitwaffle.spaceguts.graphics.gui.menu.PauseMenu;
 import com.bitwaffle.spaceguts.graphics.render.Render3D;
 import com.bitwaffle.spaceguts.graphics.shapes.Box2D;
 import com.bitwaffle.spaceguts.input.KeyBindings;
