@@ -551,4 +551,8 @@ public class Player extends DynamicEntity implements Health, Inventory{
 	public ArrayList<Pickup> getItems() {
 		return backpack.getItems();
 	}
+	
+	public int numDiamonds(){
+		return backpack.numDiamonds();
+	}
 }

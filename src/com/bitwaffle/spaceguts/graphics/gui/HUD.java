@@ -1,8 +1,13 @@
 package com.bitwaffle.spaceguts.graphics.gui;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
+import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glColor4f;
+import static org.lwjgl.opengl.GL11.glEnd;
+import static org.lwjgl.opengl.GL11.glVertex2f;
+import static org.lwjgl.opengl.GL11.glVertex2i;
 
-import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
 
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.graphics.gui.menu.MainMenu;
@@ -113,6 +118,9 @@ public class HUD {
 			/* END HEALTH BAR */
 			
 			Console.console.draw();
+			
+			String diamonds = "Diamonds: " + Entities.player.numDiamonds();
+			Debug.font.drawString(DisplayHelper.windowWidth - Debug.font.getWidth(diamonds) - 2.5f, 10.0f, diamonds, Color.cyan);
 			
 		}
 		

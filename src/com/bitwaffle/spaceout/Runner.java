@@ -42,7 +42,7 @@ import com.bitwaffle.spaceout.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.77.6.15";
+	public static final String VERSION = "0.0.77.7";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;
