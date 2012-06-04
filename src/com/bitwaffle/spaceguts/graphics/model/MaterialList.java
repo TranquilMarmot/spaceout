@@ -46,6 +46,9 @@ public class MaterialList {
 		return list.get(name);
 	}
 	
+	/**
+	 * Returns a string with every material in the list
+	 */
 	public String toString(){
 		String ret = "Material list:\n";
 		for(String s : list.keySet()){

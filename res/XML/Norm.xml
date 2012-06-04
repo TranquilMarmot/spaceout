@@ -1,0 +1,49 @@
+<Entities>
+        <Player>
+                <location>50.0f,50.0f,1000.0f</location>
+                <rotation>-0.0058384943f,0.9989326f,-0.045716275f,-0.0030980944f</rotation>
+                <mass>50.0f</mass>
+                <restitution>0.01f</restitution>
+                <model>SHIP1</model>
+                <ship>
+                	<name>Saucer</name>
+                	<model>SAUCER</model>
+                	<health>100</health>
+                	<mass>50.0f</mass>
+                	<restitution>0.01f</restitution>
+                	<acceleration>5000.0f,5000.0f,5000.0f</acceleration>
+                	<boostSpeed>100000.0f,100000.0f,100000.0f</boostSpeed>
+                	<topSpeed>300.0f</topSpeed>
+                	<stopSpeed>0.25f</stopSpeed>
+                	<rollSpeed>25.0f</rollSpeed>
+                	<turnSpeed>50.0f</turnSpeed>
+                </ship>
+        </Player>
+        
+        <Asteroids>
+        		<location>600.0f,600.0f,600.0f</location>
+        		<range>4300.0f,4300.0f,4300.0f</range>
+        		<asteroidSpeed>15000.0f,15000.0f,15000.0f</asteroidSpeed>
+        		<numAsteroids>175</numAsteroids>
+        		<initialAsteroids>100</initialAsteroids>
+        		<releaseInterval>1.0f</releaseInterval>
+        		<minSize>75</minSize>
+        		<maxSize>200</maxSize>
+        </Asteroids>
+                
+        <Sun>
+                <location>1000000.0f,1000000.0f,-2.0f</location>
+                <size>45000.0f</size>
+                <color>1.0f,1.0f,0.3f</color>
+                <intensity>0.9f,0.9f,0.9f</intensity>
+        </Sun>
+        
+        <Planet>
+        		<name>Earth</name>
+                <location>-70000.0f,-70000.0f,-2.0f</location>
+                <rotation>0.0f,0.0f,0.0f,1.0f</rotation>
+                <mass>1000000.0f</mass>
+                <size>30000.0f</size>
+               	<restitution>1.0f</restitution>
+        </Planet>
+</Entities>

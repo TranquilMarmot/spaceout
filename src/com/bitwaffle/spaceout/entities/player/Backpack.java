@@ -7,13 +7,19 @@ import com.bitwaffle.spaceguts.entities.Pickup;
 public class Backpack {
 	private ArrayList<Pickup> items;
 	
+	private int diamonds;
+	
 		
 	public Backpack(){
 		items = new ArrayList<Pickup>();
+		diamonds = 0;
 	}
 	
 	public void addInventoryItem(Pickup item){
-		items.add(item);
+		if(item.type.equals("Diamond"))
+			diamonds++;
+		else
+			items.add(item);
 	}
 	
 	public void removeInventoryItem(Pickup item){
@@ -22,5 +28,9 @@ public class Backpack {
 	
 	public ArrayList<Pickup> getItems(){
 		return items;
+	}
+	
+	public int numDiamonds(){
+		return diamonds;
 	}
 }

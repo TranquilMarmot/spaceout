@@ -80,4 +80,16 @@ public class Ship{
 	public float getStopSpeed(){ return stopSpeed; }
 	public float getRollSpeed(){ return rollSpeed; }
 	public float getTurnSpeed(){ return turnSpeed; }
+	
+	public void setModel(Models model){ this.model = model; }
+	public void setName(String name){ this.name = name; }
+	public void setHealth(int health){ this.health = health; }
+	public void setMass(float mass){ this.mass = mass; }
+	public void setRestitution(float restitution){ this.restitution = restitution; }
+	public void setAccelerationSpeed(Vector3f accelerationSpeed){ this.accelerationSpeed = accelerationSpeed; }
+	public void setBoostSpeed(Vector3f boostSpeed){ this.boostSpeed = boostSpeed; }
+	public void setTopSpeed(float topSpeed){ this.topSpeed = topSpeed; }
+	public void setStopSpeed(float stopSpeed){ this.stopSpeed = stopSpeed; }
+	public void setRollSpeed(float rollSpeed){ this.rollSpeed = rollSpeed; }
+	public void setTurnSpeed(float turnSpeed){ this.turnSpeed = turnSpeed; }
 }

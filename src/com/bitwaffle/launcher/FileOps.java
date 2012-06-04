@@ -59,6 +59,12 @@ public class FileOps {
 		}
 	}
 	
+	/**
+	 * Figure out how big a file on a server is
+	 * @param server Server file is on
+	 * @param filePath Path to file on server
+	 * @return Size of file on server
+	 */
 	public static int fileSizeOnServer(String server, String filePath){
 		try{
 			// Open up an input stream from the file server
@@ -72,6 +78,7 @@ public class FileOps {
 		return 0;
 	}
 	
+
 	/**
 	 * Creates a directory at the given path
 	 * @param directoryPath Directory to create
@@ -203,5 +210,11 @@ public class FileOps {
 		}
 		
 		return vers;
+	}
+	
+	public static boolean hasWriteAccess(String file){
+		// FIXME why wont this work?
+		File f = new File(file);
+		return f.canWrite();
 	}
 }

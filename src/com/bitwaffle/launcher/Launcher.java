@@ -123,13 +123,13 @@ public class Launcher {
 		
 		String os = System.getProperty("os.name").toLowerCase();
 		if(os.contains("windows"))
-			nativesFile = "windows.zip";
+			nativesFile = "windows.jar";
 		else if(os.contains("linux"))
-			nativesFile = "linux.zip";
+			nativesFile = "linux.jar";
 		else if(os.contains("mac"))
-			nativesFile = "macosx.zip";
+			nativesFile = "macosx.jar";
 		else if(os.contains("solaris"))
-			nativesFile = "solaris.zip";
+			nativesFile = "solaris.jar";
 		else
 			System.out.println("Error! OS not detected! Can't download natives!");
 		
@@ -144,13 +144,13 @@ public class Launcher {
 		
 		String os = System.getProperty("os.name").toLowerCase();
 		if(os.contains("windows"))
-			nativesFile = "windows.zip";
+			nativesFile = "windows.jar";
 		else if(os.contains("linux"))
-			nativesFile = "linux.zip";
+			nativesFile = "linux.jar";
 		else if(os.contains("mac"))
-			nativesFile = "macosx.zip";
+			nativesFile = "macosx.jar";
 		else if(os.contains("solaris"))
-			nativesFile = "solaris.zip";
+			nativesFile = "solaris.jar";
 		else
 			System.out.println("Error! OS not detected! Can't download natives!");
 		
