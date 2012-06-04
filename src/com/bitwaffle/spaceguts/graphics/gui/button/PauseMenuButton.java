@@ -1,6 +1,6 @@
 package com.bitwaffle.spaceguts.graphics.gui.button;
 
-import com.bitwaffle.spaceguts.util.Runner;
+import com.bitwaffle.spaceout.Runner;
 
 /**
  * A special MenuButton that is only drawn when the game is paused

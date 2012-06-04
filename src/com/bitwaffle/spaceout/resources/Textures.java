@@ -15,7 +15,7 @@ import org.newdawn.slick.opengl.TextureLoader;
  * @author TranquilMarmot
  *
  */
-public enum Textures {	
+public enum Textures {
 	// Environment
 	SKYBOX("PNG", Paths.TEXTURE_PATH.path() + "skybox.png", true, GL11.GL_NEAREST),
 	WHITE("BMP", Paths.TEXTURE_PATH.path() + "white.bmp", true, GL11.GL_NEAREST),
@@ -29,6 +29,7 @@ public enum Textures {
 	DIAMOND("PNG", Paths.MODEL_PATH.path() + "diamond/diamond.png", false, GL11.GL_NEAREST),
 	MISSILE("PNG", Paths.MODEL_PATH.path() + "missile/missile.png", false, GL11.GL_NEAREST),
 	ASTEROID("PNG", Paths.MODEL_PATH.path() + "asteroid/asteroid.png", false, GL11.GL_LINEAR),
+	TRANSPARENT_CHECKERS("PNG", Paths.TEXTURE_PATH.path() + "transparent_checkers.png", false, GL11.GL_NEAREST),
 	
 	// Planets
 	EARTH ("JPG", Paths.TEXTURE_PATH.path() + "planets/earth.jpg", true, GL11.GL_LINEAR),

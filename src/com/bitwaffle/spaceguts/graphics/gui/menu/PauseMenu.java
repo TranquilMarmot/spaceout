@@ -1,79 +1,64 @@
 package com.bitwaffle.spaceguts.graphics.gui.menu;
 
+import java.util.Map;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import com.bitwaffle.spaceguts.audio.Audio;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.GUIObject;
-import com.bitwaffle.spaceguts.graphics.gui.button.PauseMenuButton;
 import com.bitwaffle.spaceguts.physics.Physics;
-import com.bitwaffle.spaceguts.util.Runner;
-import com.bitwaffle.spaceout.resources.Sounds;
-
-
+import com.bitwaffle.spaceguts.util.menu.MenuPainter;
+import com.bitwaffle.spaceguts.util.menu.MenuPainter.Style;
+import com.bitwaffle.spaceguts.util.xml.MenuParser;
+import com.bitwaffle.spaceout.Runner;
 
 /**
  * The pause menu!
- * @author TranquilMarmot
- *
+ * 
+ * @author arthurdent
+ * 
  */
-public class PauseMenu extends GUIObject{
-	/** button on the pause menu */
-	private PauseMenuButton backToMainButton, resumeButton;
-	
+public class PauseMenu extends GUIObject {
+
 	/** whether or not to go back to the main menu on the next update */
-	private boolean backToMainMenu = false;
-	
+	public static boolean backToMainMenu = false;
+
+	private MenuPainter menuPainter;
+
 	/**
-	 * Pause menu constructor. Automatically adds the pause menu to GUI.guiObjects
+	 * Pause menu constructor. Automatically adds the pause menu to
+	 * GUI.guiObjects
 	 */
 	public PauseMenu() {
 		super(0, 0);
 
-		// button to resume the game
-		resumeButton = new PauseMenuButton("resume",
-				119, 28, -75, 50);
-		resumeButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Runner.paused = false;
-				
-				Audio.playSoundOnceAtListener(Sounds.FRIENDLY_ALERT);
-			}
-		});
+		// Build the main menu from menus.xml
+		MenuParser mp = new MenuParser("pause");
+		Map<String, String> rawMenu = mp.getMenu();
 
-		// button to go back to the main menu
-		backToMainButton = new PauseMenuButton("main menu", 119,
-				28, 75, 50);
-		backToMainButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				backToMainMenu = true;
-				
-				Audio.playSoundOnceAtListener(Sounds.BACK);
-			}
-		});
+		// Paint the menu to a hashmap
+		menuPainter = new MenuPainter(rawMenu, Style.HORIZONTAL_MENU, -40);
+
 	}
 
 	@Override
 	public void update() {
-		backToMainButton.update();
-		resumeButton.update();
-		
-		if(backToMainMenu){
-			Entities.cleanup();
-			Physics.cleanup();
-			GUI.removeGUIObject(this);
-			GUI.addGUIObject(new MainMenu());
+		if (Runner.paused) {
+			menuPainter.update();
+
+			if (backToMainMenu) {
+				Entities.cleanup();
+				Physics.cleanup();
+				GUI.removeGUIObject(this);
+				GUI.addGUIObject(new MainMenu());
+				backToMainMenu = false;
+			}
 		}
 	}
 
 	@Override
 	public void draw() {
-		backToMainButton.draw();
-		resumeButton.draw();
+		if (Runner.paused) {
+			menuPainter.draw();
+		}
 	}
 }

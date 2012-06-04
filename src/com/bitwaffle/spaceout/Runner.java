@@ -1,4 +1,4 @@
-package com.bitwaffle.spaceguts.util;
+package com.bitwaffle.spaceout;
 
 import java.util.Random;
 
@@ -14,6 +14,8 @@ import com.bitwaffle.spaceguts.input.KeyBindings;
 import com.bitwaffle.spaceguts.input.KeyboardManager;
 import com.bitwaffle.spaceguts.input.MouseManager;
 import com.bitwaffle.spaceguts.physics.Physics;
+import com.bitwaffle.spaceguts.util.Debug;
+import com.bitwaffle.spaceguts.util.DisplayHelper;
 import com.bitwaffle.spaceguts.util.console.Console;
 import com.bitwaffle.spaceout.resources.Models;
 import com.bitwaffle.spaceout.resources.ResourceLoader;
@@ -40,7 +42,7 @@ import com.bitwaffle.spaceout.resources.Textures;
  */
 public class Runner {
 	/** what version of Spaceout is this? */
-	public static final String VERSION = "0.0.77.6.10";
+	public static final String VERSION = "0.0.77.6.15";
 
 	/** prevents updates but still renders the scene */
 	public static boolean paused = false;

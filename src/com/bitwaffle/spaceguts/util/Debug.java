@@ -17,6 +17,7 @@ import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.input.KeyBindings;
 import com.bitwaffle.spaceguts.util.console.Console;
+import com.bitwaffle.spaceout.Runner;
 import com.bitwaffle.spaceout.resources.Paths;
 
 
@@ -233,6 +234,8 @@ public class Debug {
 				float speed = linear.length();
 				if(speed < 0.05f)
 					speed = 0.0f;
+				else if(speed >= Entities.player.ship.getTopSpeed() - 1)
+					speed = Entities.player.ship.getTopSpeed();
 				
 				font.drawString(DisplayHelper.windowWidth - 125,
 						DisplayHelper.windowHeight - 20, "Speed: " + Float.toString(speed));
@@ -251,8 +254,11 @@ public class Debug {
 		
 		if(Entities.player != null){
 			String lockon = "Locked on to: ";
-			if(Entities.player.lockon != null)
-				lockon += Entities.player.lockon.type;
+			if(Entities.player.lockon != null){
+				lockon += Entities.player.lockon.type + " [" + Entities.distance(Entities.player.location, Entities.player.lockon.location) + "m]";
+			} else {
+				lockon += "(nothing)";
+			}
 			font.drawString(200, 20, lockon);
 		}
 	}

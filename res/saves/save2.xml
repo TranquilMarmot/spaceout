@@ -1,0 +1,16 @@
+<save name="Example">
+        <Player>
+                <location>50.0f,50.0f,1000.0f</location>
+                <rotation>-0.0058384943f,0.9989326f,-0.045716275f,-0.0030980944f</rotation>
+                <mass>50.0f</mass>
+                <restitution>0.01f</restitution>
+                <model>SHIP1</model>
+        </Player>
+        
+        <Sun>
+                <location>-600.0f,-600.0f,-2.0f</location>
+                <size>200.0f</size>
+                <color>1.0f,1.0f,0.3f</color>
+                <intensity>0.9f,0.9f,0.9f</intensity>
+        </Sun>
+</save>
