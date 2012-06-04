@@ -17,7 +17,7 @@ public enum Models {
 	WESCOTT(Paths.SHIPS_PATH.path() + "wescott-8-beta", 1.0f, Textures.WESCOTT),
 	DIAMOND(Paths.MODEL_PATH.path() + "diamond", 2.0f, Textures.DIAMOND),
 	MISSILE(Paths.MODEL_PATH.path() + "missile", 1.0f, Textures.MISSILE),
-	ASTEROID(Paths.MODEL_PATH.path() + "asteroid", 1.0f, Textures.ASTEROID);
+	ASTEROID(Paths.MODEL_PATH.path() + "asteroid2", 1.0f, Textures.ASTEROID);
 	
 	/** the actual model object */
 	private Model model;

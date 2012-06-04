@@ -28,7 +28,7 @@ public enum Textures {
 	WESCOTT("PNG", Paths.SHIPS_PATH.path() + "wescott-8-beta/wescott-8-beta.png", false, GL11.GL_NEAREST),
 	DIAMOND("PNG", Paths.MODEL_PATH.path() + "diamond/diamond.png", false, GL11.GL_NEAREST),
 	MISSILE("PNG", Paths.MODEL_PATH.path() + "missile/missile.png", false, GL11.GL_NEAREST),
-	ASTEROID("PNG", Paths.MODEL_PATH.path() + "asteroid/asteroid.png", false, GL11.GL_LINEAR),
+	ASTEROID("PNG", Paths.MODEL_PATH.path() + "asteroid2/asteroid2.png", false, GL11.GL_LINEAR),
 	TRANSPARENT_CHECKERS("PNG", Paths.TEXTURE_PATH.path() + "transparent_checkers.png", false, GL11.GL_NEAREST),
 	
 	// Planets
