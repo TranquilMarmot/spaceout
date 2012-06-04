@@ -8,7 +8,6 @@ import com.bitwaffle.spaceguts.graphics.gui.GUI;
 import com.bitwaffle.spaceguts.graphics.gui.menu.LoadMenu;
 import com.bitwaffle.spaceguts.graphics.gui.menu.MainMenu;
 import com.bitwaffle.spaceguts.graphics.gui.menu.PauseMenu;
-import com.bitwaffle.spaceguts.util.Debug;
 import com.bitwaffle.spaceout.Runner;
 import com.bitwaffle.spaceout.resources.Sounds;
 
