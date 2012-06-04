@@ -9,12 +9,14 @@ import org.lwjgl.util.vector.Quaternion;
 import org.lwjgl.util.vector.Vector3f;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.bitwaffle.spaceguts.entities.Camera;
 import com.bitwaffle.spaceguts.entities.DynamicEntity;
 import com.bitwaffle.spaceguts.entities.Entities;
 import com.bitwaffle.spaceout.entities.dynamic.Planet;
+import com.bitwaffle.spaceout.entities.passive.AsteroidField;
 import com.bitwaffle.spaceout.entities.passive.Skybox;
 import com.bitwaffle.spaceout.entities.passive.Sun;
 import com.bitwaffle.spaceout.entities.passive.particles.Debris;
@@ -32,7 +34,7 @@ import com.bitwaffle.spaceout.ship.Ship;
  * @see Entities
  * 
  */
-public class XMLParser {
+public class EntitiesParser {
 	/**
 	 * Loads entities from an XML file
 	 * 
@@ -77,7 +79,7 @@ public class XMLParser {
 				 * any node with the name #text is, well, text so we skip it we
 				 * also skip the player's node becayse we already grabbed it
 				 */
-				if (!nodes.item(i).getNodeName().equals("#text")) {
+				if (nodes.item(i).getNodeType() == Node.ELEMENT_NODE) {
 					// grab the element
 					Element ele = (Element) nodes.item(i);
 
@@ -116,7 +118,24 @@ public class XMLParser {
 			makePlanet(ele);
 		} else if (type.equals("saucer")) {
 			makeSaucer(ele);
+		} else if (type.equals("asteroids")){
+			makeAsteroidField(ele);
 		}
+	}
+	
+	private static void makeAsteroidField(Element ele){
+		Vector3f location = getVector3f(ele, "location");
+		Vector3f range = getVector3f(ele, "range");
+		Vector3f asteroidSpeed = getVector3f(ele, "asteroidSpeed");
+		int numAsteroids = getInt(ele, "numAsteroids");
+		int initialAsteroids = getInt(ele, "initialAsteroids");
+		float releaseInterval = getFloat(ele, "releaseInterval");
+		int minSize = getInt(ele, "minSize");
+		int maxSize = getInt(ele, "maxSize");
+		
+		AsteroidField field = new AsteroidField(location, range, asteroidSpeed, numAsteroids, initialAsteroids, releaseInterval, minSize, maxSize);
+		
+		Entities.addPassiveEntity(field);
 	}
 
 	private static void makeSaucer(Element ele) {
@@ -138,26 +157,56 @@ public class XMLParser {
 		float mass = getFloat(ele, "mass");
 		float restitution = getFloat(ele, "restitution");
 		
-		/* TEMP SHIP INFO TODO make this load from XML */
-		String shipName = "WingX";
-		Models shipModel = Models.SAUCER;
-		int shipHealth = 100;
-		float shipMass = 50.0f;
-		float shipRestitution = 0.01f;
-		Vector3f shipAcceleration = new Vector3f(2500.0f, 2500.0f, 2500.0f);
-		Vector3f shipBoostSpeed = new Vector3f(100000.0f, 100000.0f, 100000.0f);
-		float shipTopSpeed = 150.0f;
-		float shipStopSpeed = 0.25f;
-		float shipRollSpeed = 25.0f;
-		float shipTurnSpeed = 50.0f;
+		Ship ship;
 		
-		Ship ship = new Ship(shipName, shipModel, shipHealth, shipMass, shipRestitution, shipAcceleration, shipBoostSpeed, shipTopSpeed, shipStopSpeed, shipRollSpeed, shipTurnSpeed);
+		NodeList nl = ele.getElementsByTagName("ship");
+		if(nl != null && nl.getLength() > 0){
+			if(nl.getLength() > 1){
+				System.out.println("Found more than one ship in player XML node! Using first result.");
+			}
+			Element el = (Element) nl.item(0);
+			
+			ship = makeShip(el);
+		} else{
+			System.out.println("Couldn't find ship info in player XML node! Using default values.");
+		
+			// default ship values
+			String shipName = "WingX";
+			Models shipModel = Models.SAUCER;
+			int shipHealth = 100;
+			float shipMass = 50.0f;
+			float shipRestitution = 0.01f;
+			Vector3f shipAcceleration = new Vector3f(5000.0f, 5000.0f, 5000.0f);
+			Vector3f shipBoostSpeed = new Vector3f(100000.0f, 100000.0f, 100000.0f);
+			float shipTopSpeed = 300.0f;
+			float shipStopSpeed = 0.25f;
+			float shipRollSpeed = 25.0f;
+			float shipTurnSpeed = 50.0f;
+			
+			ship = new Ship(shipName, shipModel, shipHealth, shipMass, shipRestitution, shipAcceleration, shipBoostSpeed, shipTopSpeed, shipStopSpeed, shipRollSpeed, shipTurnSpeed);
+		}
 		
 		Player player = new Player(location, rotation, ship,
 				mass, restitution);
 		player.type = "dynamicPlayer";
 
 		Entities.player = player;
+	}
+	
+	private static Ship makeShip(Element ele){
+		String shipName = getString(ele, "name");
+		Models shipModel = Models.valueOf(getString(ele, "model"));
+		int shipHealth = getInt(ele, "health");
+		float shipMass = getFloat(ele, "mass");
+		float shipRestitution = getFloat(ele, "restitution");
+		Vector3f shipAcceleration = getVector3f(ele, "acceleration");
+		Vector3f shipBoostSpeed = getVector3f(ele, "boostSpeed");
+		float shipTopSpeed = getFloat(ele, "topSpeed");
+		float shipStopSpeed = getFloat(ele, "stopSpeed");
+		float shipRollSpeed = getFloat(ele, "rollSpeed");
+		float shipTurnSpeed = getFloat(ele, "turnSpeed");
+		
+		return new Ship(shipName, shipModel, shipHealth, shipMass, shipRestitution, shipAcceleration, shipBoostSpeed, shipTopSpeed, shipStopSpeed, shipRollSpeed, shipTurnSpeed);
 	}
 
 	private static void makeDebris(Element ele) {
