@@ -1,9 +1,9 @@
 # Blender MTL File: 'asteroid.blend'
 # Material Count: 1
 newmtl Material_asteroid.png
-Ns 96.078431
+Ns 10.078431
 Ka 0.900000 0.900000 0.900000
-Kd 0.640000 0.640000 0.640000
+Kd 0.440000 0.440000 0.440000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
 d 1.000000

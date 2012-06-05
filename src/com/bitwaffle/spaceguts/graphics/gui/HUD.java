@@ -119,8 +119,10 @@ public class HUD {
 			
 			Console.console.draw();
 			
-			String diamonds = "Diamonds: " + Entities.player.numDiamonds();
-			Debug.font.drawString(DisplayHelper.windowWidth - Debug.font.getWidth(diamonds) - 2.5f, 10.0f, diamonds, Color.cyan);
+			if(Entities.player != null){
+				String diamonds = "Diamonds: " + Entities.player.numDiamonds();
+				Debug.font.drawString(DisplayHelper.windowWidth - Debug.font.getWidth(diamonds) - 2.5f, 10.0f, diamonds, Color.cyan);
+			}
 			
 		}
 		

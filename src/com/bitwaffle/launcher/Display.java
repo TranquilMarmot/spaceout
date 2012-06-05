@@ -296,6 +296,11 @@ public class Display {
 			public void actionPerformed(ActionEvent e){
 				if(!FileOps.hasWriteAccess(Launcher.workingDir)){
 					chooseNewHomeDir();
+					if(Launcher.filesExist()){
+						start.setText("Start Game");
+						start.removeActionListener(start.getActionListeners()[0]);
+						start.addActionListener(getLaunchListener());
+					}
 				} else{
 					progBar.setVisible(true);
 					start.setText("Downloading...");
@@ -331,7 +336,10 @@ public class Display {
 			
 		    int returnVal = chooser.showOpenDialog(null);
 		    if(returnVal == JFileChooser.APPROVE_OPTION) {
-		    	Launcher.workingDir = chooser.getSelectedFile().getAbsolutePath() + System.getProperty("file.separator");
+		    	Launcher.workingDir = chooser.getSelectedFile().getAbsolutePath();
+		    	if(!Launcher.workingDir.endsWith(System.getProperty("file.separator")))
+		    		Launcher.workingDir += System.getProperty("file.separator");
+		    	
 		    	Display.info.setText("Using " + Launcher.workingDir + " as home directory");
 		    }
 		}
