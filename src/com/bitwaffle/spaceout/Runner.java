@@ -119,7 +119,7 @@ public class Runner {
 		ResourceLoader.addJob(Textures.MENU_BACKGROUND2);
 		ResourceLoader.addJob(Textures.SKYBOX);
 		ResourceLoader.addJob(Textures.WHITE);
-		//ResourceLoader.addJob(Textures.CHECKERS);
+		ResourceLoader.addJob(Textures.TRANSPARENT_CHECKERS);
 		ResourceLoader.addJob(Textures.WING_X);
 		ResourceLoader.addJob(Textures.VENUS);
 		ResourceLoader.addJob(Textures.MARS);
@@ -131,6 +131,8 @@ public class Runner {
 		ResourceLoader.addJob(Models.SAUCER);
 		ResourceLoader.addJob(Models.SKYBOX);
 		ResourceLoader.addJob(Models.DIAMOND);
+		ResourceLoader.addJob(Models.ASTEROID);
+		ResourceLoader.addJob(Models.MISSILE);
 		ResourceLoader.addJob(Textures.MENU_PICKER_ACTIVE);
 		ResourceLoader.addJob(Textures.MENU_PICKER_MOUSEOVER);
 		ResourceLoader.addJob(Textures.MENU_PICKER_SELECTED);

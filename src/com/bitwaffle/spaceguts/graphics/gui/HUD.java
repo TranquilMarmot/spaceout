@@ -124,6 +124,8 @@ public class HUD {
 				Debug.font.drawString(DisplayHelper.windowWidth - Debug.font.getWidth(diamonds) - 2.5f, 10.0f, diamonds, Color.cyan);
 			}
 			
+			Debug.drawControls();
+			
 		}
 		
 	}

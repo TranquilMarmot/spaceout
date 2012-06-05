@@ -26,6 +26,7 @@ public class MenuCommandMap {
 		commandMap = new HashMap<String, MenuCommand>();
 		commandMap.put("QUIT_GAME",new MenuCommandMap.Quit());
 		commandMap.put("LOAD_GAME", new MenuCommandMap.LoadGame());
+		commandMap.put("SAVE_GAME", new MenuCommandMap.SaveGame());
 		
 		/* Pause Menu stuff. */
 		commandMap.put("RESUME", new MenuCommandMap.Resume());
@@ -82,5 +83,14 @@ public class MenuCommandMap {
 			MainMenu.done = true;
 		}
 		
+	}
+	
+	public class SaveGame implements MenuCommand{
+
+		@Override
+		public void doCommand() {
+			// TODO save game
+			System.out.println("Save game functionality not yet implemented");
+		}
 	}
 }

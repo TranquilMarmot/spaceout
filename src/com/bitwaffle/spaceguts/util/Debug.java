@@ -285,7 +285,7 @@ public class Debug {
 				Runner.VERSION);
 	}
 	
-	private static void drawControls(){
+	public static void drawControls(){
 		String controls;
 		
 		if(Entities.camera != null && !Entities.camera.buildMode){
@@ -312,7 +312,7 @@ public class Debug {
 			
 		}
 		
-		font.drawString(DisplayHelper.windowWidth - 220, DisplayHelper.windowHeight - font.getHeight(controls) - 20, controls);
+		font.drawString(DisplayHelper.windowWidth - 210, DisplayHelper.windowHeight - font.getHeight(controls) - 20, controls);
 	}
 
 	/**
