@@ -297,6 +297,7 @@ public class Display {
 				if(!FileOps.hasWriteAccess(Launcher.workingDir)){
 					chooseNewHomeDir();
 					if(Launcher.filesExist()){
+						Launcher.localVersion = Launcher.getLocalVersion();
 						start.setText("Start Game");
 						start.removeActionListener(start.getActionListeners()[0]);
 						start.addActionListener(getLaunchListener());

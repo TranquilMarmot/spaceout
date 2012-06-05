@@ -77,23 +77,43 @@ public class Launcher {
 	 * Gets the local version from HOME/.spaceout/version
 	 * and the server version from FILE_SERVER/version
 	 */
-	private static void getVersions(){
-		try{
-			File localversion = new File(workingDir + "/.spaceout/version");
-			localVersion = FileOps.getFirstLineFromFile(localversion);
-		} catch(FileNotFoundException e){
-			// if there's no version file, we don't know the version
-			localVersion = "???";
-		}
+	public static void getVersions(){
+		localVersion = getLocalVersion();
 		System.out.println("Local version is " + localVersion);
 		
+		serverVersion = getServerVersion();
+		System.out.println("Server version is " + serverVersion);
+	}
+	
+	/**
+	 * Gets the local version from WORKINGDIR/.spaceout/version
+	 * @return Local version string
+	 */
+	public static String getLocalVersion(){
+		String version = "";
 		try{
-			serverVersion = FileOps.getFirstLineFromURL("http://" + FILE_SERVER + "/version");
+			File localversion = new File(workingDir + "/.spaceout/version");
+			version = FileOps.getFirstLineFromFile(localversion);
+		} catch(FileNotFoundException e){
+			// if there's no version file, we don't know the version
+			version = "???";
+		}
+		return version;
+	}
+	
+	/**
+	 * Gets the server version from FILE_SERVER/version
+	 * @return Server version string
+	 */
+	public static String getServerVersion(){
+		String version;
+		try{
+			version = FileOps.getFirstLineFromURL("http://" + FILE_SERVER + "/version");
 		} catch(UnknownHostException e){
 			serverFound = false;
-			serverVersion = "(error connecting to server)";
+			version = "(error connecting to server)";
 		}
-		System.out.println("Server version is " + serverVersion);
+		return version;
 	}
 	
 	/**
