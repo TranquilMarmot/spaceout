@@ -6,7 +6,16 @@
 .project
 
 # screenshots
-res/screenshots
+screenshots/*
+
+# logs
+logs/*
 
 # javadocs
-doc/
+doc/*
+
+#binaries
+bin/*
+
+#wiki
+wiki/*

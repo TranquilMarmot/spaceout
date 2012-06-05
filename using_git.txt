@@ -2,34 +2,20 @@ Quickly set up a Spaceout project with Git and Eclipse!
 
 - If you haven't, set up git. Follow the instructions at http://help.github.com/set-up-git-redirect/
  
- - Login to bitbucket, go to your account settings, and put in your ssh key (from the previous link)
+ - Log in to bitbucket, go to your account settings, and put in your SSH key (from the previous link)
  
- - In a terminal, go to your Eclipse workspace
+ - In a terminal, cd to your Eclipse workspace (in Eclipse, go to 'File -> Switch Workspace -> Other...' to see your current workspace)
  
  - Now, do 'git clone git@bitbucket.org:bitwaffle/spaceout.git'. This should get all the files you'll need.
  
- - Open up Eclipse (make sure you're in the workspace you cloned spaceout into)
+ - Open up Eclipse (make sure you're using the workspace you cloned spaceout into)
  
  - Now, go to File -> New -> Java Project
  
  - Type in 'spaceout' as the project name. Eclipse should say something about a wizard, just click next and let it do magicks.
  
- - You should now have a new project with your clone in it.
+ - Click the little arrow next to the Run arrow and click "Run configurations..." then go to the "Arguments" tab
  
- - Right click on the 'spaceout' project and click 'Properties' (or press Alt+Enter)
+ - In "Program arguments:" put "${workspace_loc:spaceout/lib/natives/*YOUROS*}" where '*YOUROS*' is 'linux', 'windows', 'macosx', or 'solaris' (hahahah solaris)
  
- - Select 'Java Build Path' in the left pane, then select the 'Libraries' tab. There should already be the libraries there.
- 
- - Click on the little arrow next to 'lwjgl.jar'. Select 'Native library location'.
- 
- - Browse to your eclipse workspace, then go to 'spaceout/lib/native'. Select the folder that corresponds to your operating system.
- 
- - Make sure the game runs; if it does then you're ready to get coding, monkey!
- 
- - Once you're done with your work, you can do 'git status' to see what you've changed.
- 
- - You can either do a 'git add [filename]' for each file then do 'git commit', or just do a 'git commit -a' to commit all your changes.
- 
- - Enter a comment about the commit in the file that pops up.
- 
- - Now, do "git push origin master" to push your commit to the master branch of the origin.
+ - Compile and run the game; if it works you're ready to get coding, monkey! If not, shoot me an email at nate272@gmail.com

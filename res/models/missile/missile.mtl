@@ -1,0 +1,35 @@
+# Blender MTL File: 'missilefins.blend'
+# Material Count: 3
+newmtl Exhaust_untitled
+Ns 96.078431
+Ka 0.800000 0.800000 0.800000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd untitled
+
+
+newmtl Middle_untitled
+Ns 96.078431
+Ka 0.800000 0.800000 0.800000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd untitled
+
+
+newmtl Tip.001_untitled
+Ns 96.078431
+Ka 0.800000 0.800000 0.800000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd untitled
+
+
