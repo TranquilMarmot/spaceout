@@ -419,4 +419,139 @@ public class QuaternionHelper {
 		
 		return new Quaternion(x, y, z, w);
 	}
+	
+	// O is your object's position
+	// P is the position of the object to face
+	// U is the nominal "up" vector (typically Vector3.Y)
+	// Note: this does not work when O is straight below or straight above P
+	/*
+	Matrix RotateToFace(Vector3 O, Vector3 P, Vector3 U)
+	{
+	  Vector3 D = (O - P);
+	  Vector3 Right = Vector3.Cross(U, D);
+	  Vector3.Normalize(ref Right, out Right);
+	  Vector3 Backwards = Vector3.Cross(Right, U);
+	  Vector3.Normalize(ref Backwards, out Backwards);
+	  Vector3 Up = Vector3.Cross(Backwards, Right);
+	  Matrix rot = new Matrix(Right.X, Right.Y, Right.Z, 0, Up.X, Up.Y, Up.Z, 0, Backwards.X, Backwards.Y, Backwards.Z, 0, 0, 0, 0, 1);
+	  return rot;
+	}*/
+	
+	public static Matrix4f rotateToFace(Vector3f O, Vector3f P, Vector3f U){
+		Vector3f D = new Vector3f();
+		Vector3f.sub(O, P, D);
+		
+		Vector3f Right = new Vector3f();
+		Vector3f.cross(U, D, Right);
+		
+		Vector3f Backwards = new Vector3f();
+		Vector3f.cross(Right, U, Backwards);
+		
+		Backwards.normalise(Backwards);
+		
+		Vector3f Up = new Vector3f();
+		Vector3f.cross(Backwards, Right, Up);
+		
+		Matrix4f rot = new Matrix4f();
+		
+
+		rot.m00 = Right.x;
+		rot.m10 = Right.y;
+		rot.m20 = Right.z;
+		rot.m30 = 0.0f;
+		
+		rot.m03 = Up.x;
+		rot.m11 = Up.y;
+		rot.m21 = Up.z;
+		rot.m31 = 0.0f;
+		
+		rot.m02 = Backwards.x;
+		rot.m12 = Backwards.y;
+		rot.m22 = Backwards.z;
+		rot.m32 = 0.0f;
+		
+		rot.m03 = 0.0f;
+		rot.m13 = 0.0f;
+		rot.m23 = 0.0f;
+		rot.m33 = 1.0f;
+		
+		/*
+		rot.m00 = Right.x;
+		rot.m01 = Right.y;
+		rot.m02 = Right.z;
+		rot.m03 = 0.0f;
+		
+		rot.m10 = Up.x;
+		rot.m11 = Up.y;
+		rot.m12 = Up.z;
+		rot.m13 = 0.0f;
+		
+		rot.m20 = Backwards.x;
+		rot.m21 = Backwards.y;
+		rot.m22 = Backwards.z;
+		rot.m23 = 0.0f;
+		
+		rot.m30 = 0.0f;
+		rot.m31 = 0.0f;
+		rot.m32 = 0.0f;
+		rot.m33 = 1.0f;
+		*/
+		
+		return rot;
+	}
+	
+	public static Quaternion quaternionFromMatrix(Matrix4f m){
+		float tr = m.m00 + m.m11 + m.m22;
+		float qw, qx, qy, qz;
+		
+		if (tr > 0) { 
+		  float S = (float) (Math.sqrt(tr+1.0) * 2); // S=4*qw 
+		  qw = 0.25f * S;
+		  qx = (m.m21 - m.m12) / S;
+		  qy = (m.m02 - m.m20) / S; 
+		  qz = (m.m10 - m.m01) / S; 
+		} else if ((m.m00 > m.m11)&(m.m00 > m.m22)) { 
+		  float S = (float) (Math.sqrt(1.0f + m.m00 - m.m11 - m.m22) * 2); // S=4*qx 
+		  qw = (m.m21 - m.m12) / S;
+		  qx = 0.25f * S;
+		  qy = (m.m01 + m.m10) / S; 
+		  qz = (m.m02 + m.m20) / S; 
+		} else if (m.m11 > m.m22) { 
+		  float S = (float) (Math.sqrt(1.0f + m.m11 - m.m00 - m.m22) * 2.0f); // S=4*qy
+		  qw = (m.m02 - m.m20) / S;
+		  qx = (m.m01 + m.m10) / S; 
+		  qy = 0.25f * S;
+		  qz = (m.m12 + m.m21) / S; 
+		} else { 
+		  float S = (float) (Math.sqrt(1.0f + m.m22 - m.m00 - m.m11) * 2.0f); // S=4*qz
+		  qw = (m.m10 - m.m01) / S;
+		  qx = (m.m02 + m.m20) / S;
+		  qy = (m.m12 + m.m21) / S;
+		  qz = 0.25f * S;
+		}
+		
+		return new Quaternion(qx, qy, qz, qw);
+	}
+	
+	public static Quaternion lookAt(Vector3f from, Vector3f to){
+		/*
+		template <class T, class U>
+		Quaternion<decltype(T()*U())> TurnFromTo(Vec3<T> a, Vec3<U>b){
+		        Normalize(a);
+		        Normalize(b);
+		        Vec3<decltype(T()*U())> c=Normalized(a+b);
+		        Vec3<decltype(T()*U())> axis=CrossProd(a,c);
+		        return Quaternion<decltype(T()*U())>(DotProd(a,c) , axis.x, axis.y, axis.z);
+		}*/
+		
+		Vector3f a = new Vector3f(), b = new Vector3f(), c = new Vector3f();
+		from.normalise(a);
+		to.normalise(b);
+		Vector3f.add(a, b, c);
+		c.normalise(c);
+		Vector3f axis = new Vector3f();
+		Vector3f.cross(c, a, axis);
+		
+		return new Quaternion(axis.x, axis.y, axis.z, Vector3f.dot(a, c));
+	}
 }

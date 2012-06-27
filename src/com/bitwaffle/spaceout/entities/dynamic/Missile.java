@@ -190,6 +190,7 @@ public class Missile extends DynamicEntity implements Projectile{
 				if(dx1 != 0.0f || dy1 != 0.0f || dz1 != 0.0f){
 					//FIXME this doesn't work quite right...
 					Quaternion newRot = QuaternionHelper.quaternionBetweenVectors(this.location, subtract);
+					//Quaternion newRot = QuaternionHelper.lookAt(this.location, subtract);
 					this.rotation.set(newRot);
 					
 					Transform trans = new Transform();
