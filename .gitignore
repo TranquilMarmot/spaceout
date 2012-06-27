@@ -19,3 +19,6 @@ bin/*
 
 #wiki
 wiki/*
+
+#swap files
+*.swp
