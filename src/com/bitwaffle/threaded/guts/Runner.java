@@ -5,7 +5,7 @@ import com.bitwaffle.threaded.guts.graphics.PhysicsThread;
 
 public class Runner {
 	public static final String VERSION = "0.0.8";
-	public static boolean done = false;
+	public static volatile boolean done = false;
 	
 	Thread master, render, physics;
 	

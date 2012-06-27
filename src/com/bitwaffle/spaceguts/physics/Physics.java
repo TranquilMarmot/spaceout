@@ -102,7 +102,6 @@ public class Physics {
 		broadphase = null;
 		dispatcher = null;
 		solver = null;
-
 	}
 
 	/**

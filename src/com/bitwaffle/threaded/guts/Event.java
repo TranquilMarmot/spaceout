@@ -1,4 +1,4 @@
-package com.bitwaffle.threaded.guts.graphics;
+package com.bitwaffle.threaded.guts;
 
 public interface Event {
 	public void takeAction();

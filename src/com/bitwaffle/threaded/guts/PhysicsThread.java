@@ -1,9 +1,17 @@
-package com.bitwaffle.threaded.guts.graphics;
+package com.bitwaffle.threaded.guts;
 
 import com.bitwaffle.threaded.guts.RenderThread;
 import com.bitwaffle.threaded.guts.Runner;
+import com.bitwaffle.threaded.guts.physics.PhysicsWorld;
 
 public class PhysicsThread implements Runnable{
+	private PhysicsWorld world;
+
+	public PhysicsThread(){
+		// TODO new event-driven callback
+		world = new PhysicsWorld(new javax.vecmath.Vector3f(0.0f, 0.0f, 0.0f), 10, null);
+	}
+
 	@Override
 	public void run() {
 		init();
@@ -39,6 +47,7 @@ public class PhysicsThread implements Runnable{
 	}
 	
 	private void init(){
-		
+		// TODO initialize bullet here (might be a good idea to have the PhysicsThread constructor
+		// take in a data structure that describes a physics world (i.e. gravity)
 	}
 }
