@@ -27,7 +27,7 @@ public class GLSLShader {
 			while ((line = reader.readLine()) != null) {
 				source += line + "\n";
 			}
-			
+			reader.close();
 			return compileShaderFromString(source);
 		} catch(IOException e){
 			e.printStackTrace();

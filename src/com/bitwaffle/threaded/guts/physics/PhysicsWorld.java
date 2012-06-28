@@ -1,3 +1,5 @@
+package com.bitwaffle.threaded.guts.physics;
+
 import javax.vecmath.Vector3f;
 
 import com.bulletphysics.linearmath.Clock;
@@ -7,15 +9,14 @@ import com.bulletphysics.collision.dispatch.CollisionDispatcher;
 import com.bulletphysics.collision.dispatch.CollisionWorld;
 import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
 import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
-import com.bulletphysics.dynamics.SequentialImpulseConstraintSolver;
+import com.bulletphysics.dynamics.InternalTickCallback;
+import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 
 
 public class PhysicsWorld {
 
 	private Vector3f gravity;
 	private int substeps;
-
-	private InternalTickCallback callback;
 
 	private DiscreteDynamicsWorld dynamicsWorld;
 	private BroadphaseInterface broadphase;
@@ -31,7 +32,6 @@ public class PhysicsWorld {
 	public PhysicsWorld(Vector3f gravity, int substeps, InternalTickCallback callback){
 		this.gravity = gravity;
 		this.substeps = substeps;
-		this.callback = callback;
 
 		clock = new Clock();
 
@@ -59,7 +59,7 @@ public class PhysicsWorld {
 		dynamicsWorld.stepSimulation(getDeltaTimeMicroseconds() / 1000000.0f, substeps);
 	}
 
-	private static float getDeltaTimeMicroseconds(){
+	private float getDeltaTimeMicroseconds(){
 		float delta = clock.getTimeMicroseconds();
 		clock.reset();
 		return delta;

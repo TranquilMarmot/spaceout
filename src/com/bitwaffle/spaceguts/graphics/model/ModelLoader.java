@@ -186,7 +186,7 @@ public class ModelLoader {
 					builder.addTetxureIndices(textureIndices);
 				}
 			}
-			
+			reader.close();
 			model = builder.makeModel(texture);
 			
 		} catch(IOException e){
@@ -261,6 +261,8 @@ public class ModelLoader {
 					list.addMaterial(name, mat);
 				}
 			}
+			
+			reader.close();
 		} catch(FileNotFoundException e){
 			throw e;
 		} catch(IOException e){
