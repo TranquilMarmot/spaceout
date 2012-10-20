@@ -1,4 +1,3 @@
-
           ______                                   _
          /  ____|                                 | |
          \  `--. _ __   __ _  ___  ___  ___  _   _| |_
@@ -9,9 +8,16 @@
                 |_|
 
 
-             See the wiki for latest developments!
 
-          https://bitbucket.org/bitwaffle/spaceout/wiki
+Hello, fellow internet denizen!
+This was a project some friends and I did for class, we haven't touched it in a while and honestly a great deal of the code needs to be (and has been) rewritten.
+This was my first experience with OpenGL and, boy, was it a doozie! Looks pretty, though!
+          
+I figured I'd make this repo public, in case anybody finds any of the code useful somehow.
+The model loader works pretty well and the shaders are fast and powerful, so I guess check those out first!
+
+Enjoy!
+TranquilMarmot
 
 
                                                      ___ 
